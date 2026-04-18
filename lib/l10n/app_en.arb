@@ -7,10 +7,22 @@
   "passwordHint" : "Enter your password",
   "login" : "Login",
   "forgotPassword" : "Forgot password ?",
+  "forgotPasswordDesc": "Enter your email to receive an OTP code",
+  "sendCode": "Send Code",
+  "resendCode": "Resend Code",
+  "otpTitle": "Verification",
+  "otpSubtitle": "Please enter the 4-digit code sent to your email or phone number",
+  "verify": "Verify",
+  "resetPasswordTitle": "Reset Password",
+  "newPassword": "New Password",
+  "confirmPassword": "Confirm Password",
+  "updatePassword": "Update Password",
   "progress":"Progress",
   "myPlans":"My Plans",
   "home":"Home",
   "workouts":"Workouts",
-  "settings":"Settings"
+  "settings":"Settings",
+  "dontHaveAccount": "Don't have an account ?",
+  "signUp": "Sign up"
 }
 

@@ -7,9 +7,21 @@
   "passwordHint" : "أدخل كلمة السر",
   "login" : "تسجيل الدخول",
   "forgotPassword" : "نسيت كلمة السر؟",
+  "forgotPasswordDesc": "أدخل بريدك الإلكتروني أو رقم الهاتف لاستلام رمز التحقق",
+  "sendCode": "إرسال الرمز",
+  "resendCode":"إعادة إرسال الرمز",
+  "otpTitle": "التحقق من الرمز",
+  "otpSubtitle": "يرجى إدخال الرمز المكون من 4 أرقام والمرسل إلى بريدك الإلكتروني أو رقم هاتفك",
+  "verify": "تأكيد",
+  "resetPasswordTitle": "إعادة تعيين كلمة السر",
+  "newPassword": "كلمة السر الجديدة",
+  "confirmPassword": "تأكيد كلمة السر",
+  "updatePassword": "تحديث كلمة السر",
   "progress":"تقدم",
   "myPlans":"خططي",
   "home":" الرئيسية",
   "workouts":"التمارين ",
-  "settings":"الإعدادات"
+  "settings":"الإعدادات",
+  "dontHaveAccount": "ليس لديك حساب ؟",
+  "signUp": "إنشاء حساب"
 }

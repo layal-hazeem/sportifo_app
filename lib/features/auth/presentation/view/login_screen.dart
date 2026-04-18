@@ -4,6 +4,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_neumorphic_field.dart';
+import 'forgot_password_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -62,7 +63,12 @@ class LoginScreen extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const ForgotPasswordScreen()),
+                      );
+                    },
                     child: Text(
                         l10n.forgotPassword,
                         style: const TextStyle(color: AppColors.linkColor, fontSize: AppSizes.labelFontSize)
@@ -78,7 +84,30 @@ class LoginScreen extends StatelessWidget {
                     // هي لاحقاً مشان اربط الواجهة مع ال view model اللي هيي ال bloc
                   },
                 ),
+                const SizedBox(height: 30),
 
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      l10n.dontHaveAccount,
+                      style: const TextStyle(color: AppColors.textDark, fontSize: AppSizes.hintFontSize),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        //  Sign Up لاحقاً
+                      },
+                      child: Text(
+                        l10n.signUp,
+                        style: const TextStyle(
+                          color: AppColors.primaryBtn,
+                          fontWeight: FontWeight.bold,
+                          fontSize: AppSizes.hintFontSize,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
