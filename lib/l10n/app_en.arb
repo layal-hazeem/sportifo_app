@@ -1,0 +1,11 @@
+{
+  "appName" : "Sportifo",
+  "welcomeBack" : "Welcome Back",
+  "emailOrPhone" : "Email or Phone Number",
+  "emailHint" : "Enter your email or phone number",
+  "password" : "Password",
+  "passwordHint" : "Enter your password",
+  "login" : "Login",
+  "forgotPassword" : "Forgot password ?"
+}
+
