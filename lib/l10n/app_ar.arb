@@ -6,5 +6,10 @@
   "password" : "كلمة السر",
   "passwordHint" : "أدخل كلمة السر",
   "login" : "تسجيل الدخول",
-  "forgotPassword" : "نسيت كلمة السر؟"
+  "forgotPassword" : "نسيت كلمة السر؟",
+  "progress":"تقدم",
+  "myPlans":"خططي",
+  "home":" الرئيسية",
+  "workouts":"التمارين ",
+  "settings":"الإعدادات"
 }
