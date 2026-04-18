@@ -31,4 +31,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get forgotPassword => 'Forgot password ?';
+
+  @override
+  String get progress => 'Progress';
+
+  @override
+  String get myPlans => 'My Plans';
+
+  @override
+  String get home => 'Home';
+
+  @override
+  String get workouts => 'Workouts';
+
+  @override
+  String get settings => 'Settings';
 }

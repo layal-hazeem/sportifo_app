@@ -6,6 +6,11 @@
   "password" : "Password",
   "passwordHint" : "Enter your password",
   "login" : "Login",
-  "forgotPassword" : "Forgot password ?"
+  "forgotPassword" : "Forgot password ?",
+  "progress":"Progress",
+  "myPlans":"My Plans",
+  "home":"Home",
+  "workouts":"Workouts",
+  "settings":"Settings"
 }
 
