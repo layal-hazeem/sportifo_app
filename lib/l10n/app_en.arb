@@ -25,4 +25,32 @@
   "dontHaveAccount": "Don't have an account ?",
   "signUp": "Sign up"
 }
+  "settings":"Settings"
+  "createAccount": "Create Account",
+  "firstName": "First Name",
+  "lastName": "Last Name",
+  "enterFirstName": "Enter your first name",
+  "enterLastName": "Enter your last name",
 
+  "phone": "Phone Number",
+  "enterPhone":"Enter Phone Number",
+  "confirmPassword": "Confirm Password",
+  "profilePicture": "Profile Picture (Optional)",
+  "chooseOtpMethod": "Choose OTP Method",
+  "viaEmail": "Via Email",
+  "viaPhone": "Via Phone",
+  "next": "Next",
+  "register": "Register",
+  "back": "Back",
+  "getStarted":"Get Started",
+  "termsText": "By continuing, you agree to our Terms & Conditions and Privacy Policy",
+   "onboardingTitle1": "Your Home, Your Gym",
+    "onboardingDesc1": "Access ready-made workout plans and a wide range of training videos.",
+
+    "onboardingTitle2": "Your Personal Coach",
+    "onboardingDesc2": "Chat with your coach and improve faster. Expert guidance is always available.",
+
+    "onboardingTitle3": "Smart Nutrition Plans",
+    "onboardingDesc3": "Track your nutrition and improve your daily habits."
+
+}
