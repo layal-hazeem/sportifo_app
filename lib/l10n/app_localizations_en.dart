@@ -113,4 +113,70 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settings => 'Settings';
+
+  @override
+  String get completeProfileInfo => 'Complete Profile Information';
+
+  @override
+  String get weight => 'Weight';
+
+  @override
+  String get length => 'Length';
+
+  @override
+  String get birthDate => 'Birth Date';
+
+  @override
+  String get gender => 'Gender';
+
+  @override
+  String get male => 'Male';
+
+  @override
+  String get female => 'Female';
+
+  @override
+  String get next => 'Next';
+
+  @override
+  String get skip => 'Skip';
+
+  @override
+  String get kg => 'kg';
+
+  @override
+  String get cm => 'cm';
+
+  @override
+  String get messageOfIncompleteInfo => 'Please complete all of the following information (weight, height, gender, date of birth)';
+
+  @override
+  String get bodyMeasurements => 'Body Measurements';
+
+  @override
+  String get shoulders => 'Shoulders';
+
+  @override
+  String get chestCircumference => 'Chest';
+
+  @override
+  String get belly => 'Belly / Waist';
+
+  @override
+  String get hipCircumference => 'Hip';
+
+  @override
+  String get thighCircumference => 'Thigh';
+
+  @override
+  String get handCircumference => 'Hand';
+
+  @override
+  String get startingTheSportsJourney => 'Starting the sports journey';
+
+  @override
+  String get measuermentsHint => 'These measurements help us provide a more accurate analysis of your physical progress.';
+
+  @override
+  String get saving => 'Saving....';
 }

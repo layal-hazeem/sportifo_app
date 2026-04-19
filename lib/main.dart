@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:sportifo_app/features/auth/presentation/view/complete_profile_info.dart';
 import 'package:sportifo_app/features/auth/presentation/view/register_screen.dart';
 import 'package:sportifo_app/features/onboarding/presentation/view/onboarding_screen.dart';
 import 'core/routes/app_routes.dart';

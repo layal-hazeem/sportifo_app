@@ -309,6 +309,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Settings'**
   String get settings;
+
+  /// No description provided for @completeProfileInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete Profile Information'**
+  String get completeProfileInfo;
+
+  /// No description provided for @weight.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight'**
+  String get weight;
+
+  /// No description provided for @length.
+  ///
+  /// In en, this message translates to:
+  /// **'Length'**
+  String get length;
+
+  /// No description provided for @birthDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Birth Date'**
+  String get birthDate;
+
+  /// No description provided for @gender.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get gender;
+
+  /// No description provided for @male.
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get male;
+
+  /// No description provided for @female.
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get female;
+
+  /// No description provided for @next.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get next;
+
+  /// No description provided for @skip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get skip;
+
+  /// No description provided for @kg.
+  ///
+  /// In en, this message translates to:
+  /// **'kg'**
+  String get kg;
+
+  /// No description provided for @cm.
+  ///
+  /// In en, this message translates to:
+  /// **'cm'**
+  String get cm;
+
+  /// No description provided for @messageOfIncompleteInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Please complete all of the following information (weight, height, gender, date of birth)'**
+  String get messageOfIncompleteInfo;
+
+  /// No description provided for @bodyMeasurements.
+  ///
+  /// In en, this message translates to:
+  /// **'Body Measurements'**
+  String get bodyMeasurements;
+
+  /// No description provided for @shoulders.
+  ///
+  /// In en, this message translates to:
+  /// **'Shoulders'**
+  String get shoulders;
+
+  /// No description provided for @chestCircumference.
+  ///
+  /// In en, this message translates to:
+  /// **'Chest'**
+  String get chestCircumference;
+
+  /// No description provided for @belly.
+  ///
+  /// In en, this message translates to:
+  /// **'Belly / Waist'**
+  String get belly;
+
+  /// No description provided for @hipCircumference.
+  ///
+  /// In en, this message translates to:
+  /// **'Hip'**
+  String get hipCircumference;
+
+  /// No description provided for @thighCircumference.
+  ///
+  /// In en, this message translates to:
+  /// **'Thigh'**
+  String get thighCircumference;
+
+  /// No description provided for @handCircumference.
+  ///
+  /// In en, this message translates to:
+  /// **'Hand'**
+  String get handCircumference;
+
+  /// No description provided for @startingTheSportsJourney.
+  ///
+  /// In en, this message translates to:
+  /// **'Starting the sports journey'**
+  String get startingTheSportsJourney;
+
+  /// No description provided for @measuermentsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'These measurements help us provide a more accurate analysis of your physical progress.'**
+  String get measuermentsHint;
+
+  /// No description provided for @saving.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving....'**
+  String get saving;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
