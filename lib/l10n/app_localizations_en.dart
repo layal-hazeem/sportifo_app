@@ -84,9 +84,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enterPhone => 'Enter Phone Number';
 
   @override
-  String get confirmPassword => 'Confirm Password';
-
-  @override
   String get profilePicture => 'Profile Picture (Optional)';
 
   @override
@@ -168,9 +165,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get female => 'Female';
-
-  @override
-  String get next => 'Next';
 
   @override
   String get skip => 'Skip';

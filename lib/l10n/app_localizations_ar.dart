@@ -83,8 +83,6 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get enterPhone => 'أدخل رقم الهاتف';
 
-  @override
-  String get confirmPassword => 'تأكيد كلمة المرور';
 
   @override
   String get profilePicture => 'الصورة الشخصية (اختياري)';
@@ -169,8 +167,6 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get female => 'انثى';
 
-  @override
-  String get next => 'التالي';
 
   @override
   String get skip => 'تخطى';

@@ -416,11 +416,6 @@ abstract class AppLocalizations {
   /// **'Female'**
   String get female;
 
-  /// No description provided for @next.
-  ///
-  /// In en, this message translates to:
-  /// **'Next'**
-  String get next;
 
   /// No description provided for @skip.
   ///
