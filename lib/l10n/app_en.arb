@@ -12,8 +12,6 @@
   "home":"Home",
   "workouts":"Workouts",
   "settings":"Settings"
-}
-
   "createAccount": "Create Account",
   "firstName": "First Name",
   "lastName": "Last Name",
