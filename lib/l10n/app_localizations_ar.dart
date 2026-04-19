@@ -149,4 +149,68 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get signUp => 'إنشاء حساب';
+  String get completeProfileInfo => 'إكمال معلومات الملف الشخصي';
+
+  @override
+  String get weight => 'وزن';
+
+  @override
+  String get length => 'طول';
+
+  @override
+  String get birthDate => 'تاريخ الميلاد';
+
+  @override
+  String get gender => 'الجنس';
+
+  @override
+  String get male => 'ذكر';
+
+  @override
+  String get female => 'انثى';
+
+  @override
+  String get next => 'التالي';
+
+  @override
+  String get skip => 'تخطى';
+
+  @override
+  String get kg => 'كغ';
+
+  @override
+  String get cm => 'سم';
+
+  @override
+  String get messageOfIncompleteInfo => 'يرجى إكمال كافة البيانات التالية (الوزن، الطول، الجنس، الميلاد)';
+
+  @override
+  String get bodyMeasurements => 'مقاسات الجسم';
+
+  @override
+  String get shoulders => 'الأكتاف';
+
+  @override
+  String get chestCircumference => 'محيط الصدر';
+
+  @override
+  String get belly => 'البطن (الخصر)';
+
+  @override
+  String get hipCircumference => 'محيط الورك';
+
+  @override
+  String get thighCircumference => 'محيط الفخذ';
+
+  @override
+  String get handCircumference => 'محيط اليد';
+
+  @override
+  String get startingTheSportsJourney => 'بدء الرحلة الرياضية';
+
+  @override
+  String get measuermentsHint => 'تساعدنا هذه المقاسات في تقديم تحليل أدق لتقدمك البدني';
+
+  @override
+  String get saving => 'جاري الحفظ ....';
 }
