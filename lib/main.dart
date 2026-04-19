@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:sportifo_app/features/auth/presentation/view/complete_profile_info.dart';
 import 'features/auth/presentation/view/login_screen.dart';
 import 'l10n/app_localizations.dart';
 
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
         lightSource: LightSource.topLeft,
         depth: 10,
       ),
-      home: const LoginScreen(),
+      home: CompleteProfileInfoView(),
     );
   }
 }

@@ -6,12 +6,16 @@ class CustomNeumorphicField extends StatelessWidget {
   final String hint;
   final IconData icon;
   final bool isPassword;
+  final Function(String)? onChanged; 
+  final TextInputType? keyboardType; 
 
   const CustomNeumorphicField({
     super.key,
     required this.hint,
     required this.icon,
-    this.isPassword = false
+    this.isPassword = false,
+    this.onChanged,
+    this.keyboardType,
   });
 
   @override
@@ -19,10 +23,14 @@ class CustomNeumorphicField extends StatelessWidget {
     return Neumorphic(
       style: NeumorphicStyle(
         depth: -5,
-        boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(AppSizes.borderRadius)),
+        boxShape: NeumorphicBoxShape.roundRect(
+          BorderRadius.circular(AppSizes.borderRadius),
+        ),
         color: AppColors.background,
       ),
       child: TextField(
+        onChanged: onChanged, 
+        keyboardType: keyboardType,
         obscureText: isPassword,
         decoration: InputDecoration(
           hintText: hint,
@@ -32,7 +40,10 @@ class CustomNeumorphicField extends StatelessWidget {
           ),
           suffixIcon: Icon(icon, color: AppColors.hintText, size: 20),
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 15,
+          ),
         ),
       ),
     );
