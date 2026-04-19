@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
+import 'package:sportifo_app/features/auth/presentation/view/reset_password_screen.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../widgets/auth_header.dart';
 import '../widgets/custom_button.dart';
 
 class OTPScreen extends StatelessWidget {
@@ -15,7 +17,11 @@ class OTPScreen extends StatelessWidget {
     final defaultPinTheme = PinTheme(
       width: 60,
       height: 65,
-      textStyle: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.textDark),
+      textStyle: const TextStyle(
+          fontSize: 22,
+          fontWeight: FontWeight.bold,
+          color: AppColors.textDark
+      ),
       decoration: BoxDecoration(
         color: AppColors.background,
         borderRadius: BorderRadius.circular(15),
@@ -28,16 +34,21 @@ class OTPScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0, iconTheme: const IconThemeData(color: AppColors.textDark)),
+      appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          iconTheme: const IconThemeData(color: AppColors.textDark)),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: AppSizes.mainPadding),
           child: Column(
             children: [
-              const SizedBox(height: 40),
-              Text(l10n.otpTitle, style: const TextStyle(fontSize: AppSizes.titleFontSize, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 20),
-              Text(l10n.otpSubtitle, textAlign: TextAlign.center, style: const TextStyle(color: AppColors.hintText)),
+              AuthHeader(
+                title: l10n.otpTitle,
+                subtitle: l10n.otpSubtitle,
+                isCentered: true,
+              ),
+
               const SizedBox(height: 60),
 
               Pinput(
@@ -55,7 +66,7 @@ class OTPScreen extends StatelessWidget {
               CustomAuthButton(
                 text: l10n.verify,
                 onPressed: () {
-                  // Navigator.push(context, MaterialPageRoute(builder: (context) => const ResetPasswordScreen()));
+                   Navigator.push(context, MaterialPageRoute(builder: (context) => const ResetPasswordScreen()));
                 },
               ),
 

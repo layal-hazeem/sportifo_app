@@ -71,7 +71,7 @@ class LoginScreen extends StatelessWidget {
                     },
                     child: Text(
                         l10n.forgotPassword,
-                        style: const TextStyle(color: AppColors.linkColor, fontSize: AppSizes.labelFontSize)
+                        style: const TextStyle(color: AppColors.linkColor, fontSize: AppSizes.mediumFontSize)
                     ),
                   ),
                 ),
@@ -102,7 +102,7 @@ class LoginScreen extends StatelessWidget {
                         style: const TextStyle(
                           color: AppColors.primaryBtn,
                           fontWeight: FontWeight.bold,
-                          fontSize: AppSizes.hintFontSize,
+                          fontSize: AppSizes.mediumFontSize,
                         ),
                       ),
                     ),

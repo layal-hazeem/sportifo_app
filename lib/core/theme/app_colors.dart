@@ -14,6 +14,7 @@ class AppSizes {
 
   static const double titleFontSize = 35.0;
   static const double labelFontSize = 16.0;
+  static const double mediumFontSize = 15.0;
   static const double hintFontSize = 14.0;
   static const double buttonFontSize = 18.0;
 }

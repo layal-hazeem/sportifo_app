@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../widgets/auth_header.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_neumorphic_field.dart';
+import 'otp_screen.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
   const ForgotPasswordScreen({super.key});
@@ -20,29 +22,21 @@ class ForgotPasswordScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 20),
-              Center(
-                child: Text(
-                  l10n.forgotPassword,
-                  style: const TextStyle(fontSize: AppSizes.titleFontSize, fontWeight: FontWeight.bold, color: AppColors.textDark),
-                ),
+              // استخدام الويدجت الجديدة
+              AuthHeader(
+                title: l10n.forgotPassword,
+                subtitle: l10n.forgotPasswordDesc,
               ),
-              const SizedBox(height: 20),
-              Text(
-                l10n.forgotPasswordDesc,
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: AppSizes.hintFontSize, color: AppColors.hintText),
-              ),
+
               const SizedBox(height: 50),
               Text(l10n.emailOrPhone, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: AppSizes.labelFontSize)),
               const SizedBox(height: 15),
               CustomNeumorphicField(hint: l10n.emailHint, icon: Icons.email_outlined),
+
               const SizedBox(height: 40),
               CustomAuthButton(
                 text: l10n.sendCode,
-                onPressed: () {
-                  // سننتقل هنا لواجهة الـ OTP
-                },
+                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const OTPScreen())),
               ),
             ],
           ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../widgets/auth_header.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_neumorphic_field.dart';
 
@@ -13,23 +14,27 @@ class ResetPasswordScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0),
+      appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: AppSizes.mainPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 20),
-              Center(
-                child: Text(
-                  l10n.resetPasswordTitle, // "Create New Password"
-                  style: const TextStyle(fontSize: AppSizes.titleFontSize, fontWeight: FontWeight.bold),
-                ),
+              AuthHeader(
+                title: l10n.resetPasswordTitle,
+                subtitle: null, // لا نحتاج وصف هنا
               ),
               const SizedBox(height: 50),
 
-              Text(l10n.newPassword, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: AppSizes.labelFontSize)),
+              Text(l10n.newPassword,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: AppSizes.labelFontSize)
+              ),
               const SizedBox(height: 15),
               CustomNeumorphicField(
                   hint: l10n.passwordHint,
@@ -39,7 +44,11 @@ class ResetPasswordScreen extends StatelessWidget {
 
               const SizedBox(height: 30),
 
-              Text(l10n.confirmPassword, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: AppSizes.labelFontSize)),
+              Text(l10n.confirmPassword,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: AppSizes.labelFontSize)
+              ),
               const SizedBox(height: 15),
               CustomNeumorphicField(
                   hint: l10n.passwordHint,
