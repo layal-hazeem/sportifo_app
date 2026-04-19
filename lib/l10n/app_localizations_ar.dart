@@ -33,6 +33,36 @@ class AppLocalizationsAr extends AppLocalizations {
   String get forgotPassword => 'نسيت كلمة السر؟';
 
   @override
+  String get forgotPasswordDesc => 'أدخل بريدك الإلكتروني أو رقم الهاتف لاستلام رمز التحقق';
+
+  @override
+  String get sendCode => 'إرسال الرمز';
+
+  @override
+  String get resendCode => 'إعادة إرسال الرمز';
+
+  @override
+  String get otpTitle => 'التحقق من الرمز';
+
+  @override
+  String get otpSubtitle => 'يرجى إدخال الرمز المكون من 4 أرقام والمرسل إلى بريدك الإلكتروني أو رقم هاتفك';
+
+  @override
+  String get verify => 'تأكيد';
+
+  @override
+  String get resetPasswordTitle => 'إعادة تعيين كلمة السر';
+
+  @override
+  String get newPassword => 'كلمة السر الجديدة';
+
+  @override
+  String get confirmPassword => 'تأكيد كلمة السر';
+
+  @override
+  String get updatePassword => 'تحديث كلمة السر';
+
+  @override
   String get createAccount => 'إنشاء حساب';
 
   @override
@@ -115,6 +145,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get settings => 'الإعدادات';
 
   @override
+  String get dontHaveAccount => 'ليس لديك حساب ؟';
+
+  @override
+  String get signUp => 'إنشاء حساب';
   String get completeProfileInfo => 'إكمال معلومات الملف الشخصي';
 
   @override

@@ -33,6 +33,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String get forgotPassword => 'Forgot password ?';
 
   @override
+  String get forgotPasswordDesc => 'Enter your email to receive an OTP code';
+
+  @override
+  String get sendCode => 'Send Code';
+
+  @override
+  String get resendCode => 'Resend Code';
+
+  @override
+  String get otpTitle => 'Verification';
+
+  @override
+  String get otpSubtitle => 'Please enter the 4-digit code sent to your email or phone number';
+
+  @override
+  String get verify => 'Verify';
+
+  @override
+  String get resetPasswordTitle => 'Reset Password';
+
+  @override
+  String get newPassword => 'New Password';
+
+  @override
+  String get confirmPassword => 'Confirm Password';
+
+  @override
+  String get updatePassword => 'Update Password';
+
+  @override
   String get createAccount => 'Create Account';
 
   @override
@@ -115,6 +145,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings => 'Settings';
 
   @override
+  String get dontHaveAccount => 'Don\'t have an account ?';
+
+  @override
+  String get signUp => 'Sign up';
   String get completeProfileInfo => 'Complete Profile Information';
 
   @override
