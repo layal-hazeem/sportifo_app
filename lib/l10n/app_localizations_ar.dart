@@ -100,4 +100,17 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get onboardingDesc3 => 'تابع نظامك الغذائي وحسّن عاداتك اليومية.';
+  String get progress => 'تقدم';
+
+  @override
+  String get myPlans => 'خططي';
+
+  @override
+  String get home => ' الرئيسية';
+
+  @override
+  String get workouts => 'التمارين ';
+
+  @override
+  String get settings => 'الإعدادات';
 }

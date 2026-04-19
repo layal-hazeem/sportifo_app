@@ -32,4 +32,9 @@
 
      "onboardingTitle3": "خطط تغذية ذكية",
      "onboardingDesc3": "تابع نظامك الغذائي وحسّن عاداتك اليومية."
+  "progress":"تقدم",
+  "myPlans":"خططي",
+  "home":" الرئيسية",
+  "workouts":"التمارين ",
+  "settings":"الإعدادات"
 }

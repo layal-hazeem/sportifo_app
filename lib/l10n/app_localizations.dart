@@ -280,6 +280,35 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Track your nutrition and improve your daily habits.'**
   String get onboardingDesc3;
+  /// No description provided for @progress.
+  ///
+  /// In en, this message translates to:
+  /// **'Progress'**
+  String get progress;
+
+  /// No description provided for @myPlans.
+  ///
+  /// In en, this message translates to:
+  /// **'My Plans'**
+  String get myPlans;
+
+  /// No description provided for @home.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get home;
+
+  /// No description provided for @workouts.
+  ///
+  /// In en, this message translates to:
+  /// **'Workouts'**
+  String get workouts;
+
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

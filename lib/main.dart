@@ -36,13 +36,10 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [
-        Locale('en'),
-        Locale('ar'),
-      ],
+      supportedLocales: const [Locale('en'), Locale('ar')],
       locale: const Locale('en'),
-      // --------------------------------
 
+      // --------------------------------
       themeMode: ThemeMode.light,
       theme: const NeumorphicThemeData(
         baseColor: Color(0xFFF2F2F2),
@@ -53,5 +50,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 //وقت نضيف اي كلمة بملفات الترجمة مننفذ هاد الامر بالتيرمينال مشان يتعرف عالنصوص الجديدة اللي ترجمناها
 //flutter gen-l10n

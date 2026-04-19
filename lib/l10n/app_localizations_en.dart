@@ -100,4 +100,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboardingDesc3 => 'Track your nutrition and improve your daily habits.';
+  String get progress => 'Progress';
+
+  @override
+  String get myPlans => 'My Plans';
+
+  @override
+  String get home => 'Home';
+
+  @override
+  String get workouts => 'Workouts';
+
+  @override
+  String get settings => 'Settings';
 }
