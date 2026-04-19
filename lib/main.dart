@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:sportifo_app/features/auth/presentation/view/complete_profile_info.dart';
+import 'package:sportifo_app/features/auth/presentation/view/register_screen.dart';
+import 'package:sportifo_app/features/onboarding/presentation/view/onboarding_screen.dart';
+import 'core/routes/app_routes.dart';
 import 'features/auth/presentation/view/login_screen.dart';
+import 'features/splash/presentation/view/splash_screen.dart';
 import 'l10n/app_localizations.dart';
 
 void main() {
@@ -17,7 +21,16 @@ class MyApp extends StatelessWidget {
     return NeumorphicApp(
       debugShowCheckedModeBanner: false,
       title: 'Sportifo',
+// first Screen splash
+      initialRoute: AppRoutes.splash,
 
+        routes: {
+          AppRoutes.splash: (context) => const SplashScreen(),
+          AppRoutes.onboarding: (context) => const OnboardingScreen(),
+          AppRoutes.register: (context) => const RegisterScreen(),
+
+          AppRoutes.login: (context) => const LoginScreen(),
+        },
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -34,7 +47,7 @@ class MyApp extends StatelessWidget {
         lightSource: LightSource.topLeft,
         depth: 10,
       ),
-      home: CompleteProfileInfoView(),
+    // home: const RegisterScreen(),
     );
   }
 }
