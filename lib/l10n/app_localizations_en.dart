@@ -33,6 +33,73 @@ class AppLocalizationsEn extends AppLocalizations {
   String get forgotPassword => 'Forgot password ?';
 
   @override
+  String get createAccount => 'Create Account';
+
+  @override
+  String get firstName => 'First Name';
+
+  @override
+  String get lastName => 'Last Name';
+
+  @override
+  String get enterFirstName => 'Enter your first name';
+
+  @override
+  String get enterLastName => 'Enter your last name';
+
+  @override
+  String get phone => 'Phone Number';
+
+  @override
+  String get enterPhone => 'Enter Phone Number';
+
+  @override
+  String get confirmPassword => 'Confirm Password';
+
+  @override
+  String get profilePicture => 'Profile Picture (Optional)';
+
+  @override
+  String get chooseOtpMethod => 'Choose OTP Method';
+
+  @override
+  String get viaEmail => 'Via Email';
+
+  @override
+  String get viaPhone => 'Via Phone';
+
+  @override
+  String get next => 'Next';
+
+  @override
+  String get register => 'Register';
+
+  @override
+  String get back => 'Back';
+
+  @override
+  String get getStarted => 'Get Started';
+
+  @override
+  String get termsText => 'By continuing, you agree to our Terms & Conditions and Privacy Policy';
+
+  @override
+  String get onboardingTitle1 => 'Your Home, Your Gym';
+
+  @override
+  String get onboardingDesc1 => 'Access ready-made workout plans and a wide range of training videos.';
+
+  @override
+  String get onboardingTitle2 => 'Your Personal Coach';
+
+  @override
+  String get onboardingDesc2 => 'Chat with your coach and improve faster. Expert guidance is always available.';
+
+  @override
+  String get onboardingTitle3 => 'Smart Nutrition Plans';
+
+  @override
+  String get onboardingDesc3 => 'Track your nutrition and improve your daily habits.';
   String get progress => 'Progress';
 
   @override
