@@ -11,7 +11,7 @@
   "sendCode": "Send Code",
   "resendCode": "Resend Code",
   "otpTitle": "Verification",
-  "otpSubtitle": "Please enter the 4-digit code sent to your email or phone number",
+  "otpSubtitle": "Please enter the 6-digit code sent to your email or phone number",
   "verify": "Verify",
   "resetPasswordTitle": "Reset Password",
   "newPassword": "New Password",
@@ -23,8 +23,10 @@
   "workouts":"Workouts",
   "settings":"Settings",
   "dontHaveAccount": "Don't have an account ?",
-  "signUp": "Sign up"
-}
+  "signUp": "Sign up",
+  "fieldRequired": "This field  is required",
+  "passwordTooShort": "Password must be over 8 digits",
+
   "completeProfileInfo":"Complete Profile Information",
   "weight":"Weight",
   "length":"Length",
@@ -46,8 +48,7 @@
   "handCircumference": "Hand",
   "startingTheSportsJourney":"Starting the sports journey",
     "measuermentsHint":"These measurements help us provide a more accurate analysis of your physical progress.",
-    "saving":"Saving...."
-  "settings":"Settings"
+    "saving":"Saving....",
   "createAccount": "Create Account",
   "firstName": "First Name",
   "lastName": "Last Name",
@@ -56,12 +57,10 @@
 
   "phone": "Phone Number",
   "enterPhone":"Enter Phone Number",
-  "confirmPassword": "Confirm Password",
   "profilePicture": "Profile Picture (Optional)",
   "chooseOtpMethod": "Choose OTP Method",
   "viaEmail": "Via Email",
   "viaPhone": "Via Phone",
-  "next": "Next",
   "register": "Register",
   "back": "Back",
   "getStarted":"Get Started",

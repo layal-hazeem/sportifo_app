@@ -1,6 +1,6 @@
 class ApiConstants {
   // هاد الرابط بتعدليه بس الباك يعطوكي الـ Base URL تبعهم
-  static const String baseUrl = "http://127.0.0.1:8000/api/app/";
+  static const String baseUrl = "http://192.168.1.111:8000/api/app/";
 
   // هدول بتعدليهم حسب الـ Documentation اللي رح توصلك
   static const String register = "register";
