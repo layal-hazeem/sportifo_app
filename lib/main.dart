@@ -28,7 +28,6 @@ class MyApp extends StatelessWidget {
           AppRoutes.splash: (context) => const SplashScreen(),
           AppRoutes.onboarding: (context) => const OnboardingScreen(),
           AppRoutes.register: (context) => const RegisterScreen(),
-
           AppRoutes.login: (context) => const LoginScreen(),
         },
       localizationsDelegates: const [
