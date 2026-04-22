@@ -4,6 +4,8 @@ import '../models/login/login_request.dart';
 import '../models/login/reset_password_request.dart';
 
 
+import '../models/login/verify_otp_request.dart';
+import '../models/register/register_request_model.dart';
 import '../models/register/register_response_model.dart';
 import '../web_services/auth_webService.dart';
 

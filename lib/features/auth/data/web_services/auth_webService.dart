@@ -29,6 +29,8 @@ class AuthWebService {
     return await dio.post(ApiConstants.resetPassword, data: body.toJson());
 // أضيفي هنا دوال الـ OTP و Reset Password بنفس الطريقة
 
+
+}
   Future<Response> register(FormData formData) async {
     return await dio.post(ApiConstants.register, data: formData);
   }
