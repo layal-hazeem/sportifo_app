@@ -1,5 +1,5 @@
-import '../models/auth_response.dart';
-import '../models/login_request_body.dart';
+import '../models/login/login_response.dart';
+import '../models/login/login_request.dart';
 import '../web_services/AuthWebService.dart';
 
 class AuthRepository {

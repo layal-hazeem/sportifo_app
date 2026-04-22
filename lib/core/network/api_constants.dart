@@ -1,10 +1,11 @@
 class ApiConstants {
   // هاد الرابط بتعدليه بس الباك يعطوكي الـ Base URL تبعهم
-  static const String baseUrl = "https://sportifo-api.com/api/";
+  static const String baseUrl = "http://127.0.0.1:8000/api/app/";
 
   // هدول بتعدليهم حسب الـ Documentation اللي رح توصلك
-  static const String login = "auth/login";
-  static const String forgotPassword = "auth/forgot-password";
-  static const String verifyOtp = "auth/verify-otp";
-  static const String resetPassword = "auth/reset-password";
+  static const String register = "register";
+  static const String login = "login";
+  static const String forgotPassword = "forgot-password";
+  static const String verifyOtp = "verify-otp";
+  static const String resetPassword = "reset-password";
 }

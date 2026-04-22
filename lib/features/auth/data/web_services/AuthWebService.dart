@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import '../../../../core/network/api_constants.dart';
-import '../models/login_request_body.dart';
+import '../models/login/login_request.dart';
 
 class AuthWebService {
   final Dio dio;

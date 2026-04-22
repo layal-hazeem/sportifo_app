@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../data/models/login_request_body.dart';
+import '../../../data/models/login/login_request.dart';
 import '../../../data/repository/AuthRepository.dart';
 import 'login_state.dart';
 
