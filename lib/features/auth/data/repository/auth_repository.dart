@@ -1,6 +1,6 @@
 import '../models/login/login_response.dart';
 import '../models/login/login_request.dart';
-import '../web_services/AuthWebService.dart';
+import '../web_services/auth_webService.dart';
 
 class AuthRepository {
   final AuthWebService _authWebService;

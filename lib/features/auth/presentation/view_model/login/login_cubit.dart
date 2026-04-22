@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../data/models/login/login_request.dart';
-import '../../../data/repository/AuthRepository.dart';
+import '../../../data/repository/auth_repository.dart';
 import 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
