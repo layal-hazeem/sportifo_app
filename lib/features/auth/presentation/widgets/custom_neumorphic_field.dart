@@ -6,8 +6,11 @@ class CustomNeumorphicField extends StatelessWidget {
   final String hint;
   final IconData icon;
   final bool isPassword;
-  final Function(String)? onChanged; 
-  final TextInputType? keyboardType; 
+  final Function(String)? onChanged;
+  final TextInputType? keyboardType;
+  // 1. أضيفي الـ controller والـ validator
+  final TextEditingController? controller;
+  final String? Function(String?)? validator;
 
   const CustomNeumorphicField({
     super.key,
@@ -16,6 +19,8 @@ class CustomNeumorphicField extends StatelessWidget {
     this.isPassword = false,
     this.onChanged,
     this.keyboardType,
+    this.controller, // 2. تمرير الـ controller
+    this.validator,  // 3. تمرير الـ validator
   });
 
   @override
@@ -28,8 +33,11 @@ class CustomNeumorphicField extends StatelessWidget {
         ),
         color: AppColors.background,
       ),
-      child: TextField(
-        onChanged: onChanged, 
+      // 4. تغيير TextField إلى TextFormField
+      child: TextFormField(
+        controller: controller,
+        validator: validator, // 5. ربط الـ validator
+        onChanged: onChanged,
         keyboardType: keyboardType,
         obscureText: isPassword,
         decoration: InputDecoration(
@@ -44,6 +52,8 @@ class CustomNeumorphicField extends StatelessWidget {
             horizontal: 20,
             vertical: 15,
           ),
+          // 6. إضافة تنسيق لرسالة الخطأ لضمان ظهورها بشكل جميل
+          errorStyle: const TextStyle(fontSize: 12, height: 0.8),
         ),
       ),
     );
