@@ -45,7 +45,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get otpTitle => 'التحقق من الرمز';
 
   @override
-  String get otpSubtitle => 'يرجى إدخال الرمز المكون من 4 أرقام والمرسل إلى بريدك الإلكتروني أو رقم هاتفك';
+  String get otpSubtitle => 'يرجى إدخال الرمز المكون من 6 أرقام والمرسل إلى بريدك الإلكتروني أو رقم هاتفك';
 
   @override
   String get verify => 'تأكيد';
@@ -63,71 +63,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get updatePassword => 'تحديث كلمة السر';
 
   @override
-  String get createAccount => 'إنشاء حساب';
-
-  @override
-  String get firstName => 'الاسم الأول';
-
-  @override
-  String get lastName => 'الاسم الأخير';
-
-  @override
-  String get enterFirstName => 'أدخل الاسم الأول';
-
-  @override
-  String get enterLastName => 'أدخل الاسم الأخير';
-
-  @override
-  String get phone => 'رقم الهاتف';
-
-  @override
-  String get enterPhone => 'أدخل رقم الهاتف';
-
-
-  @override
-  String get profilePicture => 'الصورة الشخصية (اختياري)';
-
-  @override
-  String get chooseOtpMethod => 'اختر طريقة التحقق';
-
-  @override
-  String get viaEmail => 'عبر البريد الإلكتروني';
-
-  @override
-  String get viaPhone => 'عبر الهاتف';
-
-  @override
-  String get next => 'التالي';
-
-  @override
-  String get register => 'تسجيل';
-
-  @override
-  String get back => 'رجوع';
-
-  @override
-  String get getStarted => 'إبدأ';
-
-  @override
-  String get termsText => 'بالمتابعة, أنت توافق على الشروط والأحكام وسياسة الخصوصية';
-
-  @override
-  String get onboardingTitle1 => 'بيتك هو ناديك';
-
-  @override
-  String get onboardingDesc1 => 'استمتع بخطط تمارين جاهزة ومجموعة كبيرة من الفيديوهات التعليمية.';
-
-  @override
-  String get onboardingTitle2 => 'مدربك الشخصي';
-
-  @override
-  String get onboardingDesc2 => 'تواصل مع مدربك وطور مستواك بسرعة. الخبرة بين يديك.';
-
-  @override
-  String get onboardingTitle3 => 'خطط تغذية ذكية';
-
-  @override
-  String get onboardingDesc3 => 'تابع نظامك الغذائي وحسّن عاداتك اليومية.';
   String get progress => 'تقدم';
 
   @override
@@ -147,6 +82,14 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get signUp => 'إنشاء حساب';
+
+  @override
+  String get fieldRequired => 'هذا الحقل مطلوب';
+
+  @override
+  String get passwordTooShort => 'كلمة السر يجب أن تكون فوق 8 محارف';
+
+  @override
   String get completeProfileInfo => 'إكمال معلومات الملف الشخصي';
 
   @override
@@ -167,6 +110,8 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get female => 'انثى';
 
+  @override
+  String get next => 'التالي';
 
   @override
   String get skip => 'تخطى';
@@ -209,4 +154,67 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get saving => 'جاري الحفظ ....';
+
+  @override
+  String get createAccount => 'إنشاء حساب';
+
+  @override
+  String get firstName => 'الاسم الأول';
+
+  @override
+  String get lastName => 'الاسم الأخير';
+
+  @override
+  String get enterFirstName => 'أدخل الاسم الأول';
+
+  @override
+  String get enterLastName => 'أدخل الاسم الأخير';
+
+  @override
+  String get phone => 'رقم الهاتف';
+
+  @override
+  String get enterPhone => 'أدخل رقم الهاتف';
+
+  @override
+  String get profilePicture => 'الصورة الشخصية (اختياري)';
+
+  @override
+  String get chooseOtpMethod => 'اختر طريقة التحقق';
+
+  @override
+  String get viaEmail => 'عبر البريد الإلكتروني';
+
+  @override
+  String get viaPhone => 'عبر الهاتف';
+
+  @override
+  String get register => 'تسجيل';
+
+  @override
+  String get back => 'رجوع';
+
+  @override
+  String get getStarted => 'إبدأ';
+
+  @override
+  String get termsText => 'بالمتابعة, أنت توافق على الشروط والأحكام وسياسة الخصوصية';
+
+  @override
+  String get onboardingTitle1 => 'بيتك هو ناديك';
+
+  @override
+  String get onboardingDesc1 => 'استمتع بخطط تمارين جاهزة ومجموعة كبيرة من الفيديوهات التعليمية.';
+
+  @override
+  String get onboardingTitle2 => 'مدربك الشخصي';
+
+  @override
+  String get onboardingDesc2 => 'تواصل مع مدربك وطور مستواك بسرعة. الخبرة بين يديك.';
+
+  @override
+  String get onboardingTitle3 => 'خطط تغذية ذكية';
+
+  @override
+  String get onboardingDesc3 => 'تابع نظامك الغذائي وحسّن عاداتك اليومية.';
 }

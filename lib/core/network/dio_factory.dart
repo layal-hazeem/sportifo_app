@@ -1,40 +1,68 @@
 import 'package:dio/dio.dart';
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+import 'api_constants.dart';
 
 class DioFactory {
-  // منع إنشاء نسخة من الكلاس (Private Constructor)
-  DioFactory._();
+  late final Dio _dio;
 
-  static Dio? dio;
-
-  static Dio getDio() {
-    Duration timeout = const Duration(seconds: 30);
-
-    if (dio == null) {
-      dio = Dio();
-      dio!
-        ..options.connectTimeout = timeout
-        ..options.receiveTimeout = timeout
-        ..options.baseUrl = "https://sportifo-api.com/api/"; // Base URL المبدئي
-
-      addDioInterceptor();
-      return dio!;
-    } else {
-      return dio!;
-    }
-  }
-
-  static void addDioInterceptor() {
-    // هاد بيطبعلك كل شي بيصير بالـ API بقلب الـ Terminal بشكل مرتب
-    dio?.interceptors.add(
-      PrettyDioLogger(
-        requestHeader: true,
-        requestBody: true,
-        responseBody: true,
-        responseHeader: false,
-        error: true,
-        compact: true,
+  // Constructor
+  DioFactory() {
+    _dio = Dio(
+      BaseOptions(
+        baseUrl: ApiConstants.baseUrl,
+        // تحديد وقت الانتظار الأقصى للاتصال بالسيرفر (مثلاً 10 ثوانٍ)
+        connectTimeout: const Duration(seconds: 10),
+        // تحديد وقت الانتظار الأقصى لاستلام الرد من السيرفر
+        receiveTimeout: const Duration(seconds: 10),
+        // Headers الافتراضية
+        headers: {
+          'Accept': 'application/json',
+          // إذا كان الباك إند يتطلب لغة معينة
+          'Accept-Language': 'ar',
+        },
       ),
     );
+
+    // إضافة Interceptors (الوسطاء)
+    // وظيفتهم مراقبة وتعديل أي طلب يخرج أو رد يدخل
+    _dio.interceptors.add(
+      InterceptorsWrapper(
+        // قبل خروج أي طلب
+        onRequest: (options, handler) async {
+          // هنا لاحقاً سنقوم بجلب الـ Token من الـ LocalStorage وإضافته للـ Header
+          // String? token = await LocalStorage.getToken();
+          // if (token != null) {
+          //   options.headers['Authorization'] = 'Bearer $token';
+          // }
+          return handler.next(options); // أكمل إرسال الطلب
+        },
+        // عند استلام رد ناجح
+        onResponse: (response, handler) {
+          return handler.next(response); // أكمل دورة الرد
+        },
+        // عند حدوث خطأ
+        onError: (DioException e, handler) {
+          // هنا يمكنك معالجة أخطاء معينة بشكل عام
+          // مثلاً: إذا كان الخطأ 401 (غير مصرح)، يمكنك تسجيل خروج المستخدم تلقائياً
+          if (e.response?.statusCode == 401) {
+            // توجيه المستخدم لصفحة تسجيل الدخول
+          }
+          return handler.next(e); // مرر الخطأ ليتم التقاطه في الـ Data Source
+        },
+      ),
+    );
+
+    // إضافة LogInterceptor مفيد جداً أثناء التطوير لرؤية الطلبات والردود في الـ Console
+    // احرص على إيقافه في نسخة الـ Production (release mode)
+    _dio.interceptors.add(LogInterceptor(
+      request: true,
+      requestHeader: true,
+      requestBody: true,
+      responseHeader: true,
+      responseBody: true,
+      error: true,
+    ));
   }
+
+  // دالة تُعيد نسخة הـ Dio الجاهزة
+  Dio get dio => _dio;
 }

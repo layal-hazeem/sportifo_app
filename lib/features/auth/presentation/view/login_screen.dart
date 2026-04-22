@@ -1,13 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../data/models/login/login_request.dart';
+import '../../data/models/login/login_response.dart';
+import '../view_model/login/login_cubit.dart';
+import '../view_model/login/login_state.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_neumorphic_field.dart';
 import 'forgot_password_screen.dart';
+import 'otp_screen.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  // 1. تعريف الـ Controllers والمفتاح
+  final loginController = TextEditingController();
+  final passwordController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -15,104 +31,154 @@ class LoginScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: SizedBox.expand(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: AppSizes.mainPadding),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 80),
+      // 2. استخدام BlocListener لمراقبة الحالة وتغيير الشاشات
+      body: BlocListener<LoginCubit, LoginState>(
+        // ... بداخل الـ BlocListener في LoginScreen
+        listener: (context, state) {
+          if (state is LoginLoading) {
+            // 1. إظهار Dialog تحميل عشان المستخدم يعرف إنو التطبيق عم يشتغل
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) => const Center(child: CircularProgressIndicator()),
+            );
+          } else if (state is LoginSuccess<LoginResponse>) {
+            Navigator.pop(context); // إغلاق الـ Loading Dialog
 
-                Center(
-                  child: Text(
-                    l10n.welcomeBack,
-                    style: const TextStyle(
-                        fontSize: AppSizes.titleFontSize,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.textDark
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 80),
-
-                Text(l10n.emailOrPhone, style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: AppSizes.labelFontSize,
-                )),
-                const SizedBox(height: 15),
-                CustomNeumorphicField(
-                    hint: l10n.emailHint,
-                    icon: Icons.email_outlined
-                ),
-
-                const SizedBox(height: 35),
-
-                Text(l10n.password,  style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: AppSizes.labelFontSize,
-                )),
-                const SizedBox(height: 15),
-                CustomNeumorphicField(
-                  hint: l10n.passwordHint,
-                  icon: Icons.visibility_off_outlined,
-                  isPassword: true,
-                ),
-
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const ForgotPasswordScreen()),
-                      );
-                    },
-                    child: Text(
-                        l10n.forgotPassword,
-                        style: const TextStyle(color: AppColors.linkColor, fontSize: AppSizes.mediumFontSize)
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 35),
-
-                CustomAuthButton(
-                  text: l10n.login,
-                  onPressed: () {
-                    // هي لاحقاً مشان اربط الواجهة مع ال view model اللي هيي ال bloc
-                  },
-                ),
-                const SizedBox(height: 30),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+            // 2. التحقق من الرسالة القادمة من السيرفر
+            if (state.data.message == 200) {
+              if (state.data.data != null && state.data.data!.contains("OTP")) {
+                // نجح الطلب بس محتاج تفعيل (نروح للـ OTP)
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => OTPScreen(loginEmail: loginController.text.trim())),
+                );
+              } else {
+                // نجح الدخول المباشر (نروح للهوم)
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Login Successful!"), backgroundColor: Colors.green),
+                );
+                // Navigator.pushReplacementNamed(context, AppRoutes.home); // وجهيه للهوم
+              }
+            }
+          } else if (state is LoginError) {
+            Navigator.pop(context); // إغلاق الـ Loading Dialog
+            // 3. إظهار رسالة الخطأ للمستخدم
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.error), backgroundColor: Colors.red),
+            );
+          }
+        },
+        child: SafeArea(
+          child: SizedBox.expand(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.mainPadding),
+              child: Form(
+                key: formKey, // 3. ربط الفورم
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      l10n.dontHaveAccount,
-                      style: const TextStyle(color: AppColors.textDark, fontSize: AppSizes.hintFontSize),
+                    const SizedBox(height: 80),
+                    Center(
+                      child: Text(l10n.welcomeBack,
+                          style: const TextStyle(
+                              fontSize: AppSizes.titleFontSize,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textDark)),
                     ),
-                    TextButton(
-                      onPressed: () {
-                        //  Sign Up لاحقاً
-                      },
-                      child: Text(
-                        l10n.signUp,
+                    const SizedBox(height: 80),
+                    Text(l10n.emailOrPhone,
                         style: const TextStyle(
-                          color: AppColors.primaryBtn,
-                          fontWeight: FontWeight.bold,
-                          fontSize: AppSizes.mediumFontSize,
-                        ),
+                            fontWeight: FontWeight.bold,
+                            fontSize: AppSizes.labelFontSize)),
+                    const SizedBox(height: 15),
+                    CustomNeumorphicField(
+                      controller: loginController,
+                      hint: l10n.emailHint,
+                      icon: Icons.email_outlined,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) return l10n.fieldRequired;
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 35),
+                    Text(l10n.password,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: AppSizes.labelFontSize)),
+                    const SizedBox(height: 15),
+                    CustomNeumorphicField(
+                      controller: passwordController,
+                      hint: l10n.passwordHint,
+                      icon: Icons.visibility_off_outlined,
+                      isPassword: true,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) return l10n.fieldRequired;
+                        if (value.length < 8) return l10n.passwordTooShort;
+                        return null;
+                      },
+                    ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const ForgotPasswordScreen()));
+                        },
+                        child: Text(l10n.forgotPassword,
+                            style: const TextStyle(color: AppColors.linkColor, fontSize: AppSizes.mediumFontSize)),
                       ),
                     ),
-                  ],
+                    const SizedBox(height: 35),
+                    CustomAuthButton(
+                      text: l10n.login,
+                      onPressed: () {
+                        // 4. تنفيذ الـ Validation قبل الإرسال
+                        if (formKey.currentState!.validate()) {
+                          context.read<LoginCubit>().emitLoginStates(
+                            LoginRequest(
+                              login: loginController.text.trim(),
+                              password: passwordController.text,
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 30),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          l10n.dontHaveAccount,
+                          style: const TextStyle(color: AppColors.textDark, fontSize: AppSizes.hintFontSize),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            //  Sign Up لاحقاً
+                          },
+                          child: Text(
+                            l10n.signUp,
+                            style: const TextStyle(
+                              color: AppColors.primaryBtn,
+                              fontWeight: FontWeight.bold,
+                              fontSize: AppSizes.mediumFontSize,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    loginController.dispose();
+    passwordController.dispose();
+    super.dispose();
   }
 }
