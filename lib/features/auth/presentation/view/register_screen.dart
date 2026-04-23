@@ -202,11 +202,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       ),
                                       TextButton(
                                         onPressed: () {
-                                          _controller.animateToPage(
-                                            1,
-                                            duration: const Duration(milliseconds: 300),
-                                            curve: Curves.easeIn,
-                                          );
+                                       Navigator.pushReplacementNamed(context, AppRoutes.login);
+
                                         },
                                         child: Text(
                                           l10n.login,
