@@ -41,7 +41,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
             );
           } else if (state is LoginError) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.error), backgroundColor: Colors.red),
+              SnackBar(content: Text(state.message), backgroundColor: Colors.red),
             );
           }
         },
@@ -85,8 +85,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                       if (formKey.currentState!.validate()) {
                         context.read<LoginCubit>().emitResetPasswordStates(
                           ResetPasswordRequestBody(
-                            login: widget.email,
-                            code: widget.otpCode,
                             password: passwordController.text,
                             passwordConfirmation: confirmPasswordController.text,
                           ),

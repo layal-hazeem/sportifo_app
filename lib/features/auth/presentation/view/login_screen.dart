@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
+import '../../../../core/storage/local_storage.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../home/presentation/view/home_page.dart';
 import '../../data/models/login/login_request.dart';
-import '../../data/models/login/login_response.dart';
 import '../view_model/login/login_cubit.dart';
 import '../view_model/login/login_state.dart';
 import '../widgets/custom_button.dart';
@@ -20,7 +21,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // 1. تعريف الـ Controllers والمفتاح
   final loginController = TextEditingController();
   final passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
@@ -34,41 +34,58 @@ class _LoginScreenState extends State<LoginScreen> {
       // 2. استخدام BlocListener لمراقبة الحالة وتغيير الشاشات
       body: BlocListener<LoginCubit, LoginState>(
         // ... بداخل الـ BlocListener في LoginScreen
-        listener: (context, state) {
-          if (state is LoginLoading) {
-            // 1. إظهار Dialog تحميل عشان المستخدم يعرف إنو التطبيق عم يشتغل
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (context) => const Center(child: CircularProgressIndicator()),
-            );
-          } else if (state is LoginSuccess<LoginResponse>) {
-            Navigator.pop(context); // إغلاق الـ Loading Dialog
-
-            // 2. التحقق من الرسالة القادمة من السيرفر
-            if (state.data.message == 200) {
-              if (state.data.data != null && state.data.data!.contains("OTP")) {
-                // نجح الطلب بس محتاج تفعيل (نروح للـ OTP)
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => OTPScreen(loginEmail: loginController.text.trim())),
-                );
-              } else {
-                // نجح الدخول المباشر (نروح للهوم)
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Login Successful!"), backgroundColor: Colors.green),
-                );
-                // Navigator.pushReplacementNamed(context, AppRoutes.home); // وجهيه للهوم
-              }
+          listener: (context, state) async {
+            if (state is LoginLoading) {
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (_) => const Center(child: CircularProgressIndicator()),
+              );
             }
-          } else if (state is LoginError) {
-            Navigator.pop(context); // إغلاق الـ Loading Dialog
-            // 3. إظهار رسالة الخطأ للمستخدم
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.error), backgroundColor: Colors.red),
-            );
-          }
-        },
+
+            else if (state is LoginSuccess) {
+              Navigator.pop(context);
+
+              final token = state.response.data!.token;
+
+              // 🔥 حفظ التوكن
+              await LocalStorage.saveToken(token);
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("Login Successful!"),
+                  backgroundColor: Colors.green,
+                ),
+              );
+
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (_) => const HomePage()),
+              );
+            }
+
+            else if (state is LoginNeedsOtp) {
+              Navigator.pop(context);
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => OTPScreen(loginEmail: state.login),
+                ),
+              );
+            }
+
+            else if (state is LoginError) {
+              Navigator.pop(context);
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          },
         child: SafeArea(
           child: SizedBox.expand(
             child: SingleChildScrollView(

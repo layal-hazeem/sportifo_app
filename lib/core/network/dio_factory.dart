@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import '../storage/local_storage.dart';
 import 'api_constants.dart';
 
 class DioFactory {
@@ -28,12 +29,13 @@ class DioFactory {
       InterceptorsWrapper(
         // قبل خروج أي طلب
         onRequest: (options, handler) async {
-          // هنا لاحقاً سنقوم بجلب الـ Token من الـ LocalStorage وإضافته للـ Header
-          // String? token = await LocalStorage.getToken();
-          // if (token != null) {
-          //   options.headers['Authorization'] = 'Bearer $token';
-          // }
-          return handler.next(options); // أكمل إرسال الطلب
+          final token = await LocalStorage.getToken();
+
+          if (token != null) {
+            options.headers['Authorization'] = 'Bearer $token';
+          }
+
+          return handler.next(options);
         },
         // عند استلام رد ناجح
         onResponse: (response, handler) {

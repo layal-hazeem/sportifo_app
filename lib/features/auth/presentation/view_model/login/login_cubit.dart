@@ -16,46 +16,81 @@ class LoginCubit extends Cubit<LoginState> {
   // الدالة التي ستستدعيها الواجهة عند الضغط على زر Login
   void emitLoginStates(LoginRequest loginRequestBody) async {
     emit(LoginLoading());
+
     try {
       final response = await _authRepository.login(loginRequestBody);
-      emit(LoginSuccess(response));
+      print("🔥 RESPONSE MESSAGE: ${response.message}");
+      print("🔥 RESPONSE DATA: ${response.data}");
+      print("🔥 IS NOT VERIFIED: ${response.isNotVerified}");
+      // 🟡 not verified
+      if (response.isNotVerified) {
+        emit(LoginNeedsOtp(loginRequestBody.login));
+      }
+
+      // 🟢 success
+      else if (response.data != null) {
+        emit(LoginSuccess(response));
+      }
+
+      // 🔴 error (مثل Invalid Credentials)
+      else {
+        emit(LoginError(response.message));
+      }
+
     } catch (error) {
-      // التقاط أي خطأ من Dio أو السيرفر
-      emit(LoginError(error: error.toString()));
+      emit(LoginError("Something went wrong"));
     }
   }
   void verifyOtp(VerifyOtpRequestBody body) async {
-    emit(LoginLoading());
+    emit(OtpLoading());
+
     try {
       final response = await _authRepository.verifyOtp(body);
-      emit(LoginSuccess<LoginResponse>(response)); // حددنا النوع هون
+
+      // ✅ نجاح (في token)
+      if (response.data != null) {
+        emit(OtpSuccess(response));
+      }
+      // ❌ خطأ (OTP غلط أو منتهي)
+      else {
+        emit(OtpError(response.message));
+      }
+
     } catch (error) {
-      emit(LoginError(error: error.toString()));
+      emit(OtpError("Invalid or expired OTP"));
     }
   }
 
   // دالة نسيان كلمة السر
 // داخل ForgotPasswordCubit
-  void emitForgotPasswordStates(String email) async {
-    emit(LoginLoading());
-    try {
-      final response = await _authRepository.forgotPassword(
-          ForgotPasswordRequestBody(login: email)
-      );
-      // حددي نوع البيانات المرجعة (LoginResponse)
-      emit(LoginSuccess<LoginResponse>(response));
-    } catch (error) {
-      emit(LoginError(error: error.toString()));
-    }
-  }
+//   void emitForgotPasswordStates(String email) async {
+//     emit(LoginLoading());
+//     try {
+//       final response = await _authRepository.forgotPassword(
+//           ForgotPasswordRequestBody(login: email)
+//       );
+//       emit(LoginSuccess<LoginResponse>(response));
+//     } catch (error) {
+//       emit(LoginError(error: error.toString()));
+//     }
+//   }
 
   void emitResetPasswordStates(ResetPasswordRequestBody body) async {
     emit(LoginLoading());
+
     try {
       final response = await _authRepository.resetPassword(body);
-      emit(LoginSuccess<LoginResponse>(response));
+
+      // ✅ نجاح (data null طبيعي)
+      if (response.message.contains("successfully")) {
+        emit(LoginSuccess(response));
+      } else {
+        emit(LoginError(response.message));
+      }
+
     } catch (error) {
-      emit(LoginError(error: error.toString()));
+      emit(LoginError("Something went wrong"));
     }
   }
+
 }
