@@ -40,11 +40,7 @@ class AuthRepository {
       // 1. نحول الموديل الذي جاء من الواجهة إلى FormData
       // نضع await لأن تحويل الصورة إلى ملف يأخذ أجزاء من الثانية
       final formData = await request.toFormData();
-
-      // 2. نرسل الـ FormData الجاهزة إلى الـ WebService
       final response = await _authWebService.register(formData);
-
-      // 3. نحول الرد القادم من السيرفر (JSON) إلى الموديل الخاص بنا
       return RegisterResponseModel.fromJson(response.data);
 
     } catch (e) {

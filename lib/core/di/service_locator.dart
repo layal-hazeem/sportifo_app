@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import '../../features/auth/data/repository/auth_repository.dart';
 import '../../features/auth/data/web_services/auth_webService.dart';
 import '../../features/auth/presentation/view_model/login/login_cubit.dart';
+import '../../features/auth/presentation/view_model/register/register_cubit.dart';
 import '../network/dio_factory.dart';
 
 final getIt = GetIt.instance;
@@ -18,4 +19,6 @@ void setupServiceLocator() {
   getIt.registerLazySingleton<AuthRepository>(() => AuthRepository(getIt<AuthWebService>()));
 
   getIt.registerFactory<LoginCubit>(() => LoginCubit(getIt<AuthRepository>()));
+
+  getIt.registerFactory<RegisterCubit>(() => RegisterCubit(getIt<AuthRepository>()));
 }

@@ -19,6 +19,9 @@ class DioFactory {
           // إذا كان الباك إند يتطلب لغة معينة
           'Accept-Language': 'ar',
         },
+          validateStatus: (status) {
+            return status != null && status < 500;
+          },
       ),
     );
 

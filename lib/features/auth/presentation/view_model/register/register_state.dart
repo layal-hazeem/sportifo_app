@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
 
 @immutable
-sealed class RegisterState {}
+sealed class RegisterState {
+  const RegisterState(); // إضافة const هنا
+}
 
-// 1. حالة البداية (الشكل الافتراضي للواجهة)
-final class RegisterInitial extends RegisterState {}
+final class RegisterInitial extends RegisterState {
+  const RegisterInitial();
+}
 
-// 2. حالة التحميل (عندما يضغط المستخدم على زر التسجيل وننتظر الـ API)
-final class RegisterLoading extends RegisterState {}
+final class RegisterLoading extends RegisterState {
+  const RegisterLoading();
+}
 
-// 3. حالة النجاح (تم إنشاء الحساب بنجاح)
-final class RegisterSuccess extends RegisterState {}
+final class RegisterSuccess extends RegisterState {
+  const RegisterSuccess();
+}
 
-// 4. حالة الفشل (في حال انقطاع النت أو إيميل مستخدم مسبقاً)
 final class RegisterFailure extends RegisterState {
   final String errorMessage;
 
-  RegisterFailure({required this.errorMessage});
+  const RegisterFailure({required this.errorMessage});
 }
