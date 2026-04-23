@@ -4,7 +4,6 @@ import '../models/login/forgot_password_request_body.dart';
 import '../models/login/login_request.dart';
 import '../models/login/reset_password_request.dart';
 import '../models/login/verify_otp_request.dart';
-import '../models/register/register_request_model.dart';
 
 class AuthWebService {
   final Dio dio;

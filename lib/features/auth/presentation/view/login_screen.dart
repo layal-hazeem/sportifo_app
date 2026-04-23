@@ -70,7 +70,10 @@ class _LoginScreenState extends State<LoginScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => OTPScreen(loginEmail: state.login),
+                  builder: (_) => BlocProvider.value(
+                    value: context.read<LoginCubit>(),
+                    child: OTPScreen(loginEmail: state.login),
+                  ),
                 ),
               );
             }
