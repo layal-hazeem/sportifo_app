@@ -9,7 +9,7 @@ class RegisterCubit extends Cubit<RegisterState> {
   final AuthRepository _authRepository;
 
   // حقن الـ Repository داخل الـ Constructor عند استدعاء الكيوبت
-  RegisterCubit(this._authRepository) : super(RegisterInitial());
+  RegisterCubit(this._authRepository) : super(const RegisterInitial());
 
   // الدالة التي سيتم استدعاؤها عند الضغط على زر التسجيل في الواجهة
   Future<void> registerUser({
@@ -24,7 +24,7 @@ class RegisterCubit extends Cubit<RegisterState> {
   }) async {
 
     // 1. إخبار الواجهة أننا بدأنا التحميل (لإظهار دائرة تحميل CircularProgressIndicator)
-    emit(RegisterLoading());
+    emit(const RegisterLoading());
 
     try {
       // 2. تجميع البيانات القادمة من الواجهة داخل الـ Request Model
@@ -41,11 +41,11 @@ class RegisterCubit extends Cubit<RegisterState> {
 
       // 3. إرسال الطلب للسيرفر عبر الـ Repository
       // الكيوبت هنا لا يهتم كيف سيتم الإرسال (JSON أم FormData)، الـ Repository يتكفل بذلك
-      final response = await _authRepository.register(request);
+      await _authRepository.register(request);
 
       // 4. إذا مر الكود من السطر السابق بدون أخطاء، فهذا يعني أن التسجيل نجح!
       // نخبر الواجهة بالنجاح (مثلاً للانتقال لشاشة الـ OTP)
-      emit(RegisterSuccess());
+      emit(const RegisterSuccess());
 
     } catch (e) {
       // 5. في حال حدوث أي خطأ (مثل إيميل مستخدم سابقاً، أو انقطاع النت)
