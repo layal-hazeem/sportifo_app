@@ -3,7 +3,7 @@ import '../../../../core/theme/app_colors.dart';
 
 class CustomAuthButton extends StatelessWidget {
   final String text;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   const CustomAuthButton({super.key, required this.text, required this.onPressed});
 

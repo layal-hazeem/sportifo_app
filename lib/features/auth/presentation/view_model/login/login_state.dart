@@ -1,20 +1,40 @@
+import '../../../data/models/login/login_response.dart';
+
 abstract class LoginState {}
 
-// 1. الحالة الابتدائية
 class LoginInitial extends LoginState {}
 
-// 2. حالة التحميل (وقت يضغط المستخدم Login وننتظر السيرفر)
 class LoginLoading extends LoginState {}
 
-// 3. حالة النجاح (البيانات وصلت تمام)
-// نستخدم الـ <T> لجعلها مرنة تستقبل أي Model يرجعه الباك إيند
-class LoginSuccess<T> extends LoginState {
-  final T data;
-  LoginSuccess(this.data);
+// ✅ نجاح + verified
+class LoginSuccess extends LoginState {
+  final LoginResponse response;
+  LoginSuccess(this.response);
 }
 
-// 4. حالة الخطأ (في حال فشل الاتصال أو خطأ بالبيانات)
+// ✅ لازم OTP
+class LoginNeedsOtp extends LoginState {
+  final String login;
+  LoginNeedsOtp(this.login);
+}
+
+// ❌ خطأ
 class LoginError extends LoginState {
-  final String error;
-  LoginError({required this.error});
+  final String message;
+  LoginError(this.message);
+}
+
+// OTP Loading
+class OtpLoading extends LoginState {}
+
+// OTP Success
+class OtpSuccess extends LoginState {
+  final LoginResponse response;
+  OtpSuccess(this.response);
+}
+
+// OTP Error
+class OtpError extends LoginState {
+  final String message;
+  OtpError(this.message);
 }

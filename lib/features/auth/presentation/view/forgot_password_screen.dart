@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../view_model/login/forgot_password_cubit.dart';
 import '../view_model/login/login_cubit.dart'; // أو ForgotPasswordCubit
 import '../view_model/login/login_state.dart';
 import '../widgets/auth_header.dart';
@@ -27,19 +28,22 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0, iconTheme: const IconThemeData(color: AppColors.textDark)),
-      body: BlocListener<LoginCubit, LoginState>( // تأكدي من نوع الـ Cubit المستخدم
+      body: BlocListener<ForgotPasswordCubit, LoginState>( // تأكدي من نوع الـ Cubit المستخدم
         listener: (context, state) {
           if (state is LoginSuccess) {
             // عند النجاح ننتقل للـ OTP ونمرر الإيميل
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => OTPScreen(loginEmail: emailController.text.trim()),
+                builder: (context) => OTPScreen(
+                  loginEmail: emailController.text.trim(),
+                  isFromForgotPassword: true,
+                ),
               ),
             );
           } else if (state is LoginError) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.error), backgroundColor: Colors.red),
+              SnackBar(content: Text(state.message), backgroundColor: Colors.red),
             );
           }
         },
@@ -73,7 +77,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
                         // استدعاء دالة إرسال الكود
-                        context.read<LoginCubit>().emitForgotPasswordStates(emailController.text.trim());
+                        context.read<ForgotPasswordCubit>().emitForgotPasswordStates(emailController.text.trim());
                       }
                     },
                   ),

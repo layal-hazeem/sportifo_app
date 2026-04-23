@@ -14,7 +14,7 @@ class ForgotPasswordCubit extends Cubit<LoginState> {
       final response = await _authRepository.forgotPassword(ForgotPasswordRequestBody(login: email));
       emit(LoginSuccess(response));
     } catch (error) {
-      emit(LoginError(error: error.toString()));
+      emit(LoginError(error.toString()));
     }
   }
 }
