@@ -54,7 +54,8 @@
   "lastName": "Last Name",
   "enterFirstName": "Enter your first name",
   "enterLastName": "Enter your last name",
-
+ "email":"Email",
+ "enterEmail":"Enter Email",
   "phone": "Phone Number",
   "enterPhone":"Enter Phone Number",
   "profilePicture": "Profile Picture (Optional)",

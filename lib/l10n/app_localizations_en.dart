@@ -171,6 +171,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enterLastName => 'Enter your last name';
 
   @override
+  String get email => 'Email';
+
+  @override
+  String get enterEmail => 'Enter Email';
+
+  @override
   String get phone => 'Phone Number';
 
   @override

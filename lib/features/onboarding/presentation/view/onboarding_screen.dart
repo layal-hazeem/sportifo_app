@@ -66,7 +66,8 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     final l10n = AppLocalizations.of(context)!;
     final pages = onboardingPages(l10n);
     return Scaffold(
-      backgroundColor: AppColors.background,      body: Stack(
+      backgroundColor: AppColors.background,
+      body: Stack(
         children: [
 
           PageView.builder(
@@ -105,7 +106,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                         borderRadius: BorderRadius.circular(AppSizes.borderRadius),
                         child: Image.asset(
                           page.image,
-                          height: 370,
+                          height: 260,
                           width: double.infinity,
                           fit: BoxFit.cover,
                         ),

@@ -10,10 +10,11 @@ class DioFactory {
     _dio = Dio(
       BaseOptions(
         baseUrl: ApiConstants.baseUrl,
-        // تحديد وقت الانتظار الأقصى للاتصال بالسيرفر (مثلاً 10 ثوانٍ)
-        connectTimeout: const Duration(seconds: 10),
+        receiveDataWhenStatusError: true,
+        // تحديد وقت الانتظار الأقصى للاتصال بالسيرفر
+        connectTimeout: const Duration(seconds: 20),
         // تحديد وقت الانتظار الأقصى لاستلام الرد من السيرفر
-        receiveTimeout: const Duration(seconds: 10),
+        receiveTimeout: const Duration(seconds: 20),
         // Headers الافتراضية
         headers: {
           'Accept': 'application/json',
