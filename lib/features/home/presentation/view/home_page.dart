@@ -20,7 +20,7 @@ class HomePage extends StatelessWidget {
         return Scaffold(
           appBar: CustomAppBar(
             currentIndex: homeViewModel.currentIndex,
-            userName: "كابتن", 
+            userName: "Unknown", 
           ),
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: homeViewModel.currentIndex,
