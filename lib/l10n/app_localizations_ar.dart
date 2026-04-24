@@ -171,6 +171,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get enterLastName => 'أدخل الاسم الأخير';
 
   @override
+  String get email => ' اليريد الإلكتروني';
+
+  @override
+  String get enterEmail => 'أدخل اليريد الإلكتروني';
+
+  @override
   String get phone => 'رقم الهاتف';
 
   @override

@@ -419,6 +419,18 @@ abstract class AppLocalizations {
   /// **'Enter your last name'**
   String get enterLastName;
 
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// No description provided for @enterEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Email'**
+  String get enterEmail;
+
   /// No description provided for @phone.
   ///
   /// In en, this message translates to:
