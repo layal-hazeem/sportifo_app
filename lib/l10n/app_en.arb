@@ -73,6 +73,7 @@
     "onboardingDesc2": "Chat with your coach and improve faster. Expert guidance is always available.",
 
     "onboardingTitle3": "Smart Nutrition Plans",
-    "onboardingDesc3": "Track your nutrition and improve your daily habits."
-
+    "onboardingDesc3": "Track your nutrition and improve your daily habits.",
+      "profile":"Profile",
+    "chat":"Chat"
 }

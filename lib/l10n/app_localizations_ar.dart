@@ -223,4 +223,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get onboardingDesc3 => 'تابع نظامك الغذائي وحسّن عاداتك اليومية.';
+
+  @override
+  String get profile => 'الملف الشخصي';
+
+  @override
+  String get chat => 'المحادثات';
 }

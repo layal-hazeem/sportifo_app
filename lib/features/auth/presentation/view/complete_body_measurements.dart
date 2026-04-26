@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
+import 'package:sportifo_app/core/di/service_locator.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
-import 'package:sportifo_app/features/auth/presentation/view_model/complete_profile_view_model.dart';
+import 'package:sportifo_app/features/auth/presentation/view_model/complete_profile/complete_profile_cubit.dart';
+import 'package:sportifo_app/features/auth/presentation/view_model/complete_profile/complete_profile_view_model.dart';
 import 'package:sportifo_app/features/auth/presentation/widgets/custom_button.dart';
 import 'package:sportifo_app/features/auth/presentation/widgets/custom_neumorphic_field.dart';
 import 'package:sportifo_app/features/home/presentation/view/home_page.dart';
@@ -40,9 +43,20 @@ class CompleteBodyMeasurementsView extends StatelessWidget {
           ),
         ],
       ),
-      body: ListenableBuilder(
-        listenable: viewModel,
-        builder: (context, child) {
+      body: BlocConsumer<CompleteProfileCubit, CompleteProfileState>(
+        listener: (context, state) {
+          if (state is CompleteProfileSuccess) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const HomePage()),
+            );
+          } else if (state is Error) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.message)));
+          }
+        },
+        builder: (context, state) {
           return SingleChildScrollView(
             padding: const EdgeInsets.all(20),
             child: Column(
@@ -78,7 +92,7 @@ class CompleteBodyMeasurementsView extends StatelessWidget {
                 _buildMeasurementRow(
                   label1: l10n.belly,
                   icon1: Icons.straighten,
-                  onChanged1: (v) => viewModel.belly = double.tryParse(v),
+                  onChanged1: (v) => viewModel.waist = double.tryParse(v),
                   label2: l10n.hipCircumference,
                   icon2: Icons.accessibility_new,
                   onChanged2: (v) =>
@@ -100,12 +114,20 @@ class CompleteBodyMeasurementsView extends StatelessWidget {
                 const SizedBox(height: 20),
 
                 CustomAuthButton(
-                  text: viewModel.isLoading
+                  text: state is CompleteProfileLoading
                       ? l10n.saving
                       : l10n.startingTheSportsJourney,
-                  onPressed: viewModel.isLoading
-                      ? () {}
-                      : () => viewModel.submitProfile(context),
+                  onPressed: () {
+                    if (!viewModel.isDataComplete) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(l10n.messageOfIncompleteInfo)),
+                      );
+                      return;
+                    }
+                    context.read<CompleteProfileCubit>().completeProfile(
+                      viewModel.toRequestModel(),
+                    );
+                  },
                 ),
               ],
             ),
