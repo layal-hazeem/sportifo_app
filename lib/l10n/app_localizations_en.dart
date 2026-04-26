@@ -223,4 +223,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboardingDesc3 => 'Track your nutrition and improve your daily habits.';
+
+  @override
+  String get profile => 'Profile';
+
+  @override
+  String get chat => 'Chat';
 }

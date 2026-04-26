@@ -9,4 +9,6 @@ class ApiConstants {
   static const String forgotPassword = "forgot-password";
   static const String verifyOtp = "verify-otp";
   static const String resetPassword = "reset-password";
+  static const String profile= "profile";
+  static const String editProfile = "edit";
 }

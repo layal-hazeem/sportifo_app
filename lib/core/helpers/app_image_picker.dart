@@ -22,6 +22,10 @@ class AppImagePicker {
     return null;
   }
 
+  static Future<File?> pickImageFromGallery() async {
+    return await _pickImage(ImageSource.gallery);
+  }
+
   // دالة إظهار الـ BottomSheet المشتركة (في التسجيل وإكمال البروفايل)
   static Future<File?> showImageSourceDialog(BuildContext context) async {
     File? selectedImage;

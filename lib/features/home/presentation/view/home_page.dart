@@ -3,12 +3,20 @@ import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/features/home/presentation/view_model/home_view_model.dart';
 import 'package:sportifo_app/features/home/presentation/widgets/custom_app_bar.dart';
 import 'package:sportifo_app/features/home/presentation/widgets/custom_bottom_nav_bar.dart';
+import 'package:sportifo_app/features/home/presentation/widgets/custom_drawer.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
 HomeViewModel homeViewModel = HomeViewModel();
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int selectedDrawerIndex = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +26,17 @@ class HomePage extends StatelessWidget {
       listenable: homeViewModel,
       builder: (context, child) {
         return Scaffold(
+          drawer: CustomDrawer(
+            selectedIndex: selectedDrawerIndex,
+            onItemTap: (index) {
+              setState(() {
+                selectedDrawerIndex = index;
+              });
+            },
+          ),
           appBar: CustomAppBar(
             currentIndex: homeViewModel.currentIndex,
-            userName: "Unknown", 
+            userName: "Unknown",
           ),
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: homeViewModel.currentIndex,
@@ -51,8 +67,8 @@ class HomePage extends StatelessWidget {
                 isSelected: homeViewModel.currentIndex == 3,
               ),
               CustomBottomNavBar.build(
-                icon: Icons.settings,
-                label: l10n.settings,
+                icon: Icons.chat,
+                label: l10n.chat,
                 isSelected: homeViewModel.currentIndex == 4,
               ),
             ],
