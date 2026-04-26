@@ -17,16 +17,14 @@ class RegisterScreen extends StatefulWidget {
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
-
-// Form keys for validation
+// مفاتيح التحقق للنماذج
 final _step1FormKey = GlobalKey<FormState>();
 final _step2FormKey = GlobalKey<FormState>();
-
 class _RegisterScreenState extends State<RegisterScreen> {
   final PageController _controller = PageController();
   int currentPage = 0;
 
-  // Text controllers
+  // Controllers
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -63,14 +61,43 @@ class _RegisterScreenState extends State<RegisterScreen> {
       }
     } else {
       if (_step2FormKey.currentState!.validate()) {
-        showOtpChoice();
+
+        // 🔥 الحل الذكي: فحص الحقول لمعرفة ما أدخله المستخدم
+        final bool hasEmail = _emailController.text.trim().isNotEmpty;
+        final bool hasPhone = _phoneController.text.trim().isNotEmpty;
+
+        if (hasEmail && !hasPhone) {
+          // أدخل إيميل فقط -> نرسل فوراً
+          _submitRegistration('email');
+        }
+        else if (!hasEmail && hasPhone) {
+          // أدخل هاتف فقط -> نرسل فوراً
+          _submitRegistration('phone');
+        }
+        else if (hasEmail && hasPhone) {
+          // أدخل الاثنين معاً -> نعرض له الخيارات
+          showOtpChoice();
+        }
+        else {
+          // احتياطياً في حال كان كلا الحقلين فارغين
+          // (رغم أن الفاليديشن يفترض أن يمنع ذلك)
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(AppLocalizations.of(context)!.messageOfIncompleteInfo ?? "Please provide an email or phone"),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
       }
     }
   }
 
-  // Send data to Cubit
-  void _submitRegistration(String otpMethod) {
-    Navigator.pop(context);
+  // method for send to the cubit
+  void _submitRegistration(String otpMethod, {bool fromBottomSheet = false}) {
+
+    if (fromBottomSheet) {
+      Navigator.pop(context);
+    }
 
     context.read<RegisterCubit>().registerUser(
       firstName: _firstNameController.text.trim(),
@@ -84,10 +111,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  // OTP method bottom sheet
   void showOtpChoice() {
     final l10n = AppLocalizations.of(context)!;
-
     showModalBottomSheet(
       context: context,
       backgroundColor: AppColors.background,
@@ -110,29 +135,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-
-              Text(
-                l10n.chooseOtpMethod,
+              Text(l10n.chooseOtpMethod,
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: AppColors.textDark,
                 ),
               ),
-
               const SizedBox(height: 20),
 
+              // 3. تعديل الـ onTap ليرسل البيانات بدلاً من الإغلاق فقط
               ListTile(
                 leading: const Icon(Icons.email_outlined),
                 title: Text(l10n.viaEmail),
                 onTap: () => _submitRegistration('email'),
               ),
-
               ListTile(
                 leading: const Icon(Icons.phone_outlined),
                 title: Text(l10n.viaPhone),
                 onTap: () => _submitRegistration('phone'),
               ),
+              const SizedBox(height: 10),
             ],
           ),
         );
@@ -146,25 +169,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-
+      // 4. تغليف الواجهة بـ BlocConsumer
       body: BlocConsumer<RegisterCubit, RegisterState>(
         listener: (context, state) {
           if (state is RegisterSuccess) {
+
             Navigator.pushReplacementNamed(
-              context,
-              AppRoutes.otpScreen,
+                context,
+                AppRoutes.otpScreen,
               arguments: _emailController.text.trim(),
             );
-          } else if (state is RegisterFailure) {
+          }
+          /// !!!
+          else if (state is RegisterFailure) {
+
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.errorMessage),
-                backgroundColor: Colors.red,
-              ),
+              SnackBar(content: Text(state.errorMessage), backgroundColor: Colors.red),
             );
           }
         },
-
         builder: (context, state) {
           return SafeArea(
             child: Stack(
@@ -174,18 +197,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   child: Column(
                     children: [
                       const SizedBox(height: 40),
-
                       Text(
                         l10n.createAccount,
                         style: const TextStyle(
-                          fontSize: AppSizes.titleFontSize,
+                          fontSize:  AppSizes.titleFontSize,
                           fontWeight: FontWeight.bold,
                           color: AppColors.textDark,
                         ),
                       ),
-
                       const SizedBox(height: 30),
 
+                      // Pages
                       Expanded(
                         child: PageView(
                           controller: _controller,
@@ -194,8 +216,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             setState(() => currentPage = index);
                           },
                           children: [
-
-                            /// STEP 1
+                            /// 🔥 STEP 1
                             SingleChildScrollView(
                               child: Form(
                                 key: _step1FormKey,
@@ -222,23 +243,66 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       l10n.enterEmail,
                                       Icons.email_outlined,
                                       controller: _emailController,
-                                      validator: (val) =>
-                                          AppValidators.validateEmail(val, message: "Required field"),
+                                      validator: (val) {
+                                        if (val!.trim().isEmpty &&
+                                            _phoneController.text.trim().isEmpty) {
+                                          return "Please enter email or phone";
+                                        }
+                                        return AppValidators.validateEmail(
+                                          val,
+                                          isRequired: false,
+                                          message: "",
+                                        );
+                                      },
                                     ),
                                     buildField(
                                       l10n.phone,
                                       l10n.enterPhone,
                                       Icons.phone_outlined,
                                       controller: _phoneController,
-                                      validator: (val) =>
-                                          AppValidators.validatePhone(val, message: "Required field"),
+                                      validator: (val) {
+                                        if (val!.trim().isEmpty &&
+                                            _emailController.text.trim().isEmpty) {
+                                          return "Please enter email or phone";
+                                        }
+                                        return AppValidators.validatePhone(
+                                          val,
+                                          isRequired: false,
+                                          message: "",
+                                        );
+                                      },
+                                    ),
+                                    const SizedBox(height: 30),
+
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          l10n.dontHaveAccount,
+                                          style: const TextStyle(
+                                            color: AppColors.textDark,
+                                            fontSize: AppSizes.hintFontSize,
+                                          ),
+                                        ),
+                                        TextButton(
+                                          onPressed: login,
+                                          child: Text(
+                                            l10n.login,
+                                            style: const TextStyle(
+                                              color: AppColors.primaryBtn,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: AppSizes.mediumFontSize,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
                               ),
                             ),
 
-                            /// STEP 2
+                            /// 🔥 STEP 2
                             SingleChildScrollView(
                               child: Form(
                                 key: _step2FormKey,
@@ -253,31 +317,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       validator: (val) =>
                                           AppValidators.validatePassword(val, message: "Required field"),
                                     ),
-
                                     buildField(
                                       l10n.confirmPassword,
                                       l10n.confirmPassword,
                                       Icons.visibility_off_outlined,
                                       isPassword: true,
                                       controller: _confirmPasswordController,
-                                      validator: (val) =>
-                                          AppValidators.validateConfirmPassword(
-                                            val,
-                                            _passwordController.text,
-                                            message: "Required field",
-                                          ),
+                                      validator: (val) => AppValidators.validateConfirmPassword(
+                                        val,
+                                        _passwordController.text,
+                                        message: "Required field",
+                                      ),
                                     ),
 
-                                    const SizedBox(height: 25),
+                                    const SizedBox(height: 20),
 
-                                    /// Profile Image (same style as CompleteProfile)
+                                    /// Profile Image
                                     Column(
                                       children: [
                                         Text(
                                           l10n.profilePicture,
                                           style: const TextStyle(fontWeight: FontWeight.bold),
                                         ),
-
                                         const SizedBox(height: 15),
 
                                         Stack(
@@ -296,7 +357,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                               )
                                                   : null,
                                             ),
-
                                             Positioned(
                                               bottom: 0,
                                               right: 0,
@@ -309,20 +369,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                                     size: 18,
                                                   ),
                                                   onPressed: () async {
-                                                    final File? pickedImage = await AppImagePicker
-                                                        .showImageSourceDialog(
-                                                        context);
+                                                    final File? pickedImage =
+                                                    await AppImagePicker.showImageSourceDialog(context);
 
-                                                    // إذا اختار صورة، نحدث المتغير ونعمل setState لكي تظهر الشاشة الصورة الجديدة
                                                     if (pickedImage != null) {
                                                       setState(() {
-                                                        _selectedProfilePic =
-                                                            pickedImage;
+                                                        _selectedProfilePic = pickedImage;
                                                       });
-                                                    };
-                                                  }
+                                                    }
+                                                  },
                                                 ),
-
                                               ),
                                             ),
                                           ],
@@ -337,32 +393,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                       ),
 
-                      const SizedBox(height: 10),
-
-                      Text(
-                        l10n.termsText,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: AppColors.hintText,
-                          fontSize: 13,
+                      /// 🔥 هاد لازم يكون جوّا الـ Column مو برا
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Text(
+                          l10n.termsText,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: AppColors.hintText,
+                            fontSize: 13,
+                          ),
                         ),
                       ),
 
                       const SizedBox(height: 20),
 
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primaryBtn,
-                          minimumSize: const Size(double.infinity, 50),
-                        ),
+                      CustomAuthButton(
+                        text: currentPage == 0 ? l10n.next : l10n.register,
                         onPressed: nextStep,
-                        child: Text(
-                          currentPage == 0 ? l10n.next : l10n.register,
-                          style: const TextStyle(color: Colors.white),
-                        ),
                       ),
 
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 20),
 
                       if (currentPage == 1)
                         TextButton(
@@ -372,19 +423,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               curve: Curves.easeInOut,
                             );
                           },
-                          child: Text(l10n.back),
+                          child: Text(
+                            l10n.back,
+                            style: const TextStyle(
+                              color: AppColors.primaryBtn,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
+
+                      const SizedBox(height: 10),
                     ],
                   ),
                 ),
 
+                // loading
                 if (state is RegisterLoading)
                   Container(
                     color: Colors.black.withValues(alpha: 0.3),
                     child: const Center(
-                      child: CircularProgressIndicator(
-                        color: AppColors.primaryBtn,
-                      ),
+                      child: CircularProgressIndicator(color: AppColors.primaryBtn),
                     ),
                   ),
               ],
@@ -401,21 +459,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
       IconData icon, {
         bool isPassword = false,
         required TextEditingController controller,
-        String? Function(String?)? validator,
+        String? Function(String?)? validator, // تمرير الفالديتور
       }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 20),
-        Text(label,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+        Text(label, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
         const SizedBox(height: 10),
         CustomNeumorphicField(
           hint: hint,
           icon: icon,
           isPassword: isPassword,
           controller: controller,
-          validator: validator,
+          validator: validator, // ربطه هنا
         ),
       ],
     );
