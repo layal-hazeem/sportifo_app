@@ -1,3 +1,5 @@
+import '../../../../core/network/api_error_handler.dart';
+import '../../../../core/network/api_result.dart';
 import '../models/login/forgot_password_request_body.dart';
 import '../models/login/login_response.dart';
 import '../models/login/login_request.dart';
@@ -35,17 +37,17 @@ class AuthRepository {
     return LoginResponse.fromJson(response.data);
   }
 
-  Future<RegisterResponseModel> register(RegisterRequestModel request) async {
+  Future<ApiResult<RegisterResponseModel>> register(RegisterRequestModel request) async {
     try {
-      // 1. نحول الموديل الذي جاء من الواجهة إلى FormData
-      // نضع await لأن تحويل الصورة إلى ملف يأخذ أجزاء من الثانية
       final formData = await request.toFormData();
       final response = await _authWebService.register(formData);
-      return RegisterResponseModel.fromJson(response.data);
+
+      // 🔥 في حال النجاح نغلف الرد بـ Success
+      return Success(RegisterResponseModel.fromJson(response.data));
 
     } catch (e) {
-      // نرمي الخطأ لكي يلتقطه الـ Cubit ويظهره للمستخدم
-      rethrow;
+      // 🔥 في حال الفشل نمرر الخطأ للـ Handler ليصطاده ونغلفه بـ Failure
+      return Failure(ApiErrorHandler.handle(e));
     }
   }
 }

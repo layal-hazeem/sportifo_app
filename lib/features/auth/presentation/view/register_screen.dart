@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/helpers/app_image_picker.dart';
+import '../../../../core/helpers/app_snackbar.dart';
 import '../../../../core/helpers/app_validators.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -51,6 +52,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   // Go to next step or OTP selection
+// لا تنسي عمل import للكلاس المساعد في أعلى الملف إذا لم تفعليه بعد:
+// import '../../../../core/helpers/app_snackbar.dart';
+
   void nextStep() {
     if (currentPage == 0) {
       if (_step1FormKey.currentState!.validate()) {
@@ -79,13 +83,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
           showOtpChoice();
         }
         else {
-          // احتياطياً في حال كان كلا الحقلين فارغين
-          // (رغم أن الفاليديشن يفترض أن يمنع ذلك)
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(AppLocalizations.of(context)!.messageOfIncompleteInfo ?? "Please provide an email or phone"),
-              backgroundColor: Colors.red,
-            ),
+          // 🔥 التعديل هنا: استخدام السناك بار الموحد والأنيق
+          AppSnackBar.show(
+            context,
+            message: AppLocalizations.of(context)?.messageOfIncompleteInfo ?? "Please provide an email or phone",
+            isError: true,
           );
         }
       }
@@ -171,23 +173,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
       backgroundColor: AppColors.background,
       // 4. تغليف الواجهة بـ BlocConsumer
       body: BlocConsumer<RegisterCubit, RegisterState>(
-        listener: (context, state) {
-          if (state is RegisterSuccess) {
-
-            Navigator.pushReplacementNamed(
+          listener: (context, state) {
+            if (state is RegisterSuccess) {
+              Navigator.pushReplacementNamed(
                 context,
                 AppRoutes.otpScreen,
-              arguments: _emailController.text.trim(),
-            );
-          }
-          /// !!!
-          else if (state is RegisterFailure) {
+                arguments: _emailController.text.trim(),
+              );
+            }
+            else if (state is RegisterFailure) {
 
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.errorMessage), backgroundColor: Colors.red),
-            );
-          }
-        },
+              // 🔥 سكري أي BottomSheet مفتوح
+              Navigator.of(context, rootNavigator: true).pop();
+
+              // 🔥 بعدها اعرضي السناك بار
+              AppSnackBar.show(
+                context,
+                message: state.errorMessage,
+                isError: true,
+              );
+            }
+          },
         builder: (context, state) {
           return SafeArea(
             child: Stack(
