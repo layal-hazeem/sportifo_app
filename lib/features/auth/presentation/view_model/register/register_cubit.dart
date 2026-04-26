@@ -1,11 +1,12 @@
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../data/models/register/register_request_model.dart';
 import '../../../data/repository/auth_repository.dart';
 import 'register_state.dart';
 
 class RegisterCubit extends Cubit<RegisterState> {
-  // تعريف الـ Repository كمتغير لا يمكن تغييره
+
   final AuthRepository _authRepository;
 
   // حقن الـ Repository داخل الـ Constructor عند استدعاء الكيوبت
@@ -22,7 +23,6 @@ class RegisterCubit extends Cubit<RegisterState> {
     required String otpMethod,
     File? profilePic, // اختياري لأن المستخدم قد لا يرفع صورة
   }) async {
-
     // 1. إخبار الواجهة أننا بدأنا التحميل (لإظهار دائرة تحميل CircularProgressIndicator)
     emit(const RegisterLoading());
 
@@ -46,11 +46,19 @@ class RegisterCubit extends Cubit<RegisterState> {
       // 4. إذا مر الكود من السطر السابق بدون أخطاء، فهذا يعني أن التسجيل نجح!
       // نخبر الواجهة بالنجاح (مثلاً للانتقال لشاشة الـ OTP)
       emit(const RegisterSuccess());
-
     } catch (e) {
-      // 5. في حال حدوث أي خطأ (مثل إيميل مستخدم سابقاً، أو انقطاع النت)
-      // نلتقط الخطأ ونرسله للواجهة كرسالة نصية لتعرضه للمستخدم في SnackBar
-      emit(RegisterFailure(errorMessage: e.toString()));
+      String errorMessage = "Something went wrong. Please try again."; // رسالة افتراضية
+
+      // 🔥 سحب رسالة الخطأ القادمة من الباك إند (Laravel)
+      if (e is DioException && e.response != null) {
+        if (e.response?.data is Map) {
+          // جلب رسالة الخطأ من السيرفر وعرضها للمستخدم
+          errorMessage =
+              e.response?.data['message']?.toString() ?? errorMessage;
+        }
+      }
+
+      emit(RegisterFailure(errorMessage: errorMessage));
     }
   }
 }

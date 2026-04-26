@@ -7,10 +7,10 @@ class AppValidators {
     return null; // null تعني أن الإدخال صحيح
   }
 
-  // 2. التحقق من الإيميل
-  static String? validateEmail(String? value, {required String message}) {
+  // 2. التحقق من الإيميل (مع خيار هل هو إجباري أم لا)
+  static String? validateEmail(String? value, {bool isRequired = true, required String message}) {
     if (value == null || value.trim().isEmpty) {
-      return message;
+      return isRequired ? message : null; // إذا لم يكن إجبارياً، نسمح بالفراغ
     }
     // كود (Regex) للتحقق من أن الصيغة هي صيغة إيميل حقيقية
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
@@ -20,18 +20,17 @@ class AppValidators {
     return null;
   }
 
-  // 3. التحقق من رقم الهاتف
-  static String? validatePhone(String? value, {required String message}) {
+  // 3. التحقق من رقم الهاتف (مع خيار هل هو إجباري أم لا)
+  static String? validatePhone(String? value, {bool isRequired = true, required String message}) {
     if (value == null || value.trim().isEmpty) {
-      return message;
+      return isRequired ? message : null; // إذا لم يكن إجبارياً، نسمح بالفراغ
     }
-    // التحقق من أن الطول مناسب (مثلاً لا يقل عن 9 أرقام)
+    // التحقق من أن الطول مناسب
     if (value.length < 9) {
       return 'Please enter a valid phone number';
     }
     return null;
   }
-
   // 4. التحقق من كلمة المرور
   static String? validatePassword(String? value, {required String message}) {
     if (value == null || value.isEmpty) {
