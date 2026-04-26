@@ -27,12 +27,18 @@ class RegisterRequestModel {
     Map<String, dynamic> map = {
       'first_name': firstName,
       'last_name': lastName,
-      'email': email,
-      'phone': phone,
       'password': password,
       'password_confirmation': passwordConfirmation,
       'otp_method': otpMethod,
     };
+
+    // 🔥 الحل: نضيف الإيميل والهاتف للطلب "فقط" إذا كان المستخدم قد كتب فيهما شيئاً
+    if (email.trim().isNotEmpty) {
+      map['email'] = email.trim();
+    }
+    if (phone.trim().isNotEmpty) {
+      map['phone'] = phone.trim();
+    }
 
     if (profilePic != null) {
       map['profile_pic'] = await MultipartFile.fromFile(profilePic!.path);
