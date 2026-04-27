@@ -54,11 +54,11 @@ class MyApp extends StatelessWidget {
               ModalRoute.of(context)?.settings.arguments as String? ?? '';
 
           return BlocProvider(
-            create: (context) => getIt<LoginCubit>(), // 🔥 الحل هون
+            create: (context) => getIt<LoginCubit>(),
             child: OTPScreen(loginEmail: email),
           );
         },
-        AppRoutes.home: (context) => const HomePage(), // 🔥 تأكدي من إضافة هذه!
+        AppRoutes.home: (context) => const HomePage(),
         AppRoutes.editProfile: (context) => BlocProvider(
           create: (_) => getIt<CompleteProfileCubit>(),
           child: CompleteBodyMeasurementsView(

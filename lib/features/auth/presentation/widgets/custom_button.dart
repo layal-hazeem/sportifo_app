@@ -4,8 +4,14 @@ import '../../../../core/theme/app_colors.dart';
 class CustomAuthButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
+  final bool isLoading;
 
-  const CustomAuthButton({super.key, required this.text, required this.onPressed});
+  const CustomAuthButton({
+    super.key,
+    required this.text,
+    required this.onPressed,
+    this.isLoading = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +19,6 @@ class CustomAuthButton extends StatelessWidget {
       width: double.infinity,
       height: 55,
       child: ElevatedButton(
-        onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primaryBtn,
           shape: RoundedRectangleBorder(
@@ -21,9 +26,24 @@ class CustomAuthButton extends StatelessWidget {
           ),
           elevation: 5,
         ),
-        child: Text(
+        onPressed: isLoading ? null : onPressed,
+
+        child: isLoading
+            ? const SizedBox(
+          width: 25,
+          height: 25,
+          child: CircularProgressIndicator(
+            color: Colors.white,
+            strokeWidth: 2.5,
+          ),
+        )
+            : Text(
           text,
-          style: const TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: AppSizes.buttonFontSize,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );
