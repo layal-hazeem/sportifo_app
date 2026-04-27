@@ -1,5 +1,8 @@
 import '../../../../core/network/api_error_handler.dart';
 import '../../../../core/network/api_result.dart';
+import 'package:sportifo_app/features/auth/data/models/complete_prfile/complete_profile_request_model.dart';
+import 'package:sportifo_app/features/auth/data/models/complete_prfile/complete_profile_respons_model.dart';
+
 import '../models/login/forgot_password_request_body.dart';
 import '../models/login/login_response.dart';
 import '../models/login/login_request.dart';
@@ -50,4 +53,9 @@ class AuthRepository {
       return Failure(ApiErrorHandler.handle(e));
     }
   }
+
+  Future completeProfile(CompleteProfileRequestModel body) async {
+  final response = await _authWebService.completeProfile(body);
+  return CompleteProfileResponsModel.fromJson(response.data);
+}
 }

@@ -526,6 +526,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Track your nutrition and improve your daily habits.'**
   String get onboardingDesc3;
+
+  /// No description provided for @profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profile;
+
+  /// No description provided for @chat.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat'**
+  String get chat;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
