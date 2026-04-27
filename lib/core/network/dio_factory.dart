@@ -4,21 +4,17 @@ import 'api_constants.dart';
 
 class DioFactory {
   late final Dio _dio;
-
+  final LocalStorage _localStorage; // 🔥 إضافة المتغير هنا
   // Constructor
-  DioFactory() {
+  DioFactory(this._localStorage) {
     _dio = Dio(
       BaseOptions(
         baseUrl: ApiConstants.baseUrl,
         receiveDataWhenStatusError: true,
-        // تحديد وقت الانتظار الأقصى للاتصال بالسيرفر
         connectTimeout: const Duration(seconds: 20),
-        // تحديد وقت الانتظار الأقصى لاستلام الرد من السيرفر
         receiveTimeout: const Duration(seconds: 20),
-        // Headers الافتراضية
         headers: {
           'Accept': 'application/json',
-          // إذا كان الباك إند يتطلب لغة معينة
           'Accept-Language': 'ar',
         },
         validateStatus: (status) {
@@ -30,28 +26,19 @@ class DioFactory {
     // وظيفتهم مراقبة وتعديل أي طلب يخرج أو رد يدخل
     _dio.interceptors.add(
       InterceptorsWrapper(
-        // قبل خروج أي طلب
         onRequest: (options, handler) async {
-          final token = await LocalStorage.getToken();
-
+          // 🔥 جلب التوكن بسرعة الصاروخ بدون await
+          final token = _localStorage.getToken();
           if (token != null) {
             options.headers['Authorization'] = 'Bearer $token';
           }
-
           return handler.next(options);
         },
-        // عند استلام رد ناجح
-        onResponse: (response, handler) {
-          return handler.next(response); // أكمل دورة الرد
-        },
-        // عند حدوث خطأ
         onError: (DioException e, handler) {
-          // هنا يمكنك معالجة أخطاء معينة بشكل عام
-          // مثلاً: إذا كان الخطأ 401 (غير مصرح)، يمكنك تسجيل خروج المستخدم تلقائياً
           if (e.response?.statusCode == 401) {
             // توجيه المستخدم لصفحة تسجيل الدخول
           }
-          return handler.next(e); // مرر الخطأ ليتم التقاطه في الـ Data Source
+          return handler.next(e);
         },
       ),
     );
@@ -70,6 +57,5 @@ class DioFactory {
     );
   }
 
-  // دالة تُعيد نسخة הـ Dio الجاهزة
   Dio get dio => _dio;
 }

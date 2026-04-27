@@ -1,3 +1,5 @@
+import '../../../../core/network/api_error_handler.dart';
+import '../../../../core/network/api_result.dart';
 import 'package:sportifo_app/features/auth/data/models/complete_prfile/complete_profile_request_model.dart';
 import 'package:sportifo_app/features/auth/data/models/complete_prfile/complete_profile_respons_model.dart';
 
@@ -38,17 +40,17 @@ class AuthRepository {
     return LoginResponse.fromJson(response.data);
   }
 
-  Future<RegisterResponseModel> register(RegisterRequestModel request) async {
+  Future<ApiResult<RegisterResponseModel>> register(RegisterRequestModel request) async {
     try {
-      // 1. نحول الموديل الذي جاء من الواجهة إلى FormData
-      // نضع await لأن تحويل الصورة إلى ملف يأخذ أجزاء من الثانية
       final formData = await request.toFormData();
       final response = await _authWebService.register(formData);
-      return RegisterResponseModel.fromJson(response.data);
+
+      // 🔥 في حال النجاح نغلف الرد بـ Success
+      return Success(RegisterResponseModel.fromJson(response.data));
 
     } catch (e) {
-      // نرمي الخطأ لكي يلتقطه الـ Cubit ويظهره للمستخدم
-      rethrow;
+      // 🔥 في حال الفشل نمرر الخطأ للـ Handler ليصطاده ونغلفه بـ Failure
+      return Failure(ApiErrorHandler.handle(e));
     }
   }
 

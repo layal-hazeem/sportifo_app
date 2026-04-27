@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/routes/app_routes.dart';
+import '../../../../core/di/service_locator.dart';
+import '../../../../core/storage/local_storage.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../auth/presentation/widgets/custom_button.dart';
@@ -37,22 +39,24 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     animationController.forward();
   }
 
-  void next() {
-
+  void next() async {
     if (currentIndex < 2) {
       _controller.nextPage(
         duration: const Duration(milliseconds: 400),
         curve: Curves.easeInOut,
       );
     } else {
-      Navigator.pushReplacementNamed(context, AppRoutes.register);
+      // 🔥 حفظنا في الذاكرة أنه شاهد الافتتاحية
+      await getIt<LocalStorage>().saveOnboardingSeen();
+      if (mounted) Navigator.pushReplacementNamed(context, AppRoutes.register);
     }
   }
 
-  void skip() {
-    Navigator.pushReplacementNamed(context, AppRoutes.register);
+  void skip() async {
+    // 🔥 حفظنا في الذاكرة أنه تخطى الافتتاحية
+    await getIt<LocalStorage>().saveOnboardingSeen();
+    if (mounted) Navigator.pushReplacementNamed(context, AppRoutes.register);
   }
-
 
   @override
   void dispose() {
