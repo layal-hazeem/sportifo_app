@@ -4,16 +4,13 @@ import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:sportifo_app/core/di/service_locator.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/complete_profile/complete_profile_cubit.dart';
-import 'package:sportifo_app/features/auth/presentation/view_model/complete_profile/complete_profile_view_model.dart';
 import 'package:sportifo_app/features/auth/presentation/widgets/custom_button.dart';
 import 'package:sportifo_app/features/auth/presentation/widgets/custom_neumorphic_field.dart';
 import 'package:sportifo_app/features/home/presentation/view/home_page.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class CompleteBodyMeasurementsView extends StatelessWidget {
-  final CompleteProfileViewModel viewModel;
-
-  const CompleteBodyMeasurementsView({super.key, required this.viewModel});
+  const CompleteBodyMeasurementsView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,28 +18,7 @@ class CompleteBodyMeasurementsView extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: NeumorphicAppBar(
-        title: Text(l10n.bodyMeasurements),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(0.0),
-            child: TextButton(
-              onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HomePage()),
-                );
-              },
-              child: Text(
-                l10n.skip,
-                softWrap: false,
-                maxLines: 1,
-                style: TextStyle(color: AppColors.linkColor),
-              ),
-            ),
-          ),
-        ],
-      ),
+      appBar: NeumorphicAppBar(title: Text(l10n.bodyMeasurements)),
       body: BlocConsumer<CompleteProfileCubit, CompleteProfileState>(
         listener: (context, state) {
           if (state is CompleteProfileSuccess) {
@@ -50,10 +26,14 @@ class CompleteBodyMeasurementsView extends StatelessWidget {
               context,
               MaterialPageRoute(builder: (_) => const HomePage()),
             );
-          } else if (state is Error) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.message)));
+          } else if (state.status == ProfileStatus.error) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.errorMessage ?? "Unexpected error"),
+                backgroundColor: Colors.red,
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
           }
         },
         builder: (context, state) {
@@ -81,34 +61,45 @@ class CompleteBodyMeasurementsView extends StatelessWidget {
                 _buildMeasurementRow(
                   label1: l10n.shoulders,
                   icon1: Icons.horizontal_rule,
-                  onChanged1: (v) => viewModel.shoulders = double.tryParse(v),
+                  onChanged1: (v) => context
+                      .read<CompleteProfileCubit>()
+                      .setShoulders(double.tryParse(v)),
                   label2: l10n.chestCircumference,
                   icon2: Icons.architecture,
-                  onChanged2: (v) =>
-                      viewModel.chestCircumference = double.tryParse(v),
+                  onChanged2: (v) {
+                    final value = double.tryParse(v);
+                    context.read<CompleteProfileCubit>().setChest(value);
+                  },
                 ),
                 const SizedBox(height: 20),
 
                 _buildMeasurementRow(
                   label1: l10n.belly,
                   icon1: Icons.straighten,
-                  onChanged1: (v) => viewModel.waist = double.tryParse(v),
+                  onChanged1: (v) => context
+                      .read<CompleteProfileCubit>()
+                      .setWaist(double.tryParse(v)),
                   label2: l10n.hipCircumference,
                   icon2: Icons.accessibility_new,
-                  onChanged2: (v) =>
-                      viewModel.hipCircumference = double.tryParse(v),
+                  onChanged2: (v) {
+                    final value = double.tryParse(v);
+                    context.read<CompleteProfileCubit>().setHip(value);
+                  },
                 ),
                 const SizedBox(height: 20),
 
                 _buildMeasurementRow(
                   label1: l10n.thighCircumference,
                   icon1: Icons.boy_rounded,
-                  onChanged1: (v) =>
-                      viewModel.thighCircumference = double.tryParse(v),
+                  onChanged1: (v) => context
+                      .read<CompleteProfileCubit>()
+                      .setThigh(double.tryParse(v)),
                   label2: l10n.handCircumference,
                   icon2: Icons.front_hand_outlined,
-                  onChanged2: (v) =>
-                      viewModel.handCircumference = double.tryParse(v),
+                  onChanged2: (v) {
+                    final value = double.tryParse(v);
+                    context.read<CompleteProfileCubit>().setHand(value);
+                  },
                 ),
 
                 const SizedBox(height: 20),
@@ -118,15 +109,15 @@ class CompleteBodyMeasurementsView extends StatelessWidget {
                       ? l10n.saving
                       : l10n.startingTheSportsJourney,
                   onPressed: () {
-                    if (!viewModel.isDataComplete) {
+                    final cubit = context.read<CompleteProfileCubit>();
+
+                    if (!cubit.state.isComplete) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text(l10n.messageOfIncompleteInfo)),
                       );
                       return;
                     }
-                    context.read<CompleteProfileCubit>().completeProfile(
-                      viewModel.toRequestModel(),
-                    );
+                    cubit.completeProfile();
                   },
                 ),
               ],
