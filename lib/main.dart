@@ -59,6 +59,13 @@ class MyApp extends StatelessWidget {
           );
         },
         AppRoutes.home: (context) => const HomePage(), // 🔥 تأكدي من إضافة هذه!
+        AppRoutes.editProfile: (context) => BlocProvider(
+          create: (_) => getIt<CompleteProfileCubit>(),
+          child: CompleteBodyMeasurementsView(
+            viewModel: CompleteProfileViewModel(),
+          ),
+        ),
+
       },
         localizationsDelegates: const [
           AppLocalizations.delegate,
@@ -73,30 +80,12 @@ class MyApp extends StatelessWidget {
           baseColor: Color(0xFFF2F2F2),
           lightSource: LightSource.topLeft,
           depth: 10,
-        },// ملاحظة: الـ OTP والـ Reset Password يتم حقنهم هنا بنفس الطريقة لاحقاً
 
-        AppRoutes.editProfile: (context) => BlocProvider(
-          create: (_) => getIt<CompleteProfileCubit>(),
-          child: CompleteBodyMeasurementsView(
-            viewModel: CompleteProfileViewModel(),
-          ),
-        ),
-        
-      },
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [Locale('en'), Locale('ar')],
-      locale: const Locale('en'),
-      themeMode: ThemeMode.light,
-      theme: const NeumorphicThemeData(
-        baseColor: Color(0xFFF2F2F2),
-        lightSource: LightSource.topLeft,
-        depth: 10,
-      ),
+        // ملاحظة: الـ OTP والـ Reset Password يتم حقنهم هنا بنفس الطريقة لاحقاً
+
+  ),
+
+
     );
   }
 }
