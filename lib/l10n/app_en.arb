@@ -25,8 +25,7 @@
   "dontHaveAccount": "Don't have an account ?",
   "signUp": "Sign up",
   "fieldRequired": "This field  is required",
-  "passwordTooShort": "Password must be over 8 digits",
-
+"passwordTooShort": "Password must be at least 8 characters",
   "completeProfileInfo":"Complete Profile Information",
   "weight":"Weight",
   "length":"Length",
@@ -75,5 +74,12 @@
     "onboardingTitle3": "Smart Nutrition Plans",
     "onboardingDesc3": "Track your nutrition and improve your daily habits.",
       "profile":"Profile",
-    "chat":"Chat"
+    "chat":"Chat",
+     "requiredField": "This field is required",
+      "enterEmailOrPhone": "Please enter an email or phone number",
+      "invalidEmail": "Invalid email address",
+      "invalidPhone": "Invalid phone number",
+      "passwordMismatch": "Passwords do not match",
+      "loading": "Loading...",
+      "error": "Something went wrong, please try again"
 }

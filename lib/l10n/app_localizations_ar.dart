@@ -171,10 +171,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get enterLastName => 'أدخل الاسم الأخير';
 
   @override
-  String get email => ' اليريد الإلكتروني';
+  String get email => 'البريد الإلكتروني';
 
   @override
-  String get enterEmail => 'أدخل اليريد الإلكتروني';
+  String get enterEmail => 'أدخل البريد الإلكتروني';
 
   @override
   String get phone => 'رقم الهاتف';
@@ -229,4 +229,25 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get chat => 'المحادثات';
+
+  @override
+  String get requiredField => 'هذا الحقل مطلوب';
+
+  @override
+  String get enterEmailOrPhone => 'يرجى إدخال بريد إلكتروني أو رقم هاتف';
+
+  @override
+  String get invalidEmail => 'البريد الإلكتروني غير صالح';
+
+  @override
+  String get invalidPhone => 'رقم الهاتف غير صالح';
+
+  @override
+  String get passwordMismatch => 'كلمتا المرور غير متطابقتين';
+
+  @override
+  String get loading => 'جاري التحميل...';
+
+  @override
+  String get error => 'حدث خطأ، حاول مرة أخرى';
 }

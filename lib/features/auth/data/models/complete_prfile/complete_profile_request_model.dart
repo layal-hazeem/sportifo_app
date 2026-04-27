@@ -9,7 +9,7 @@ class CompleteProfileRequestModel {
   String? email;
   String? phone;
   String? date_of_birth;
-  String? gender;
+bool? gender;
   double? height;
   double? weight;
   bool? update_pic;
@@ -46,7 +46,7 @@ class CompleteProfileRequestModel {
     String? email,
     String? phone,
     String? date_of_birth,
-    String? gender,
+    bool? gender,
     double? height,
     double? weight,
     bool? update_pic,
@@ -85,7 +85,7 @@ class CompleteProfileRequestModel {
       'email': email,
       'phone': phone,
       'date_of_birth': date_of_birth,
-      'gender': gender,
+      'gender': gender == null ? null : (gender! ? 1 : 0),
       'height': height ?? 0,
       'weight': weight ?? 0,
       'update_pic': update_pic,
@@ -110,7 +110,7 @@ class CompleteProfileRequestModel {
       date_of_birth: map['date_of_birth'] != null
           ? map['date_of_birth'] as String
           : null,
-      gender: map['gender'] != null ? map['gender'] as String : null,
+      gender: map['gender'] == null ? null : (map['gender'] == 1),
       height: map['height'] != null ? (map['height'] as num).toDouble() : null,
       weight: map['weight'] != null ? (map['weight'] as num).toDouble() : null,
       update_pic: map['update_pic'] != null ? map['update_pic'] as bool : null,
@@ -210,18 +210,26 @@ class CompleteProfileRequestModel {
       'hip_perimeter': hip_perimeter,
       'arm_perimeter': arm_perimeter,
     };
+if (gender != null) {
+    map['gender'] = gender! ? 1 : 0;
+  }
 
-    // إزالة القيم الفارغة لكي لا نزعج السيرفر
-    map.removeWhere((key, value) => value == null);
+  // 3. معالجة الصورة و update_pic
+  // إذا كانت هناك صورة جديدة (مسار ملف محلي)
+  if (profile_pic != null && !profile_pic!.startsWith('http')) {
+    map['profile_pic'] = await MultipartFile.fromFile(profile_pic!);
+    map['update_pic'] = 1; // السيرفر يطلب true/false أو 1/0
+  } else {
+    // إذا لم يغير الصورة، نرسل 0 ليتخطى الـ Validation
+    map['update_pic'] = 0;
+  }
 
-    // 🔥 تحويل مسار الصورة إلى ملف حقيقي ليفهمه السيرفر
-    if (profile_pic != null && profile_pic!.isNotEmpty) {
-      map['profile_pic'] = await MultipartFile.fromFile(profile_pic!);
-    }
+  // 4. إزالة القيم الفارغة (باستثناء الحقول التي أصلحناها يدوياً فوق)
+  map.removeWhere((key, value) => value == null);
 
-    // 🔥 خدعة لاراڤيل: نرسل الطلب كـ POST ونخبره داخلياً أنه PUT
-    map['_method'] = 'PUT';
+  // 5. إضافة طريقة PUT لـ Laravel
+  map['_method'] = 'PUT';
 
-    return FormData.fromMap(map);
+  return FormData.fromMap(map);
   }
 }

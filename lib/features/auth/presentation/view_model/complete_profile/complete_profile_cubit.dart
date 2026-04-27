@@ -9,8 +9,7 @@ part 'complete_profile_state.dart';
 class CompleteProfileCubit extends Cubit<CompleteProfileState> {
   final AuthRepository repository;
 
-  CompleteProfileCubit(this.repository)
-      : super(const CompleteProfileState());
+  CompleteProfileCubit(this.repository) : super(const CompleteProfileState());
 
   // 📸 Image
   void setImage(String path) {
@@ -30,7 +29,7 @@ class CompleteProfileCubit extends Cubit<CompleteProfileState> {
     emit(state.copyWith(birthDate: date));
   }
 
-  void setGender(String value) {
+  void setGender(bool value) {
     emit(state.copyWith(gender: value));
   }
 
@@ -60,7 +59,7 @@ class CompleteProfileCubit extends Cubit<CompleteProfileState> {
   }
 
   // 🚀 Submit profile
- Future<void> completeProfile() async {
+  Future<void> completeProfile() async {
     emit(state.copyWith(status: ProfileStatus.loading));
 
     final request = state.toRequestModel();
@@ -72,10 +71,12 @@ class CompleteProfileCubit extends Cubit<CompleteProfileState> {
         emit(state.copyWith(status: ProfileStatus.success));
         break;
       case Failure():
-        emit(state.copyWith(
-          status: ProfileStatus.error,
-          errorMessage: result.message,
-        ));
+        emit(
+          state.copyWith(
+            status: ProfileStatus.error,
+            errorMessage: result.message,
+          ),
+        );
         break;
     }
   }
