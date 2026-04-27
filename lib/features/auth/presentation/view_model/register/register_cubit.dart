@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../../core/network/api_result.dart';
 import '../../../data/models/register/register_request_model.dart';
 import '../../../data/repository/auth_repository.dart';
 import 'register_state.dart';
@@ -26,7 +27,7 @@ class RegisterCubit extends Cubit<RegisterState> {
     // 1. إخبار الواجهة أننا بدأنا التحميل (لإظهار دائرة تحميل CircularProgressIndicator)
     emit(const RegisterLoading());
 
-    try {
+
       // 2. تجميع البيانات القادمة من الواجهة داخل الـ Request Model
       final request = RegisterRequestModel(
         firstName: firstName,
@@ -39,26 +40,19 @@ class RegisterCubit extends Cubit<RegisterState> {
         profilePic: profilePic,
       );
 
-      // 3. إرسال الطلب للسيرفر عبر الـ Repository
-      // الكيوبت هنا لا يهتم كيف سيتم الإرسال (JSON أم FormData)، الـ Repository يتكفل بذلك
-      await _authRepository.register(request);
+      final result = await _authRepository.register(request);
 
-      // 4. إذا مر الكود من السطر السابق بدون أخطاء، فهذا يعني أن التسجيل نجح!
-      // نخبر الواجهة بالنجاح (مثلاً للانتقال لشاشة الـ OTP)
-      emit(const RegisterSuccess());
-    } catch (e) {
-      String errorMessage = "Something went wrong. Please try again."; // رسالة افتراضية
+      // 🔥 سحر الـ Pattern Matching في Dart (للتعامل مع الـ sealed class)
+      switch (result) {
+        case Success():
+        // إذا كان الرد Success، نطلق حالة النجاح
+          emit(const RegisterSuccess());
+          break;
 
-      // 🔥 سحب رسالة الخطأ القادمة من الباك إند (Laravel)
-      if (e is DioException && e.response != null) {
-        if (e.response?.data is Map) {
-          // جلب رسالة الخطأ من السيرفر وعرضها للمستخدم
-          errorMessage =
-              e.response?.data['message']?.toString() ?? errorMessage;
-        }
+        case Failure():
+        // إذا كان الرد Failure، نأخذ الرسالة الجاهزة والمترجمة التي جهزها لنا الـ ApiErrorHandler
+          emit(RegisterFailure(errorMessage: result.message));
+          break;
       }
-
-      emit(RegisterFailure(errorMessage: errorMessage));
     }
   }
-}

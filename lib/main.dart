@@ -15,15 +15,15 @@ import 'features/auth/presentation/view/login_screen.dart';
 import 'features/auth/presentation/view/otp_screen.dart';
 import 'features/auth/presentation/view_model/login/login_cubit.dart';
 import 'features/auth/presentation/view_model/register/register_cubit.dart';
+import 'features/home/presentation/view/home_page.dart';
 import 'features/splash/presentation/view/splash_screen.dart';
 import 'l10n/app_localizations.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  setupServiceLocator();
+  await setupServiceLocator(); // 🔥 وضعنا await هنا لكي ينتظر تحميل الذاكرة
   runApp(const MyApp());
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -36,18 +36,15 @@ class MyApp extends StatelessWidget {
       initialRoute: AppRoutes.splash,
       // home: HomePage(),
 
-      // 2. قمنا بتغليف الشاشات التي تحتاج كيوبت من داخل الـ routes مباشرة
       routes: {
         AppRoutes.splash: (context) => const SplashScreen(),
         AppRoutes.onboarding: (context) => const OnboardingScreen(),
 
-        // 🔥 حقن الكيوبت الخاص بكِ لشاشة التسجيل
         AppRoutes.register: (context) => BlocProvider(
           create: (context) => getIt<RegisterCubit>(),
           child: const RegisterScreen(),
         ),
 
-        // 🔥 حقن الكيوبت الخاص بزميلتك لشاشة تسجيل الدخول
         AppRoutes.login: (context) => BlocProvider(
           create: (context) => getIt<LoginCubit>(),
           child: const LoginScreen(),
@@ -60,6 +57,22 @@ class MyApp extends StatelessWidget {
             create: (context) => getIt<LoginCubit>(), // 🔥 الحل هون
             child: OTPScreen(loginEmail: email),
           );
+        },
+        AppRoutes.home: (context) => const HomePage(), // 🔥 تأكدي من إضافة هذه!
+      },
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [Locale('en'), Locale('ar')],
+        locale: const Locale('en'),
+        themeMode: ThemeMode.light,
+        theme: const NeumorphicThemeData(
+          baseColor: Color(0xFFF2F2F2),
+          lightSource: LightSource.topLeft,
+          depth: 10,
         },// ملاحظة: الـ OTP والـ Reset Password يتم حقنهم هنا بنفس الطريقة لاحقاً
 
         AppRoutes.editProfile: (context) => BlocProvider(

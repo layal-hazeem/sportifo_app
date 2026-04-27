@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/helpers/app_image_picker.dart';
+import '../../../../core/helpers/app_snackbar.dart';
 import '../../../../core/helpers/app_validators.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -21,6 +21,7 @@ class RegisterScreen extends StatefulWidget {
 final _step1FormKey = GlobalKey<FormState>();
 final _step2FormKey = GlobalKey<FormState>();
 class _RegisterScreenState extends State<RegisterScreen> {
+
   final PageController _controller = PageController();
   int currentPage = 0;
 
@@ -50,7 +51,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     Navigator.pushReplacementNamed(context, AppRoutes.login);
   }
 
-  // Go to next step or OTP selection
   void nextStep() {
     if (currentPage == 0) {
       if (_step1FormKey.currentState!.validate()) {
@@ -62,30 +62,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
     } else {
       if (_step2FormKey.currentState!.validate()) {
 
-        // 🔥 الحل الذكي: فحص الحقول لمعرفة ما أدخله المستخدم
         final bool hasEmail = _emailController.text.trim().isNotEmpty;
         final bool hasPhone = _phoneController.text.trim().isNotEmpty;
 
         if (hasEmail && !hasPhone) {
-          // أدخل إيميل فقط -> نرسل فوراً
+
           _submitRegistration('email');
         }
         else if (!hasEmail && hasPhone) {
-          // أدخل هاتف فقط -> نرسل فوراً
+
           _submitRegistration('phone');
         }
         else if (hasEmail && hasPhone) {
-          // أدخل الاثنين معاً -> نعرض له الخيارات
+
           showOtpChoice();
         }
         else {
-          // احتياطياً في حال كان كلا الحقلين فارغين
-          // (رغم أن الفاليديشن يفترض أن يمنع ذلك)
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(AppLocalizations.of(context)!.messageOfIncompleteInfo ?? "Please provide an email or phone"),
-              backgroundColor: Colors.red,
-            ),
+          AppSnackBar.show(
+            context,
+            message: AppLocalizations.of(context)?.messageOfIncompleteInfo ?? "Please provide an email or phone",
+            isError: true,
           );
         }
       }
@@ -144,7 +140,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const SizedBox(height: 20),
 
-              // 3. تعديل الـ onTap ليرسل البيانات بدلاً من الإغلاق فقط
               ListTile(
                 leading: const Icon(Icons.email_outlined),
                 title: Text(l10n.viaEmail),
@@ -169,25 +164,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      // 4. تغليف الواجهة بـ BlocConsumer
-      body: BlocConsumer<RegisterCubit, RegisterState>(
-        listener: (context, state) {
-          if (state is RegisterSuccess) {
 
-            Navigator.pushReplacementNamed(
+      body: BlocConsumer<RegisterCubit, RegisterState>(
+          listener: (context, state) {
+            if (state is RegisterSuccess) {
+              Navigator.pushReplacementNamed(
                 context,
                 AppRoutes.otpScreen,
-              arguments: _emailController.text.trim(),
-            );
-          }
-          /// !!!
-          else if (state is RegisterFailure) {
+                arguments: _emailController.text.trim(),
+              );
+            }
+            else if (state is RegisterFailure) {
 
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.errorMessage), backgroundColor: Colors.red),
-            );
-          }
-        },
+              Navigator.of(context, rootNavigator: true).pop();
+
+              AppSnackBar.show(
+                context,
+                message: state.errorMessage,
+                isError: true,
+              );
+            }
+          },
         builder: (context, state) {
           return SafeArea(
             child: Stack(
@@ -216,7 +213,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             setState(() => currentPage = index);
                           },
                           children: [
-                            /// 🔥 STEP 1
+                            ///  STEP 1
                             SingleChildScrollView(
                               child: Form(
                                 key: _step1FormKey,
@@ -302,7 +299,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                             ),
 
-                            /// 🔥 STEP 2
+                            ///  STEP 2
                             SingleChildScrollView(
                               child: Form(
                                 key: _step2FormKey,
@@ -329,62 +326,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         message: "Required field",
                                       ),
                                     ),
-
-                                    const SizedBox(height: 20),
-
-                                    /// Profile Image
-                                    Column(
-                                      children: [
-                                        Text(
-                                          l10n.profilePicture,
-                                          style: const TextStyle(fontWeight: FontWeight.bold),
-                                        ),
-                                        const SizedBox(height: 15),
-
-                                        Stack(
-                                          children: [
-                                            CircleAvatar(
-                                              radius: 55,
-                                              backgroundColor: AppColors.background,
-                                              backgroundImage: _selectedProfilePic != null
-                                                  ? FileImage(_selectedProfilePic!)
-                                                  : null,
-                                              child: _selectedProfilePic == null
-                                                  ? const Icon(
-                                                Icons.person,
-                                                size: 55,
-                                                color: AppColors.hintText,
-                                              )
-                                                  : null,
-                                            ),
-                                            Positioned(
-                                              bottom: 0,
-                                              right: 0,
-                                              child: CircleAvatar(
-                                                backgroundColor: AppColors.primaryBtn,
-                                                child: IconButton(
-                                                  icon: const Icon(
-                                                    Icons.camera_alt,
-                                                    color: Colors.white,
-                                                    size: 18,
-                                                  ),
-                                                  onPressed: () async {
-                                                    final File? pickedImage =
-                                                    await AppImagePicker.showImageSourceDialog(context);
-
-                                                    if (pickedImage != null) {
-                                                      setState(() {
-                                                        _selectedProfilePic = pickedImage;
-                                                      });
-                                                    }
-                                                  },
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
                                   ],
                                 ),
                               ),
@@ -393,7 +334,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                       ),
 
-                      /// 🔥 هاد لازم يكون جوّا الـ Column مو برا
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: Text(
@@ -459,7 +399,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       IconData icon, {
         bool isPassword = false,
         required TextEditingController controller,
-        String? Function(String?)? validator, // تمرير الفالديتور
+        String? Function(String?)? validator,
       }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -472,7 +412,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           icon: icon,
           isPassword: isPassword,
           controller: controller,
-          validator: validator, // ربطه هنا
+          validator: validator,
         ),
       ],
     );
