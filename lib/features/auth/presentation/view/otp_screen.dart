@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pinput/pinput.dart';
 import 'package:sportifo_app/features/auth/presentation/view/reset_password_screen.dart';
+import '../../../../core/di/service_locator.dart';
 import '../../../../core/storage/local_storage.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -107,8 +108,7 @@ class _OTPScreenState extends State<OTPScreen> {
                 );
               } else {
                 // ✅ login flow
-                await LocalStorage.saveToken(token);
-
+                await getIt<LocalStorage>().saveToken(token);
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (_) => const HomePage()),

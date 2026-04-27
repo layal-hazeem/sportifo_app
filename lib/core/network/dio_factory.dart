@@ -4,9 +4,9 @@ import 'api_constants.dart';
 
 class DioFactory {
   late final Dio _dio;
-
+  final LocalStorage _localStorage; // 🔥 إضافة المتغير هنا
   // Constructor
-  DioFactory() {
+  DioFactory(this._localStorage) {
     _dio = Dio(
       BaseOptions(
         baseUrl: ApiConstants.baseUrl,
@@ -17,21 +17,18 @@ class DioFactory {
           'Accept': 'application/json',
           'Accept-Language': 'ar',
         },
-        // 🔥 تم حذف validateStatus من هنا لكي يقوم Dio باصطياد أخطاء الـ 400 والـ 422 ورميها للـ catch!
       ),
     );
 
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          final token = await LocalStorage.getToken();
+          // 🔥 جلب التوكن بسرعة الصاروخ بدون await
+          final token = _localStorage.getToken();
           if (token != null) {
             options.headers['Authorization'] = 'Bearer $token';
           }
           return handler.next(options);
-        },
-        onResponse: (response, handler) {
-          return handler.next(response);
         },
         onError: (DioException e, handler) {
           if (e.response?.statusCode == 401) {

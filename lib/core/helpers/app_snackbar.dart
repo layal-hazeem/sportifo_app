@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart'; // تأكدي من مسار الألوان
+import '../theme/app_colors.dart';
 
 class AppSnackBar {
   // دالة ثابتة يمكن استدعاؤها من أي مكان في التطبيق
