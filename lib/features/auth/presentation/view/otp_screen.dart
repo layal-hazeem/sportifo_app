@@ -121,8 +121,7 @@ class _OTPScreenState extends State<OTPScreen> {
               );
             } else {
               // ✅ login flow
-              await LocalStorage.saveToken(token);
-
+              await getIt<LocalStorage>().saveToken(token);
               Navigator.pushReplacementNamed(context, AppRoutes.editProfile);
             }
           }

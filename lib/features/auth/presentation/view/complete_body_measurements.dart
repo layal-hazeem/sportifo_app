@@ -21,12 +21,15 @@ class CompleteBodyMeasurementsView extends StatelessWidget {
       appBar: NeumorphicAppBar(title: Text(l10n.bodyMeasurements)),
       body: BlocConsumer<CompleteProfileCubit, CompleteProfileState>(
         listener: (context, state) {
-          if (state is CompleteProfileSuccess) {
+          // ✅ التعديل هنا: افحص الـ status وليس نوع الكلاس
+          if (state.status == ProfileStatus.success) {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (_) => const HomePage()),
             );
-          } else if (state.status == ProfileStatus.error) {
+          }
+
+          if (state.status == ProfileStatus.error) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.errorMessage ?? "Unexpected error"),
@@ -105,20 +108,25 @@ class CompleteBodyMeasurementsView extends StatelessWidget {
                 const SizedBox(height: 20),
 
                 CustomAuthButton(
-                  text: state is CompleteProfileLoading
+                  text: state.status == ProfileStatus.loading
                       ? l10n.saving
                       : l10n.startingTheSportsJourney,
-                  onPressed: () {
-                    final cubit = context.read<CompleteProfileCubit>();
 
-                    if (!cubit.state.isComplete) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(l10n.messageOfIncompleteInfo)),
-                      );
-                      return;
-                    }
-                    cubit.completeProfile();
-                  },
+                  onPressed: state.status == ProfileStatus.loading
+                      ? null 
+                      : () {
+                          final cubit = context.read<CompleteProfileCubit>();
+
+                          if (!state.isComplete) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(l10n.messageOfIncompleteInfo),
+                              ),
+                            );
+                            return;
+                          }
+                          cubit.completeProfile();
+                        },
                 ),
               ],
             ),

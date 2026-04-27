@@ -53,9 +53,18 @@ class AuthRepository {
       return Failure(ApiErrorHandler.handle(e));
     }
   }
+Future<ApiResult<CompleteProfileResponsModel>> completeProfile(
+  CompleteProfileRequestModel body,
+) async {
+  try {
+    final formData = await body.toFormData();
+    final response = await _authWebService.completeProfile(formData);
 
-  Future completeProfile(CompleteProfileRequestModel body) async {
-  final response = await _authWebService.completeProfile(body);
-  return CompleteProfileResponsModel.fromJson(response.data);
+    return Success(
+      CompleteProfileResponsModel.fromJson(response.data),
+    );
+  } catch (e) {
+    return Failure(ApiErrorHandler.handle(e));
+  }
 }
 }

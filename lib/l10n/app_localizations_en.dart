@@ -87,7 +87,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fieldRequired => 'This field  is required';
 
   @override
-  String get passwordTooShort => 'Password must be over 8 digits';
+  String get passwordTooShort => 'Password must be at least 8 characters';
 
   @override
   String get completeProfileInfo => 'Complete Profile Information';
@@ -229,4 +229,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get chat => 'Chat';
+
+  @override
+  String get requiredField => 'This field is required';
+
+  @override
+  String get enterEmailOrPhone => 'Please enter an email or phone number';
+
+  @override
+  String get invalidEmail => 'Invalid email address';
+
+  @override
+  String get invalidPhone => 'Invalid phone number';
+
+  @override
+  String get passwordMismatch => 'Passwords do not match';
+
+  @override
+  String get loading => 'Loading...';
+
+  @override
+  String get error => 'Something went wrong, please try again';
 }

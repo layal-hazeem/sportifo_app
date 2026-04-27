@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/helpers/app_snackbar.dart';
@@ -33,7 +32,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
 
-  File? _selectedProfilePic;
 
   @override
   void dispose() {
@@ -103,10 +101,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       password: _passwordController.text,
       passwordConfirmation: _confirmPasswordController.text,
       otpMethod: otpMethod,
-      profilePic: _selectedProfilePic,
     );
   }
-
   void showOtpChoice() {
     final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet(
@@ -143,12 +139,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ListTile(
                 leading: const Icon(Icons.email_outlined),
                 title: Text(l10n.viaEmail),
-                onTap: () => _submitRegistration('email'),
-              ),
+                onTap: () => _submitRegistration('email', fromBottomSheet: true),              ),
               ListTile(
                 leading: const Icon(Icons.phone_outlined),
                 title: Text(l10n.viaPhone),
-                onTap: () => _submitRegistration('phone'),
+                onTap: () => _submitRegistration('phone',fromBottomSheet: true),
               ),
               const SizedBox(height: 10),
             ],
@@ -171,12 +166,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
               Navigator.pushReplacementNamed(
                 context,
                 AppRoutes.otpScreen,
-                arguments: _emailController.text.trim(),
-              );
+                arguments: _emailController.text.isNotEmpty
+                    ? _emailController.text.trim()
+                    : _phoneController.text.trim(),
+                           );
             }
             else if (state is RegisterFailure) {
 
-              Navigator.of(context, rootNavigator: true).pop();
 
               AppSnackBar.show(
                 context,
@@ -203,7 +199,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                       ),
                       const SizedBox(height: 30),
-
                       // Pages
                       Expanded(
                         child: PageView(
@@ -225,7 +220,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       Icons.person_outline,
                                       controller: _firstNameController,
                                       validator: (val) =>
-                                          AppValidators.validateRequired(val, message: "Required field"),
+                                          AppValidators.validateRequired(val, message: l10n.requiredField),
                                     ),
                                     buildField(
                                       l10n.lastName,
@@ -233,7 +228,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       Icons.person_outline,
                                       controller: _lastNameController,
                                       validator: (val) =>
-                                          AppValidators.validateRequired(val, message: "Required field"),
+                                          AppValidators.validateRequired(val, message: l10n.requiredField),
                                     ),
                                     buildField(
                                       l10n.email,
@@ -243,12 +238,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       validator: (val) {
                                         if (val!.trim().isEmpty &&
                                             _phoneController.text.trim().isEmpty) {
-                                          return "Please enter email or phone";
+                                          return l10n.enterEmailOrPhone;
                                         }
                                         return AppValidators.validateEmail(
                                           val,
                                           isRequired: false,
-                                          message: "",
+                                          message:  l10n.invalidEmail,
                                         );
                                       },
                                     ),
@@ -260,17 +255,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       validator: (val) {
                                         if (val!.trim().isEmpty &&
                                             _emailController.text.trim().isEmpty) {
-                                          return "Please enter email or phone";
+                                          return l10n.enterEmailOrPhone;
                                         }
                                         return AppValidators.validatePhone(
                                           val,
                                           isRequired: false,
-                                          message: "",
+                                          message: l10n.invalidPhone,
                                         );
                                       },
                                     ),
                                     const SizedBox(height: 30),
-
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
@@ -312,7 +306,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       isPassword: true,
                                       controller: _passwordController,
                                       validator: (val) =>
-                                          AppValidators.validatePassword(val, message: "Required field"),
+                                          AppValidators.validatePassword(val, message: l10n.requiredField),
                                     ),
                                     buildField(
                                       l10n.confirmPassword,
@@ -323,7 +317,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       validator: (val) => AppValidators.validateConfirmPassword(
                                         val,
                                         _passwordController.text,
-                                        message: "Required field",
+                                        message: l10n.passwordMismatch,
                                       ),
                                     ),
                                   ],
@@ -351,10 +345,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       CustomAuthButton(
                         text: currentPage == 0 ? l10n.next : l10n.register,
                         onPressed: nextStep,
+                        isLoading: state is RegisterLoading,
                       ),
 
                       const SizedBox(height: 20),
-
                       if (currentPage == 1)
                         TextButton(
                           onPressed: () {
@@ -377,14 +371,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
 
-                // loading
-                if (state is RegisterLoading)
-                  Container(
-                    color: Colors.black.withValues(alpha: 0.3),
-                    child: const Center(
-                      child: CircularProgressIndicator(color: AppColors.primaryBtn),
-                    ),
-                  ),
+
               ],
             ),
           );

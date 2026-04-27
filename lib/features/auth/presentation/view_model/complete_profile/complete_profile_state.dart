@@ -7,7 +7,7 @@ class CompleteProfileState {
   final double? weight;
   final double? height;
   final String? birthDate;
-  final String? gender;
+  final bool? gender;
 
   final double? shouldersWidth;
   final double? chestPerimeter;
@@ -40,7 +40,7 @@ class CompleteProfileState {
     double? weight,
     double? height,
     String? birthDate,
-    String? gender,
+    bool? gender,
     double? shouldersWidth,
     double? chestPerimeter,
     double? waistPerimeter,
@@ -85,7 +85,6 @@ class CompleteProfileState {
   }
 
   bool get isComplete =>
-      imagePath != null &&
       weight != null &&
       height != null &&
       birthDate != null &&
