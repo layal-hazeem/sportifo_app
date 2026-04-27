@@ -21,12 +21,11 @@ class DioFactory {
           // إذا كان الباك إند يتطلب لغة معينة
           'Accept-Language': 'ar',
         },
-          validateStatus: (status) {
-            return status != null && status < 500;
-          },
+        validateStatus: (status) {
+          return status != null && status < 500;
+        },
       ),
     );
-
     // إضافة Interceptors (الوسطاء)
     // وظيفتهم مراقبة وتعديل أي طلب يخرج أو رد يدخل
     _dio.interceptors.add(
@@ -59,14 +58,16 @@ class DioFactory {
 
     // إضافة LogInterceptor مفيد جداً أثناء التطوير لرؤية الطلبات والردود في الـ Console
     // احرص على إيقافه في نسخة الـ Production (release mode)
-    _dio.interceptors.add(LogInterceptor(
-      request: true,
-      requestHeader: true,
-      requestBody: true,
-      responseHeader: true,
-      responseBody: true,
-      error: true,
-    ));
+    _dio.interceptors.add(
+      LogInterceptor(
+        request: true,
+        requestHeader: true,
+        requestBody: true,
+        responseHeader: true,
+        responseBody: true,
+        error: true,
+      ),
+    );
   }
 
   // دالة تُعيد نسخة הـ Dio الجاهزة

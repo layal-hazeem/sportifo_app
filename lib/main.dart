@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:sportifo_app/core/network/api_constants.dart';
 import 'package:sportifo_app/features/auth/presentation/view/complete_body_measurements.dart';
 import 'package:sportifo_app/features/auth/presentation/view/complete_profile_info.dart';
 import 'package:sportifo_app/features/auth/presentation/view/register_screen.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/complete_profile/complete_profile_cubit.dart';
-import 'package:sportifo_app/features/auth/presentation/view_model/complete_profile/complete_profile_view_model.dart';
 import 'package:sportifo_app/features/home/presentation/view/home_page.dart';
 import 'package:sportifo_app/features/onboarding/presentation/view/onboarding_screen.dart';
 import 'core/di/service_locator.dart';
@@ -34,7 +34,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Sportifo',
       initialRoute: AppRoutes.splash,
-      // home: HomePage(),
 
       // 2. قمنا بتغليف الشاشات التي تحتاج كيوبت من داخل الـ routes مباشرة
       routes: {
@@ -60,15 +59,11 @@ class MyApp extends StatelessWidget {
             create: (context) => getIt<LoginCubit>(), // 🔥 الحل هون
             child: OTPScreen(loginEmail: email),
           );
-        },// ملاحظة: الـ OTP والـ Reset Password يتم حقنهم هنا بنفس الطريقة لاحقاً
-
+        }, // ملاحظة: الـ OTP والـ Reset Password يتم حقنهم هنا بنفس الطريقة لاحقاً
         AppRoutes.editProfile: (context) => BlocProvider(
           create: (_) => getIt<CompleteProfileCubit>(),
-          child: CompleteBodyMeasurementsView(
-            viewModel: CompleteProfileViewModel(),
-          ),
+          child: CompleteProfileInfoView(),
         ),
-        
       },
       localizationsDelegates: const [
         AppLocalizations.delegate,

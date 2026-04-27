@@ -8,5 +8,5 @@ class AppRoutes {
   static const otpScreen = '/otpScreen';
   static const resetPasswordScreen = '/resetPasswordScreen';
 static const String profile= "/profile";
-  static const String editProfile = "/profile/edit";
+  static const String editProfile = "profile/edit";
 }
