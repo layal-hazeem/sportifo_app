@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:sportifo_app/core/network/api_result.dart';
 import 'package:sportifo_app/features/auth/data/models/complete_prfile/complete_profile_request_model.dart';
 import 'package:sportifo_app/features/auth/data/models/complete_prfile/complete_profile_respons_model.dart';
 import 'package:sportifo_app/features/auth/data/repository/auth_repository.dart';
@@ -59,21 +60,23 @@ class CompleteProfileCubit extends Cubit<CompleteProfileState> {
   }
 
   // 🚀 Submit profile
-  Future<void> completeProfile() async {
+ Future<void> completeProfile() async {
     emit(state.copyWith(status: ProfileStatus.loading));
 
-    try {
-      final request = state.toRequestModel();
+    final request = state.toRequestModel();
+    final result = await repository.completeProfile(request);
 
-      final CompleteProfileResponsModel response =
-          await repository.completeProfile(request);
-
-      emit(state.copyWith(status: ProfileStatus.success));
-    } catch (e) {
-      emit(state.copyWith(
-        status: ProfileStatus.error,
-        errorMessage: e.toString(),
-      ));
+    // سحر الـ Pattern Matching
+    switch (result) {
+      case Success():
+        emit(state.copyWith(status: ProfileStatus.success));
+        break;
+      case Failure():
+        emit(state.copyWith(
+          status: ProfileStatus.error,
+          errorMessage: result.message,
+        ));
+        break;
     }
   }
 }

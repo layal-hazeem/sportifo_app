@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
+
 class CompleteProfileRequestModel {
   String? first_name;
   String? last_name;
@@ -189,5 +191,37 @@ class CompleteProfileRequestModel {
         thigh_perimeter.hashCode ^
         hip_perimeter.hashCode ^
         arm_perimeter.hashCode;
+  }
+
+   Future<FormData> toFormData() async {
+    Map<String, dynamic> map = {
+      'first_name': first_name,
+      'last_name': last_name,
+      'email': email,
+      'phone': phone,
+      'date_of_birth': date_of_birth,
+      'gender': gender,
+      'height': height,
+      'weight': weight,
+      'shoulders_width': shoulders_width,
+      'chest_perimeter': chest_perimeter,
+      'waist_perimeter': waist_perimeter,
+      'thigh_perimeter': thigh_perimeter,
+      'hip_perimeter': hip_perimeter,
+      'arm_perimeter': arm_perimeter,
+    };
+
+    // إزالة القيم الفارغة لكي لا نزعج السيرفر
+    map.removeWhere((key, value) => value == null);
+
+    // 🔥 تحويل مسار الصورة إلى ملف حقيقي ليفهمه السيرفر
+    if (profile_pic != null && profile_pic!.isNotEmpty) {
+      map['profile_pic'] = await MultipartFile.fromFile(profile_pic!);
+    }
+
+    // 🔥 خدعة لاراڤيل: نرسل الطلب كـ POST ونخبره داخلياً أنه PUT
+    map['_method'] = 'PUT';
+
+    return FormData.fromMap(map);
   }
 }

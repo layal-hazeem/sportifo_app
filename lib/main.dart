@@ -61,6 +61,7 @@ class MyApp extends StatelessWidget {
           create: (_) => getIt<CompleteProfileCubit>(),
           child: CompleteProfileInfoView(),
         ),
+        AppRoutes.home: (context) => const HomePage(),
       },
         localizationsDelegates: const [
           AppLocalizations.delegate,
