@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
             create: (context) => getIt<LoginCubit>(), // 🔥 الحل هون
             child: OTPScreen(loginEmail: email),
           );
-        }, 
+        },
         AppRoutes.editProfile: (context) => BlocProvider(
           create: (_) => getIt<CompleteProfileCubit>(),
           child: CompleteProfileInfoView(),

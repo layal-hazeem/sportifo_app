@@ -69,4 +69,14 @@ Future<ApiResult<CompleteProfileResponsModel>> completeProfile(
     return Failure(ApiErrorHandler.handle(e));
   }
 }
+
+Future<ApiResult<void>> logout() async {
+  try {
+    await _authWebService.logout();
+    return  Success(null);
+  } catch (e) {
+    return Failure(ApiErrorHandler.handle(e));
+  }
+}
+
 }
