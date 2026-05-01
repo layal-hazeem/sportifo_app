@@ -1,12 +1,16 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
+import 'package:sportifo_app/core/routes/app_routes.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/features/home/presentation/view/home_page.dart';
 import 'package:sportifo_app/features/home/presentation/view_model/home_view_model.dart';
 import 'package:sportifo_app/features/profile/presentation/view/profile_page.dart';
+import 'package:sportifo_app/features/profile/presentation/view_model/profile_cubit.dart';
 
 class CustomDrawer extends StatelessWidget {
   final int selectedIndex;
   final Function(int) onItemTap;
+  
 
   const CustomDrawer({
     super.key,
@@ -143,7 +147,7 @@ class CustomDrawer extends StatelessWidget {
         child: Neumorphic(
           duration: const Duration(milliseconds: 250),
           style: NeumorphicStyle(
-            depth: isSelected ? 6 : -4, 
+            depth: isSelected ? 6 : -4,
             intensity: 0.8,
             boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(20)),
             color: isSelected
@@ -185,10 +189,7 @@ class CustomDrawer extends StatelessWidget {
   void _navigateToPage(BuildContext context, int index) {
     switch (index) {
       case 0:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => ProfilePage()),
-        );
+        Navigator.pushReplacementNamed(context, AppRoutes.getProfile);
         break;
       case 1:
         // Navigator.push(context,MaterialPageRoute(builder: (_) => WorkoutsPage()));

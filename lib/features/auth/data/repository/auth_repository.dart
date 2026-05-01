@@ -1,3 +1,5 @@
+import 'package:sportifo_app/features/profile/data/models/profile_response.dart';
+
 import '../../../../core/network/api_error_handler.dart';
 import '../../../../core/network/api_result.dart';
 import 'package:sportifo_app/features/auth/data/models/complete_prfile/complete_profile_request_model.dart';
