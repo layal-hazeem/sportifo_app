@@ -66,13 +66,12 @@ class _LoginScreenState extends State<LoginScreen> {
             }
 
             else if (state is LoginNeedsOtp) {
-              Navigator.pop(context);
+              Navigator.pop(context); // إغلاق الـ Loading Dialog
 
-              Navigator.push(
+              Navigator.pushNamed(
                 context,
-                MaterialPageRoute(
-                  builder: (_) => OTPScreen(loginEmail: state.login),
-                ),
+                AppRoutes.otpScreen,
+                arguments: state.login, // نرسل الإيميل كـ argument
               );
             }
 

@@ -109,21 +109,28 @@ class _OTPScreenState extends State<OTPScreen> {
             final token = state.response.data!.token;
 
             if (widget.isFromForgotPassword) {
-              // 🔐 نروح ل reset password
-              Navigator.pushReplacement(
+              Navigator.pushReplacementNamed(
                 context,
-                MaterialPageRoute(
-                  builder: (_) => ResetPasswordScreen(
-                    email: widget.loginEmail,
-                    otpCode: pinController.text,
-                  ),
-                ),
+                AppRoutes.resetPasswordScreen,
+                arguments: {
+                  'email': widget.loginEmail,
+                  'otpCode': pinController.text,
+                },
               );
             } else {
               // ✅ login flow
               await getIt<LocalStorage>().saveToken(token);
               Navigator.pushReplacementNamed(context, AppRoutes.editProfile);
             }
+          }
+          else if (state is OtpError) {
+            Navigator.pop(context); // لإغلاق الـ Loading Dialog
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Colors.red,
+              ),
+            );
           }
         },
         child: SafeArea(
