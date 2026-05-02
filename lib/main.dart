@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:sportifo_app/core/network/api_constants.dart';
-import 'package:sportifo_app/features/auth/presentation/view/complete_body_measurements.dart';
 import 'package:sportifo_app/features/auth/presentation/view/complete_profile_info.dart';
 import 'package:sportifo_app/features/auth/presentation/view/register_screen.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/complete_profile/complete_profile_cubit.dart';
@@ -13,11 +11,12 @@ import 'package:sportifo_app/features/profile/presentation/view/profile_page.dar
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_cubit.dart';
 import 'core/di/service_locator.dart';
 import 'core/routes/app_routes.dart';
+import 'features/auth/presentation/view/forgot_password_screen.dart';
 import 'features/auth/presentation/view/login_screen.dart';
 import 'features/auth/presentation/view/otp_screen.dart';
+import 'features/auth/presentation/view/reset_password_screen.dart';
 import 'features/auth/presentation/view_model/login/login_cubit.dart';
 import 'features/auth/presentation/view_model/register/register_cubit.dart';
-import 'features/home/presentation/view/home_page.dart';
 import 'features/splash/presentation/view/splash_screen.dart';
 import 'l10n/app_localizations.dart';
 
@@ -70,6 +69,22 @@ class MyApp extends StatelessWidget {
         ),
 
         AppRoutes.home: (context) => const HomePage(),
+        AppRoutes.forgotPasswordScreen: (context) => BlocProvider(
+          create: (context) => getIt<LoginCubit>(),
+          child: const ForgotPasswordScreen(), // تأكدي من اسم الكلاس
+        ),
+        AppRoutes.resetPasswordScreen: (context) {
+          // استقبال الـ Map الذي يحتوي على الإيميل والكود
+          final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+
+          return BlocProvider(
+            create: (context) => getIt<LoginCubit>(),
+            child: ResetPasswordScreen(
+              email: args?['email'] ?? '',
+              otpCode: args?['otpCode'] ?? '',
+            ),
+          );
+        },
       },
       localizationsDelegates: const [
         AppLocalizations.delegate,
