@@ -20,35 +20,56 @@ class AuthRepository {
   final AuthWebService _authWebService;
   AuthRepository(this._authWebService);
 
-  Future<LoginResponse> login(LoginRequest loginRequestBody) async {
-    final response = await _authWebService.login(loginRequestBody);
-    // نمرر الـ response.data (التي هي Map) للـ Factory
-    return LoginResponse.fromJson(response.data);
+  Future<ApiResult<LoginResponse>> login(LoginRequest loginRequestBody) async {
+    try {
+      final response = await _authWebService.login(loginRequestBody);
+      return Success(LoginResponse.fromJson(response.data));
+    } catch (e) {
+      return Failure(ApiErrorHandler.handle(e));
+    }
   }
+  Future<ApiResult<LoginResponse>> verifyOtp(VerifyOtpRequestBody verifyOtpRequestBody) async {
+    try {
+      final response = await _authWebService.verifyOtp(verifyOtpRequestBody);
+      final loginResponse = LoginResponse.fromJson(response.data);
 
-  Future<LoginResponse> verifyOtp(VerifyOtpRequestBody verifyOtpRequestBody) async {
-    final response = await _authWebService.verifyOtp(verifyOtpRequestBody);
-    return LoginResponse.fromJson(response.data);
+      // هنا نضع شرط التأكد من التوكن لضمان النجاح الحقيقي
+      if (loginResponse.data?.token != null) {
+        return Success(loginResponse);
+      } else {
+        return Failure(loginResponse.message ?? "Invalid or expired OTP");
+      }
+    } catch (e) {
+      return Failure(ApiErrorHandler.handle(e));
+    }
   }
 
 // في ملف auth_repository.dart
-  Future<LoginResponse> forgotPassword(ForgotPasswordRequestBody body) async {
-    final response = await _authWebService.forgotPassword(body);
-    return LoginResponse.fromJson(response.data);
+  Future<ApiResult<LoginResponse>> forgotPassword(ForgotPasswordRequestBody body) async {
+    try {
+      final response = await _authWebService.forgotPassword(body);
+      return Success(LoginResponse.fromJson(response.data));
+    } catch (e) {
+      return Failure(ApiErrorHandler.handle(e));
+    }
   }
 
-  Future<LoginResponse> resetPassword(ResetPasswordRequestBody body) async {
-    final response = await _authWebService.resetPassword(body);
-    return LoginResponse.fromJson(response.data);
+  Future<ApiResult<LoginResponse>> resetPassword(ResetPasswordRequestBody body) async {
+    try {
+      final response = await _authWebService.resetPassword(body);
+      return Success(LoginResponse.fromJson(response.data));
+    } catch (e) {
+      return Failure(ApiErrorHandler.handle(e));
+    }
   }
+
 // بداخل كلاس AuthRepository
-  Future<LoginResponse> resendOtp(String login) async {
+  Future<ApiResult<LoginResponse>> resendOtp(String login) async {
     try {
       final response = await _authWebService.resendOtp(login);
-      return LoginResponse.fromJson(response.data);
+      return Success(LoginResponse.fromJson(response.data));
     } catch (e) {
-      // نستخدم الـ Handler الذي أعددتِه مسبقاً
-      throw ApiErrorHandler.handle(e);
+      return Failure(ApiErrorHandler.handle(e));
     }
   }
 
