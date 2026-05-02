@@ -13,28 +13,31 @@ class LoginResponse {
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) {
     final rawData = json['data'];
+    final message = json['message']?.toString() ?? '';
 
-    // 🟡 حالة not verified
-    if (rawData is String && rawData.contains("not verified")) {
+    // 1. حالة الـ Not Verified (فحص الرسالة أو الـ data)
+    if (message.toLowerCase().contains("not verified") ||
+        (rawData is String && rawData.contains("not verified"))) {
       return LoginResponse(
-        message: json['message'].toString(),
+        message: message,
         data: null,
         isNotVerified: true,
       );
     }
 
-    // 🟢 حالة success
-    if (rawData is Map) {
+    // 2. حالة النجاح مع وجود بيانات (Login)
+    if (rawData is Map<String, dynamic>) {
       return LoginResponse(
-        message: json['message'].toString(),
-        data: LoginData.fromJson(rawData as Map<String, dynamic>),
+        message: message,
+        data: LoginData.fromJson(rawData),
         isNotVerified: false,
       );
     }
 
-    // 🔴 حالة error
+    // 3. حالة النجاح بدون بيانات (Reset Password / Message Only)
+    // هنا الحل: نعتبر النجاح إذا لم يكن هناك خطأ صريح من السيرفر
     return LoginResponse(
-      message: json['message'].toString(),
+      message: message,
       data: null,
       isNotVerified: false,
     );

@@ -8,7 +8,6 @@ import '../models/login/forgot_password_request_body.dart';
 import '../models/login/login_request.dart';
 import '../models/login/reset_password_request.dart';
 import '../models/login/verify_otp_request.dart';
-import '../models/register/register_request_model.dart';
 
 class AuthWebService {
   final Dio dio;
@@ -30,11 +29,22 @@ class AuthWebService {
   }
 
   Future<Response> resetPassword(ResetPasswordRequestBody body) async {
-    return await dio.post(ApiConstants.resetPassword, data: body.toJson());
-// أضيفي هنا دوال الـ OTP و Reset Password بنفس الطريقة
+    // تحويل الـ Map إلى FormData
+    FormData formData = FormData.fromMap(body.toJson());
 
+    return await dio.post(
+      ApiConstants.resetPassword,
+      data: formData, // نرسل الـ formData هنا
+    );
+  }
+  // بداخل كلاس AuthWebService
+  Future<Response> resendOtp(String login) async {
+    return await dio.post(
+      ApiConstants.resendOtp,
+      data: {'login': login}, // نرسل الإيميل بداخل Map
+    );
+  }
 
-}
   Future<Response> register(FormData formData) async {
     return await dio.post(ApiConstants.register, data: formData);
   }

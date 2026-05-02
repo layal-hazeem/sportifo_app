@@ -8,61 +8,49 @@ class ApiErrorHandler {
         case DioExceptionType.connectionTimeout:
         case DioExceptionType.sendTimeout:
         case DioExceptionType.receiveTimeout:
-          return "Connection timeout. Please check your internet and try again.";
+          return "Connection timeout. Please check your internet.";
         case DioExceptionType.badResponse:
           return _handleStatusCode(error.response);
-        case DioExceptionType.cancel:
-          return "Request to the server was cancelled.";
         case DioExceptionType.connectionError:
-          return "No Internet connection. Please check your network.";
-        case DioExceptionType.unknown:
+          return "No Internet connection.";
         default:
-          return "Unexpected network error occurred.";
+        // لا نرجع رسالة هنا، نتركها فارغة أو نرجع null ليتم تجاهلها في الواجهة
+          return "";
       }
-    } else {
-      return "Something went wrong. Please try again."; // أخطاء برمجية أخرى
     }
+    return ""; // تجاهل الأخطاء البرمجية غير المتعلقة بالشبكة في الـ UI
   }
 
   static String _handleStatusCode(Response? response) {
-    if (response == null) return "Unknown server error.";
+    if (response == null) return "";
 
-    final statusCode = response.statusCode;
     final data = response.data;
+    String? serverMessage; // نجعلها نول في البداية
 
-    String serverMessage = "Server error occurred.";
-
-    // 🔥 الترقية الذكية: استخراج أخطاء Laravel (Validation Errors)
+    // استخراج الرسالة الحقيقية فقط
     if (data != null && data is Map) {
-      // 1. إذا كان الخطأ بداخل مصفوفة "errors" (وهذا هو الطبيعي في Laravel 422)
       if (data.containsKey('errors')) {
         final errors = data['errors'] as Map<String, dynamic>;
         if (errors.isNotEmpty) {
-          // نأخذ أول خطأ في أول حقل ونعرضه
           serverMessage = errors.values.first[0].toString();
         }
-      }
-      // 2. إذا كان الخطأ موجوداً في حقل "message" العادي
-      else if (data.containsKey('message')) {
+      } else if (data.containsKey('message')) {
         serverMessage = data['message'].toString();
       }
     }
 
-    switch (statusCode) {
-      case 400: // Bad Request
-        return serverMessage;
-      case 401: // Unauthorized
-        return serverMessage.isNotEmpty ? serverMessage : "Unauthorized access.";
-      case 403: // Forbidden
-        return "You do not have permission to access this.";
-      case 404: // Not Found
-        return "Requested resource was not found.";
-      case 422: // 🔥 Validation Error (هنا يقع خطأ الإيميل المستخدم)
-        return serverMessage;
-      case 500: // Internal Server Error
-        return "Internal server error. Please try again later.";
-      default:
-        return serverMessage;
+    // القاعدة الذهبية: إذا وجدنا رسالة من السيرفر، نرجعها فوراً مهما كان كود الخطأ
+    if (serverMessage != null && serverMessage.isNotEmpty) {
+      return serverMessage;
+    }
+
+    // إذا لم يرسل السيرفر أي JSON، نضع رسائلنا بناءً على الكود
+    switch (response.statusCode) {
+      case 401: return "Session expired. Please login again.";
+      case 403: return "Access denied.";
+      case 404: return "Resource not found.";
+      case 500: return "Server is currently down. Try later.";
+      default: return ""; // نرجع فارغ لكي لا يظهر SnackBar عشوائي
     }
   }
 }

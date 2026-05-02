@@ -8,6 +8,7 @@ import 'package:sportifo_app/features/auth/presentation/view/reset_password_scre
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/storage/local_storage.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/snack_bar_utils.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../home/presentation/view/home_page.dart';
 import '../../data/models/login/verify_otp_request.dart';
@@ -104,9 +105,13 @@ class _OTPScreenState extends State<OTPScreen> {
               builder: (_) => const Center(child: CircularProgressIndicator()),
             );
           } else if (state is OtpSuccess) {
-            Navigator.pop(context);
+            Navigator.pop(context); // إغلاق الـ Loading
 
-            final token = state.response.data!.token;
+            // ✅ حفظ التوكن مرة واحدة فقط بشكل مركزي
+            final token = state.response.data?.token;
+            if (token != null) {
+              await getIt<LocalStorage>().saveToken(token);
+            }
 
             if (widget.isFromForgotPassword) {
               Navigator.pushReplacementNamed(
@@ -118,18 +123,26 @@ class _OTPScreenState extends State<OTPScreen> {
                 },
               );
             } else {
-              // ✅ login flow
-              await getIt<LocalStorage>().saveToken(token);
+              // ✅ التوجه مباشرة لتعديل الملف الشخصي (الآن التوكن محفوظ وجاهز)
               Navigator.pushReplacementNamed(context, AppRoutes.editProfile);
             }
           }
           else if (state is OtpError) {
             Navigator.pop(context); // لإغلاق الـ Loading Dialog
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: Colors.red,
-              ),
+            AppSnackBar.show(
+              context,
+              message: state.message, // عرض الرسالة المستخرجة من الـ Response
+              type: SnackBarType.error,
+            );
+
+          }// أضيفي هذه الحالات داخل الـ listener في OTPScreen
+          else if (state is ResendOtpLoading) {
+            // يمكن إظهار مؤشر تحميل صغير أو تعطيل الزر
+          } else if (state is ResendOtpSuccess) {
+            AppSnackBar.show(
+              context,
+              message: state.message,
+              type: SnackBarType.success,
             );
           }
         },
@@ -152,45 +165,51 @@ class _OTPScreenState extends State<OTPScreen> {
                 const SizedBox(height: 60),
                 CustomAuthButton(
                   text: l10n.verify,
+                  // تغيير اللون ليدل على أن الزر معطل
+                  backgroundColor: _isFinished ? Colors.grey.shade400 : AppColors.primaryBtn,
                   onPressed: _isFinished
-                      ? null // إذا انتهى الوقت الزر بكون معطل
+                      ? null  // 🔥 هنا السر: تمرير null يعطل الزر تماماً ويجعله غير قابل للضغط
                       : () {
-                          // تأكدي من استيراد الملفات الصحيحة في أعلى الشاشة
-                          final otpValue = pinController.text;
-                          if (otpValue.isNotEmpty) {
-                            context.read<LoginCubit>().verifyOtp(
-                              VerifyOtpRequestBody(
-                                login: widget.loginEmail,
-                                otp: otpValue,
-                              ),
-                            );
-                          }
-                        },
+                    final otpValue = pinController.text;
+                    if (otpValue.length < 6) {
+                      AppSnackBar.show(context, message: "Please enter full code", type: SnackBarType.error);
+                      return;
+                    }
+                    context.read<LoginCubit>().verifyOtp(
+                      VerifyOtpRequestBody(
+                        login: widget.loginEmail,
+                        otp: otpValue,
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(height: 20),
                 // عرض العداد أو زر إعادة الإرسال
                 _isFinished
                     ? TextButton(
-                        onPressed: () {
-                          // استدعاء دالة إعادة الإرسال
-                          // context.read<LoginCubit>().emitLoginStates(LoginRequest(login: widget.loginEmail, password: ...));
-                          startTimer();
-                        },
-                        child: Text(
-                          l10n.resendCode,
-                          style: const TextStyle(
-                            color: AppColors.primaryBtn,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      )
+                  onPressed: () {
+                    // 1. مسح النص القديم من الحقول
+                    pinController.clear();
+                    // 2. استدعاء الدالة من الكيوبيت
+                    context.read<LoginCubit>().resendOtp(widget.loginEmail);
+                    // 3. إعادة تشغيل العداد (سيعود الزر للعمل تلقائياً لأن _isFinished ستصبح false)
+                    startTimer();
+                  },
+                  child: Text(
+                    l10n.resendCode,
+                    style: const TextStyle(
+                      color: AppColors.primaryBtn,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                )
                     : Text(
-                        "Resend code in 00:${_start.toString().padLeft(2, '0')}",
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                  "${l10n.resendCodeIn} 00:${_start.toString().padLeft(2, '0')}", // استخدمي الترجمة هنا
+                  style: const TextStyle(
+                    color: Colors.grey,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ],
             ),
           ),

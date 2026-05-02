@@ -5,12 +5,14 @@ class CustomAuthButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
   final bool isLoading;
+  final Color? backgroundColor;
 
   const CustomAuthButton({
     super.key,
     required this.text,
     required this.onPressed,
     this.isLoading = false,
+    this.backgroundColor,
   });
 
   @override

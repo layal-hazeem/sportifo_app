@@ -9,6 +9,8 @@ import 'package:sportifo_app/features/auth/presentation/widgets/custom_neumorphi
 import 'package:sportifo_app/features/home/presentation/view/home_page.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
+import '../../../../core/utils/snack_bar_utils.dart';
+
 class CompleteBodyMeasurementsView extends StatelessWidget {
   const CompleteBodyMeasurementsView({super.key});
 
@@ -30,12 +32,10 @@ class CompleteBodyMeasurementsView extends StatelessWidget {
           }
 
           if (state.status == ProfileStatus.error) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.errorMessage ?? "Unexpected error"),
-                backgroundColor: Colors.red,
-                behavior: SnackBarBehavior.floating,
-              ),
+            AppSnackBar.show(
+              context,
+              message: state.errorMessage ?? l10n.unexpectedError, // تأكدي من وجود unexpectedError في الترجمة
+              type: SnackBarType.error,
             );
           }
         },
@@ -118,10 +118,10 @@ class CompleteBodyMeasurementsView extends StatelessWidget {
                           final cubit = context.read<CompleteProfileCubit>();
 
                           if (!state.isComplete) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(l10n.messageOfIncompleteInfo),
-                              ),
+                            AppSnackBar.show(
+                              context,
+                              message: l10n.messageOfIncompleteInfo,
+                              type: SnackBarType.warning, // يفضل استخدام warning هنا
                             );
                             return;
                           }

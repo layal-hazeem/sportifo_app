@@ -17,9 +17,15 @@
   "newPassword": "كلمة السر الجديدة",
   "confirmPassword": "تأكيد كلمة السر",
   "updatePassword": "تحديث كلمة السر",
- "createAccount": "إنشاء حساب",
+  "loginSuccess": "تم تسجيل الدخول بنجاح ",
+  "otpSentMessage": "تم إرسال كود التحقق ",
+  "resendCodeIn": "إعادة إرسال الكود خلال",
+  "passwordChangedSuccess": "تم تحديث كلمة المرور بنجاح! يرجى تسجيل الدخول بكلمة المرور الجديدة.",
+  "passwordsDontMatch": "كلمات المرور غير متطابقة",
+  "createAccount": "إنشاء حساب",
   "fieldRequired": "هذا الحقل مطلوب",
   "passwordTooShort": "كلمة السر يجب أن تكون فوق 8 محارف",
+  "unexpectedError": "حدث خطأ غير متوقع، يرجى المحاولة لاحقاً",
 
 
   "firstName": "الاسم الأول",

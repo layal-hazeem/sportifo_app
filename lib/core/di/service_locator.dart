@@ -7,6 +7,7 @@ import 'package:sportifo_app/features/profile/data/web_services/profile_web_serv
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_cubit.dart';
 import '../../features/auth/data/repository/auth_repository.dart';
 import '../../features/auth/data/web_services/auth_webService.dart';
+import '../../features/auth/presentation/view_model/login/forgot_password_cubit.dart';
 import '../../features/auth/presentation/view_model/login/login_cubit.dart';
 import '../../features/auth/presentation/view_model/register/register_cubit.dart';
 import '../network/dio_factory.dart';
@@ -35,11 +36,15 @@ Future<void> setupServiceLocator() async {
   );
 
   getIt.registerFactory<LoginCubit>(() => LoginCubit(getIt<AuthRepository>()));
+  getIt.registerFactory(() => ForgotPasswordCubit(getIt()));
 
   getIt.registerFactory<RegisterCubit>(
     () => RegisterCubit(getIt<AuthRepository>()),
   );
 
+  getIt.registerFactory<CompleteProfileCubit>(() => CompleteProfileCubit(getIt<AuthRepository>()));
+
+}
   getIt.registerFactory<CompleteProfileCubit>(
     () => CompleteProfileCubit(getIt<AuthRepository>()),
   );

@@ -5,6 +5,7 @@ import '../../../../core/di/service_locator.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/storage/local_storage.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/snack_bar_utils.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../home/presentation/view/home_page.dart';
 import '../../data/models/login/login_request.dart';
@@ -52,11 +53,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
               // 🔥 حفظ التوكن
               await getIt<LocalStorage>().saveToken(token);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text("Login Successful!"),
-                  backgroundColor: Colors.green,
-                ),
+              AppSnackBar.show(
+                context,
+                message: l10n.loginSuccess, // أو نص مباشر "Login Successful!"
+                type: SnackBarType.success,
               );
 
               Navigator.pushReplacement(
@@ -78,11 +78,10 @@ class _LoginScreenState extends State<LoginScreen> {
             else if (state is LoginError) {
               Navigator.pop(context);
 
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: Colors.red,
-                ),
+              AppSnackBar.show(
+                context,
+                message: state.message,
+                type: SnackBarType.error,
               );
             }
           },
@@ -124,11 +123,12 @@ class _LoginScreenState extends State<LoginScreen> {
                             fontWeight: FontWeight.bold,
                             fontSize: AppSizes.labelFontSize)),
                     const SizedBox(height: 15),
+                    // حقل كلمة السر في LoginScreen
                     CustomNeumorphicField(
                       controller: passwordController,
                       hint: l10n.passwordHint,
-                      icon: Icons.visibility_off_outlined,
-                      isPassword: true,
+                      icon: Icons.lock_outline, // أيقونة القفل كأيقونة أساسية (Prefix)
+                      isPassword: true,        // هذا سيفعل زر العين تلقائياً (Suffix)
                       validator: (value) {
                         if (value == null || value.isEmpty) return l10n.fieldRequired;
                         if (value.length < 8) return l10n.passwordTooShort;
@@ -139,7 +139,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       alignment: Alignment.centerRight,
                       child: TextButton(
                         onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => const ForgotPasswordScreen()));
+                          // ✅ التعديل هنا: نستخدم pushNamed بدلاً من push العادي
+                          Navigator.pushNamed(context, AppRoutes.forgotPasswordScreen);
                         },
                         child: Text(l10n.forgotPassword,
                             style: const TextStyle(color: AppColors.linkColor, fontSize: AppSizes.mediumFontSize)),

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/helpers/app_snackbar.dart';
 import '../../../../core/helpers/app_validators.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/snack_bar_utils.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_neumorphic_field.dart';
@@ -79,7 +79,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           AppSnackBar.show(
             context,
             message: AppLocalizations.of(context)?.messageOfIncompleteInfo ?? "Please provide an email or phone",
-            isError: true,
+            type: SnackBarType.error, // استبدال isError: true بـ SnackBarType.error
           );
         }
       }
@@ -163,6 +163,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
       body: BlocConsumer<RegisterCubit, RegisterState>(
           listener: (context, state) {
             if (state is RegisterSuccess) {
+              AppSnackBar.show(
+                context,
+                message: l10n.otpSentMessage,
+                type: SnackBarType.success,
+              );
               Navigator.pushReplacementNamed(
                 context,
                 AppRoutes.otpScreen,
@@ -172,12 +177,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                            );
             }
             else if (state is RegisterFailure) {
-
-
               AppSnackBar.show(
                 context,
                 message: state.errorMessage,
-                isError: true,
+                type: SnackBarType.error, // التعديل هنا
               );
             }
           },
@@ -302,7 +305,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     buildField(
                                       l10n.password,
                                       l10n.passwordHint,
-                                      Icons.visibility_off_outlined,
+                                      Icons.lock_outline,
                                       isPassword: true,
                                       controller: _passwordController,
                                       validator: (val) =>
@@ -311,7 +314,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     buildField(
                                       l10n.confirmPassword,
                                       l10n.confirmPassword,
-                                      Icons.visibility_off_outlined,
+                                      Icons.lock_outline,
                                       isPassword: true,
                                       controller: _confirmPasswordController,
                                       validator: (val) => AppValidators.validateConfirmPassword(

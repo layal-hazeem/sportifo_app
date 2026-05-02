@@ -15,6 +15,7 @@ import 'features/auth/presentation/view/forgot_password_screen.dart';
 import 'features/auth/presentation/view/login_screen.dart';
 import 'features/auth/presentation/view/otp_screen.dart';
 import 'features/auth/presentation/view/reset_password_screen.dart';
+import 'features/auth/presentation/view_model/login/forgot_password_cubit.dart';
 import 'features/auth/presentation/view_model/login/login_cubit.dart';
 import 'features/auth/presentation/view_model/register/register_cubit.dart';
 import 'features/splash/presentation/view/splash_screen.dart';
@@ -50,12 +51,25 @@ class MyApp extends StatelessWidget {
           child: const LoginScreen(),
         ),
         AppRoutes.otpScreen: (context) {
-          final email =
-              ModalRoute.of(context)?.settings.arguments as String? ?? '';
+          // استقبال الـ Arguments كـ Map بدلاً من String لكي نمرر الـ flag
+          final args = ModalRoute.of(context)?.settings.arguments;
+
+          String email = "";
+          bool isFromForgot = false;
+
+          if (args is String) {
+            email = args; // للحالة القديمة (Login normal)
+          } else if (args is Map<String, dynamic>) {
+            email = args['email'] ?? '';
+            isFromForgot = args['isFromForgotPassword'] ?? false;
+          }
 
           return BlocProvider(
-            create: (context) => getIt<LoginCubit>(), // 🔥 الحل هون
-            child: OTPScreen(loginEmail: email),
+            create: (context) => getIt<LoginCubit>(),
+            child: OTPScreen(
+              loginEmail: email,
+              isFromForgotPassword: isFromForgot,
+            ),
           );
         },
         AppRoutes.editProfile: (context) => BlocProvider(
@@ -70,8 +84,8 @@ class MyApp extends StatelessWidget {
 
         AppRoutes.home: (context) => const HomePage(),
         AppRoutes.forgotPasswordScreen: (context) => BlocProvider(
-          create: (context) => getIt<LoginCubit>(),
-          child: const ForgotPasswordScreen(), // تأكدي من اسم الكلاس
+          create: (context) => getIt<ForgotPasswordCubit>(), // ✅ استخدمي هذا
+          child: const ForgotPasswordScreen(),
         ),
         AppRoutes.resetPasswordScreen: (context) {
           // استقبال الـ Map الذي يحتوي على الإيميل والكود
@@ -85,6 +99,7 @@ class MyApp extends StatelessWidget {
             ),
           );
         },
+
       },
       localizationsDelegates: const [
         AppLocalizations.delegate,

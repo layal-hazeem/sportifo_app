@@ -63,6 +63,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get updatePassword => 'Update Password';
 
   @override
+  String get loginSuccess => 'Login Successes';
+
+  @override
+  String get otpSentMessage => 'A verification code has been sent';
+
+  @override
+  String get resendCodeIn => 'Resend code in';
+
+  @override
+  String get passwordChangedSuccess => 'Password updated successfully! Please login with your new password.';
+
+  @override
+  String get passwordsDontMatch => 'Passwords do not match';
+
+  @override
   String get progress => 'Progress';
 
   @override
@@ -88,6 +103,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get passwordTooShort => 'Password must be at least 8 characters';
+
+  @override
+  String get unexpectedError => 'An unexpected error occurred, please try again later';
 
   @override
   String get completeProfileInfo => 'Complete Profile Information';

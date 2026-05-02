@@ -41,6 +41,16 @@ class AuthRepository {
     final response = await _authWebService.resetPassword(body);
     return LoginResponse.fromJson(response.data);
   }
+// بداخل كلاس AuthRepository
+  Future<LoginResponse> resendOtp(String login) async {
+    try {
+      final response = await _authWebService.resendOtp(login);
+      return LoginResponse.fromJson(response.data);
+    } catch (e) {
+      // نستخدم الـ Handler الذي أعددتِه مسبقاً
+      throw ApiErrorHandler.handle(e);
+    }
+  }
 
   Future<ApiResult<RegisterResponseModel>> register(RegisterRequestModel request) async {
     try {
