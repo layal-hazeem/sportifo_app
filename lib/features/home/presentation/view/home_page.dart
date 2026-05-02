@@ -11,6 +11,8 @@ import 'package:sportifo_app/features/home/presentation/widgets/custom_bottom_na
 import 'package:sportifo_app/features/home/presentation/widgets/custom_drawer.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
+import '../../../workout/presentation/view/workout_type_screen.dart';
+
 HomeViewModel homeViewModel = HomeViewModel();
 
 class HomePage extends StatefulWidget {
@@ -23,6 +25,71 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int selectedDrawerIndex = 1;
 
+  // 🔥 1. قائمة الشاشات التي ستظهر في الـ Body
+  final List<Widget> _screens = [
+    const Center(child: Text("Progress Screen")), // Index 0
+    const Center(child: Text("My Plans Screen")), // Index 1
+    const Center(child: Text("Home Dashboard")),  // Index 2
+    const WorkoutTypeScreen(),                    // 🔥 Index 3: شاشتنا الفخمة للتمارين
+    const Center(child: Text("Chat Screen")),     // Index 4
+  ];
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    return ListenableBuilder(
+      listenable: homeViewModel,
+      builder: (context, child) {
+        return Scaffold(
+          body: _screens[homeViewModel.currentIndex],
+          drawer: CustomDrawer(
+            selectedIndex: selectedDrawerIndex,
+            onItemTap: (index) {
+              setState(() {
+                selectedDrawerIndex = index;
+              });
+            },
+          ),
+          appBar: CustomAppBar(
+            currentIndex: homeViewModel.currentIndex,
+            userName: "Unknown",
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: homeViewModel.currentIndex,
+            onTap: (index) => homeViewModel.changeTab(index),
+            type: BottomNavigationBarType.fixed,
+            showSelectedLabels: false,
+            selectedItemColor: AppColors.primaryBtn,
+            unselectedItemColor: AppColors.hintText,
+            items: [
+              CustomBottomNavBar.build(
+                icon: Icons.show_chart,
+                label: l10n.progress,
+                isSelected: homeViewModel.currentIndex == 0,
+              ),
+              CustomBottomNavBar.build(
+                icon: Icons.calendar_today,
+                label: l10n.myPlans,
+                isSelected: homeViewModel.currentIndex == 1,
+              ),
+              CustomBottomNavBar.build(
+                icon: Icons.home,
+                label: l10n.home,
+                isSelected: homeViewModel.currentIndex == 2,
+              ),
+              CustomBottomNavBar.build(
+                icon: Icons.fitness_center_outlined,
+                label: l10n.workouts,
+                isSelected: homeViewModel.currentIndex == 3,
+              ),
+              CustomBottomNavBar.build(
+                icon: Icons.chat,
+                label: l10n.chat,
+                isSelected: homeViewModel.currentIndex == 4,
+              ),
+            ],
+          ),
+        );
 @override
 Widget build(BuildContext context) {
   final l10n = AppLocalizations.of(context)!;
