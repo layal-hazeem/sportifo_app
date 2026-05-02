@@ -268,4 +268,19 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get error => 'حدث خطأ، حاول مرة أخرى';
+
+  @override
+  String get aboutUs => 'حول التطبيق';
+
+  @override
+  String get logout => 'تسجيل خروج';
+
+  @override
+  String get confirmLogout => 'هل أنت متأكد أنك تريد تسجيل الخروج؟';
+
+  @override
+  String get logoutApproval => 'نعم، تسجيل الخروج';
+
+  @override
+  String get agreed => 'موافق';
 }

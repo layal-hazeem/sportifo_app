@@ -268,4 +268,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get error => 'Something went wrong, please try again';
+
+  @override
+  String get aboutUs => 'about us';
+
+  @override
+  String get logout => 'Logout';
+
+  @override
+  String get confirmLogout => 'Are you sure you want to log out?';
+
+  @override
+  String get logoutApproval => 'Yes, log out';
+
+  @override
+  String get agreed => 'Agreed';
 }

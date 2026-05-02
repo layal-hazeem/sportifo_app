@@ -1,12 +1,19 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
+import 'package:sportifo_app/core/helpers/dialog_helper.dart';
+import 'package:sportifo_app/core/routes/app_routes.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/features/auth/presentation/view_model/logout/logout_cubit.dart';
 import 'package:sportifo_app/features/home/presentation/view/home_page.dart';
 import 'package:sportifo_app/features/home/presentation/view_model/home_view_model.dart';
 import 'package:sportifo_app/features/profile/presentation/view/profile_page.dart';
+import 'package:sportifo_app/features/profile/presentation/view_model/profile_cubit.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class CustomDrawer extends StatelessWidget {
   final int selectedIndex;
   final Function(int) onItemTap;
+
 
   const CustomDrawer({
     super.key,
@@ -16,6 +23,8 @@ class CustomDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Drawer(
       backgroundColor: AppColors.primaryBtn,
       child: Stack(
@@ -36,19 +45,19 @@ class CustomDrawer extends StatelessWidget {
 
                   _buildItem(
                     icon: Icons.person_outline,
-                    text: "profile",
+                    text: l10n.profile,
                     index: 0,
                     context: context,
                   ),
                   _buildItem(
                     icon: Icons.settings,
-                    text: "Settings",
+                    text: l10n.settings,
                     index: 1,
                     context: context,
                   ),
                   _buildItem(
                     icon: Icons.info_outline,
-                    text: "about us",
+                    text: l10n.aboutUs,
                     index: 2,
                     context: context,
                   ),
@@ -57,7 +66,7 @@ class CustomDrawer extends StatelessWidget {
 
                   _buildItem(
                     icon: Icons.logout,
-                    text: "Logout",
+                    text: l10n.logout,
                     index: 3,
                     context: context,
                   ),
@@ -131,19 +140,20 @@ class CustomDrawer extends StatelessWidget {
     required BuildContext context,
   }) {
     final isSelected = selectedIndex == index;
+        final l10n = AppLocalizations.of(context)!;
 
     return GestureDetector(
       onTap: () {
         onItemTap(index);
         Navigator.pop(context);
-        _navigateToPage(context, index);
+        _navigateToPage(context, index, l10n);
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 6),
         child: Neumorphic(
           duration: const Duration(milliseconds: 250),
           style: NeumorphicStyle(
-            depth: isSelected ? 6 : -4, 
+            depth: isSelected ? 6 : -4,
             intensity: 0.8,
             boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(20)),
             color: isSelected
@@ -182,19 +192,30 @@ class CustomDrawer extends StatelessWidget {
     );
   }
 
-  void _navigateToPage(BuildContext context, int index) {
+  Future<void> _navigateToPage(BuildContext context, int index, AppLocalizations l10n) async {
     switch (index) {
       case 0:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => ProfilePage()),
-        );
+        Navigator.pushReplacementNamed(context, AppRoutes.getProfile);
         break;
       case 1:
         // Navigator.push(context,MaterialPageRoute(builder: (_) => WorkoutsPage()));
         break;
       case 2:
         // Navigator.push(context,MaterialPageRoute(builder: (_) => StatsPage()));
+        break;
+      case 3:
+        final logoutCubit = context.read<LogoutCubit>();
+
+        DialogHelper.showCustomDialog(
+          context: context,
+          title: l10n.logout,
+          message: l10n.confirmLogout,
+          type: DialogType.warning,
+          confirmBtnText: l10n.logoutApproval,
+          onConfirm: () {
+            logoutCubit.logout();
+          },
+        );
         break;
     }
   }

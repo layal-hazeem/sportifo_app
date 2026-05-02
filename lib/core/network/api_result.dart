@@ -8,4 +8,6 @@ class Success<T> extends ApiResult<T> {
 class Failure<T> extends ApiResult<T> {
   final String message;
   Failure(this.message);
+
+  Object? get apiError => null;
 }

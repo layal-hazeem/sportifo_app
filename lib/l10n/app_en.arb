@@ -87,5 +87,10 @@
       "invalidPhone": "Invalid phone number",
       "passwordMismatch": "Passwords do not match",
       "loading": "Loading...",
-      "error": "Something went wrong, please try again"
+      "error": "Something went wrong, please try again",
+      "aboutUs":"about us",
+      "logout":"Logout",
+      "confirmLogout":"Are you sure you want to log out?",
+      "logoutApproval":"Yes, log out",
+      "agreed":"Agreed"
 }
