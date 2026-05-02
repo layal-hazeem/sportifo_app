@@ -38,3 +38,13 @@ class OtpError extends LoginState {
   final String message;
   OtpError(this.message);
 }
+// حالات إعادة إرسال الكود
+class ResendOtpLoading extends LoginState {}
+class ResendOtpSuccess extends LoginState {
+  final String message;
+  ResendOtpSuccess(this.message);
+}
+class ResendOtpError extends LoginState {
+  final String message;
+  ResendOtpError(this.message);
+}

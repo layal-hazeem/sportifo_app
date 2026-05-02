@@ -13,13 +13,14 @@ class DioFactory {
         receiveDataWhenStatusError: true,
         connectTimeout: const Duration(seconds: 20),
         receiveTimeout: const Duration(seconds: 20),
-        headers: {
-          'Accept': 'application/json',
-          'Accept-Language': 'ar',
+        headers: {'Accept': 'application/json', 'Accept-Language': 'ar'},
+        validateStatus: (status) {
+          return status != null && status < 500;
         },
       ),
     );
-
+    // إضافة Interceptors (الوسطاء)
+    // وظيفتهم مراقبة وتعديل أي طلب يخرج أو رد يدخل
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
@@ -30,23 +31,27 @@ class DioFactory {
           }
           return handler.next(options);
         },
-        onError: (DioException e, handler) {
+        onError: (DioException e, handler) async {
           if (e.response?.statusCode == 401) {
-            // توجيه المستخدم لصفحة تسجيل الدخول
+            await _localStorage.clearToken();
           }
           return handler.next(e);
         },
       ),
     );
 
-    _dio.interceptors.add(LogInterceptor(
-      request: true,
-      requestHeader: true,
-      requestBody: true,
-      responseHeader: true,
-      responseBody: true,
-      error: true,
-    ));
+    // إضافة LogInterceptor مفيد جداً أثناء التطوير لرؤية الطلبات والردود في الـ Console
+    // احرص على إيقافه في نسخة الـ Production (release mode)
+    _dio.interceptors.add(
+      LogInterceptor(
+        request: true,
+        requestHeader: true,
+        requestBody: true,
+        responseHeader: true,
+        responseBody: true,
+        error: true,
+      ),
+    );
   }
 
   Dio get dio => _dio;

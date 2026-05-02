@@ -61,6 +61,7 @@ class _CustomNeumorphicFieldState extends State<CustomNeumorphicField> {
           ),
 
          prefixIcon: Icon(widget.icon, color: AppColors.hintText, size: 20),
+//           prefixIcon: Icon(widget.icon, color: AppColors.hintText, size: 20),
 
           suffixIcon: widget.isPassword
               ? IconButton(

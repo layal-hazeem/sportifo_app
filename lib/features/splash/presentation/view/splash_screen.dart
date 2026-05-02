@@ -13,7 +13,8 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin{
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
   late AnimationController controller;
   late Animation<double> scaleAnimation;
 
@@ -25,9 +26,10 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       duration: const Duration(seconds: 3),
     );
 
-    scaleAnimation = Tween<double>(begin: 0.6, end: 1.0).animate(
-      CurvedAnimation(parent: controller, curve: Curves.easeInOut),
-    );
+    scaleAnimation = Tween<double>(
+      begin: 0.6,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: controller, curve: Curves.easeInOut));
 
     controller.repeat(reverse: true);
 
@@ -70,14 +72,11 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:AppColors.primaryBtn, // لونك
+      backgroundColor: AppColors.primaryBtn, // لونك
       body: Center(
         child: ScaleTransition(
           scale: scaleAnimation,
-          child: Image.asset(
-            "assets/images/logo.png",
-            width: 400,
-          ),
+          child: Image.asset("assets/images/logo.png", width: 400),
         ),
       ),
     );

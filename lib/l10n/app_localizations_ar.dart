@@ -63,6 +63,21 @@ class AppLocalizationsAr extends AppLocalizations {
   String get updatePassword => 'تحديث كلمة السر';
 
   @override
+  String get loginSuccess => 'تم تسجيل الدخول بنجاح ';
+
+  @override
+  String get otpSentMessage => 'تم إرسال كود التحقق ';
+
+  @override
+  String get resendCodeIn => 'إعادة إرسال الكود خلال';
+
+  @override
+  String get passwordChangedSuccess => 'تم تحديث كلمة المرور بنجاح! يرجى تسجيل الدخول بكلمة المرور الجديدة.';
+
+  @override
+  String get passwordsDontMatch => 'كلمات المرور غير متطابقة';
+
+  @override
   String get progress => 'تقدم';
 
   @override
@@ -88,6 +103,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get passwordTooShort => 'كلمة السر يجب أن تكون فوق 8 محارف';
+
+  @override
+  String get unexpectedError => 'حدث خطأ غير متوقع، يرجى المحاولة لاحقاً';
 
   @override
   String get completeProfileInfo => 'إكمال معلومات الملف الشخصي';
@@ -250,4 +268,19 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get error => 'حدث خطأ، حاول مرة أخرى';
+
+  @override
+  String get aboutUs => 'حول التطبيق';
+
+  @override
+  String get logout => 'تسجيل خروج';
+
+  @override
+  String get confirmLogout => 'هل أنت متأكد أنك تريد تسجيل الخروج؟';
+
+  @override
+  String get logoutApproval => 'نعم، تسجيل الخروج';
+
+  @override
+  String get agreed => 'موافق';
 }

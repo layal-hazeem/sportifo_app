@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:sportifo_app/features/profile/data/models/profile_response.dart';
 
 import '../../../../core/network/api_error_handler.dart';
 import '../../../../core/network/api_result.dart';
@@ -41,6 +42,16 @@ class AuthRepository {
     final response = await _authWebService.resetPassword(body);
     return LoginResponse.fromJson(response.data);
   }
+// بداخل كلاس AuthRepository
+  Future<LoginResponse> resendOtp(String login) async {
+    try {
+      final response = await _authWebService.resendOtp(login);
+      return LoginResponse.fromJson(response.data);
+    } catch (e) {
+      // نستخدم الـ Handler الذي أعددتِه مسبقاً
+      throw ApiErrorHandler.handle(e);
+    }
+  }
 
   Future<ApiResult<RegisterResponseModel>> register(RegisterRequestModel request) async {
     try {
@@ -56,9 +67,28 @@ class AuthRepository {
       return Failure("Unexpected error occurred");
     }
   }
+Future<ApiResult<CompleteProfileResponsModel>> completeProfile(
+  CompleteProfileRequestModel body,
+) async {
+  try {
+    final formData = await body.toFormData();
+    final response = await _authWebService.completeProfile(formData);
 
-  Future completeProfile(CompleteProfileRequestModel body) async {
-  final response = await _authWebService.completeProfile(body);
-  return CompleteProfileResponsModel.fromJson(response.data);
+    return Success(
+      CompleteProfileResponsModel.fromJson(response.data),
+    );
+  } catch (e) {
+    return Failure(ApiErrorHandler.handle(e));
+  }
 }
+
+Future<ApiResult<void>> logout() async {
+  try {
+    await _authWebService.logout();
+    return  Success(null);
+  } catch (e) {
+    return Failure(ApiErrorHandler.handle(e));
+  }
+}
+
 }

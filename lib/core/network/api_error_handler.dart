@@ -7,27 +7,26 @@ class ApiErrorHandler {
         case DioExceptionType.connectionTimeout:
         case DioExceptionType.sendTimeout:
         case DioExceptionType.receiveTimeout:
-          return "Connection timeout. Please check your internet and try again.";
+          return "Connection timeout. Please check your internet.";
         case DioExceptionType.badResponse:
           return _handleStatusCode(error.response);
-        case DioExceptionType.cancel:
-          return "Request to the server was cancelled.";
         case DioExceptionType.connectionError:
-          return "No Internet connection. Please check your network.";
-        case DioExceptionType.unknown:
+          return "No Internet connection.";
         default:
-          return "Unexpected network error occurred.";
+        // لا نرجع رسالة هنا، نتركها فارغة أو نرجع null ليتم تجاهلها في الواجهة
+          return "";
       }
     } else {
       return "Something went wrong. Please try again.";
     }
+    return ""; // تجاهل الأخطاء البرمجية غير المتعلقة بالشبكة في الـ UI
   }
 
   static String _handleStatusCode(Response? response) {
-    if (response == null) return "Unknown server error.";
+    if (response == null) return "";
 
-    final statusCode = response.statusCode;
     final data = response.data;
+    String? serverMessage; // نجعلها نول في البداية
 
     String? extractedMessage;
 

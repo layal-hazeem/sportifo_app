@@ -203,6 +203,36 @@ abstract class AppLocalizations {
   /// **'Update Password'**
   String get updatePassword;
 
+  /// No description provided for @loginSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Login Successes'**
+  String get loginSuccess;
+
+  /// No description provided for @otpSentMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'A verification code has been sent'**
+  String get otpSentMessage;
+
+  /// No description provided for @resendCodeIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend code in'**
+  String get resendCodeIn;
+
+  /// No description provided for @passwordChangedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Password updated successfully! Please login with your new password.'**
+  String get passwordChangedSuccess;
+
+  /// No description provided for @passwordsDontMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get passwordsDontMatch;
+
   /// No description provided for @progress.
   ///
   /// In en, this message translates to:
@@ -256,6 +286,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Password must be at least 8 characters'**
   String get passwordTooShort;
+
+  /// No description provided for @unexpectedError.
+  ///
+  /// In en, this message translates to:
+  /// **'An unexpected error occurred, please try again later'**
+  String get unexpectedError;
 
   /// No description provided for @completeProfileInfo.
   ///
@@ -580,6 +616,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Something went wrong, please try again'**
   String get error;
+
+  /// No description provided for @aboutUs.
+  ///
+  /// In en, this message translates to:
+  /// **'about us'**
+  String get aboutUs;
+
+  /// No description provided for @logout.
+  ///
+  /// In en, this message translates to:
+  /// **'Logout'**
+  String get logout;
+
+  /// No description provided for @confirmLogout.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to log out?'**
+  String get confirmLogout;
+
+  /// No description provided for @logoutApproval.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, log out'**
+  String get logoutApproval;
+
+  /// No description provided for @agreed.
+  ///
+  /// In en, this message translates to:
+  /// **'Agreed'**
+  String get agreed;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

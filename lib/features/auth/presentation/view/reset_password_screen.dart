@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/snack_bar_utils.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../data/models/login/reset_password_request.dart';
 import '../view_model/login/login_cubit.dart';
@@ -34,14 +35,19 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       body: BlocListener<LoginCubit, LoginState>(
         listener: (context, state) {
           if (state is LoginSuccess) {
+            AppSnackBar.show(
+              context,
+              message: l10n.passwordChangedSuccess,
+              type: SnackBarType.success,
+            );
             // نجحت العملية! ارجعي لأول صفحة (Login)
             Navigator.popUntil(context, (route) => route.isFirst);
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("Success! Please login with new password")),
-            );
+
           } else if (state is LoginError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: Colors.red),
+            AppSnackBar.show(
+              context,
+              message: state.message,
+              type: SnackBarType.error,
             );
           }
         },
@@ -61,7 +67,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   CustomNeumorphicField(
                     controller: passwordController,
                     hint: l10n.passwordHint,
-                    icon: Icons.lock_outline,
+                    icon: Icons.lock_outline, // أيقونة القفل
                     isPassword: true,
                     validator: (value) => value!.length < 8 ? l10n.passwordTooShort : null,
                   ),
@@ -75,7 +81,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     hint: l10n.passwordHint,
                     icon: Icons.lock_reset,
                     isPassword: true,
-                    validator: (value) => value != passwordController.text ? "Passwords don't match" : null,
+                    // استخدام نص الترجمة بدلاً من النص الثابت
+                    validator: (value) => value != passwordController.text
+                        ? l10n.passwordsDontMatch
+                        : null,
                   ),
 
                   const SizedBox(height: 60),
@@ -85,6 +94,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                       if (formKey.currentState!.validate()) {
                         context.read<LoginCubit>().emitResetPasswordStates(
                           ResetPasswordRequestBody(
+                            email: widget.email, // ✅ مرري الإيميل المستلم من الـ OTP
+                            code: widget.otpCode, // ✅ مرري الكود المستلم من الـ OTP
                             password: passwordController.text,
                             passwordConfirmation: confirmPasswordController.text,
                           ),

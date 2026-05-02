@@ -2,10 +2,13 @@ import 'dart:async'; // ضروري للمؤقت
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pinput/pinput.dart';
+import 'package:sportifo_app/core/routes/app_routes.dart';
+import 'package:sportifo_app/features/auth/presentation/view/complete_profile_info.dart';
 import 'package:sportifo_app/features/auth/presentation/view/reset_password_screen.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/storage/local_storage.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/snack_bar_utils.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../home/presentation/view/home_page.dart';
 import '../../data/models/login/verify_otp_request.dart';
@@ -36,13 +39,21 @@ class _OTPScreenState extends State<OTPScreen> {
   bool _isFinished = false;
 
   void startTimer() {
-    setState(() { _isFinished = false; _start = 60; });
+    setState(() {
+      _isFinished = false;
+      _start = 60;
+    });
     _timer?.cancel(); // تأمين لعدم تكرار التايمر
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_start == 0) {
-        setState(() { timer.cancel(); _isFinished = true; });
+        setState(() {
+          timer.cancel();
+          _isFinished = true;
+        });
       } else {
-        setState(() { _start--; });
+        setState(() {
+          _start--;
+        });
       }
     });
   }
@@ -65,8 +76,13 @@ class _OTPScreenState extends State<OTPScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     final defaultPinTheme = PinTheme(
-      width: 60, height: 65,
-      textStyle: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.textDark),
+      width: 60,
+      height: 65,
+      textStyle: const TextStyle(
+        fontSize: 22,
+        fontWeight: FontWeight.bold,
+        color: AppColors.textDark,
+      ),
       decoration: BoxDecoration(
         color: AppColors.background,
         borderRadius: BorderRadius.circular(15),
@@ -81,47 +97,65 @@ class _OTPScreenState extends State<OTPScreen> {
       backgroundColor: AppColors.background,
       appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0),
       body: BlocListener<LoginCubit, LoginState>(
-          listener: (context, state) async {
-            if (state is OtpLoading) {
-              showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (_) => const Center(child: CircularProgressIndicator()),
+        listener: (context, state) async {
+          if (state is OtpLoading) {
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (_) => const Center(child: CircularProgressIndicator()),
+            );
+          } else if (state is OtpSuccess) {
+            Navigator.pop(context); // إغلاق الـ Loading
+
+            // ✅ حفظ التوكن مرة واحدة فقط بشكل مركزي
+            final token = state.response.data?.token;
+            if (token != null) {
+              await getIt<LocalStorage>().saveToken(token);
+            }
+
+            if (widget.isFromForgotPassword) {
+              Navigator.pushReplacementNamed(
+                context,
+                AppRoutes.resetPasswordScreen,
+                arguments: {
+                  'email': widget.loginEmail,
+                  'otpCode': pinController.text,
+                },
               );
+            } else {
+              // ✅ التوجه مباشرة لتعديل الملف الشخصي (الآن التوكن محفوظ وجاهز)
+              Navigator.pushReplacementNamed(context, AppRoutes.editProfile);
             }
+          }
+          else if (state is OtpError) {
+            Navigator.pop(context); // لإغلاق الـ Loading Dialog
+            AppSnackBar.show(
+              context,
+              message: state.message, // عرض الرسالة المستخرجة من الـ Response
+              type: SnackBarType.error,
+            );
 
-            else if (state is OtpSuccess) {
-              Navigator.pop(context);
-
-              final token = state.response.data!.token;
-
-              if (widget.isFromForgotPassword) {
-                // 🔐 نروح ل reset password
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => ResetPasswordScreen(
-                      email: widget.loginEmail,
-                      otpCode: pinController.text,
-                    ),
-                  ),
-                );
-              } else {
-                // ✅ login flow
-                await getIt<LocalStorage>().saveToken(token);
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (_) => const HomePage()),
-                );
-              }
-            }
-          },
+          }// أضيفي هذه الحالات داخل الـ listener في OTPScreen
+          else if (state is ResendOtpLoading) {
+            // يمكن إظهار مؤشر تحميل صغير أو تعطيل الزر
+          } else if (state is ResendOtpSuccess) {
+            AppSnackBar.show(
+              context,
+              message: state.message,
+              type: SnackBarType.success,
+            );
+          }
+        },
         child: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               children: [
-                AuthHeader(title: l10n.otpTitle, subtitle: l10n.otpSubtitle, isCentered: true),
+                AuthHeader(
+                  title: l10n.otpTitle,
+                  subtitle: l10n.otpSubtitle,
+                  isCentered: true,
+                ),
                 const SizedBox(height: 60),
                 Pinput(
                   controller: pinController,
@@ -131,33 +165,51 @@ class _OTPScreenState extends State<OTPScreen> {
                 const SizedBox(height: 60),
                 CustomAuthButton(
                   text: l10n.verify,
+                  // تغيير اللون ليدل على أن الزر معطل
+                  backgroundColor: _isFinished ? Colors.grey.shade400 : AppColors.primaryBtn,
                   onPressed: _isFinished
-                      ? null // إذا انتهى الوقت الزر بكون معطل
+                      ? null  // 🔥 هنا السر: تمرير null يعطل الزر تماماً ويجعله غير قابل للضغط
                       : () {
-                    // تأكدي من استيراد الملفات الصحيحة في أعلى الشاشة
                     final otpValue = pinController.text;
-                    if (otpValue.isNotEmpty) {
-                      context.read<LoginCubit>().verifyOtp(
-                        VerifyOtpRequestBody(
-                          login: widget.loginEmail,
-                          otp: otpValue,
-                        ),
-                      );
+                    if (otpValue.length < 6) {
+                      AppSnackBar.show(context, message: "Please enter full code", type: SnackBarType.error);
+                      return;
                     }
+                    context.read<LoginCubit>().verifyOtp(
+                      VerifyOtpRequestBody(
+                        login: widget.loginEmail,
+                        otp: otpValue,
+                      ),
+                    );
                   },
                 ),
                 const SizedBox(height: 20),
                 // عرض العداد أو زر إعادة الإرسال
                 _isFinished
                     ? TextButton(
-                    onPressed: () {
-                      // استدعاء دالة إعادة الإرسال
-                      // context.read<LoginCubit>().emitLoginStates(LoginRequest(login: widget.loginEmail, password: ...));
-                      startTimer();
-                    },
-                    child: Text(l10n.resendCode, style: const TextStyle(color: AppColors.primaryBtn, fontWeight: FontWeight.bold)))
-                    : Text("Resend code in 00:${_start.toString().padLeft(2, '0')}",
-                    style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
+                  onPressed: () {
+                    // 1. مسح النص القديم من الحقول
+                    pinController.clear();
+                    // 2. استدعاء الدالة من الكيوبيت
+                    context.read<LoginCubit>().resendOtp(widget.loginEmail);
+                    // 3. إعادة تشغيل العداد (سيعود الزر للعمل تلقائياً لأن _isFinished ستصبح false)
+                    startTimer();
+                  },
+                  child: Text(
+                    l10n.resendCode,
+                    style: const TextStyle(
+                      color: AppColors.primaryBtn,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                )
+                    : Text(
+                  "${l10n.resendCodeIn} 00:${_start.toString().padLeft(2, '0')}", // استخدمي الترجمة هنا
+                  style: const TextStyle(
+                    color: Colors.grey,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ],
             ),
           ),
