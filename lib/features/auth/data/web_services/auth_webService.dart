@@ -45,4 +45,9 @@ class AuthWebService {
       data: formData,
     );
   }
+
+  Future<Response> logout() async {
+  return await dio.post(ApiConstants.logout);
+}
+
 }

@@ -214,20 +214,15 @@ if (gender != null) {
     map['gender'] = gender! ? 1 : 0;
   }
 
-  // 3. معالجة الصورة و update_pic
-  // إذا كانت هناك صورة جديدة (مسار ملف محلي)
   if (profile_pic != null && !profile_pic!.startsWith('http')) {
     map['profile_pic'] = await MultipartFile.fromFile(profile_pic!);
-    map['update_pic'] = 1; // السيرفر يطلب true/false أو 1/0
+    map['update_pic'] = 1;
   } else {
-    // إذا لم يغير الصورة، نرسل 0 ليتخطى الـ Validation
     map['update_pic'] = 0;
   }
 
-  // 4. إزالة القيم الفارغة (باستثناء الحقول التي أصلحناها يدوياً فوق)
   map.removeWhere((key, value) => value == null);
 
-  // 5. إضافة طريقة PUT لـ Laravel
   map['_method'] = 'PUT';
 
   return FormData.fromMap(map);

@@ -16,7 +16,7 @@ class CompleteProfileResponsModel {
     final String? firstName;
     final String? lastName;
     final String? email;
-    final String? phone; // جعلتهnullable
+    final String? phone; 
     final DateTime? dateOfBirth;
     final bool? gender;
     final int? isActive;

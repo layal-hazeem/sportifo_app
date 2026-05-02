@@ -7,6 +7,8 @@ import 'package:sportifo_app/features/auth/presentation/view/register_screen.dar
 import 'package:sportifo_app/features/auth/presentation/view_model/complete_profile/complete_profile_cubit.dart';
 import 'package:sportifo_app/features/home/presentation/view/home_page.dart';
 import 'package:sportifo_app/features/onboarding/presentation/view/onboarding_screen.dart';
+import 'package:sportifo_app/features/profile/presentation/view/profile_page.dart';
+import 'package:sportifo_app/features/profile/presentation/view_model/profile_cubit.dart';
 import 'core/di/service_locator.dart';
 import 'core/routes/app_routes.dart';
 import 'features/auth/presentation/view/forgot_password_screen.dart';
@@ -23,6 +25,7 @@ void main() async {
   await setupServiceLocator(); // 🔥 وضعنا await هنا لكي ينتظر تحميل الذاكرة
   runApp(const MyApp());
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -33,7 +36,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Sportifo',
       initialRoute: AppRoutes.splash,
-
       routes: {
         AppRoutes.splash: (context) => const SplashScreen(),
         AppRoutes.onboarding: (context) => const OnboardingScreen(),
@@ -55,11 +57,17 @@ class MyApp extends StatelessWidget {
             create: (context) => getIt<LoginCubit>(), // 🔥 الحل هون
             child: OTPScreen(loginEmail: email),
           );
-        }, // ملاحظة: الـ OTP والـ Reset Password يتم حقنهم هنا بنفس الطريقة لاحقاً
+        },
         AppRoutes.editProfile: (context) => BlocProvider(
           create: (_) => getIt<CompleteProfileCubit>(),
           child: CompleteProfileInfoView(),
         ),
+
+        AppRoutes.getProfile: (context) => BlocProvider(
+          create: (context) => getIt<ProfileCubit>()..getProfile(),
+          child: ProfilePage(),
+        ),
+
         AppRoutes.home: (context) => const HomePage(),
         AppRoutes.forgotPasswordScreen: (context) => BlocProvider(
           create: (context) => getIt<LoginCubit>(),
@@ -78,25 +86,22 @@ class MyApp extends StatelessWidget {
           );
         },
       },
-        localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: const [Locale('en'), Locale('ar')],
-        locale: const Locale('en'),
-        themeMode: ThemeMode.light,
-        theme: const NeumorphicThemeData(
-          baseColor: Color(0xFFF2F2F2),
-          lightSource: LightSource.topLeft,
-          depth: 10,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [Locale('en'), Locale('ar')],
+      locale: const Locale('en'),
+      themeMode: ThemeMode.light,
+      theme: const NeumorphicThemeData(
+        baseColor: Color(0xFFF2F2F2),
+        lightSource: LightSource.topLeft,
+        depth: 10,
 
         // ملاحظة: الـ OTP والـ Reset Password يتم حقنهم هنا بنفس الطريقة لاحقاً
-
-  ),
-
-
+      ),
     );
   }
 }

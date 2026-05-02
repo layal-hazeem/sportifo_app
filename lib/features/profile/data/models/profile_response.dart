@@ -1,0 +1,125 @@
+// To parse this JSON data, do
+//
+//     final profileResponsModel = profileResponsModelFromJson(jsonString);
+
+import 'dart:convert';
+
+ProfileResponsModel profileResponsModelFromJson(String str) => ProfileResponsModel.fromJson(json.decode(str));
+
+String profileResponsModelToJson(ProfileResponsModel data) => json.encode(data.toJson());
+
+class ProfileResponsModel {
+    final int? id;
+    final String firstName;
+    final String? lastName;
+    final String? email;
+    final String? phone;
+    final DateTime? dateOfBirth;
+    final bool? gender;
+    final double? height;
+    final double? weight;
+    final int? isActive;
+    final bool? isVerified;
+    final String? profilePic;
+    final Sizes? sizes;
+
+    ProfileResponsModel({
+        this.id,
+        required this.firstName,
+        this.lastName,
+        this.email,
+        this.phone,
+        this.dateOfBirth,
+        this.gender,
+        this.height,
+        this.weight,
+        this.isActive,
+        this.isVerified,
+        this.profilePic,
+        this.sizes,
+    });
+
+    factory ProfileResponsModel.fromJson(Map<String, dynamic> json) => ProfileResponsModel(
+        id: json["id"],
+        firstName: json["first_name"],
+        lastName: json["last_name"],
+        email: json["email"],
+        phone: json["phone"],
+        dateOfBirth: json["date_of_birth"] == null ? null : DateTime.parse(json["date_of_birth"]),
+        gender: json["gender"],
+        height: json["height"]?.toDouble(),
+        weight: json["weight"]?.toDouble(),
+        isActive: json["is_active"],
+        isVerified: json["is_verified"],
+        profilePic: json["profile_pic"],
+        sizes: json["sizes"] == null ? null : Sizes.fromJson(json["sizes"]),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "id": id,
+        "first_name": firstName,
+        "last_name": lastName,
+        "email": email,
+        "phone": phone,
+        "date_of_birth": "${dateOfBirth!.year.toString().padLeft(4, '0')}-${dateOfBirth!.month.toString().padLeft(2, '0')}-${dateOfBirth!.day.toString().padLeft(2, '0')}",
+        "gender": gender,
+        "height": height,
+        "weight": weight,
+        "is_active": isActive,
+        "is_verified": isVerified,
+        "profile_pic": profilePic,
+        "sizes": sizes?.toJson(),
+    };
+}
+
+class Sizes {
+    final int? id;
+    final double? height;
+    final double? weight;
+    final double? shouldersWidth;
+    final double? chestPerimeter;
+    final double? stomachPerimeter;
+    final double? waistPerimeter;
+    final double? thighPerimeter;
+    final double? hipPerimeter;
+    final double? armPerimeter;
+
+    Sizes({
+        this.id,
+        this.height,
+        this.weight,
+        this.shouldersWidth,
+        this.chestPerimeter,
+        this.stomachPerimeter,
+        this.waistPerimeter,
+        this.thighPerimeter,
+        this.hipPerimeter,
+        this.armPerimeter,
+    });
+
+    factory Sizes.fromJson(Map<String, dynamic> json) => Sizes(
+        id: json["id"],
+        height: json["height"]?.toDouble(),
+        weight: json["weight"]?.toDouble(),
+        shouldersWidth: json["shoulders_width"]?.toDouble(),
+        chestPerimeter: json["chest_perimeter"]?.toDouble(),
+        stomachPerimeter: json["stomach_perimeter"]?.toDouble(),
+        waistPerimeter: json["waist_perimeter"]?.toDouble(),
+        thighPerimeter: json["thigh_perimeter"]?.toDouble(),
+        hipPerimeter: json["hip_perimeter"]?.toDouble(),
+        armPerimeter: json["arm_perimeter"]?.toDouble(),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "id": id,
+        "height": height,
+        "weight": weight,
+        "shoulders_width": shouldersWidth,
+        "chest_perimeter": chestPerimeter,
+        "stomach_perimeter": stomachPerimeter,
+        "waist_perimeter": waistPerimeter,
+        "thigh_perimeter": thighPerimeter,
+        "hip_perimeter": hipPerimeter,
+        "arm_perimeter": armPerimeter,
+    };
+}

@@ -580,6 +580,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Something went wrong, please try again'**
   String get error;
+
+  /// No description provided for @aboutUs.
+  ///
+  /// In en, this message translates to:
+  /// **'about us'**
+  String get aboutUs;
+
+  /// No description provided for @logout.
+  ///
+  /// In en, this message translates to:
+  /// **'Logout'**
+  String get logout;
+
+  /// No description provided for @confirmLogout.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to log out?'**
+  String get confirmLogout;
+
+  /// No description provided for @logoutApproval.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, log out'**
+  String get logoutApproval;
+
+  /// No description provided for @agreed.
+  ///
+  /// In en, this message translates to:
+  /// **'Agreed'**
+  String get agreed;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -13,10 +13,7 @@ class DioFactory {
         receiveDataWhenStatusError: true,
         connectTimeout: const Duration(seconds: 20),
         receiveTimeout: const Duration(seconds: 20),
-        headers: {
-          'Accept': 'application/json',
-          'Accept-Language': 'ar',
-        },
+        headers: {'Accept': 'application/json', 'Accept-Language': 'ar'},
         validateStatus: (status) {
           return status != null && status < 500;
         },
@@ -34,9 +31,9 @@ class DioFactory {
           }
           return handler.next(options);
         },
-        onError: (DioException e, handler) {
+        onError: (DioException e, handler) async {
           if (e.response?.statusCode == 401) {
-            // توجيه المستخدم لصفحة تسجيل الدخول
+            await _localStorage.clearToken();
           }
           return handler.next(e);
         },
