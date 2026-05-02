@@ -9,4 +9,8 @@ class AppRoutes {
   static const resetPasswordScreen = '/resetPasswordScreen';
 static const String profile= "/profile";
   static const String editProfile = "/profile/edit";
+
+  static const String muscleGroups = "/muscleGroups";
+  static const String exercisesList = "/exercisesList";
+  static const String exerciseDetails = "/exerciseDetails";
 }

@@ -184,9 +184,9 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                   TextButton(
                     onPressed: skip,
                     child: Text(
-                      "Skip",
+                      l10n.skip,
                       style: TextStyle(
-                        color: AppColors.primaryBtn,
+                        color: AppColors.linkColor,
                         fontSize: 18,
                       ),
                     ),

@@ -305,7 +305,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     buildField(
                                       l10n.password,
                                       l10n.passwordHint,
-                                      Icons.visibility_off_outlined,
+                                      Icons.lock_outline,
                                       isPassword: true,
                                       controller: _passwordController,
                                       validator: (val) =>
@@ -314,7 +314,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     buildField(
                                       l10n.confirmPassword,
                                       l10n.confirmPassword,
-                                      Icons.visibility_off_outlined,
+                                      Icons.lock_outline,
                                       isPassword: true,
                                       controller: _confirmPasswordController,
                                       validator: (val) => AppValidators.validateConfirmPassword(
@@ -364,7 +364,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           child: Text(
                             l10n.back,
                             style: const TextStyle(
-                              color: AppColors.primaryBtn,
+                              color: AppColors.linkColor,
                               fontWeight: FontWeight.bold,
                             ),
                           ),

@@ -6,6 +6,8 @@ import 'package:sportifo_app/features/home/presentation/widgets/custom_bottom_na
 import 'package:sportifo_app/features/home/presentation/widgets/custom_drawer.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
+import '../../../workout/presentation/view/workout_type_screen.dart';
+
 HomeViewModel homeViewModel = HomeViewModel();
 
 class HomePage extends StatefulWidget {
@@ -18,6 +20,14 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int selectedDrawerIndex = 1;
 
+  // 🔥 1. قائمة الشاشات التي ستظهر في الـ Body
+  final List<Widget> _screens = [
+    const Center(child: Text("Progress Screen")), // Index 0
+    const Center(child: Text("My Plans Screen")), // Index 1
+    const Center(child: Text("Home Dashboard")),  // Index 2
+    const WorkoutTypeScreen(),                    // 🔥 Index 3: شاشتنا الفخمة للتمارين
+    const Center(child: Text("Chat Screen")),     // Index 4
+  ];
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -26,6 +36,7 @@ class _HomePageState extends State<HomePage> {
       listenable: homeViewModel,
       builder: (context, child) {
         return Scaffold(
+          body: _screens[homeViewModel.currentIndex],
           drawer: CustomDrawer(
             selectedIndex: selectedDrawerIndex,
             onItemTap: (index) {

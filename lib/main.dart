@@ -17,6 +17,10 @@ import 'features/auth/presentation/view_model/login/login_cubit.dart';
 import 'features/auth/presentation/view_model/register/register_cubit.dart';
 import 'features/home/presentation/view/home_page.dart';
 import 'features/splash/presentation/view/splash_screen.dart';
+import 'features/workout/presentation/view/exercises_list_screen.dart';
+import 'features/workout/presentation/view/muscle_groups_screen.dart';
+import 'features/workout/presentation/view_model/categories_cubit/categories_cubit.dart';
+import 'features/workout/presentation/view_model/exercises_cubit/exercises_cubit.dart';
 import 'l10n/app_localizations.dart';
 
 void main() async {
@@ -65,7 +69,28 @@ class MyApp extends StatelessWidget {
             viewModel: CompleteProfileViewModel(),
           ),
         ),
+// 🔥 مسارات التمارين
+        AppRoutes.muscleGroups: (context) => BlocProvider(
+          create: (context) => getIt<CategoriesCubit>(),
+          child: const MuscleGroupsScreen(),
+        ),
+        AppRoutes.exercisesList: (context) {
+          // استلام الـ ID (إما للكارديو أو للعضلة)
+          final args = ModalRoute.of(context)?.settings.arguments as Map<String, int>?;
+          return BlocProvider(
+            create: (context) => getIt<ExercisesCubit>(), // حقن الكيوبت
+            child: ExercisesListScreen(
+              categoryId: args?['categoryId'],
+              organId: args?['organId'],
+            ),
+          );
+        },
 
+        // AppRoutes.exerciseDetails: (context) {
+        //   // استلام كائن التمرين بالكامل لعرض تفاصيله
+        //   final exercise = ModalRoute.of(context)?.settings.arguments as ExerciseModel;
+        //   return ExerciseDetailsScreen(exercise: exercise);
+        // },
       },
         localizationsDelegates: const [
           AppLocalizations.delegate,
