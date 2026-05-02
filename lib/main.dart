@@ -36,64 +36,48 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 1. أضفنا الـ BlocProvider هون عشان يكون متاح لكل الشاشات
     return NeumorphicApp(
       debugShowCheckedModeBanner: false,
       title: 'Sportifo',
       initialRoute: AppRoutes.splash,
+
       routes: {
         AppRoutes.splash: (context) => const SplashScreen(),
         AppRoutes.onboarding: (context) => const OnboardingScreen(),
 
         AppRoutes.register: (context) => BlocProvider(
-          create: (context) => getIt<RegisterCubit>(),
+          create: (_) => getIt<RegisterCubit>(),
           child: const RegisterScreen(),
         ),
 
         AppRoutes.login: (context) => BlocProvider(
-          create: (context) => getIt<LoginCubit>(),
+          create: (_) => getIt<LoginCubit>(),
           child: const LoginScreen(),
         ),
-        AppRoutes.otpScreen: (context) {
-          // استقبال الـ Arguments كـ Map بدلاً من String لكي نمرر الـ flag
-          final args = ModalRoute.of(context)?.settings.arguments;
 
-          String email = "";
-          bool isFromForgot = false;
-
-          if (args is String) {
-            email = args; // للحالة القديمة (Login normal)
-          } else if (args is Map<String, dynamic>) {
-            email = args['email'] ?? '';
-            isFromForgot = args['isFromForgotPassword'] ?? false;
-          }
-
-          return BlocProvider(
-            create: (context) => getIt<LoginCubit>(),
-            child: OTPScreen(loginEmail: email),
-          );
-        },
         AppRoutes.home: (context) => const HomePage(),
-            child: OTPScreen(
-              loginEmail: email,
-              isFromForgotPassword: isFromForgot,
-            ),
-          );
-        },
+
+        AppRoutes.getProfile: (context) => BlocProvider(
+          create: (_) => getIt<ProfileCubit>()..getProfile(),
+          child: ProfilePage(),
+        ),
+
         AppRoutes.editProfile: (context) => BlocProvider(
           create: (_) => getIt<CompleteProfileCubit>(),
           child: CompleteProfileInfoView(),
         ),
-// 🔥 مسارات التمارين
+
         AppRoutes.muscleGroups: (context) => BlocProvider(
-          create: (context) => getIt<CategoriesCubit>(),
+          create: (_) => getIt<CategoriesCubit>(),
           child: const MuscleGroupsScreen(),
         ),
+
         AppRoutes.exercisesList: (context) {
-          // استلام الـ ID (إما للكارديو أو للعضلة)
-          final args = ModalRoute.of(context)?.settings.arguments as Map<String, int>?;
+          final args = ModalRoute.of(context)?.settings.arguments
+          as Map<String, int>?;
+
           return BlocProvider(
-            create: (context) => getIt<ExercisesCubit>(), // حقن الكيوبت
+            create: (_) => getIt<ExercisesCubit>(),
             child: ExercisesListScreen(
               categoryId: args?['categoryId'],
               organId: args?['organId'],
@@ -101,41 +85,17 @@ class MyApp extends StatelessWidget {
           );
         },
 
-        // AppRoutes.exerciseDetails: (context) {
-        //   // استلام كائن التمرين بالكامل لعرض تفاصيله
-        //   final exercise = ModalRoute.of(context)?.settings.arguments as ExerciseModel;
-        //   return ExerciseDetailsScreen(exercise: exercise);
-        // },
-      },
-        localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: const [Locale('en'), Locale('ar')],
-        locale: const Locale('en'),
-        themeMode: ThemeMode.light,
-        theme: const NeumorphicThemeData(
-          baseColor: Color(0xFFF2F2F2),
-          lightSource: LightSource.topLeft,
-          depth: 10,
-        AppRoutes.getProfile: (context) => BlocProvider(
-          create: (context) => getIt<ProfileCubit>()..getProfile(),
-          child: ProfilePage(),
-        ),
-
-        AppRoutes.home: (context) => const HomePage(),
         AppRoutes.forgotPasswordScreen: (context) => BlocProvider(
-          create: (context) => getIt<ForgotPasswordCubit>(), // ✅ استخدمي هذا
+          create: (_) => getIt<ForgotPasswordCubit>(),
           child: const ForgotPasswordScreen(),
         ),
+
         AppRoutes.resetPasswordScreen: (context) {
-          // استقبال الـ Map الذي يحتوي على الإيميل والكود
-          final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+          final args = ModalRoute.of(context)?.settings.arguments
+          as Map<String, dynamic>?;
 
           return BlocProvider(
-            create: (context) => getIt<LoginCubit>(),
+            create: (_) => getIt<LoginCubit>(),
             child: ResetPasswordScreen(
               email: args?['email'] ?? '',
               otpCode: args?['otpCode'] ?? '',
@@ -143,22 +103,49 @@ class MyApp extends StatelessWidget {
           );
         },
 
+        AppRoutes.otpScreen: (context) {
+          final args = ModalRoute.of(context)?.settings.arguments;
+
+          String email = "";
+          bool isFromForgot = false;
+
+          if (args is String) {
+            email = args;
+          } else if (args is Map<String, dynamic>) {
+            email = args['email'] ?? '';
+            isFromForgot = args['isFromForgotPassword'] ?? false;
+          }
+
+          return BlocProvider(
+            create: (_) => getIt<LoginCubit>(),
+            child: OTPScreen(
+              loginEmail: email,
+              isFromForgotPassword: isFromForgot,
+            ),
+          );
+        },
       },
+
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [Locale('en'), Locale('ar')],
+
+      supportedLocales: const [
+        Locale('en'),
+        Locale('ar'),
+      ],
+
       locale: const Locale('en'),
+
       themeMode: ThemeMode.light,
+
       theme: const NeumorphicThemeData(
         baseColor: Color(0xFFF2F2F2),
         lightSource: LightSource.topLeft,
         depth: 10,
-
-        // ملاحظة: الـ OTP والـ Reset Password يتم حقنهم هنا بنفس الطريقة لاحقاً
       ),
     );
   }
