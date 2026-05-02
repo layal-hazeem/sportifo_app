@@ -19,6 +19,10 @@ import 'features/auth/presentation/view_model/login/forgot_password_cubit.dart';
 import 'features/auth/presentation/view_model/login/login_cubit.dart';
 import 'features/auth/presentation/view_model/register/register_cubit.dart';
 import 'features/splash/presentation/view/splash_screen.dart';
+import 'features/workout/presentation/view/exercises_list_screen.dart';
+import 'features/workout/presentation/view/muscle_groups_screen.dart';
+import 'features/workout/presentation/view_model/categories_cubit/categories_cubit.dart';
+import 'features/workout/presentation/view_model/exercises_cubit/exercises_cubit.dart';
 import 'l10n/app_localizations.dart';
 
 void main() async {
@@ -32,67 +36,66 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 1. أضفنا الـ BlocProvider هون عشان يكون متاح لكل الشاشات
     return NeumorphicApp(
       debugShowCheckedModeBanner: false,
       title: 'Sportifo',
       initialRoute: AppRoutes.splash,
+
       routes: {
         AppRoutes.splash: (context) => const SplashScreen(),
         AppRoutes.onboarding: (context) => const OnboardingScreen(),
 
         AppRoutes.register: (context) => BlocProvider(
-          create: (context) => getIt<RegisterCubit>(),
+          create: (_) => getIt<RegisterCubit>(),
           child: const RegisterScreen(),
         ),
 
         AppRoutes.login: (context) => BlocProvider(
-          create: (context) => getIt<LoginCubit>(),
+          create: (_) => getIt<LoginCubit>(),
           child: const LoginScreen(),
         ),
-        AppRoutes.otpScreen: (context) {
-          // استقبال الـ Arguments كـ Map بدلاً من String لكي نمرر الـ flag
-          final args = ModalRoute.of(context)?.settings.arguments;
 
-          String email = "";
-          bool isFromForgot = false;
+        AppRoutes.home: (context) => const HomePage(),
 
-          if (args is String) {
-            email = args; // للحالة القديمة (Login normal)
-          } else if (args is Map<String, dynamic>) {
-            email = args['email'] ?? '';
-            isFromForgot = args['isFromForgotPassword'] ?? false;
-          }
+        AppRoutes.getProfile: (context) => BlocProvider(
+          create: (_) => getIt<ProfileCubit>()..getProfile(),
+          child: ProfilePage(),
+        ),
 
-          return BlocProvider(
-            create: (context) => getIt<LoginCubit>(),
-            child: OTPScreen(
-              loginEmail: email,
-              isFromForgotPassword: isFromForgot,
-            ),
-          );
-        },
         AppRoutes.editProfile: (context) => BlocProvider(
           create: (_) => getIt<CompleteProfileCubit>(),
           child: CompleteProfileInfoView(),
         ),
 
-        AppRoutes.getProfile: (context) => BlocProvider(
-          create: (context) => getIt<ProfileCubit>()..getProfile(),
-          child: ProfilePage(),
+        AppRoutes.muscleGroups: (context) => BlocProvider(
+          create: (_) => getIt<CategoriesCubit>(),
+          child: const MuscleGroupsScreen(),
         ),
 
-        AppRoutes.home: (context) => const HomePage(),
-        AppRoutes.forgotPasswordScreen: (context) => BlocProvider(
-          create: (context) => getIt<ForgotPasswordCubit>(), // ✅ استخدمي هذا
-          child: const ForgotPasswordScreen(),
-        ),
-        AppRoutes.resetPasswordScreen: (context) {
-          // استقبال الـ Map الذي يحتوي على الإيميل والكود
-          final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+        AppRoutes.exercisesList: (context) {
+          final args = ModalRoute.of(context)?.settings.arguments
+          as Map<String, int>?;
 
           return BlocProvider(
-            create: (context) => getIt<LoginCubit>(),
+            create: (_) => getIt<ExercisesCubit>(),
+            child: ExercisesListScreen(
+              categoryId: args?['categoryId'],
+              organId: args?['organId'],
+            ),
+          );
+        },
+
+        AppRoutes.forgotPasswordScreen: (context) => BlocProvider(
+          create: (_) => getIt<ForgotPasswordCubit>(),
+          child: const ForgotPasswordScreen(),
+        ),
+
+        AppRoutes.resetPasswordScreen: (context) {
+          final args = ModalRoute.of(context)?.settings.arguments
+          as Map<String, dynamic>?;
+
+          return BlocProvider(
+            create: (_) => getIt<LoginCubit>(),
             child: ResetPasswordScreen(
               email: args?['email'] ?? '',
               otpCode: args?['otpCode'] ?? '',
@@ -100,22 +103,49 @@ class MyApp extends StatelessWidget {
           );
         },
 
+        AppRoutes.otpScreen: (context) {
+          final args = ModalRoute.of(context)?.settings.arguments;
+
+          String email = "";
+          bool isFromForgot = false;
+
+          if (args is String) {
+            email = args;
+          } else if (args is Map<String, dynamic>) {
+            email = args['email'] ?? '';
+            isFromForgot = args['isFromForgotPassword'] ?? false;
+          }
+
+          return BlocProvider(
+            create: (_) => getIt<LoginCubit>(),
+            child: OTPScreen(
+              loginEmail: email,
+              isFromForgotPassword: isFromForgot,
+            ),
+          );
+        },
       },
+
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [Locale('en'), Locale('ar')],
+
+      supportedLocales: const [
+        Locale('en'),
+        Locale('ar'),
+      ],
+
       locale: const Locale('en'),
+
       themeMode: ThemeMode.light,
+
       theme: const NeumorphicThemeData(
         baseColor: Color(0xFFF2F2F2),
         lightSource: LightSource.topLeft,
         depth: 10,
-
-        // ملاحظة: الـ OTP والـ Reset Password يتم حقنهم هنا بنفس الطريقة لاحقاً
       ),
     );
   }

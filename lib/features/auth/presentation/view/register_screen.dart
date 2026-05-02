@@ -177,6 +177,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                            );
             }
             else if (state is RegisterFailure) {
+
+
               AppSnackBar.show(
                 context,
                 message: state.errorMessage,
@@ -363,7 +365,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           child: Text(
                             l10n.back,
                             style: const TextStyle(
-                              color: AppColors.primaryBtn,
+                              color: AppColors.linkColor,
                               fontWeight: FontWeight.bold,
                             ),
                           ),

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:sportifo_app/features/profile/data/models/profile_response.dart';
 
 import '../../../../core/network/api_error_handler.dart';
@@ -81,9 +82,10 @@ class AuthRepository {
       // 🔥 في حال النجاح نغلف الرد بـ Success
       return Success(RegisterResponseModel.fromJson(response.data));
 
-    } catch (e) {
-      // 🔥 في حال الفشل نمرر الخطأ للـ Handler ليصطاده ونغلفه بـ Failure
+    } on DioException catch (e) {
       return Failure(ApiErrorHandler.handle(e));
+    } catch (e) {
+      return Failure("Unexpected error occurred");
     }
   }
 Future<ApiResult<CompleteProfileResponsModel>> completeProfile(
