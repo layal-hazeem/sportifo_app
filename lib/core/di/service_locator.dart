@@ -44,7 +44,7 @@ Future<void> setupServiceLocator() async {
 
   getIt.registerFactory<CompleteProfileCubit>(() => CompleteProfileCubit(getIt<AuthRepository>()));
 
-}
+
   getIt.registerFactory<CompleteProfileCubit>(
     () => CompleteProfileCubit(getIt<AuthRepository>()),
   );
