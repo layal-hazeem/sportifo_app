@@ -41,39 +41,24 @@ class LoginCubit extends Cubit<LoginState> {
       emit(LoginError("Something went wrong"));
     }
   }
+// في ملف login_cubit.dart
+// في ملف login_cubit.dart
   void verifyOtp(VerifyOtpRequestBody body) async {
     emit(OtpLoading());
-
     try {
       final response = await _authRepository.verifyOtp(body);
 
-      // ✅ نجاح (في token)
-      if (response.data != null) {
+      // التحقق الصارم من وجود التوكن كدليل نجاح
+      if (response.data?.token != null && response.data!.token!.isNotEmpty) {
         emit(OtpSuccess(response));
+      } else {
+        emit(OtpError(response.message ?? "Invalid OTP"));
       }
-      // ❌ خطأ (OTP غلط أو منتهي)
-      else {
-        emit(OtpError(response.message));
-      }
-
     } catch (error) {
-      emit(OtpError("Invalid or expired OTP"));
+      // هنا سيتم استلام رسالة "Invalid or expired OTP" القادمة من السيرفر
+      emit(OtpError(error.toString()));
     }
   }
-
-  // دالة نسيان كلمة السر
-// داخل ForgotPasswordCubit
-//   void emitForgotPasswordStates(String email) async {
-//     emit(LoginLoading());
-//     try {
-//       final response = await _authRepository.forgotPassword(
-//           ForgotPasswordRequestBody(login: email)
-//       );
-//       emit(LoginSuccess<LoginResponse>(response));
-//     } catch (error) {
-//       emit(LoginError(error: error.toString()));
-//     }
-//   }
 
   void emitResetPasswordStates(ResetPasswordRequestBody body) async {
     emit(LoginLoading());
@@ -81,16 +66,29 @@ class LoginCubit extends Cubit<LoginState> {
     try {
       final response = await _authRepository.resetPassword(body);
 
-      // ✅ نجاح (data null طبيعي)
+      // التحقق من النجاح بناءً على الرسالة القادمة من البوست مان
       if (response.message.contains("successfully")) {
         emit(LoginSuccess(response));
       } else {
+        // في حال رجع رسالة خطأ من السيرفر
         emit(LoginError(response.message));
       }
-
     } catch (error) {
-      emit(LoginError("Something went wrong"));
+      // التقاط أخطاء الـ 401 أو 422 وغيرها
+      emit(LoginError("Failed to reset password. Please check your data."));
     }
   }
 
+  // بداخل كلاس LoginCubit
+  void resendOtp(String email) async {
+    emit(ResendOtpLoading()); // حالة التحميل الخاصة بإعادة الإرسال
+
+    try {
+      final response = await _authRepository.resendOtp(email);
+      emit(ResendOtpSuccess(response.message));
+    } catch (error) {
+      // error هنا ستكون النص الراجع من ApiErrorHandler
+      emit(ResendOtpError(error.toString()));
+    }
+  }
 }

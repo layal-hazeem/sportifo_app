@@ -1,5 +1,5 @@
 class RegisterResponseModel {
-  final int message;
+  final String message; // 🔥 غيرناه إلى String لكي يستقبل الأرقام والنصوص بأمان
   final String data;
 
   RegisterResponseModel({
@@ -9,8 +9,9 @@ class RegisterResponseModel {
 
   factory RegisterResponseModel.fromJson(Map<String, dynamic> json) {
     return RegisterResponseModel(
-      message: json['message'] ?? 0,
-      data: json['data'] ?? '',
+      // استخدام toString يحمي التطبيق من أي Crash بسبب اختلاف نوع البيانات
+      message: json['message']?.toString() ?? '',
+      data: json['data']?.toString() ?? '',
     );
   }
 }

@@ -1,23 +1,32 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalStorage {
+  final SharedPreferences _prefs;
   static const String _tokenKey = "token";
+  static const String _onboardingKey = "onboarding_seen";
 
-  // حفظ التوكن
-  static Future<void> saveToken(String token) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_tokenKey, token);
+  // حقن الـ SharedPreferences من خلال الـ Constructor
+  LocalStorage(this._prefs);
+
+  // ------------------ إدارة التوكن ------------------
+  Future<void> saveToken(String token) async {
+    await _prefs.setString(_tokenKey, token);
   }
 
-  // جلب التوكن
-  static Future<String?> getToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(_tokenKey);
+  String? getToken() {
+    return _prefs.getString(_tokenKey);
   }
 
-  // حذف التوكن (logout لاحقاً)
-  static Future<void> clearToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_tokenKey);
+  Future<void> clearToken() async {
+    await _prefs.remove(_tokenKey);
+  }
+
+  // ------------------ إدارة الأون بوردينغ ------------------
+  Future<void> saveOnboardingSeen() async {
+    await _prefs.setBool(_onboardingKey, true);
+  }
+
+  bool isOnboardingSeen() {
+    return _prefs.getBool(_onboardingKey) ?? false;
   }
 }

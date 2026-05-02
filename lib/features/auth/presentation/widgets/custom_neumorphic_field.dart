@@ -2,13 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import '../../../../core/theme/app_colors.dart';
 
-class CustomNeumorphicField extends StatelessWidget {
+class CustomNeumorphicField extends StatefulWidget {
   final String hint;
   final IconData icon;
   final bool isPassword;
   final Function(String)? onChanged;
   final TextInputType? keyboardType;
-  // 1. أضيفي الـ controller والـ validator
   final TextEditingController? controller;
   final String? Function(String?)? validator;
 
@@ -19,9 +18,23 @@ class CustomNeumorphicField extends StatelessWidget {
     this.isPassword = false,
     this.onChanged,
     this.keyboardType,
-    this.controller, // 2. تمرير الـ controller
-    this.validator,  // 3. تمرير الـ validator
+    this.controller,
+    this.validator,
   });
+
+  @override
+  State<CustomNeumorphicField> createState() => _CustomNeumorphicFieldState();
+}
+
+class _CustomNeumorphicFieldState extends State<CustomNeumorphicField> {
+  late bool _obscureText;
+
+  @override
+  void initState() {
+    super.initState();
+    // إذا كان الحقل كلمة مرور، نجعله مخفياً كبداية
+    _obscureText = widget.isPassword;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,26 +46,43 @@ class CustomNeumorphicField extends StatelessWidget {
         ),
         color: AppColors.background,
       ),
-      // 4. تغيير TextField إلى TextFormField
       child: TextFormField(
-        controller: controller,
-        validator: validator, // 5. ربط الـ validator
-        onChanged: onChanged,
-        keyboardType: keyboardType,
-        obscureText: isPassword,
+        // ✅ إضافة widget. قبل كل المتغيرات هنا
+        controller: widget.controller,
+        validator: widget.validator,
+        onChanged: widget.onChanged,
+        keyboardType: widget.keyboardType,
+        obscureText: _obscureText,
         decoration: InputDecoration(
-          hintText: hint,
+          hintText: widget.hint, // ✅ أضفنا widget.
           hintStyle: const TextStyle(
             color: AppColors.hintText,
             fontSize: AppSizes.hintFontSize,
           ),
-          suffixIcon: Icon(icon, color: AppColors.hintText, size: 20),
+
+          prefixIcon: Icon(widget.icon, color: AppColors.hintText, size: 20),
+
+          suffixIcon: widget.isPassword
+              ? IconButton(
+            icon: Icon(
+              _obscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+              color: AppColors.hintText,
+              size: 20,
+            ),
+            onPressed: () {
+              // تغيير الحالة عند الضغط على العين
+              setState(() {
+                _obscureText = !_obscureText;
+              });
+            },
+          )
+              : null,
+
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 20,
             vertical: 15,
           ),
-          // 6. إضافة تنسيق لرسالة الخطأ لضمان ظهورها بشكل جميل
           errorStyle: const TextStyle(fontSize: 12, height: 0.8),
         ),
       ),

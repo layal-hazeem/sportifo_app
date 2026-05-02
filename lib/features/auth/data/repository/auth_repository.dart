@@ -1,3 +1,8 @@
+import '../../../../core/network/api_error_handler.dart';
+import '../../../../core/network/api_result.dart';
+import 'package:sportifo_app/features/auth/data/models/complete_prfile/complete_profile_request_model.dart';
+import 'package:sportifo_app/features/auth/data/models/complete_prfile/complete_profile_respons_model.dart';
+
 import '../models/login/forgot_password_request_body.dart';
 import '../models/login/login_response.dart';
 import '../models/login/login_request.dart';
@@ -34,18 +39,42 @@ class AuthRepository {
     final response = await _authWebService.resetPassword(body);
     return LoginResponse.fromJson(response.data);
   }
-
-  Future<RegisterResponseModel> register(RegisterRequestModel request) async {
+// بداخل كلاس AuthRepository
+  Future<LoginResponse> resendOtp(String login) async {
     try {
-      // 1. نحول الموديل الذي جاء من الواجهة إلى FormData
-      // نضع await لأن تحويل الصورة إلى ملف يأخذ أجزاء من الثانية
-      final formData = await request.toFormData();
-      final response = await _authWebService.register(formData);
-      return RegisterResponseModel.fromJson(response.data);
-
+      final response = await _authWebService.resendOtp(login);
+      return LoginResponse.fromJson(response.data);
     } catch (e) {
-      // نرمي الخطأ لكي يلتقطه الـ Cubit ويظهره للمستخدم
-      rethrow;
+      // نستخدم الـ Handler الذي أعددتِه مسبقاً
+      throw ApiErrorHandler.handle(e);
     }
   }
+
+  Future<ApiResult<RegisterResponseModel>> register(RegisterRequestModel request) async {
+    try {
+      final formData = await request.toFormData();
+      final response = await _authWebService.register(formData);
+
+      // 🔥 في حال النجاح نغلف الرد بـ Success
+      return Success(RegisterResponseModel.fromJson(response.data));
+
+    } catch (e) {
+      // 🔥 في حال الفشل نمرر الخطأ للـ Handler ليصطاده ونغلفه بـ Failure
+      return Failure(ApiErrorHandler.handle(e));
+    }
+  }
+Future<ApiResult<CompleteProfileResponsModel>> completeProfile(
+  CompleteProfileRequestModel body,
+) async {
+  try {
+    final formData = await body.toFormData();
+    final response = await _authWebService.completeProfile(formData);
+
+    return Success(
+      CompleteProfileResponsModel.fromJson(response.data),
+    );
+  } catch (e) {
+    return Failure(ApiErrorHandler.handle(e));
+  }
+}
 }

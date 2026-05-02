@@ -1,4 +1,8 @@
 import 'package:dio/dio.dart';
+import 'package:sportifo_app/core/network/api_error_handler.dart';
+import 'package:sportifo_app/core/network/api_result.dart';
+import 'package:sportifo_app/features/auth/data/models/complete_prfile/complete_profile_request_model.dart';
+import 'package:sportifo_app/features/auth/data/models/complete_prfile/complete_profile_respons_model.dart';
 import '../../../../core/network/api_constants.dart';
 import '../models/login/forgot_password_request_body.dart';
 import '../models/login/login_request.dart';
@@ -25,12 +29,30 @@ class AuthWebService {
   }
 
   Future<Response> resetPassword(ResetPasswordRequestBody body) async {
-    return await dio.post(ApiConstants.resetPassword, data: body.toJson());
-// أضيفي هنا دوال الـ OTP و Reset Password بنفس الطريقة
+    // تحويل الـ Map إلى FormData
+    FormData formData = FormData.fromMap(body.toJson());
 
+    return await dio.post(
+      ApiConstants.resetPassword,
+      data: formData, // نرسل الـ formData هنا
+    );
+  }
+  // بداخل كلاس AuthWebService
+  Future<Response> resendOtp(String login) async {
+    return await dio.post(
+      ApiConstants.resendOtp,
+      data: {'login': login}, // نرسل الإيميل بداخل Map
+    );
+  }
 
-}
   Future<Response> register(FormData formData) async {
     return await dio.post(ApiConstants.register, data: formData);
+  }
+
+  Future<Response> completeProfile(FormData formData) async {
+    return await dio.post(
+      ApiConstants.editProfile,
+      data: formData,
+    );
   }
 }

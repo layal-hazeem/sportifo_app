@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../view_model/login/forgot_password_cubit.dart';
@@ -30,16 +31,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0, iconTheme: const IconThemeData(color: AppColors.textDark)),
       body: BlocListener<ForgotPasswordCubit, LoginState>( // تأكدي من نوع الـ Cubit المستخدم
         listener: (context, state) {
+          // داخل ForgotPasswordScreen
           if (state is LoginSuccess) {
-            // عند النجاح ننتقل للـ OTP ونمرر الإيميل
-            Navigator.push(
+            Navigator.pushNamed(
               context,
-              MaterialPageRoute(
-                builder: (context) => OTPScreen(
-                  loginEmail: emailController.text.trim(),
-                  isFromForgotPassword: true,
-                ),
-              ),
+              AppRoutes.otpScreen,
+              arguments: {
+                'email': emailController.text.trim(),
+                'isFromForgotPassword': true,
+              },
             );
           } else if (state is LoginError) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -72,13 +72,26 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     },
                   ),
                   const SizedBox(height: 40),
-                  CustomAuthButton(
-                    text: l10n.sendCode,
-                    onPressed: () {
-                      if (formKey.currentState!.validate()) {
-                        // استدعاء دالة إرسال الكود
-                        context.read<ForgotPasswordCubit>().emitForgotPasswordStates(emailController.text.trim());
-                      }
+                  // استبدلي الزر القديم بهذا الكود
+                  // ... بطلة الـ IT، استخدمي هذا الجزء داخل الـ Column بدلاً من القديم
+                  BlocBuilder<ForgotPasswordCubit, LoginState>(
+                    builder: (context, state) {
+                      return CustomAuthButton(
+                        // 1. النص يظل ثابتاً لأن الـ Widget سيتولى إخفاءه عند التحميل
+                        text: l10n.sendCode,
+
+                        // 2. تفعيل حالة التحميل بناءً على الـ state
+                        isLoading: state is LoginLoading,
+
+                        // 3. تعطيل الزر يتم تلقائياً داخل الـ CustomAuthButton إذا كان isLoading true
+                        onPressed: () {
+                          if (formKey.currentState!.validate()) {
+                            context.read<ForgotPasswordCubit>().emitForgotPasswordStates(
+                              emailController.text.trim(),
+                            );
+                          }
+                        },
+                      );
                     },
                   ),
                 ],

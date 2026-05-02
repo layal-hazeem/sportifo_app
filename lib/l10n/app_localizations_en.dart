@@ -63,6 +63,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get updatePassword => 'Update Password';
 
   @override
+  String get loginSuccess => 'Login Successes';
+
+  @override
+  String get otpSentMessage => 'A verification code has been sent';
+
+  @override
+  String get resendCodeIn => 'Resend code in';
+
+  @override
+  String get passwordChangedSuccess => 'Password updated successfully! Please login with your new password.';
+
+  @override
+  String get passwordsDontMatch => 'Passwords do not match';
+
+  @override
   String get progress => 'Progress';
 
   @override
@@ -87,7 +102,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fieldRequired => 'This field  is required';
 
   @override
-  String get passwordTooShort => 'Password must be over 8 digits';
+  String get passwordTooShort => 'Password must be at least 8 characters';
+
+  @override
+  String get unexpectedError => 'An unexpected error occurred, please try again later';
 
   @override
   String get completeProfileInfo => 'Complete Profile Information';
@@ -171,6 +189,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enterLastName => 'Enter your last name';
 
   @override
+  String get email => 'Email';
+
+  @override
+  String get enterEmail => 'Enter Email';
+
+  @override
   String get phone => 'Phone Number';
 
   @override
@@ -217,4 +241,31 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboardingDesc3 => 'Track your nutrition and improve your daily habits.';
+
+  @override
+  String get profile => 'Profile';
+
+  @override
+  String get chat => 'Chat';
+
+  @override
+  String get requiredField => 'This field is required';
+
+  @override
+  String get enterEmailOrPhone => 'Please enter an email or phone number';
+
+  @override
+  String get invalidEmail => 'Invalid email address';
+
+  @override
+  String get invalidPhone => 'Invalid phone number';
+
+  @override
+  String get passwordMismatch => 'Passwords do not match';
+
+  @override
+  String get loading => 'Loading...';
+
+  @override
+  String get error => 'Something went wrong, please try again';
 }

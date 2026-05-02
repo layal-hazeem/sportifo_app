@@ -1,11 +1,13 @@
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../../core/network/api_result.dart';
 import '../../../data/models/register/register_request_model.dart';
 import '../../../data/repository/auth_repository.dart';
 import 'register_state.dart';
 
 class RegisterCubit extends Cubit<RegisterState> {
-  // تعريف الـ Repository كمتغير لا يمكن تغييره
+
   final AuthRepository _authRepository;
 
   // حقن الـ Repository داخل الـ Constructor عند استدعاء الكيوبت
@@ -22,11 +24,10 @@ class RegisterCubit extends Cubit<RegisterState> {
     required String otpMethod,
     File? profilePic, // اختياري لأن المستخدم قد لا يرفع صورة
   }) async {
-
     // 1. إخبار الواجهة أننا بدأنا التحميل (لإظهار دائرة تحميل CircularProgressIndicator)
     emit(const RegisterLoading());
 
-    try {
+
       // 2. تجميع البيانات القادمة من الواجهة داخل الـ Request Model
       final request = RegisterRequestModel(
         firstName: firstName,
@@ -39,18 +40,19 @@ class RegisterCubit extends Cubit<RegisterState> {
         profilePic: profilePic,
       );
 
-      // 3. إرسال الطلب للسيرفر عبر الـ Repository
-      // الكيوبت هنا لا يهتم كيف سيتم الإرسال (JSON أم FormData)، الـ Repository يتكفل بذلك
-      await _authRepository.register(request);
+      final result = await _authRepository.register(request);
 
-      // 4. إذا مر الكود من السطر السابق بدون أخطاء، فهذا يعني أن التسجيل نجح!
-      // نخبر الواجهة بالنجاح (مثلاً للانتقال لشاشة الـ OTP)
-      emit(const RegisterSuccess());
+      // 🔥 سحر الـ Pattern Matching في Dart (للتعامل مع الـ sealed class)
+      switch (result) {
+        case Success():
+        // إذا كان الرد Success، نطلق حالة النجاح
+          emit(const RegisterSuccess());
+          break;
 
-    } catch (e) {
-      // 5. في حال حدوث أي خطأ (مثل إيميل مستخدم سابقاً، أو انقطاع النت)
-      // نلتقط الخطأ ونرسله للواجهة كرسالة نصية لتعرضه للمستخدم في SnackBar
-      emit(RegisterFailure(errorMessage: e.toString()));
+        case Failure():
+        // إذا كان الرد Failure، نأخذ الرسالة الجاهزة والمترجمة التي جهزها لنا الـ ApiErrorHandler
+          emit(RegisterFailure(errorMessage: result.message));
+          break;
+      }
     }
   }
-}

@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
+import 'package:sportifo_app/core/di/service_locator.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
-import 'package:sportifo_app/features/auth/presentation/view_model/complete_profile_view_model.dart';
+import 'package:sportifo_app/features/auth/presentation/view_model/complete_profile/complete_profile_cubit.dart';
 import 'package:sportifo_app/features/auth/presentation/widgets/custom_button.dart';
 import 'package:sportifo_app/features/auth/presentation/widgets/custom_neumorphic_field.dart';
 import 'package:sportifo_app/features/home/presentation/view/home_page.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
-class CompleteBodyMeasurementsView extends StatelessWidget {
-  final CompleteProfileViewModel viewModel;
+import '../../../../core/utils/snack_bar_utils.dart';
 
-  const CompleteBodyMeasurementsView({super.key, required this.viewModel});
+class CompleteBodyMeasurementsView extends StatelessWidget {
+  const CompleteBodyMeasurementsView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,31 +20,26 @@ class CompleteBodyMeasurementsView extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: NeumorphicAppBar(
-        title: Text(l10n.bodyMeasurements),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(0.0),
-            child: TextButton(
-              onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HomePage()),
-                );
-              },
-              child: Text(
-                l10n.skip,
-                softWrap: false,
-                maxLines: 1,
-                style: TextStyle(color: AppColors.linkColor),
-              ),
-            ),
-          ),
-        ],
-      ),
-      body: ListenableBuilder(
-        listenable: viewModel,
-        builder: (context, child) {
+      appBar: NeumorphicAppBar(title: Text(l10n.bodyMeasurements)),
+      body: BlocConsumer<CompleteProfileCubit, CompleteProfileState>(
+        listener: (context, state) {
+          // ✅ التعديل هنا: افحص الـ status وليس نوع الكلاس
+          if (state.status == ProfileStatus.success) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const HomePage()),
+            );
+          }
+
+          if (state.status == ProfileStatus.error) {
+            AppSnackBar.show(
+              context,
+              message: state.errorMessage ?? l10n.unexpectedError, // تأكدي من وجود unexpectedError في الترجمة
+              type: SnackBarType.error,
+            );
+          }
+        },
+        builder: (context, state) {
           return SingleChildScrollView(
             padding: const EdgeInsets.all(20),
             child: Column(
@@ -67,45 +64,69 @@ class CompleteBodyMeasurementsView extends StatelessWidget {
                 _buildMeasurementRow(
                   label1: l10n.shoulders,
                   icon1: Icons.horizontal_rule,
-                  onChanged1: (v) => viewModel.shoulders = double.tryParse(v),
+                  onChanged1: (v) => context
+                      .read<CompleteProfileCubit>()
+                      .setShoulders(double.tryParse(v)),
                   label2: l10n.chestCircumference,
                   icon2: Icons.architecture,
-                  onChanged2: (v) =>
-                      viewModel.chestCircumference = double.tryParse(v),
+                  onChanged2: (v) {
+                    final value = double.tryParse(v);
+                    context.read<CompleteProfileCubit>().setChest(value);
+                  },
                 ),
                 const SizedBox(height: 20),
 
                 _buildMeasurementRow(
                   label1: l10n.belly,
                   icon1: Icons.straighten,
-                  onChanged1: (v) => viewModel.belly = double.tryParse(v),
+                  onChanged1: (v) => context
+                      .read<CompleteProfileCubit>()
+                      .setWaist(double.tryParse(v)),
                   label2: l10n.hipCircumference,
                   icon2: Icons.accessibility_new,
-                  onChanged2: (v) =>
-                      viewModel.hipCircumference = double.tryParse(v),
+                  onChanged2: (v) {
+                    final value = double.tryParse(v);
+                    context.read<CompleteProfileCubit>().setHip(value);
+                  },
                 ),
                 const SizedBox(height: 20),
 
                 _buildMeasurementRow(
                   label1: l10n.thighCircumference,
                   icon1: Icons.boy_rounded,
-                  onChanged1: (v) =>
-                      viewModel.thighCircumference = double.tryParse(v),
+                  onChanged1: (v) => context
+                      .read<CompleteProfileCubit>()
+                      .setThigh(double.tryParse(v)),
                   label2: l10n.handCircumference,
                   icon2: Icons.front_hand_outlined,
-                  onChanged2: (v) =>
-                      viewModel.handCircumference = double.tryParse(v),
+                  onChanged2: (v) {
+                    final value = double.tryParse(v);
+                    context.read<CompleteProfileCubit>().setHand(value);
+                  },
                 ),
 
                 const SizedBox(height: 20),
 
                 CustomAuthButton(
-                  text: viewModel.isLoading
+                  text: state.status == ProfileStatus.loading
                       ? l10n.saving
                       : l10n.startingTheSportsJourney,
-                  onPressed: viewModel.isLoading
-                      ? () {}
-                      : () => viewModel.submitProfile(context),
+
+                  onPressed: state.status == ProfileStatus.loading
+                      ? null 
+                      : () {
+                          final cubit = context.read<CompleteProfileCubit>();
+
+                          if (!state.isComplete) {
+                            AppSnackBar.show(
+                              context,
+                              message: l10n.messageOfIncompleteInfo,
+                              type: SnackBarType.warning, // يفضل استخدام warning هنا
+                            );
+                            return;
+                          }
+                          cubit.completeProfile();
+                        },
                 ),
               ],
             ),

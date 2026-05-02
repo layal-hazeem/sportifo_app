@@ -17,6 +17,11 @@
   "newPassword": "New Password",
   "confirmPassword": "Confirm Password",
   "updatePassword": "Update Password",
+  "loginSuccess": "Login Successes",
+  "otpSentMessage": "A verification code has been sent",
+  "resendCodeIn": "Resend code in",
+  "passwordChangedSuccess": "Password updated successfully! Please login with your new password.",
+  "passwordsDontMatch": "Passwords do not match",
   "progress":"Progress",
   "myPlans":"My Plans",
   "home":"Home",
@@ -25,8 +30,8 @@
   "dontHaveAccount": "Don't have an account ?",
   "signUp": "Sign up",
   "fieldRequired": "This field  is required",
-  "passwordTooShort": "Password must be over 8 digits",
-
+"passwordTooShort": "Password must be at least 8 characters",
+  "unexpectedError": "An unexpected error occurred, please try again later",
   "completeProfileInfo":"Complete Profile Information",
   "weight":"Weight",
   "length":"Length",
@@ -54,7 +59,8 @@
   "lastName": "Last Name",
   "enterFirstName": "Enter your first name",
   "enterLastName": "Enter your last name",
-
+ "email":"Email",
+ "enterEmail":"Enter Email",
   "phone": "Phone Number",
   "enterPhone":"Enter Phone Number",
   "profilePicture": "Profile Picture (Optional)",
@@ -72,6 +78,14 @@
     "onboardingDesc2": "Chat with your coach and improve faster. Expert guidance is always available.",
 
     "onboardingTitle3": "Smart Nutrition Plans",
-    "onboardingDesc3": "Track your nutrition and improve your daily habits."
-
+    "onboardingDesc3": "Track your nutrition and improve your daily habits.",
+      "profile":"Profile",
+    "chat":"Chat",
+     "requiredField": "This field is required",
+      "enterEmailOrPhone": "Please enter an email or phone number",
+      "invalidEmail": "Invalid email address",
+      "invalidPhone": "Invalid phone number",
+      "passwordMismatch": "Passwords do not match",
+      "loading": "Loading...",
+      "error": "Something went wrong, please try again"
 }

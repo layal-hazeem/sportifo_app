@@ -2,23 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:sportifo_app/features/auth/presentation/view/complete_profile_info.dart';
 import 'package:sportifo_app/features/auth/presentation/view/register_screen.dart';
+import 'package:sportifo_app/features/auth/presentation/view_model/complete_profile/complete_profile_cubit.dart';
+import 'package:sportifo_app/features/home/presentation/view/home_page.dart';
 import 'package:sportifo_app/features/onboarding/presentation/view/onboarding_screen.dart';
 import 'core/di/service_locator.dart';
 import 'core/routes/app_routes.dart';
+import 'features/auth/presentation/view/forgot_password_screen.dart';
 import 'features/auth/presentation/view/login_screen.dart';
 import 'features/auth/presentation/view/otp_screen.dart';
+import 'features/auth/presentation/view/reset_password_screen.dart';
+import 'features/auth/presentation/view_model/login/forgot_password_cubit.dart';
 import 'features/auth/presentation/view_model/login/login_cubit.dart';
 import 'features/auth/presentation/view_model/register/register_cubit.dart';
 import 'features/splash/presentation/view/splash_screen.dart';
 import 'l10n/app_localizations.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  setupServiceLocator();
+  await setupServiceLocator(); // 🔥 وضعنا await هنا لكي ينتظر تحميل الذاكرة
   runApp(const MyApp());
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -30,32 +35,63 @@ class MyApp extends StatelessWidget {
       title: 'Sportifo',
       initialRoute: AppRoutes.splash,
 
-      // 2. قمنا بتغليف الشاشات التي تحتاج كيوبت من داخل الـ routes مباشرة
       routes: {
         AppRoutes.splash: (context) => const SplashScreen(),
         AppRoutes.onboarding: (context) => const OnboardingScreen(),
 
-        // 🔥 حقن الكيوبت الخاص بكِ لشاشة التسجيل
         AppRoutes.register: (context) => BlocProvider(
           create: (context) => getIt<RegisterCubit>(),
           child: const RegisterScreen(),
         ),
 
-        // 🔥 حقن الكيوبت الخاص بزميلتك لشاشة تسجيل الدخول
         AppRoutes.login: (context) => BlocProvider(
           create: (context) => getIt<LoginCubit>(),
           child: const LoginScreen(),
         ),
         AppRoutes.otpScreen: (context) {
-          final email =
-              ModalRoute.of(context)?.settings.arguments as String? ?? '';
+          // استقبال الـ Arguments كـ Map بدلاً من String لكي نمرر الـ flag
+          final args = ModalRoute.of(context)?.settings.arguments;
+
+          String email = "";
+          bool isFromForgot = false;
+
+          if (args is String) {
+            email = args; // للحالة القديمة (Login normal)
+          } else if (args is Map<String, dynamic>) {
+            email = args['email'] ?? '';
+            isFromForgot = args['isFromForgotPassword'] ?? false;
+          }
 
           return BlocProvider(
-            create: (context) => getIt<LoginCubit>(), // 🔥 الحل هون
-            child: OTPScreen(loginEmail: email),
+            create: (context) => getIt<LoginCubit>(),
+            child: OTPScreen(
+              loginEmail: email,
+              isFromForgotPassword: isFromForgot,
+            ),
+          );
+        }, // ملاحظة: الـ OTP والـ Reset Password يتم حقنهم هنا بنفس الطريقة لاحقاً
+        AppRoutes.editProfile: (context) => BlocProvider(
+          create: (_) => getIt<CompleteProfileCubit>(),
+          child: CompleteProfileInfoView(),
+        ),
+        AppRoutes.home: (context) => const HomePage(),
+        AppRoutes.forgotPasswordScreen: (context) => BlocProvider(
+          create: (context) => getIt<ForgotPasswordCubit>(), // ✅ استخدمي هذا
+          child: const ForgotPasswordScreen(),
+        ),
+        AppRoutes.resetPasswordScreen: (context) {
+          // استقبال الـ Map الذي يحتوي على الإيميل والكود
+          final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+
+          return BlocProvider(
+            create: (context) => getIt<LoginCubit>(),
+            child: ResetPasswordScreen(
+              email: args?['email'] ?? '',
+              otpCode: args?['otpCode'] ?? '',
+            ),
           );
         },
-        // ملاحظة: الـ OTP والـ Reset Password يتم حقنهم هنا بنفس الطريقة لاحقاً
+
       },
         localizationsDelegates: const [
           AppLocalizations.delegate,
@@ -70,8 +106,13 @@ class MyApp extends StatelessWidget {
           baseColor: Color(0xFFF2F2F2),
           lightSource: LightSource.topLeft,
           depth: 10,
-        ),
-      );
+
+        // ملاحظة: الـ OTP والـ Reset Password يتم حقنهم هنا بنفس الطريقة لاحقاً
+
+  ),
+
+
+    );
   }
 }
 

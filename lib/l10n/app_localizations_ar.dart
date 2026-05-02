@@ -63,6 +63,21 @@ class AppLocalizationsAr extends AppLocalizations {
   String get updatePassword => 'تحديث كلمة السر';
 
   @override
+  String get loginSuccess => 'تم تسجيل الدخول بنجاح ';
+
+  @override
+  String get otpSentMessage => 'تم إرسال كود التحقق ';
+
+  @override
+  String get resendCodeIn => 'إعادة إرسال الكود خلال';
+
+  @override
+  String get passwordChangedSuccess => 'تم تحديث كلمة المرور بنجاح! يرجى تسجيل الدخول بكلمة المرور الجديدة.';
+
+  @override
+  String get passwordsDontMatch => 'كلمات المرور غير متطابقة';
+
+  @override
   String get progress => 'تقدم';
 
   @override
@@ -88,6 +103,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get passwordTooShort => 'كلمة السر يجب أن تكون فوق 8 محارف';
+
+  @override
+  String get unexpectedError => 'حدث خطأ غير متوقع، يرجى المحاولة لاحقاً';
 
   @override
   String get completeProfileInfo => 'إكمال معلومات الملف الشخصي';
@@ -171,6 +189,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get enterLastName => 'أدخل الاسم الأخير';
 
   @override
+  String get email => 'البريد الإلكتروني';
+
+  @override
+  String get enterEmail => 'أدخل البريد الإلكتروني';
+
+  @override
   String get phone => 'رقم الهاتف';
 
   @override
@@ -217,4 +241,31 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get onboardingDesc3 => 'تابع نظامك الغذائي وحسّن عاداتك اليومية.';
+
+  @override
+  String get profile => 'الملف الشخصي';
+
+  @override
+  String get chat => 'المحادثات';
+
+  @override
+  String get requiredField => 'هذا الحقل مطلوب';
+
+  @override
+  String get enterEmailOrPhone => 'يرجى إدخال بريد إلكتروني أو رقم هاتف';
+
+  @override
+  String get invalidEmail => 'البريد الإلكتروني غير صالح';
+
+  @override
+  String get invalidPhone => 'رقم الهاتف غير صالح';
+
+  @override
+  String get passwordMismatch => 'كلمتا المرور غير متطابقتين';
+
+  @override
+  String get loading => 'جاري التحميل...';
+
+  @override
+  String get error => 'حدث خطأ، حاول مرة أخرى';
 }

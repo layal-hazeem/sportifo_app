@@ -203,6 +203,36 @@ abstract class AppLocalizations {
   /// **'Update Password'**
   String get updatePassword;
 
+  /// No description provided for @loginSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Login Successes'**
+  String get loginSuccess;
+
+  /// No description provided for @otpSentMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'A verification code has been sent'**
+  String get otpSentMessage;
+
+  /// No description provided for @resendCodeIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend code in'**
+  String get resendCodeIn;
+
+  /// No description provided for @passwordChangedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Password updated successfully! Please login with your new password.'**
+  String get passwordChangedSuccess;
+
+  /// No description provided for @passwordsDontMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get passwordsDontMatch;
+
   /// No description provided for @progress.
   ///
   /// In en, this message translates to:
@@ -254,8 +284,14 @@ abstract class AppLocalizations {
   /// No description provided for @passwordTooShort.
   ///
   /// In en, this message translates to:
-  /// **'Password must be over 8 digits'**
+  /// **'Password must be at least 8 characters'**
   String get passwordTooShort;
+
+  /// No description provided for @unexpectedError.
+  ///
+  /// In en, this message translates to:
+  /// **'An unexpected error occurred, please try again later'**
+  String get unexpectedError;
 
   /// No description provided for @completeProfileInfo.
   ///
@@ -419,6 +455,18 @@ abstract class AppLocalizations {
   /// **'Enter your last name'**
   String get enterLastName;
 
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// No description provided for @enterEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Email'**
+  String get enterEmail;
+
   /// No description provided for @phone.
   ///
   /// In en, this message translates to:
@@ -514,6 +562,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Track your nutrition and improve your daily habits.'**
   String get onboardingDesc3;
+
+  /// No description provided for @profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profile;
+
+  /// No description provided for @chat.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat'**
+  String get chat;
+
+  /// No description provided for @requiredField.
+  ///
+  /// In en, this message translates to:
+  /// **'This field is required'**
+  String get requiredField;
+
+  /// No description provided for @enterEmailOrPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter an email or phone number'**
+  String get enterEmailOrPhone;
+
+  /// No description provided for @invalidEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email address'**
+  String get invalidEmail;
+
+  /// No description provided for @invalidPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid phone number'**
+  String get invalidPhone;
+
+  /// No description provided for @passwordMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get passwordMismatch;
+
+  /// No description provided for @loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading...'**
+  String get loading;
+
+  /// No description provided for @error.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong, please try again'**
+  String get error;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
