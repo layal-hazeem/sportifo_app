@@ -8,11 +8,11 @@ class CategoriesCubit extends Cubit<CategoriesState> {
 
   CategoriesCubit(this._repository) : super(CategoriesInitial());
 
-  // نمرر 2 لجلب العضلات، أو 3 لجلب الأجزاء الدقيقة
   Future<void> fetchCategories(int levelId) async {
     emit(CategoriesLoading());
 
-    final result = await _repository.getSubCategories(levelId);
+    // 🔥 التعديل هنا: خليناه ينادي getCategories
+    final result = await _repository.getCategories(levelId);
 
     switch (result) {
       case Success():

@@ -13,7 +13,7 @@ class DioFactory {
         receiveDataWhenStatusError: true,
         connectTimeout: const Duration(seconds: 20),
         receiveTimeout: const Duration(seconds: 20),
-        headers: {'Accept': 'application/json', 'Accept-Language': 'ar'},
+        headers: {'Accept': 'application/json', 'Accept-Language': 'en'},
         validateStatus: (status) {
           return status != null && status < 500;
         },
