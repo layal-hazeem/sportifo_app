@@ -1,5 +1,6 @@
 class ApiConstants {
   // static const String baseUrl = "http://192.168.1.2:8000/api/app/";
+  static const String baseUrl = "http://192.168.1.111:8000/api/app/";
   // static const String baseUrl = "http://10.0.2.2:8000/api/app/";
   // static const String baseUrl = "http://192.168.27.147:8000/api/app/";
    static const String baseUrl = "http://10.0.2.2:8000/api/app/";

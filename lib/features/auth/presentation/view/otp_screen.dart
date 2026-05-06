@@ -33,7 +33,6 @@ class OTPScreen extends StatefulWidget {
 class _OTPScreenState extends State<OTPScreen> {
   final pinController = TextEditingController();
 
-  // متغيرات المؤقت
   Timer? _timer;
   int _start = 60;
   bool _isFinished = false;
@@ -43,7 +42,7 @@ class _OTPScreenState extends State<OTPScreen> {
       _isFinished = false;
       _start = 60;
     });
-    _timer?.cancel(); // تأمين لعدم تكرار التايمر
+    _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_start == 0) {
         setState(() {
@@ -61,7 +60,7 @@ class _OTPScreenState extends State<OTPScreen> {
   @override
   void initState() {
     super.initState();
-    startTimer(); // يبدأ العد التنازلي فور فتح الشاشة
+    startTimer();
   }
 
   @override
@@ -105,7 +104,7 @@ class _OTPScreenState extends State<OTPScreen> {
               builder: (_) => const Center(child: CircularProgressIndicator()),
             );
           } else if (state is OtpSuccess) {
-            Navigator.pop(context); // إغلاق الـ Loading
+            Navigator.pop(context);
 
             // ✅ حفظ التوكن مرة واحدة فقط بشكل مركزي
             final token = state.response.data?.token;
@@ -123,21 +122,19 @@ class _OTPScreenState extends State<OTPScreen> {
                 },
               );
             } else {
-              // ✅ التوجه مباشرة لتعديل الملف الشخصي (الآن التوكن محفوظ وجاهز)
               Navigator.pushReplacementNamed(context, AppRoutes.editProfile);
             }
           }
           else if (state is OtpError) {
-            Navigator.pop(context); // لإغلاق الـ Loading Dialog
+            Navigator.pop(context);
             AppSnackBar.show(
               context,
-              message: state.message, // عرض الرسالة المستخرجة من الـ Response
+              message: state.message,
               type: SnackBarType.error,
             );
 
-          }// أضيفي هذه الحالات داخل الـ listener في OTPScreen
+          }
           else if (state is ResendOtpLoading) {
-            // يمكن إظهار مؤشر تحميل صغير أو تعطيل الزر
           } else if (state is ResendOtpSuccess) {
             AppSnackBar.show(
               context,
@@ -165,10 +162,9 @@ class _OTPScreenState extends State<OTPScreen> {
                 const SizedBox(height: 60),
                 CustomAuthButton(
                   text: l10n.verify,
-                  // تغيير اللون ليدل على أن الزر معطل
                   backgroundColor: _isFinished ? Colors.grey.shade400 : AppColors.primaryBtn,
                   onPressed: _isFinished
-                      ? null  // 🔥 هنا السر: تمرير null يعطل الزر تماماً ويجعله غير قابل للضغط
+                      ? null
                       : () {
                     final otpValue = pinController.text;
                     if (otpValue.length < 6) {
@@ -184,15 +180,11 @@ class _OTPScreenState extends State<OTPScreen> {
                   },
                 ),
                 const SizedBox(height: 20),
-                // عرض العداد أو زر إعادة الإرسال
                 _isFinished
                     ? TextButton(
                   onPressed: () {
-                    // 1. مسح النص القديم من الحقول
                     pinController.clear();
-                    // 2. استدعاء الدالة من الكيوبيت
                     context.read<LoginCubit>().resendOtp(widget.loginEmail);
-                    // 3. إعادة تشغيل العداد (سيعود الزر للعمل تلقائياً لأن _isFinished ستصبح false)
                     startTimer();
                   },
                   child: Text(
@@ -204,7 +196,7 @@ class _OTPScreenState extends State<OTPScreen> {
                   ),
                 )
                     : Text(
-                  "${l10n.resendCodeIn} 00:${_start.toString().padLeft(2, '0')}", // استخدمي الترجمة هنا
+                  "${l10n.resendCodeIn} 00:${_start.toString().padLeft(2, '0')}",
                   style: const TextStyle(
                     color: Colors.grey,
                     fontWeight: FontWeight.bold,
