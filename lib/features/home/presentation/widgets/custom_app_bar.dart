@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final int currentIndex;
@@ -22,12 +22,27 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
   Widget _buildBody(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     switch (currentIndex) {
+      case 0:
+        return AppBar(
+          title: Text(l10n.progress),
+        );
+
+      case 1:
+        return AppBar(
+          title: Text(l10n.myPlans),
+        );
+
       case 2:
         return AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
-          // title: Text("أهلاً \"$userName\"", style: const TextStyle(color: Colors.black)),
+          // title: Text(
+          //   // "${l10n.welcome} $userName",
+          //   // style: const TextStyle(color: Colors.black),
+          // ),
           actions: [
             IconButton(
               icon: const Icon(Icons.chat, color: AppColors.primaryBtn),
@@ -43,8 +58,21 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             const SizedBox(width: 8),
           ],
         );
+
+      case 3:
+        return AppBar(
+          title: Text(l10n.workouts),
+        );
+
+      case 4:
+        return AppBar(
+          title: Text(l10n.chat),
+        );
+
       default:
-        return AppBar(title: const Text("Sportifo"));
+        return AppBar(
+          title: Text(l10n.appName),
+        );
     }
   }
 }

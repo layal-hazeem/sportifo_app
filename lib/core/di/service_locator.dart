@@ -14,6 +14,8 @@ import '../../features/workout/data/repository/workout_repository.dart';
 import '../../features/workout/data/web_services/workout_web_service.dart';
 import '../../features/workout/presentation/view_model/categories_cubit/categories_cubit.dart';
 import '../../features/workout/presentation/view_model/exercises_cubit/exercises_cubit.dart';
+import '../../features/workout/presentation/view_model/parts_cubit/parts_cubit.dart';
+import '../localization/locale_cubit.dart';
 import '../network/dio_factory.dart';
 import '../storage/local_storage.dart';
 
@@ -54,11 +56,9 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<WorkoutRepository>(() => WorkoutRepository(getIt<WorkoutWebService>()));
   getIt.registerFactory<ExercisesCubit>(() => ExercisesCubit(getIt<WorkoutRepository>()));
   getIt.registerFactory<CategoriesCubit>(() => CategoriesCubit(getIt<WorkoutRepository>()));
+  getIt.registerFactory<PartsCubit>(() => PartsCubit(getIt<WorkoutRepository>()));
 
 
-  getIt.registerFactory<CompleteProfileCubit>(
-    () => CompleteProfileCubit(getIt<AuthRepository>()),
-  );
 
   getIt.registerLazySingleton<ProfileWebService>(
     () => ProfileWebService(getIt<Dio>()),
@@ -72,4 +72,6 @@ Future<void> setupServiceLocator() async {
   getIt.registerFactory<ProfileCubit>(
     () => ProfileCubit(getIt<ProfileRepository>()),
   );
+  // إعدادات اللغة
+  getIt.registerFactory<LocaleCubit>(() => LocaleCubit(getIt<LocalStorage>()));
 }

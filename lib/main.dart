@@ -10,7 +10,9 @@ import 'package:sportifo_app/features/onboarding/presentation/view/onboarding_sc
 import 'package:sportifo_app/features/profile/presentation/view/profile_page.dart';
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_cubit.dart';
 import 'core/di/service_locator.dart';
+import 'core/localization/locale_cubit.dart';
 import 'core/routes/app_routes.dart';
+import 'core/storage/local_storage.dart';
 import 'features/auth/presentation/view/forgot_password_screen.dart';
 import 'features/auth/presentation/view/login_screen.dart';
 import 'features/auth/presentation/view/otp_screen.dart';
@@ -21,8 +23,10 @@ import 'features/auth/presentation/view_model/register/register_cubit.dart';
 import 'features/splash/presentation/view/splash_screen.dart';
 import 'features/workout/presentation/view/exercises_list_screen.dart';
 import 'features/workout/presentation/view/muscle_groups_screen.dart';
+import 'features/workout/presentation/view/workout_type_screen.dart';
 import 'features/workout/presentation/view_model/categories_cubit/categories_cubit.dart';
 import 'features/workout/presentation/view_model/exercises_cubit/exercises_cubit.dart';
+import 'features/workout/presentation/view_model/parts_cubit/parts_cubit.dart';
 import 'l10n/app_localizations.dart';
 
 void main() async {
@@ -36,95 +40,109 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return NeumorphicApp(
-      debugShowCheckedModeBanner: false,
+    return BlocProvider(
+        create: (context) => getIt<LocaleCubit>(),
+        // 🔥 2. نستخدم BlocBuilder للاستماع لتغيرات اللغة
+        child: BlocBuilder<LocaleCubit, Locale>(
+            builder: (context, locale) {
+              return NeumorphicApp(      debugShowCheckedModeBanner: false,
       title: 'Sportifo',
       initialRoute: AppRoutes.splash,
 
-      routes: {
-        AppRoutes.splash: (context) => const SplashScreen(),
-        AppRoutes.onboarding: (context) => const OnboardingScreen(),
+                routes: {
+                  AppRoutes.splash: (context) => const SplashScreen(),
+                  AppRoutes.onboarding: (context) => const OnboardingScreen(),
 
-        AppRoutes.register: (context) => BlocProvider(
-          create: (_) => getIt<RegisterCubit>(),
-          child: const RegisterScreen(),
-        ),
+                  AppRoutes.register: (context) => BlocProvider(
+                    create: (_) => getIt<RegisterCubit>(),
+                    child: const RegisterScreen(),
+                  ),
 
-        AppRoutes.login: (context) => BlocProvider(
-          create: (_) => getIt<LoginCubit>(),
-          child: const LoginScreen(),
-        ),
+                  AppRoutes.login: (context) => BlocProvider(
+                    create: (_) => getIt<LoginCubit>(),
+                    child: const LoginScreen(),
+                  ),
 
-        AppRoutes.home: (context) => const HomePage(),
+                  // 🔥 تم دمج مسار الـ Home ليكون واحداً فقط ويحتوي على الكيوبتات المطلوبة
+                  AppRoutes.home: (context) => MultiBlocProvider(
+                    providers: [
+                      BlocProvider(create: (context) => getIt<CategoriesCubit>()),
+                      // يمكننا وضع الكيوبتات الأخرى هنا إذا احتجناها، لكن بما أننا سنضعها في MuscleGroupsScreen فهذا يكفي حالياً
+                    ],
+                    child: const HomePage(),
+                  ),
 
-        AppRoutes.getProfile: (context) => BlocProvider(
-          create: (_) => getIt<ProfileCubit>()..getProfile(),
-          child: ProfilePage(),
-        ),
+                  AppRoutes.getProfile: (context) => BlocProvider(
+                    create: (_) => getIt<ProfileCubit>()..getProfile(),
+                    child: ProfilePage(),
+                  ),
 
-        AppRoutes.editProfile: (context) => BlocProvider(
-          create: (_) => getIt<CompleteProfileCubit>(),
-          child: CompleteProfileInfoView(),
-        ),
+                  AppRoutes.editProfile: (context) => BlocProvider(
+                    create: (_) => getIt<CompleteProfileCubit>(),
+                    child: CompleteProfileInfoView(),
+                  ),
 
-        AppRoutes.muscleGroups: (context) => BlocProvider(
-          create: (_) => getIt<CategoriesCubit>(),
-          child: const MuscleGroupsScreen(),
-        ),
+                  // 🔥 هنا أضفنا الـ PartsCubit لكي تعمل شاشة العضلات بشكل صحيح مع الفلاتر الدقيقة
+                  AppRoutes.muscleGroups: (context) => MultiBlocProvider(
+                    providers: [
+                      BlocProvider(create: (_) => getIt<CategoriesCubit>()),
+                      BlocProvider(create: (_) => getIt<ExercisesCubit>()),
+                      BlocProvider(create: (_) => getIt<PartsCubit>()), // أضفنا PartsCubit هنا
+                    ],
+                    child: const MuscleGroupsScreen(),
+                  ),
 
-        AppRoutes.exercisesList: (context) {
-          final args = ModalRoute.of(context)?.settings.arguments
-          as Map<String, int>?;
+                  // AppRoutes.exercisesList: (context) {
+                  //   final args = ModalRoute.of(context)?.settings.arguments as Map<String, int>?;
+                  //
+                  //   return BlocProvider(
+                  //     create: (_) => getIt<ExercisesCubit>(),
+                  //     child: ExercisesListScreen(
+                  //       categoryId: args?['categoryId'],
+                  //       organId: args?['organId'],
+                  //     ),
+                  //   );
+                  // },
 
-          return BlocProvider(
-            create: (_) => getIt<ExercisesCubit>(),
-            child: ExercisesListScreen(
-              categoryId: args?['categoryId'],
-              organId: args?['organId'],
-            ),
-          );
-        },
+                  AppRoutes.forgotPasswordScreen: (context) => BlocProvider(
+                    create: (_) => getIt<ForgotPasswordCubit>(),
+                    child: const ForgotPasswordScreen(),
+                  ),
 
-        AppRoutes.forgotPasswordScreen: (context) => BlocProvider(
-          create: (_) => getIt<ForgotPasswordCubit>(),
-          child: const ForgotPasswordScreen(),
-        ),
+                  AppRoutes.resetPasswordScreen: (context) {
+                    final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
 
-        AppRoutes.resetPasswordScreen: (context) {
-          final args = ModalRoute.of(context)?.settings.arguments
-          as Map<String, dynamic>?;
+                    return BlocProvider(
+                      create: (_) => getIt<LoginCubit>(),
+                      child: ResetPasswordScreen(
+                        email: args?['email'] ?? '',
+                        otpCode: args?['otpCode'] ?? '',
+                      ),
+                    );
+                  },
 
-          return BlocProvider(
-            create: (_) => getIt<LoginCubit>(),
-            child: ResetPasswordScreen(
-              email: args?['email'] ?? '',
-              otpCode: args?['otpCode'] ?? '',
-            ),
-          );
-        },
+                  AppRoutes.otpScreen: (context) {
+                    final args = ModalRoute.of(context)?.settings.arguments;
 
-        AppRoutes.otpScreen: (context) {
-          final args = ModalRoute.of(context)?.settings.arguments;
+                    String email = "";
+                    bool isFromForgot = false;
 
-          String email = "";
-          bool isFromForgot = false;
+                    if (args is String) {
+                      email = args;
+                    } else if (args is Map<String, dynamic>) {
+                      email = args['email'] ?? '';
+                      isFromForgot = args['isFromForgotPassword'] ?? false;
+                    }
 
-          if (args is String) {
-            email = args;
-          } else if (args is Map<String, dynamic>) {
-            email = args['email'] ?? '';
-            isFromForgot = args['isFromForgotPassword'] ?? false;
-          }
-
-          return BlocProvider(
-            create: (_) => getIt<LoginCubit>(),
-            child: OTPScreen(
-              loginEmail: email,
-              isFromForgotPassword: isFromForgot,
-            ),
-          );
-        },
-      },
+                    return BlocProvider(
+                      create: (_) => getIt<LoginCubit>(),
+                      child: OTPScreen(
+                        loginEmail: email,
+                        isFromForgotPassword: isFromForgot,
+                      ),
+                    );
+                  },
+                },
 
       localizationsDelegates: const [
         AppLocalizations.delegate,
@@ -138,15 +156,17 @@ class MyApp extends StatelessWidget {
         Locale('ar'),
       ],
 
-      locale: const Locale('en'),
-
-      themeMode: ThemeMode.light,
+                locale: locale,
+                themeMode: ThemeMode.light,
 
       theme: const NeumorphicThemeData(
         baseColor: Color(0xFFF2F2F2),
         lightSource: LightSource.topLeft,
         depth: 10,
       ),
+              );
+            },
+        ),
     );
   }
 }
