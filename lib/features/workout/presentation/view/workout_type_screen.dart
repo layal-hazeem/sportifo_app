@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/routes/app_routes.dart';
+import '../view_model/categories_cubit/categories_cubit.dart';
+import '../view_model/categories_cubit/categories_state.dart';
+import '../widgets/light_premium_workout_card.dart'; // 🔥 استيراد الـ Widget المنفصل
 
 class WorkoutTypeScreen extends StatefulWidget {
   const WorkoutTypeScreen({super.key});
@@ -38,6 +42,9 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
     );
 
     _controller.forward();
+
+    // استدعاء الـ API لجلب التصنيفات الأساسية (رقم 1 يعني مقاومة وكارديو)
+    context.read<CategoriesCubit>().fetchCategories(1);
   }
 
   @override
@@ -46,186 +53,87 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
     super.dispose();
   }
 
+  // 🔥 قمنا بتغيير الروابط إلى مسارات محلية (Local Assets)
+  // تأكدي أن هذه المسارات مطابقة للمجلدات عندك في المشروع
+  final Map<int, Map<String, String>> _categoryUIInfo = {
+    1: {
+      'subtitle': 'Burn Fat',
+      'image': 'assets/images/strength.jpg', // مسار صورة الكارديو
+    },
+    2: {
+      'subtitle': 'Build Muscle',
+      'image': 'assets/images/cardio.jpg', // مسار صورة المقاومة
+    }
+  };
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    // تم الحفاظ على العرض لظهور بطاقتين
     final cardWidth = screenWidth * 0.45;
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: const Text(
-          "Workouts",
-          style: TextStyle(
-            color: AppColors.textDark,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
       body: FadeTransition(
         opacity: _opacityAnimation,
         child: SlideTransition(
           position: _slideAnimation,
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-            physics: const BouncingScrollPhysics(),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: cardWidth,
-                  child:LightPremiumWorkoutCard(
-                    title: "CARDIO",
-                    subtitle: "Burn Fat",
-                    imageUrl: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?q=80&w=800",
-                    onTap: () {
-                      // 🔥 حسب الباك إند، ID الكارديو هو 2
-                      Navigator.pushNamed(context, AppRoutes.exercisesList, arguments: {'categoryId': 2});
-                    },
-                  ),
-                ),
+          child: BlocBuilder<CategoriesCubit, CategoriesState>(
+            builder: (context, state) {
+              if (state is CategoriesLoading) {
+                return const Center(child: CircularProgressIndicator(color: AppColors.primaryBtn));
+              }
+              else if (state is CategoriesFailure) {
+                return Center(child: Text(state.errorMessage, style: const TextStyle(color: Colors.red)));
+              }
+              else if (state is CategoriesSuccess) {
+                final categories = state.categories;
 
-                const SizedBox(width: 15),
+                if (categories.isEmpty) {
+                  return const Center(child: Text("No categories found."));
+                }
 
-                SizedBox(
-                  width: cardWidth,
-                  child: LightPremiumWorkoutCard(
-                    title: "RESISTANCE",
-                    subtitle: "Build Muscle",
-                    imageUrl: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&q=80&w=800",
-                    onTap: () {
-                      // الانتقال لشبكة العضلات
-                      Navigator.pushNamed(context, AppRoutes.muscleGroups);
-                    },
-                  ),
-                ),
-
-                const SizedBox(width: 10),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class LightPremiumWorkoutCard extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final String imageUrl;
-  final VoidCallback onTap;
-
-  const LightPremiumWorkoutCard({
-    super.key,
-    required this.title,
-    required this.subtitle,
-    required this.imageUrl,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: AspectRatio(
-        // تم تقليل الـ AspectRatio لزيادة الطول بشكل كبير (حوالي 3/4 الواجهة)
-        aspectRatio: 0.38, 
-        child: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 10,
-                offset: Offset(0, 6),
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                Image.network(
-                  imageUrl,
-                  fit: BoxFit.cover,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return const Center(child: CircularProgressIndicator(color: AppColors.primaryBtn));
-                  },
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.white.withValues(alpha: 0.0),
-                        Colors.white.withValues(alpha: 0.2),
-                        Colors.white.withValues(alpha: 0.9),
-                      ],
-                    ),
-                  ),
-                ),
-                Positioned(
-                  bottom: 20,
-                  left: 12,
-                  right: 12,
-                  child: Column(
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                  physics: const BouncingScrollPhysics(),
+                  child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        title,
-                        style: const TextStyle(
-                          color: AppColors.textDark,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w900,
-                          letterSpacing: 1.0,
+                    children: categories.map((category) {
+
+                      // جلب الصورة المحلية والوصف، وصورة افتراضية في حال لم نجدها
+                      final uiInfo = _categoryUIInfo[category.id] ?? {
+                        'subtitle': 'Start Training',
+                        'image': 'assets/images/default_workout.png',
+                      };
+
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 15),
+                        child: SizedBox(
+                          width: cardWidth,
+                          child: LightPremiumWorkoutCard(
+                            title: category.name.toUpperCase(),
+                            subtitle: uiInfo['subtitle']!,
+                            imagePath: uiInfo['image']!, // نمرر المسار المحلي
+                            onTap: () {
+                              if (category.id == 2) {
+                                Navigator.pushNamed(
+                                  context,
+                                  AppRoutes.exercisesList,
+                                  arguments: {'categoryId': category.id},
+                                );
+                              } else {
+                                Navigator.pushNamed(context, AppRoutes.muscleGroups);
+                              }
+                            },
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 6),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              subtitle,
-                              style: const TextStyle(
-                                color: AppColors.hintText,
-                                fontSize: 11,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: const BoxDecoration(
-                              color: AppColors.primaryBtn,
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.play_arrow_rounded,
-                              color: Colors.white,
-                              size: 20,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                      );
+                    }).toList(),
                   ),
-                ),
-              ],
-            ),
+                );
+              }
+              return const SizedBox();
+            },
           ),
         ),
       ),

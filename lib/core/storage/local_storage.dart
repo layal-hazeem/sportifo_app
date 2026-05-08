@@ -29,4 +29,11 @@ class LocalStorage {
   bool isOnboardingSeen() {
     return _prefs.getBool(_onboardingKey) ?? false;
   }
+  Future<void> setLanguage(String lang) async {
+    await _prefs.setString('lang', lang);
+  }
+
+  String getLanguage() {
+    return _prefs.getString('lang') ?? 'en';
+  }
 }

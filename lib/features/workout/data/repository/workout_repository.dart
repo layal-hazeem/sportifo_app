@@ -1,6 +1,6 @@
 // تأكدي من استيراد ApiResult و ApiErrorHandler
- import '../../../../core/network/api_result.dart';
- import '../../../../core/network/api_error_handler.dart';
+import '../../../../core/network/api_result.dart';
+import '../../../../core/network/api_error_handler.dart';
 
 import '../models/exercise_model.dart';
 import '../models/filter_item_model.dart';
@@ -10,32 +10,47 @@ class WorkoutRepository {
   final WorkoutWebService _webService;
   WorkoutRepository(this._webService);
 
-  // أضيفي هذه الدالة داخل WorkoutRepository
-
-  Future<ApiResult<List<FilterItemModel>>> getSubCategories(int parentId) async {
+  // =====================================
+  // 1. دالة جلب العضلات الأساسية (للصور اللي فوق)
+  // =====================================
+  Future<ApiResult<List<FilterItemModel>>> getCategories(int id) async {
     try {
-      final response = await _webService.getSubCategories(parentId);
+      final response = await _webService.getCategories(id);
       final responseModel = FilterResponseModel.fromJson(response.data);
       return Success(responseModel.data);
     } catch (e) {
       return Failure(ApiErrorHandler.handle(e));
     }
   }
+
+  // =====================================
+  // 2. دالة جلب الأجزاء الدقيقة (للكبسولات)
+  // =====================================
+  Future<ApiResult<List<FilterItemModel>>> getSubCategories(int organId) async {
+    try {
+      final response = await _webService.getSubCategories(organId);
+      final responseModel = FilterResponseModel.fromJson(response.data);
+      return Success(responseModel.data);
+    } catch (e) {
+      return Failure(ApiErrorHandler.handle(e));
+    }
+  }
+
+  // =====================================
+  // 3. دالة جلب التمارين
+  // =====================================
   Future<ApiResult<List<ExerciseModel>>> getExercises({
     int? categoryId,
     int? organId,
-    int? partId,
+    List<int>? partIds, // 👈 غيرناها للستة
   }) async {
     try {
       final response = await _webService.getExercises(
         categoryId: categoryId,
         organId: organId,
-        partId: partId,
+        partIds: partIds, // 🔥 التعديل هون: صارت partIds
       );
-
       final responseModel = ExerciseResponseModel.fromJson(response.data);
-
-      // نرجع الـ Data (وهي List<ExerciseModel>)
       return Success(responseModel.data);
     } catch (e) {
       return Failure(ApiErrorHandler.handle(e));

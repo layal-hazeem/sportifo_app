@@ -11,7 +11,9 @@ import 'package:sportifo_app/features/home/presentation/widgets/custom_bottom_na
 import 'package:sportifo_app/features/home/presentation/widgets/custom_drawer.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
+import '../../../../core/di/service_locator.dart';
 import '../../../workout/presentation/view/workout_type_screen.dart';
+import '../../../workout/presentation/view_model/categories_cubit/categories_cubit.dart';
 
 HomeViewModel homeViewModel = HomeViewModel();
 
@@ -29,7 +31,7 @@ class _HomePageState extends State<HomePage> {
     const Center(child: Text("Progress Screen")),
     const Center(child: Text("My Plans Screen")),
     const Center(child: Text("Home Dashboard")),
-    const WorkoutTypeScreen(),
+  const WorkoutTypeScreen(),
     const Center(child: Text("Chat Screen")),
   ];
 
