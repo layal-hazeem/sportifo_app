@@ -187,6 +187,8 @@ class _EditProfilePageState extends State<EditProfilePage>
   }
 
   Widget _buildInfoTab(ProfileState state) {
+    final l10n = AppLocalizations.of(context)!;
+
     return SingleChildScrollView(
       key: const ValueKey("info"),
       padding: EdgeInsets.all(20),
@@ -194,31 +196,19 @@ class _EditProfilePageState extends State<EditProfilePage>
         key: _formKey,
         child: Column(
           children: [
-            CustomNeumorphicField(
-              hint: "First Name",
-              icon: Icons.person_outline,
+            buildField(
+              l10n.firstName,
+              l10n.firstName,
+              Icons.person_outline,
               controller: _firstNameController,
             ),
             const SizedBox(height: 20),
 
-            CustomNeumorphicField(
-              hint: "Last Name",
-              icon: Icons.person_outline,
+            buildField(
+              l10n.lastName,
+              l10n.lastName,
+              Icons.person_outline,
               controller: _lastNameController,
-            ),
-            const SizedBox(height: 20),
-
-            CustomNeumorphicField(
-              hint: "Email",
-              icon: Icons.email,
-              controller: _emailController,
-            ),
-            const SizedBox(height: 20),
-
-            CustomNeumorphicField(
-              hint: "Phone",
-              icon: Icons.phone,
-              controller: _phoneController,
             ),
             const SizedBox(height: 20),
 
@@ -272,71 +262,81 @@ class _EditProfilePageState extends State<EditProfilePage>
   }
 
   Widget _buildMeasurementsTab() {
+    final l10n = AppLocalizations.of(context)!;
+
     return SingleChildScrollView(
-      key: const ValueKey("measurements"),
+      key: ValueKey(l10n.bodyMeasurements),
       padding: const EdgeInsets.all(20),
       child: Column(
         children: [
-          CustomNeumorphicField(
-            hint: "Height",
-            icon: Icons.height,
+          buildField(
+            l10n.height,
+            l10n.height,
+            Icons.height,
             keyboardType: TextInputType.number,
             controller: _heightController,
           ),
           const SizedBox(height: 20),
 
-          CustomNeumorphicField(
-            hint: "Weight",
-            icon: Icons.monitor_weight_outlined,
+          buildField(
+            l10n.weight,
+            l10n.weight,
+            Icons.monitor_weight_outlined,
             keyboardType: TextInputType.number,
             controller: _weightController,
           ),
 
           const SizedBox(height: 40),
 
-          CustomNeumorphicField(
-            hint: "Shoulders Width",
-            icon: Icons.accessibility_new,
+          buildField(
+            l10n.shoulders,
+            l10n.shoulders,
+            Icons.accessibility_new,
             keyboardType: TextInputType.number,
             controller: _shouldersWidthController,
           ),
           const SizedBox(height: 20),
 
-          CustomNeumorphicField(
-            hint: "Chest",
-            icon: Icons.straighten,
+          buildField(
+            l10n.chestCircumference,
+            l10n.chestCircumference,
+            Icons.fitness_center,
             keyboardType: TextInputType.number,
             controller: _chestPerimeterController,
           ),
           const SizedBox(height: 20),
 
-          CustomNeumorphicField(
-            hint: "Waist",
-            icon: Icons.straighten,
+          buildField(
+            l10n.waist,
+            l10n.waist,
+            Icons.radio_button_unchecked,
             keyboardType: TextInputType.number,
             controller: _waistPerimeterController,
           ),
           const SizedBox(height: 20),
 
-          CustomNeumorphicField(
-            hint: "Thigh",
-            icon: Icons.straighten,
+          buildField(
+            l10n.thighCircumference,
+            l10n.thighCircumference,
+            Icons.accessibility,
             keyboardType: TextInputType.number,
             controller: _thighPerimeterController,
           ),
           const SizedBox(height: 20),
 
-          CustomNeumorphicField(
-            hint: "Hip",
-            icon: Icons.straighten,
+          buildField(
+            l10n.hipCircumference,
+            l10n.hipCircumference,
+            Icons.self_improvement,
             keyboardType: TextInputType.number,
             controller: _hipPerimeterController,
           ),
           const SizedBox(height: 20),
 
-          CustomNeumorphicField(
-            hint: "Arm",
-            icon: Icons.straighten,
+          buildField(
+            l10n.armCircumference,
+            l10n.armCircumference,
+            Icons.fitness_center,
             keyboardType: TextInputType.number,
             controller: _armPerimeterController,
           ),
@@ -376,6 +376,39 @@ class _EditProfilePageState extends State<EditProfilePage>
                 ? _buildInfoTab(state)
                 : _buildMeasurementsTab(),
           ),
+        ),
+      ],
+    );
+  }
+
+  Widget buildField(
+    String label,
+    String hint,
+    IconData icon, {
+    bool isPassword = false,
+    TextInputType? keyboardType,
+    required TextEditingController controller,
+    String? Function(String?)? validator,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 20),
+
+        Text(
+          label,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        ),
+
+        const SizedBox(height: 10),
+
+        CustomNeumorphicField(
+          hint: hint,
+          icon: icon,
+          isPassword: isPassword,
+          keyboardType: keyboardType,
+          controller: controller,
+          validator: validator,
         ),
       ],
     );
