@@ -15,3 +15,11 @@ class ProfileError extends ProfileState {
   final String message;
   ProfileError(this.message);
 }
+
+class ProfileImageUpdating extends ProfileState {}
+
+class ProfileImageUpdated extends ProfileState {
+  final ProfileResponsModel profile;
+
+  ProfileImageUpdated(this.profile);
+}

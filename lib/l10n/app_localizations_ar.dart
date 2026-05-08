@@ -111,10 +111,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get completeProfileInfo => 'إكمال معلومات الملف الشخصي';
 
   @override
-  String get weight => 'وزن';
+  String get weight => 'الوزن';
 
   @override
-  String get length => 'طول';
+  String get height => 'الطول';
 
   @override
   String get birthDate => 'تاريخ الميلاد';
@@ -153,7 +153,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get chestCircumference => 'محيط الصدر';
 
   @override
-  String get belly => 'البطن (الخصر)';
+  String get waist => 'الخصر';
 
   @override
   String get hipCircumference => 'محيط الورك';
@@ -162,7 +162,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get thighCircumference => 'محيط الفخذ';
 
   @override
-  String get handCircumference => 'محيط اليد';
+  String get armCircumference => 'محيط اليد';
 
   @override
   String get startingTheSportsJourney => 'بدء الرحلة الرياضية';
@@ -283,4 +283,22 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get agreed => 'موافق';
+
+  @override
+  String get information => 'معلومات الحساب';
+
+  @override
+  String get noBodyMeasurements => 'لم يتم تحديد قياسات الجسم بعد';
+
+  @override
+  String get editProfile => 'تعديل الحساب';
+
+  @override
+  String get saveChanges => 'حفظ التغييرات';
+
+  @override
+  String get noPhone => 'لا يوجد رقم';
+
+  @override
+  String get noEmail => 'لا يوجد بريد الكتروني';
 }

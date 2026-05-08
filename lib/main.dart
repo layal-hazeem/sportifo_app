@@ -5,8 +5,11 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:sportifo_app/features/auth/presentation/view/complete_profile_info.dart';
 import 'package:sportifo_app/features/auth/presentation/view/register_screen.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/complete_profile/complete_profile_cubit.dart';
+import 'package:sportifo_app/features/auth/presentation/view_model/logout/logout_cubit.dart';
 import 'package:sportifo_app/features/home/presentation/view/home_page.dart';
 import 'package:sportifo_app/features/onboarding/presentation/view/onboarding_screen.dart';
+import 'package:sportifo_app/features/profile/data/models/profile_response.dart';
+import 'package:sportifo_app/features/profile/presentation/view/edit_profile_page.dart';
 import 'package:sportifo_app/features/profile/presentation/view/profile_page.dart';
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_cubit.dart';
 import 'core/di/service_locator.dart';
@@ -57,15 +60,23 @@ class MyApp extends StatelessWidget {
 
         AppRoutes.home: (context) => const HomePage(),
 
-        AppRoutes.getProfile: (context) => BlocProvider(
-          create: (_) => getIt<ProfileCubit>()..getProfile(),
+        AppRoutes.getProfile: (context) => MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (_) => getIt<ProfileCubit>()..getProfile()),
+            BlocProvider(create: (_) => getIt<LogoutCubit>()),
+          ],
           child: ProfilePage(),
         ),
 
-        AppRoutes.editProfile: (context) => BlocProvider(
-          create: (_) => getIt<CompleteProfileCubit>(),
-          child: CompleteProfileInfoView(),
-        ),
+        AppRoutes.editProfile: (context) {
+          final profile =
+              ModalRoute.of(context)!.settings.arguments as ProfileResponsModel;
+
+          return BlocProvider(
+            create: (_) => getIt<ProfileCubit>(),
+            child: EditProfilePage(profile: profile),
+          );
+        },
 
         AppRoutes.muscleGroups: (context) => BlocProvider(
           create: (_) => getIt<CategoriesCubit>(),
@@ -73,8 +84,8 @@ class MyApp extends StatelessWidget {
         ),
 
         AppRoutes.exercisesList: (context) {
-          final args = ModalRoute.of(context)?.settings.arguments
-          as Map<String, int>?;
+          final args =
+              ModalRoute.of(context)?.settings.arguments as Map<String, int>?;
 
           return BlocProvider(
             create: (_) => getIt<ExercisesCubit>(),
@@ -91,8 +102,9 @@ class MyApp extends StatelessWidget {
         ),
 
         AppRoutes.resetPasswordScreen: (context) {
-          final args = ModalRoute.of(context)?.settings.arguments
-          as Map<String, dynamic>?;
+          final args =
+              ModalRoute.of(context)?.settings.arguments
+                  as Map<String, dynamic>?;
 
           return BlocProvider(
             create: (_) => getIt<LoginCubit>(),
@@ -133,12 +145,9 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
 
-      supportedLocales: const [
-        Locale('en'),
-        Locale('ar'),
-      ],
+      supportedLocales: const [Locale('en'), Locale('ar')],
 
-      locale: const Locale('en'),
+      locale: const Locale('ar'),
 
       themeMode: ThemeMode.light,
 

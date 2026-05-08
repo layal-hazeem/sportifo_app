@@ -113,7 +113,7 @@ class CompleteProfileInfoView extends StatelessWidget {
                     const SizedBox(width: 15),
                     Expanded(
                       child: CustomNeumorphicField(
-                        hint: "${l10n.length} (${l10n.cm})",
+                        hint: "${l10n.height} (${l10n.cm})",
                         icon: Icons.height,
                         keyboardType: TextInputType.number,
                         onChanged: (val) {

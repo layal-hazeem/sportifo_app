@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final int currentIndex;
@@ -22,12 +23,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
   Widget _buildBody(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     switch (currentIndex) {
       case 2:
         return AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
-          // title: Text("أهلاً \"$userName\"", style: const TextStyle(color: Colors.black)),
+          title: Text(""),
           actions: [
             IconButton(
               icon: const Icon(Icons.chat, color: AppColors.primaryBtn),

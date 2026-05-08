@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/complete_profile/complete_profile_cubit.dart';
+import 'package:sportifo_app/features/auth/presentation/view_model/logout/logout_cubit.dart';
 import 'package:sportifo_app/features/profile/data/repository/profile_repository.dart';
 import 'package:sportifo_app/features/profile/data/web_services/profile_web_service.dart';
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_cubit.dart';
@@ -46,15 +47,24 @@ Future<void> setupServiceLocator() async {
     () => RegisterCubit(getIt<AuthRepository>()),
   );
 
-  getIt.registerFactory<CompleteProfileCubit>(() => CompleteProfileCubit(getIt<AuthRepository>()));
+  getIt.registerFactory<CompleteProfileCubit>(
+    () => CompleteProfileCubit(getIt<AuthRepository>()),
+  );
 
   // 🔥 4. قسم التمارين (Workouts)
   // تأكدي من عمل import لهذه الملفات في الأعلى
-  getIt.registerLazySingleton<WorkoutWebService>(() => WorkoutWebService(getIt<Dio>()));
-  getIt.registerLazySingleton<WorkoutRepository>(() => WorkoutRepository(getIt<WorkoutWebService>()));
-  getIt.registerFactory<ExercisesCubit>(() => ExercisesCubit(getIt<WorkoutRepository>()));
-  getIt.registerFactory<CategoriesCubit>(() => CategoriesCubit(getIt<WorkoutRepository>()));
-
+  getIt.registerLazySingleton<WorkoutWebService>(
+    () => WorkoutWebService(getIt<Dio>()),
+  );
+  getIt.registerLazySingleton<WorkoutRepository>(
+    () => WorkoutRepository(getIt<WorkoutWebService>()),
+  );
+  getIt.registerFactory<ExercisesCubit>(
+    () => ExercisesCubit(getIt<WorkoutRepository>()),
+  );
+  getIt.registerFactory<CategoriesCubit>(
+    () => CategoriesCubit(getIt<WorkoutRepository>()),
+  );
 
   getIt.registerLazySingleton<ProfileWebService>(
     () => ProfileWebService(getIt<Dio>()),
@@ -67,5 +77,9 @@ Future<void> setupServiceLocator() async {
   // Cubit
   getIt.registerFactory<ProfileCubit>(
     () => ProfileCubit(getIt<ProfileRepository>()),
+  );
+
+  getIt.registerFactory<LogoutCubit>(
+    () => LogoutCubit(getIt<AuthRepository>()),
   );
 }
