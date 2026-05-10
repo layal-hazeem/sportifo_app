@@ -16,4 +16,6 @@ class AppRoutes {
   static const String getProfile= "/profile";
   static const String editProfile = "profile/edit";
   static const String logout = "logout";
+  static const String searchScreen = "/searchScreen";
+
 }

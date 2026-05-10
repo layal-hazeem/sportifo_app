@@ -16,6 +16,7 @@ import '../../features/workout/data/web_services/workout_web_service.dart';
 import '../../features/workout/presentation/view_model/categories_cubit/categories_cubit.dart';
 import '../../features/workout/presentation/view_model/exercises_cubit/exercises_cubit.dart';
 import '../../features/workout/presentation/view_model/parts_cubit/parts_cubit.dart';
+import '../../features/workout/presentation/view_model/search_cubit/search_cubit.dart';
 import '../localization/locale_cubit.dart';
 import '../network/dio_factory.dart';
 import '../storage/local_storage.dart';
@@ -93,4 +94,6 @@ Future<void> setupServiceLocator() async {
   );
   // إعدادات اللغة
   getIt.registerFactory<LocaleCubit>(() => LocaleCubit(getIt<LocalStorage>()));
+
+  getIt.registerFactory<SearchCubit>(() => SearchCubit(getIt<WorkoutRepository>()));
 }

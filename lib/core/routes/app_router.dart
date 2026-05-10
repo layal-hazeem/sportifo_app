@@ -7,6 +7,8 @@ import '../../features/home/presentation/view/home_page.dart';
 import '../../features/onboarding/presentation/view/onboarding_screen.dart';
 import '../../features/profile/presentation/view/profile_page.dart';
 import '../../features/profile/presentation/view_model/profile_cubit.dart';
+import '../../features/workout/presentation/view/search_screen.dart';
+import '../../features/workout/presentation/view_model/search_cubit/search_cubit.dart';
 import '../di/service_locator.dart';
 import 'app_routes.dart';
 import '../../features/auth/presentation/view/forgot_password_screen.dart';
@@ -127,9 +129,14 @@ class AppRouter {
             ),
           ),
         );
-
+      case AppRoutes.searchScreen:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => getIt<SearchCubit>(),
+            child: const SearchExercisesScreen(),
+          ),
+        );
       default:
-      // 🔥 شاشة حماية في حال طلب مسار غير موجود
         return MaterialPageRoute(
           builder: (_) => Scaffold(
             appBar: AppBar(title: const Text('Error')),

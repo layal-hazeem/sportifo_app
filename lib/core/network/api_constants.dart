@@ -16,4 +16,5 @@ class ApiConstants {
   static const String exercise = "exercises";
   static const String getProfile = "profile";
   static const String logout = "logout";
+  static const String categories = "categories";
 }
