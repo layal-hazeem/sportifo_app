@@ -32,6 +32,7 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
     'Shoulders': 'assets/images/muscles/shoulders.jpg',
     'Biceps': 'assets/images/muscles/biceps.jpg',
     'Triceps': 'assets/images/muscles/triceps.jpg',
+    'ABS':'assets/images/muscles/ABS.jpg'
   };
 
   @override
@@ -52,13 +53,20 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
           'Resistance Training',
           style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search, color: AppColors.textDark, size: 28),
+            onPressed: () {
+              Navigator.pushNamed(context, AppRoutes.searchScreen);
+            },
+          ),
+          const SizedBox(width: 10), // مسافة صغيرة عن حافة الشاشة
+        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ==========================================
-          // 1. شريط العضلات (الصور)
-          // ==========================================
+
           SizedBox(
             height: 110,
             child: BlocConsumer<CategoriesCubit, CategoriesState>(
@@ -94,9 +102,8 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                           if (!isSelected) {
                             setState(() {
                               selectedMuscleId = muscle.id;
-                              selectedPartIds.clear(); // 🔥 تصفير الفلاتر عند اختيار عضلة جديدة
+                              selectedPartIds.clear();
                             });
-                            // نجلب كل التمارين لأن الفلاتر فاضية (يعني الكل)
                             context.read<ExercisesCubit>().fetchExercises(organId: muscle.id);
                             context.read<PartsCubit>().fetchParts(muscle.id);
                           }
@@ -112,9 +119,7 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
 
           const SizedBox(height: 15),
 
-          // ==========================================
-          // 2. شريط الفلاتر (الأقسام الصغيرة بدون زر All)
-          // ==========================================
+
           BlocBuilder<PartsCubit, PartsState>(
             builder: (context, state) {
               if (state is PartsSuccess && state.Parts.isNotEmpty) {
@@ -123,10 +128,9 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     padding: const EdgeInsets.symmetric(horizontal: 20),
-                    itemCount: state.Parts.length, // 🔥 شلنا الـ +1 تبع الـ All
+                    itemCount: state.Parts.length,
                     itemBuilder: (context, index) {
                       final part = state.Parts[index];
-                      // الكبسولة تكون محددة إذا كان الـ ID تبعها موجود باللستة
                       final isSelected = selectedPartIds.contains(part.id);
 
                       return PartFilterChip(
@@ -134,20 +138,17 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                         isSelected: isSelected,
                         onSelected: (bool selected) {
                           setState(() {
-                            // إذا ضغط عليها بنضيفها للستة، وإذا لغى الضغط بنحذفها
                             if (selected) {
                               selectedPartIds.add(part.id);
                             } else {
                               selectedPartIds.remove(part.id);
                             }
 
-                            // 🔥 المنطق الذكي: إذا حددهم كلهم، بنفضيلو اللستة ليرجع للحالة الافتراضية
                             if (selectedPartIds.length == state.Parts.length) {
                               selectedPartIds.clear();
                             }
                           });
 
-                          // طلب التمارين بناءً على اللستة الجديدة
                           context.read<ExercisesCubit>().fetchExercises(
                             organId: selectedMuscleId,
                             partIds: selectedPartIds.isEmpty ? null : selectedPartIds, // إذا اللستة فاضية بنبعت Null يعني الكل
@@ -167,9 +168,7 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
             child: Divider(color: Colors.black12, thickness: 1),
           ),
 
-          // ==========================================
-          // 3. قائمة التمارين
-          // ==========================================
+
           Expanded(
             child: BlocBuilder<ExercisesCubit, ExercisesState>(
               builder: (context, state) {

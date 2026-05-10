@@ -36,19 +36,18 @@ class WorkoutRepository {
     }
   }
 
-  // =====================================
-  // 3. دالة جلب التمارين
-  // =====================================
   Future<ApiResult<List<ExerciseModel>>> getExercises({
     int? categoryId,
     int? organId,
-    List<int>? partIds, // 👈 غيرناها للستة
+    List<int>? partIds,
+    String? searchQuery,
   }) async {
     try {
       final response = await _webService.getExercises(
         categoryId: categoryId,
         organId: organId,
-        partIds: partIds, // 🔥 التعديل هون: صارت partIds
+        partIds: partIds,
+        searchQuery: searchQuery,
       );
       final responseModel = ExerciseResponseModel.fromJson(response.data);
       return Success(responseModel.data);
