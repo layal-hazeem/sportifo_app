@@ -117,7 +117,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get weight => 'Weight';
 
   @override
-  String get length => 'Length';
+  String get height => 'Height';
 
   @override
   String get birthDate => 'Birth Date';
@@ -156,7 +156,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chestCircumference => 'Chest';
 
   @override
-  String get belly => 'Belly / Waist';
+  String get waist => 'Waist';
 
   @override
   String get hipCircumference => 'Hip';
@@ -165,7 +165,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get thighCircumference => 'Thigh';
 
   @override
-  String get handCircumference => 'Hand';
+  String get armCircumference => 'Hand';
 
   @override
   String get startingTheSportsJourney => 'Starting the sports journey';
@@ -316,4 +316,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get default_workout_name => 'Workout';
+  String get information => 'Info';
+
+  @override
+  String get noBodyMeasurements => 'No body measurements yet';
+
+  @override
+  String get editProfile => 'Edit Profile';
+
+  @override
+  String get saveChanges => 'Save Changes';
+
+  @override
+  String get noPhone => 'No phone';
+
+  @override
+  String get noEmail => 'No email';
 }

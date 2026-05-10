@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
+import 'package:sportifo_app/core/helpers/app_image_picker.dart';
+import 'package:sportifo_app/core/helpers/dialog_helper.dart';
 import 'package:sportifo_app/core/routes/app_routes.dart';
-import 'package:sportifo_app/features/auth/presentation/widgets/custom_neumorphic_field.dart';
+import 'package:sportifo_app/features/auth/presentation/view_model/logout/logout_cubit.dart';
+import 'package:sportifo_app/features/auth/presentation/widgets/custom_button.dart';
+import 'package:sportifo_app/features/profile/presentation/widgets/logout_button.dart';
+import 'package:sportifo_app/features/profile/presentation/view/edit_profile_page.dart';
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_cubit.dart';
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_state.dart';
 import 'package:sportifo_app/features/profile/presentation/widgets/basic_info_section.dart';
-import 'package:sportifo_app/features/profile/presentation/widgets/measuremants_chips.dart';
-import 'package:sportifo_app/features/profile/presentation/widgets/metric_card.dart';
-import 'package:sportifo_app/features/profile/presentation/widgets/profile_header.dart';
+import 'package:sportifo_app/features/profile/presentation/widgets/profile_tabs_section.dart';
+import 'package:sportifo_app/features/profile/presentation/widgets/profile_top_section.dart';
 import '../../../../core/theme/app_colors.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
@@ -28,8 +32,8 @@ class _ProfilePageState extends State<ProfilePage> {
       backgroundColor: AppColors.background,
       appBar: NeumorphicAppBar(
         title: Text(
-          "Profile",
-          style: const TextStyle(
+          l10n.profile,
+          style: TextStyle(
             color: AppColors.textDark,
             fontWeight: FontWeight.bold,
           ),
@@ -38,83 +42,153 @@ class _ProfilePageState extends State<ProfilePage> {
           padding: const EdgeInsets.all(8),
           style: NeumorphicStyle(
             boxShape: NeumorphicBoxShape.circle(),
-            color: AppColors.background,
+            color: AppColors.primaryBtn,
           ),
           onPressed: () {
             Navigator.pushReplacementNamed(context, AppRoutes.home);
           },
           child: const Icon(Icons.arrow_back, color: AppColors.textDark),
         ),
-        color: AppColors.background,
+        color: AppColors.primaryBtn,
       ),
 
-      body: BlocBuilder<ProfileCubit, ProfileState>(
-        builder: (context, state) {
-          if (state is ProfileLoading) {
-            return Center(
-              child: CircularProgressIndicator(color: AppColors.primaryBtn),
+      body: BlocListener<LogoutCubit, LogoutState>(
+        listener: (context, state) {
+          if (state is LogoutSuccess) {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              AppRoutes.login,
+              (route) => false,
             );
-          } else if (state is ProfileSuccess) {
-            final user = state.profileModel;
-
-            return RefreshIndicator(
-              color: AppColors.primaryBtn,
-              onRefresh: () async {
-                await context.read<ProfileCubit>().getProfile();
-              },
-              child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 20),
-                    ProfileHeader(
-                      image: user.profilePic,
-                      firstName: user.firstName,
-                      lastName: user.lastName,
-                      email: user.email,
-                      gender: user.gender,
-                    ),
-                    const SizedBox(height: 20),
-                    BasicInfoSection(
-                      email: user.email,
-                      phone: user.phone,
-                      birth: user.dateOfBirth,
-                    ),
-                    const SizedBox(height: 25),
-
-                    Row(
-                      children: [
-                        Expanded(
-                          child: MetricCard(
-                            title: "Height",
-                            value: "${user.height ?? "-"} cm",
-                            icon: Icons.height,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: MetricCard(
-                            title: "Weight",
-                            value: "${user.weight ?? "-"} kg",
-                            icon: Icons.monitor_weight,
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    MeasurementsChips(sizes: user.sizes),
-                  ],
-                ),
-              ),
-            );
-          } else if (state is ProfileError) {
-            return Center(child: Text(state.message));
           }
-          return const SizedBox();
         },
+        child: BlocBuilder<ProfileCubit, ProfileState>(
+          builder: (context, state) {
+            if (state is ProfileLoading) {
+              return Center(
+                child: CircularProgressIndicator(color: AppColors.primaryBtn),
+              );
+            }
+
+            if (state is ProfileError) {
+              return Center(child: Text(state.message));
+            }
+
+            if (state is ProfileSuccess) {
+              final user = state.profileModel;
+
+              return RefreshIndicator(
+                color: AppColors.primaryBtn,
+                onRefresh: () async {
+                  await context.read<ProfileCubit>().getProfile();
+                },
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    children: [
+                      ProfileTopSection(
+                        imageUrl: user.profilePic,
+                        localImage: null,
+                        firstName: user.firstName,
+                        gender: user.gender,
+                        onEditImage: () async {
+                          final file =
+                              await AppImagePicker.showImageSourceDialog(
+                                context,
+                              );
+                          if (file != null) {
+                            context.read<ProfileCubit>().updateProfileImage(
+                              file,
+                            );
+                          }
+                        },
+                      ),
+
+                      Center(
+                        child: Text(
+                          "${user.firstName} ${user.lastName}",
+                          style: TextStyle(fontSize: AppSizes.labelFontSize),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      
+                      ProfileTabsSection(profile: user),
+
+                      const SizedBox(height: 230),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: SizedBox(
+                                width: double.infinity,
+                                height: 50,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.primaryBtn,
+                                    elevation: 5,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                        AppSizes.borderRadius,
+                                      ),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pushNamed(
+                                      context,
+                                      AppRoutes.editProfile,
+                                      arguments: user,
+                                    );
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.edit, color: Colors.white),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        l10n.editProfile,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 15),
+                            Expanded(
+                              child: LogoutButton(
+                                text: l10n.logout,
+                                onPressed: () {
+                                  final cubit = context.read<LogoutCubit>();
+
+                                  DialogHelper.showCustomDialog(
+                                    context: context,
+                                    title: l10n.logout,
+                                    message: l10n.confirmLogout,
+                                    type: DialogType.warning,
+                                    confirmBtnText: l10n.logoutApproval,
+                                    onConfirm: () {
+                                      cubit.logout();
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }
+            return const SizedBox();
+          },
+        ),
       ),
     );
   }

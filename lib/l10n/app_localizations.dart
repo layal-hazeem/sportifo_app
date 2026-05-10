@@ -311,11 +311,11 @@ abstract class AppLocalizations {
   /// **'Weight'**
   String get weight;
 
-  /// No description provided for @length.
+  /// No description provided for @height.
   ///
   /// In en, this message translates to:
-  /// **'Length'**
-  String get length;
+  /// **'Height'**
+  String get height;
 
   /// No description provided for @birthDate.
   ///
@@ -389,11 +389,11 @@ abstract class AppLocalizations {
   /// **'Chest'**
   String get chestCircumference;
 
-  /// No description provided for @belly.
+  /// No description provided for @waist.
   ///
   /// In en, this message translates to:
-  /// **'Belly / Waist'**
-  String get belly;
+  /// **'Waist'**
+  String get waist;
 
   /// No description provided for @hipCircumference.
   ///
@@ -407,11 +407,11 @@ abstract class AppLocalizations {
   /// **'Thigh'**
   String get thighCircumference;
 
-  /// No description provided for @handCircumference.
+  /// No description provided for @armCircumference.
   ///
   /// In en, this message translates to:
   /// **'Hand'**
-  String get handCircumference;
+  String get armCircumference;
 
   /// No description provided for @startingTheSportsJourney.
   ///
@@ -712,6 +712,41 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Workout'**
   String get default_workout_name;
+  /// No description provided for @information.
+  ///
+  /// In en, this message translates to:
+  /// **'Info'**
+  String get information;
+
+  /// No description provided for @noBodyMeasurements.
+  ///
+  /// In en, this message translates to:
+  /// **'No body measurements yet'**
+  String get noBodyMeasurements;
+
+  /// No description provided for @editProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Profile'**
+  String get editProfile;
+
+  /// No description provided for @saveChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Changes'**
+  String get saveChanges;
+
+  /// No description provided for @noPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'No phone'**
+  String get noPhone;
+
+  /// No description provided for @noEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'No email'**
+  String get noEmail;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

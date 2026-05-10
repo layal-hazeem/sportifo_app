@@ -11,6 +11,8 @@ import '../../features/workout/data/models/exercise_model.dart';
 import '../../features/workout/presentation/view/exercise_details_screen.dart';
 import '../../features/workout/presentation/view/workout_type_screen.dart';
 import '../../features/workout/presentation/view_model/saved_exercises/saved_exercises_cubit.dart';
+import '../../features/workout/presentation/view/search_screen.dart';
+import '../../features/workout/presentation/view_model/search_cubit/search_cubit.dart';
 import '../di/service_locator.dart';
 import 'app_routes.dart';
 import '../../features/auth/presentation/view/forgot_password_screen.dart';
@@ -164,10 +166,14 @@ class AppRouter {
           builder: (_) => BlocProvider(
             create: (context) => getIt<SavedExercisesCubit>(),
             child: ExerciseDetailsScreen(exercise: exercise),
+      case AppRoutes.searchScreen:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => getIt<SearchCubit>(),
+            child: const SearchExercisesScreen(),
           ),
         );
       default:
-      // 🔥 شاشة حماية في حال طلب مسار غير موجود
         return MaterialPageRoute(
           builder: (_) => Scaffold(
             appBar: AppBar(title: const Text('Error')),

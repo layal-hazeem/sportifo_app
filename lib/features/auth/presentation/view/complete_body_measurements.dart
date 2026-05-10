@@ -34,7 +34,9 @@ class CompleteBodyMeasurementsView extends StatelessWidget {
           if (state.status == ProfileStatus.error) {
             AppSnackBar.show(
               context,
-              message: state.errorMessage ?? l10n.unexpectedError, // تأكدي من وجود unexpectedError في الترجمة
+              message:
+                  state.errorMessage ??
+                  l10n.unexpectedError, // تأكدي من وجود unexpectedError في الترجمة
               type: SnackBarType.error,
             );
           }
@@ -77,7 +79,7 @@ class CompleteBodyMeasurementsView extends StatelessWidget {
                 const SizedBox(height: 20),
 
                 _buildMeasurementRow(
-                  label1: l10n.belly,
+                  label1: l10n.waist,
                   icon1: Icons.straighten,
                   onChanged1: (v) => context
                       .read<CompleteProfileCubit>()
@@ -97,7 +99,7 @@ class CompleteBodyMeasurementsView extends StatelessWidget {
                   onChanged1: (v) => context
                       .read<CompleteProfileCubit>()
                       .setThigh(double.tryParse(v)),
-                  label2: l10n.handCircumference,
+                  label2: l10n.armCircumference,
                   icon2: Icons.front_hand_outlined,
                   onChanged2: (v) {
                     final value = double.tryParse(v);
@@ -113,7 +115,7 @@ class CompleteBodyMeasurementsView extends StatelessWidget {
                       : l10n.startingTheSportsJourney,
 
                   onPressed: state.status == ProfileStatus.loading
-                      ? null 
+                      ? null
                       : () {
                           final cubit = context.read<CompleteProfileCubit>();
 
@@ -121,7 +123,8 @@ class CompleteBodyMeasurementsView extends StatelessWidget {
                             AppSnackBar.show(
                               context,
                               message: l10n.messageOfIncompleteInfo,
-                              type: SnackBarType.warning, // يفضل استخدام warning هنا
+                              type: SnackBarType
+                                  .warning, 
                             );
                             return;
                           }
