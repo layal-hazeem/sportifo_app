@@ -257,6 +257,12 @@ abstract class AppLocalizations {
   /// **'Workouts'**
   String get workouts;
 
+  /// No description provided for @workout.
+  ///
+  /// In en, this message translates to:
+  /// **'Workout '**
+  String get workout;
+
   /// No description provided for @settings.
   ///
   /// In en, this message translates to:
@@ -647,6 +653,65 @@ abstract class AppLocalizations {
   /// **'Agreed'**
   String get agreed;
 
+  /// No description provided for @resistance_training.
+  ///
+  /// In en, this message translates to:
+  /// **'Resistance Training'**
+  String get resistance_training;
+
+  /// No description provided for @target_muscle.
+  ///
+  /// In en, this message translates to:
+  /// **'Target Muscle'**
+  String get target_muscle;
+
+  /// No description provided for @how_to_perform.
+  ///
+  /// In en, this message translates to:
+  /// **'How to perform'**
+  String get how_to_perform;
+
+  /// No description provided for @gallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Gallery'**
+  String get gallery;
+
+  /// No description provided for @no_exercises_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No exercises found'**
+  String get no_exercises_found;
+
+  /// No description provided for @burn_fat.
+  ///
+  /// In en, this message translates to:
+  /// **'Burn Fat'**
+  String get burn_fat;
+
+  /// No description provided for @build_muscle.
+  ///
+  /// In en, this message translates to:
+  /// **'Build Muscle'**
+  String get build_muscle;
+
+  /// No description provided for @start_training.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Training'**
+  String get start_training;
+
+  /// No description provided for @no_categories_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No categories found.'**
+  String get no_categories_found;
+
+  /// No description provided for @default_workout_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Workout'**
+  String get default_workout_name;
   /// No description provided for @information.
   ///
   /// In en, this message translates to:

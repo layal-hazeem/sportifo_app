@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/routes/app_routes.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../view_model/categories_cubit/categories_cubit.dart';
 import '../view_model/categories_cubit/categories_state.dart';
 import '../widgets/light_premium_workout_card.dart'; // 🔥 استيراد الـ Widget المنفصل
@@ -68,6 +69,7 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final screenWidth = MediaQuery.of(context).size.width;
     final cardWidth = screenWidth * 0.45;
 
@@ -89,7 +91,7 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
                 final categories = state.categories;
 
                 if (categories.isEmpty) {
-                  return const Center(child: Text("No categories found."));
+                  return  Center(child: Text(l10n.no_categories_found));
                 }
 
                 return SingleChildScrollView(
@@ -114,15 +116,19 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
                             title: category.name.toUpperCase(),
                             subtitle: uiInfo['subtitle']!,
                             imagePath: uiInfo['image']!, // نمرر المسار المحلي
+                            // داخل WorkoutTypeScreen في الـ onTap
                             onTap: () {
-                              if (category.id == 2) {
-                                Navigator.pushNamed(
-                                  context,
-                                  AppRoutes.exercisesList,
-                                  arguments: {'categoryId': category.id},
-                                );
-                              } else {
+                              if (category.id == 1) { // 👈 تأكدي من آيدي المقاومة في الـ API عندك
                                 Navigator.pushNamed(context, AppRoutes.muscleGroups);
+                              } else {
+                                Navigator.pushNamed(
+                                    context,
+                                    AppRoutes.exercisesList,
+                                    arguments: {
+                                      'categoryId': category.id,
+                                      'categoryName': category.name, // تمرير الاسم ضروري
+                                    }
+                                );
                               }
                             },
                           ),

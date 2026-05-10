@@ -31,7 +31,10 @@ class _HomePageState extends State<HomePage> {
     const Center(child: Text("Progress Screen")),
     const Center(child: Text("My Plans Screen")),
     const Center(child: Text("Home Dashboard")),
-  const WorkoutTypeScreen(),
+    BlocProvider(
+      create: (context) => getIt<CategoriesCubit>(),
+      child: const WorkoutTypeScreen(),
+    ),
     const Center(child: Text("Chat Screen")),
   ];
 

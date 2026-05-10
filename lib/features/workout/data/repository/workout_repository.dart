@@ -55,4 +55,16 @@ class WorkoutRepository {
       return Failure(ApiErrorHandler.handle(e));
     }
   }
+
+
+  // داخل WorkoutRepository
+  Future<ApiResult<bool>> toggleSaveExercise(int exerciseId) async {
+    try {
+      final response = await _webService.toggleSaveExercise(exerciseId);
+      // إذا كان الباك إند يرجع success: true عند النجاح
+      return Success(response.data['success'] ?? true);
+    } catch (e) {
+      return Failure(ApiErrorHandler.handle(e));
+    }
+  }
 }
