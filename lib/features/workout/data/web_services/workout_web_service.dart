@@ -47,4 +47,12 @@ class WorkoutWebService {
       queryParameters: queryParams,
     );
   }
+
+  // داخل WorkoutWebService
+  Future<Response> toggleSaveExercise(int exerciseId) async {
+    return await dio.post(
+      ApiConstants.saveExercise, // "savedExercise"
+      data: {'exercise_id': exerciseId},
+    );
+  }
 }

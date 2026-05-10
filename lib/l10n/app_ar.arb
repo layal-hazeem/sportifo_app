@@ -57,6 +57,8 @@
   "myPlans":"خططي",
   "home":" الرئيسية",
   "workouts":"التمارين ",
+  "workout":"تمرين ",
+
   "settings":"الإعدادات",
   "dontHaveAccount": "ليس لديك حساب ؟",
   "signUp": "إنشاء حساب",
@@ -89,11 +91,21 @@
     "invalidPhone": "رقم الهاتف غير صالح",
     "passwordMismatch": "كلمتا المرور غير متطابقتين",
     "loading": "جاري التحميل...",
-    "error": "حدث خطأ، حاول مرة أخرى"
     "error": "حدث خطأ، حاول مرة أخرى",
     "aboutUs":"حول التطبيق",
     "logout":"تسجيل خروج",
     "confirmLogout":"هل أنت متأكد أنك تريد تسجيل الخروج؟",
     "logoutApproval":"نعم، تسجيل الخروج",
-    "agreed":"موافق"
+    "agreed":"موافق",
+
+  "resistance_training": "تدريبات المقاومة",
+  "target_muscle": "العضلة المستهدفة",
+  "how_to_perform": "كيفية الأداء",
+  "gallery": "معرض الصور",
+  "no_exercises_found": "لم يتم العثور على تمارين",
+  "burn_fat": "حرق الدهون",
+  "build_muscle": "بناء العضلات",
+  "start_training": "ابدأ التدريب",
+  "no_categories_found": "لم يتم العثور على تصنيفات.",
+  "default_workout_name": "تمرين"
 }

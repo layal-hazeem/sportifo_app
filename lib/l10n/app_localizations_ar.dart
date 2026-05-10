@@ -90,6 +90,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get workouts => 'التمارين ';
 
   @override
+  String get workout => 'تمرين ';
+
+  @override
   String get settings => 'الإعدادات';
 
   @override
@@ -283,4 +286,34 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get agreed => 'موافق';
+
+  @override
+  String get resistance_training => 'تدريبات المقاومة';
+
+  @override
+  String get target_muscle => 'العضلة المستهدفة';
+
+  @override
+  String get how_to_perform => 'كيفية الأداء';
+
+  @override
+  String get gallery => 'معرض الصور';
+
+  @override
+  String get no_exercises_found => 'لم يتم العثور على تمارين';
+
+  @override
+  String get burn_fat => 'حرق الدهون';
+
+  @override
+  String get build_muscle => 'بناء العضلات';
+
+  @override
+  String get start_training => 'ابدأ التدريب';
+
+  @override
+  String get no_categories_found => 'لم يتم العثور على تصنيفات.';
+
+  @override
+  String get default_workout_name => 'تمرين';
 }

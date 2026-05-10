@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/routes/app_routes.dart';
+import '../../../../core/utils/wave_app_bar.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../view_model/categories_cubit/categories_cubit.dart';
 import '../view_model/categories_cubit/categories_state.dart';
 import '../view_model/exercises_cubit/exercises_cubit.dart';
 import '../view_model/exercises_cubit/exercises_state.dart';
 import '../view_model/parts_cubit/parts_cubit.dart';
 import '../view_model/parts_cubit/parts_state.dart';
-import '../widgets/exercise_list_item.dart';
+import '../widgets/exercise_card.dart';
+import '../widgets/exercises_grid_view.dart';
 import '../widgets/horizontal_muscle_card.dart';
 import '../widgets/part_filter_chip.dart';
 
@@ -21,7 +24,6 @@ class MuscleGroupsScreen extends StatefulWidget {
 
 class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
   int? selectedMuscleId;
-
   // 🔥 التعديل هنا: تحول إلى List ليدعم التحديد المتعدد
   List<int> selectedPartIds = [];
 
@@ -42,16 +44,13 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: AppColors.textDark),
-        title: const Text(
-          'Resistance Training',
-          style: TextStyle(color: AppColors.textDark, fontWeight: FontWeight.bold),
-        ),
+      appBar: WaveAppBar(
+        title: l10n.resistance_training,
+        showBackButton: true,
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,7 +59,7 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
           // 1. شريط العضلات (الصور)
           // ==========================================
           SizedBox(
-            height: 110,
+            height: 90,
             child: BlocConsumer<CategoriesCubit, CategoriesState>(
               listener: (context, state) {
                 if (state is CategoriesSuccess && state.categories.isNotEmpty) {
@@ -168,33 +167,26 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
           ),
 
           // ==========================================
-          // 3. قائمة التمارين
+          // 3. قائمة التمارين (المعدلة إلى Grid)
           // ==========================================
           Expanded(
             child: BlocBuilder<ExercisesCubit, ExercisesState>(
               builder: (context, state) {
                 if (state is ExercisesLoading) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(
+                    child: CircularProgressIndicator(color: AppColors.primaryBtn),
+                  );
                 } else if (state is ExercisesSuccess) {
-                  return ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    itemCount: state.exercises.length,
-                    itemBuilder: (context, index) {
-                      final exercise = state.exercises[index];
 
-                      return ExerciseListItem(
-                        exerciseName: exercise.name,
-                        muscleName: exercise.category?.organ?.name ?? "",
-                        imageUrl: exercise.gifUrl ?? (exercise.pictureUrls.isNotEmpty ? exercise.pictureUrls.first : ''),
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            AppRoutes.exerciseDetails,
-                            arguments: exercise,
-                          );
-                        },
-                      );
-                    },
+                  // 🔥 استدعاء الويدجت الذي أنشأتِه وتمرير البيانات له
+                  return ExercisesGridView(exercises: state.exercises);
+
+                } else if (state is ExercisesFailure) {
+                  return Center(
+                    child: Text(
+                      state.errorMessage,
+                      style: const TextStyle(color: Colors.red),
+                    ),
                   );
                 }
                 return const SizedBox();

@@ -26,6 +26,8 @@
   "myPlans":"My Plans",
   "home":"Home",
   "workouts":"Workouts",
+  "workout":"Workout ",
+
   "settings":"Settings",
   "dontHaveAccount": "Don't have an account ?",
   "signUp": "Sign up",
@@ -87,11 +89,23 @@
       "invalidPhone": "Invalid phone number",
       "passwordMismatch": "Passwords do not match",
       "loading": "Loading...",
-      "error": "Something went wrong, please try again"
       "error": "Something went wrong, please try again",
       "aboutUs":"about us",
       "logout":"Logout",
       "confirmLogout":"Are you sure you want to log out?",
       "logoutApproval":"Yes, log out",
-      "agreed":"Agreed"
+      "agreed":"Agreed",
+
+    "resistance_training": "Resistance Training",
+    "target_muscle": "Target Muscle",
+    "how_to_perform": "How to perform",
+    "gallery": "Gallery",
+    "no_exercises_found": "No exercises found",
+    "burn_fat": "Burn Fat",
+    "build_muscle": "Build Muscle",
+    "start_training": "Start Training",
+    "no_categories_found": "No categories found.",
+    "default_workout_name": "Workout"
+
+
 }

@@ -47,6 +47,7 @@ dependencies:
   get_it: ^9.2.1
   shared_preferences: ^2.5.5
   image_picker: ^1.2.1
+  gif_view: ^1.0.3
 
 dev_dependencies:
   flutter_test:
