@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../view_model/search_cubit/search_cubit.dart';
 import '../view_model/search_cubit/search_state.dart';
-import '../widgets/exercise_list_item.dart';
+import '../widgets/exercise_card.dart';
 // ... المستوردات الأخرى
 
 class SearchExercisesScreen extends StatefulWidget {
@@ -48,13 +48,17 @@ class _SearchExercisesScreenState extends State<SearchExercisesScreen> {
           if (state is SearchSuccess) {
             return ListView.builder(
               itemCount: state.exercises.length,
+              // ... داخل ListView.builder
               itemBuilder: (context, index) {
                 final exercise = state.exercises[index];
-                return ExerciseListItem(
-                  exerciseName: exercise.name,
-                  muscleName: exercise.category?.organ?.name ?? "",
-                  imageUrl: exercise.gifUrl ?? "",
-                  onTap: () => Navigator.pushNamed(context, AppRoutes.exerciseDetails, arguments: exercise),
+                return ExerciseCard(
+                  // 🔥 التعديل هنا: مرري الكائن الكامل
+                  exercise: exercise,
+                  onTap: () => Navigator.pushNamed(
+                    context,
+                    AppRoutes.exerciseDetails,
+                    arguments: exercise,
+                  ),
                 );
               },
             );

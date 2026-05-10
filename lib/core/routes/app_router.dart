@@ -166,6 +166,8 @@ class AppRouter {
           builder: (_) => BlocProvider(
             create: (context) => getIt<SavedExercisesCubit>(),
             child: ExerciseDetailsScreen(exercise: exercise),
+    ),
+        );
       case AppRoutes.searchScreen:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
