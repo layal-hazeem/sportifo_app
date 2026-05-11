@@ -712,6 +712,7 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Workout'**
   String get default_workout_name;
+
   /// No description provided for @information.
   ///
   /// In en, this message translates to:
@@ -747,6 +748,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No email'**
   String get noEmail;
+
+  /// No description provided for @termsPart1.
+  ///
+  /// In en, this message translates to:
+  /// **'By registering, you agree to our '**
+  String get termsPart1;
+
+  /// No description provided for @termsPart2.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Use'**
+  String get termsPart2;
+
+  /// No description provided for @termsPart3.
+  ///
+  /// In en, this message translates to:
+  /// **' and '**
+  String get termsPart3;
+
+  /// No description provided for @termsPart4.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get termsPart4;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

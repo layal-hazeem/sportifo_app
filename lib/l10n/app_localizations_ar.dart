@@ -225,7 +225,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get getStarted => 'إبدأ';
 
   @override
-  String get termsText => 'بالمتابعة, أنت توافق على الشروط والأحكام وسياسة الخصوصية';
+  String get termsText => 'By continuing, you agree to our Terms & Conditions and Privacy Policy';
 
   @override
   String get onboardingTitle1 => 'بيتك هو ناديك';
@@ -316,6 +316,8 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get default_workout_name => 'تمرين';
+
+  @override
   String get information => 'معلومات الحساب';
 
   @override
@@ -332,4 +334,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get noEmail => 'لا يوجد بريد الكتروني';
+
+  @override
+  String get termsPart1 => 'بالتسجيل، فإنك توافق على ';
+
+  @override
+  String get termsPart2 => 'شروط الاستخدام';
+
+  @override
+  String get termsPart3 => ' و ';
+
+  @override
+  String get termsPart4 => 'سياسة الخصوصية';
 }

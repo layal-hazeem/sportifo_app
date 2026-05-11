@@ -316,6 +316,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get default_workout_name => 'Workout';
+
+  @override
   String get information => 'Info';
 
   @override
@@ -332,4 +334,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noEmail => 'No email';
+
+  @override
+  String get termsPart1 => 'By registering, you agree to our ';
+
+  @override
+  String get termsPart2 => 'Terms of Use';
+
+  @override
+  String get termsPart3 => ' and ';
+
+  @override
+  String get termsPart4 => 'Privacy Policy';
 }

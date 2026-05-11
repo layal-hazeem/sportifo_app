@@ -52,6 +52,17 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
       appBar: WaveAppBar(
         title: l10n.resistance_training,
         showBackButton: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search, color: Colors.white, size: 28),
+            onPressed: () {
+              // 🔥 بعتنا 1 (لأنها مقاومة)
+              Navigator.pushNamed(context, AppRoutes.searchScreen, arguments: 1);
+            },
+          ),
+          const SizedBox(width: 10), // مسافة صغيرة عن حافة الشاشة
+        ],
+
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

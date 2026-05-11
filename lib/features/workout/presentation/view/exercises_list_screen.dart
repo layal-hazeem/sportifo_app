@@ -28,6 +28,14 @@ class ExercisesListScreen extends StatelessWidget {
       appBar: WaveAppBar(
         title: categoryName,
         showBackButton: true,
+          actions: [
+      IconButton(
+      icon: const Icon(Icons.search, color: Colors.white, size: 28),
+      onPressed: () {
+        Navigator.pushNamed(context, AppRoutes.searchScreen, arguments: 2);
+      },
+    ),
+    ]
       ),
       body: BlocBuilder<ExercisesCubit, ExercisesState>(
         builder: (context, state) {

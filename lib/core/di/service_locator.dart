@@ -93,4 +93,5 @@ Future<void> setupServiceLocator() async {
   getIt.registerFactory<LocaleCubit>(() => LocaleCubit(getIt<LocalStorage>()));
 
   getIt.registerFactory<SearchCubit>(() => SearchCubit(getIt<WorkoutRepository>()));
+
 }

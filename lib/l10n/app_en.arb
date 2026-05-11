@@ -113,5 +113,9 @@
       "editProfile":"Edit Profile",
       "saveChanges":"Save Changes",
       "noPhone":"No phone",
-      "noEmail":"No email"
+      "noEmail":"No email",
+      "termsPart1": "By registering, you agree to our ",
+        "termsPart2": "Terms of Use",
+        "termsPart3": " and ",
+        "termsPart4": "Privacy Policy"
 }
