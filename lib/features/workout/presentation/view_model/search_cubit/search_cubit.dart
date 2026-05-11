@@ -9,8 +9,7 @@ class SearchCubit extends Cubit<SearchState> {
   SearchCubit(this._repository) : super(SearchInitial());
 
 // 🔥 أضفنا categoryId اختياري
-  Future<void> searchExercises(String query, {int? categoryId}) async {
-    if (query.isEmpty) {
+  Future<void> searchExercises(String query, {int? categoryId, int? organId, List<int>? partIds}) async {    if (query.isEmpty) {
       emit(SearchInitial());
       return;
     }
@@ -18,8 +17,12 @@ class SearchCubit extends Cubit<SearchState> {
     emit(SearchLoading());
 
     // 🔥 بنمرر الـ categoryId للريبوزيتوري
-    final result = await _repository.getExercises(searchQuery: query, categoryId: categoryId);
-
+  final result = await _repository.getExercises(
+    searchQuery: query,
+    categoryId: categoryId,
+    organId: organId,
+    partIds: partIds,
+  );
     switch (result) {
       case Success():
         if (result.data.isEmpty) {

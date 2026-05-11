@@ -10,11 +10,11 @@ import '../view_model/search_cubit/search_state.dart';
 import '../widgets/exercise_card.dart';
 
 class SearchExercisesScreen extends StatefulWidget {
-  final int? categoryId; // 🔥 أضفنا هاد المتغير (1 للمقاومة، 2 للكارديو مثلاً)
+  final int? categoryId;
+  final int? organId;
+  final List<int>? partIds;
 
-  const SearchExercisesScreen({super.key, this.categoryId});
-
-  @override
+  const SearchExercisesScreen({super.key, this.categoryId, this.organId, this.partIds});  @override
   State<SearchExercisesScreen> createState() => _SearchExercisesScreenState();
 }
 
@@ -32,15 +32,18 @@ class _SearchExercisesScreenState extends State<SearchExercisesScreen> {
   void _onSearchChanged(String query) {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
-    // 🔥 إذا مسح النص، نلغي الانتظار ونفضي الشاشة فوراً!
     if (query.isEmpty) {
       context.read<SearchCubit>().searchExercises('');
       return;
     }
 
-    // الانتظار فقط عند الكتابة (لعدم الضغط على السيرفر)
     _debounce = Timer(const Duration(milliseconds: 500), () {
-      context.read<SearchCubit>().searchExercises(query, categoryId: widget.categoryId);
+      context.read<SearchCubit>().searchExercises(
+        query,
+        categoryId: widget.categoryId,
+        organId: widget.organId,
+        partIds: widget.partIds, // 🔥 تأكدي إنو هاد السطر مكتوب هيك تماماً
+      );
     });
   }
 
