@@ -5,7 +5,7 @@ import '../../../../core/routes/app_routes.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../view_model/categories_cubit/categories_cubit.dart';
 import '../view_model/categories_cubit/categories_state.dart';
-import '../widgets/light_premium_workout_card.dart'; // 🔥 استيراد الـ Widget المنفصل
+import '../widgets/light_premium_workout_card.dart';
 
 class WorkoutTypeScreen extends StatefulWidget {
   const WorkoutTypeScreen({super.key});
@@ -16,10 +16,9 @@ class WorkoutTypeScreen extends StatefulWidget {
 
 class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
     with SingleTickerProviderStateMixin {
-
   late AnimationController _controller;
-  late Animation<Offset> _slideAnimation;
-  late Animation<double> _opacityAnimation;
+  late Animation<Offset> _headerSlideAnimation;
+  late Animation<double> _headerOpacityAnimation;
 
   @override
   void initState() {
@@ -27,24 +26,23 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
 
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 1200),
     );
 
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.3),
+    // أنيميشن مخصص للعنوان (Header)
+    _headerSlideAnimation = Tween<Offset>(
+      begin: const Offset(0, -0.5),
       end: Offset.zero,
     ).animate(CurvedAnimation(
       parent: _controller,
-      curve: Curves.easeOutBack,
+      curve: const Interval(0.0, 0.5, curve: Curves.easeOutCubic),
     ));
 
-    _opacityAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeIn),
+    _headerOpacityAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: const Interval(0.0, 0.5)),
     );
 
-    _controller.forward();
 
-    // استدعاء الـ API لجلب التصنيفات الأساسية (رقم 1 يعني مقاومة وكارديو)
     context.read<CategoriesCubit>().fetchCategories(1);
   }
 
@@ -54,16 +52,14 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
     super.dispose();
   }
 
-  // 🔥 قمنا بتغيير الروابط إلى مسارات محلية (Local Assets)
-  // تأكدي أن هذه المسارات مطابقة للمجلدات عندك في المشروع
   final Map<int, Map<String, String>> _categoryUIInfo = {
     1: {
-      'subtitle': 'Burn Fat',
-      'image': 'assets/images/strength.jpg', // مسار صورة الكارديو
+      'subtitle': 'Build Muscle & Strength',
+      'image': 'assets/images/strength.jpg',
     },
     2: {
-      'subtitle': 'Build Muscle',
-      'image': 'assets/images/cardio.jpg', // مسار صورة المقاومة
+      'subtitle': 'Burn Fat & Improve Endurance',
+      'image': 'assets/images/cardio.jpg',
     }
   };
 
@@ -71,76 +67,145 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final screenWidth = MediaQuery.of(context).size.width;
-    final cardWidth = screenWidth * 0.45;
+
+    final cardWidth = screenWidth * 0.75;
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: FadeTransition(
-        opacity: _opacityAnimation,
-        child: SlideTransition(
-          position: _slideAnimation,
-          child: BlocBuilder<CategoriesCubit, CategoriesState>(
-            builder: (context, state) {
-              if (state is CategoriesLoading) {
-                return const Center(child: CircularProgressIndicator(color: AppColors.primaryBtn));
+      body: SafeArea(
+        child: BlocConsumer<CategoriesCubit, CategoriesState>(
+          listener: (context, state) {
+            if (state is CategoriesSuccess) {
+              _controller.forward(from: 0.0);
+            }
+          },
+          builder: (context, state) {
+            if (state is CategoriesLoading) {
+              return const Center(
+                  child: CircularProgressIndicator(color: AppColors.primaryBtn));
+            } else if (state is CategoriesFailure) {
+              return Center(
+                  child: Text(state.errorMessage,
+                      style: const TextStyle(color: Colors.red)));
+            } else if (state is CategoriesSuccess) {
+              final categories = state.categories;
+
+              if (categories.isEmpty) {
+                return Center(child: Text(l10n.no_categories_found));
               }
-              else if (state is CategoriesFailure) {
-                return Center(child: Text(state.errorMessage, style: const TextStyle(color: Colors.red)));
-              }
-              else if (state is CategoriesSuccess) {
-                final categories = state.categories;
 
-                if (categories.isEmpty) {
-                  return  Center(child: Text(l10n.no_categories_found));
-                }
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 40),
 
-                return SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                  physics: const BouncingScrollPhysics(),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: categories.map((category) {
 
-                      // جلب الصورة المحلية والوصف، وصورة افتراضية في حال لم نجدها
-                      final uiInfo = _categoryUIInfo[category.id] ?? {
-                        'subtitle': 'Start Training',
-                        'image': 'assets/images/default_workout.png',
-                      };
-
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 15),
-                        child: SizedBox(
-                          width: cardWidth,
-                          child: LightPremiumWorkoutCard(
-                            title: category.name.toUpperCase(),
-                            subtitle: uiInfo['subtitle']!,
-                            imagePath: uiInfo['image']!, // نمرر المسار المحلي
-                            // داخل WorkoutTypeScreen في الـ onTap
-                            onTap: () {
-                              if (category.id == 1) { // 👈 تأكدي من آيدي المقاومة في الـ API عندك
-                                Navigator.pushNamed(context, AppRoutes.muscleGroups);
-                              } else {
-                                Navigator.pushNamed(
-                                    context,
-                                    AppRoutes.exercisesList,
-                                    arguments: {
-                                      'categoryId': category.id,
-                                      'categoryName': category.name, // تمرير الاسم ضروري
-                                    }
-                                );
-                              }
-                            },
-                          ),
+                  SlideTransition(
+                    position: _headerSlideAnimation,
+                    child: FadeTransition(
+                      opacity: _headerOpacityAnimation,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Text(
+                            //   "Ready to Sweat?", // يمكنك وضعها في ملف الترجمة
+                            //   style: TextStyle(
+                            //     fontSize: 16,
+                            //     color: AppColors.primaryBtn.withOpacity(0.8),
+                            //     fontWeight: FontWeight.bold,
+                            //     letterSpacing: 1.2,
+                            //   ),
+                            // ),
+                            const SizedBox(height: 5),
+                            const Text(
+                              "Choose Your\nWorkout Type", // يمكنك وضعها في ملف الترجمة
+                              style: TextStyle(
+                                fontSize: 32,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.textDark,
+                                height: 1.2,
+                              ),
+                            ),
+                          ],
                         ),
-                      );
-                    }).toList(),
+                      ),
+                    ),
                   ),
-                );
-              }
-              return const SizedBox();
-            },
-          ),
+
+                  const SizedBox(height: 40),
+
+                  Expanded(
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      physics: const BouncingScrollPhysics(),
+                      itemCount: categories.length,
+                      itemBuilder: (context, index) {
+                        final category = categories[index];
+
+                        final uiInfo = _categoryUIInfo[category.id] ?? {
+                          'subtitle': 'Start Training',
+                          'image': 'assets/images/default_workout.png',
+                        };
+
+                        final delay = 0.2 + (index * 0.2);
+                        final slideAnim = Tween<Offset>(
+                          begin: const Offset(0.5, 0.0),
+                          end: Offset.zero,
+                        ).animate(CurvedAnimation(
+                          parent: _controller,
+                          curve: Interval(delay, 1.0, curve: Curves.easeOutQuart),
+                        ));
+
+                        final fadeAnim = Tween<double>(begin: 0.0, end: 1.0).animate(
+                          CurvedAnimation(
+                            parent: _controller,
+                            curve: Interval(delay, 1.0, curve: Curves.easeIn),
+                          ),
+                        );
+
+                        return SlideTransition(
+                          position: slideAnim,
+                          child: FadeTransition(
+                            opacity: fadeAnim,
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 20),
+                              child: SizedBox(
+                                width: cardWidth,
+                                child: LightPremiumWorkoutCard(
+                                  title: category.name.toUpperCase(),
+                                  subtitle: uiInfo['subtitle']!,
+                                  imagePath: uiInfo['image']!,
+                                  onTap: () {
+                                    if (category.id == 1) {
+                                      Navigator.pushNamed(context, AppRoutes.muscleGroups);
+                                    } else {
+                                      Navigator.pushNamed(
+                                        context,
+                                        AppRoutes.exercisesList,
+                                        arguments: {
+                                          'categoryId': category.id,
+                                          'categoryName': category.name,
+                                        },
+                                      );
+                                    }
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+                ],
+              );
+            }
+            return const SizedBox();
+          },
         ),
       ),
     );
