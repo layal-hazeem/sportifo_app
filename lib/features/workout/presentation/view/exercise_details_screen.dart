@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gif_view/gif_view.dart';
+import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/snack_bar_utils.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../data/models/exercise_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../view_model/saved_exercises/saved_exercises_cubit.dart';
+import '../view_model/saved_exercises/saved_exercises_state.dart';
 
 class ExerciseDetailsScreen extends StatelessWidget {
   final ExerciseModel exercise;
@@ -29,17 +32,32 @@ class ExerciseDetailsScreen extends StatelessWidget {
             ),
 
             actions: [
-              BlocBuilder<SavedExercisesCubit, void>(
+              // داخل الـ Actions في الـ AppBar وداخل الـ Stack في الكارد
+              // استبدلي الـ BlocBuilder القديم بهذا المزيج
+              BlocConsumer<SavedExercisesCubit, SavedExercisesState>(
+                // استمعي للتغييرات لإظهار السناك بار
+                listener: (context, state) {
+                  // نتحقق أن الحالة هي نجاح التبديل "لهذا التمرين بالتحديد"
+                  if (state is SavedExercisesToggleSuccess && state.exerciseId == exercise.id) {
+                    AppSnackBar.show(
+                      context,
+                      message: state.isSaved ? "Added to saved" : "Removed from saved",
+                      type: SnackBarType.success,
+                      onActionPressed: () => Navigator.pushNamed(context, AppRoutes.savedExercises),
+                    );
+                  }
+                },
+                // حافظي على الـ builder كما هو لرسم الأيقونة
                 builder: (context, state) {
                   return IconButton(
                     icon: Icon(
                       exercise.isSaved ? Icons.bookmark : Icons.bookmark_border,
-                        color: AppColors.primaryBtn,
+                      color: AppColors.primaryBtn,
                     ),
                     onPressed: () => context.read<SavedExercisesCubit>().toggleSave(exercise),
                   );
                 },
-              ),
+              )
             ],
 
             flexibleSpace: FlexibleSpaceBar(

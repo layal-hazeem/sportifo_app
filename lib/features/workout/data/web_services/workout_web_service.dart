@@ -54,4 +54,8 @@ class WorkoutWebService {
       data: {'exercise_id': exerciseId},
     );
   }
+  // دالة لجلب التمارين التي حفظها المستخدم فقط
+  Future<Response> getSavedExercises() async {
+    return await dio.get(ApiConstants.getSavedExercises); // اللي هو "savedExercises"
+  }
 }

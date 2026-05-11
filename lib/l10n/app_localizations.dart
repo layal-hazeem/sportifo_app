@@ -713,6 +713,12 @@ abstract class AppLocalizations {
   /// **'Workout'**
   String get default_workout_name;
 
+  /// No description provided for @saved_exercises.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved Exercises'**
+  String get saved_exercises;
+
   /// No description provided for @information.
   ///
   /// In en, this message translates to:
