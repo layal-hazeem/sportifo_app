@@ -17,24 +17,33 @@ class WorkoutWebService {
     );
   }
 
-  Future<Response> getExercises({int? categoryId,
+  Future<Response> getExercises({
+    int? categoryId,
     int? organId,
-    List<int>? partIds,
+    List<int>? partIds, // القائمة اللي فيها (Middle, Lower)
     String? searchQuery,
   }) async {
     Map<String, dynamic> queryParams = {};
 
     if (categoryId != null) queryParams['category_id'] = categoryId;
     if (organId != null) queryParams['organ_id'] = organId;
+
     if (partIds != null && partIds.isNotEmpty) {
-      queryParams['smallest_category_id'] = partIds;
+      // 🔥 التعديل هنا: إضافة الأقواس المربعة ليفهم السيرفر أنها مصفوفة (Array)
+      queryParams['smallest_category_id[]'] = partIds;
     }
+
     if (searchQuery != null && searchQuery.isNotEmpty) {
-      queryParams['search'] = searchQuery; // 🔥 مطابقة للباك إند
+      queryParams['search'] = searchQuery;
     }
+
     return await dio.get(
       ApiConstants.exercise,
       queryParameters: queryParams,
+      // 🔥 هذا الخيار مهم جداً لإرسال المصفوفات بشكل صحيح في Dio
+      options: Options(
+        listFormat: ListFormat.multiCompatible,
+      ),
     );
   }
 

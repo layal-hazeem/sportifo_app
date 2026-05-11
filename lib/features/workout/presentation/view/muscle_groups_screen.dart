@@ -53,13 +53,21 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
         title: l10n.resistance_training,
         showBackButton: true,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.search, color: Colors.white, size: 28),
-            onPressed: () {
-              // 🔥 بعتنا 1 (لأنها مقاومة)
-              Navigator.pushNamed(context, AppRoutes.searchScreen, arguments: 1);
+
+      IconButton(
+        icon: const Icon(Icons.search, color: AppColors.background),
+        onPressed: () {
+          Navigator.pushNamed(
+            context,
+            AppRoutes.searchScreen,
+            arguments: {
+              'categoryId': 1,
+              'organId': selectedMuscleId, // المتغير المعرف عندك فوق
+              'partIds': selectedPartIds,   // القائمة المعرفة عندك فوق
             },
-          ),
+          );
+        },
+      ),
           const SizedBox(width: 10), // مسافة صغيرة عن حافة الشاشة
         ],
 
@@ -73,13 +81,12 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
             child: BlocConsumer<CategoriesCubit, CategoriesState>(
               listener: (context, state) {
                 if (state is CategoriesSuccess && state.categories.isNotEmpty) {
-                  final firstMuscleId = state.categories.first.id;
                   setState(() {
-                    selectedMuscleId = firstMuscleId;
-                    selectedPartIds.clear(); // تصفير الفلاتر (عرض الكل)
+                    selectedMuscleId = null; // 🔥 لا نحدد شي ديفولت
+                    selectedPartIds.clear();
                   });
-                  context.read<ExercisesCubit>().fetchExercises(organId: firstMuscleId);
-                  context.read<PartsCubit>().fetchParts(firstMuscleId);
+                  // نجلب كل التمارين أول ما نفتح الواجهة
+                  context.read<ExercisesCubit>().fetchExercises();
                 }
               },
               builder: (context, state) {
@@ -100,18 +107,36 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                         imagePath: imagePath,
                         isSelected: isSelected,
                         onTap: () {
-                          if (!isSelected) {
-                            setState(() {
+                          setState(() {
+                            if (isSelected) {
+                              // 🔥 إذا ضغط على العضلة المختارة حالياً: نلغي التحديد
+                              selectedMuscleId = null;
+                              selectedPartIds.clear();
+                              // نجلب كل التمارين بدون فلتر العضلة
+                              context.read<ExercisesCubit>().fetchExercises();
+                              // نخفي أو نصفر العضلات الصغيرة
+                              context.read<PartsCubit>().emit(PartsInitial());
+                            } else {
+                              // 🔥 إذا اختار عضلة جديدة
                               selectedMuscleId = muscle.id;
                               selectedPartIds.clear();
-                            });
-                            context.read<ExercisesCubit>().fetchExercises(organId: muscle.id);
-                            context.read<PartsCubit>().fetchParts(muscle.id);
-                          }
-                        },
+                              context.read<ExercisesCubit>().fetchExercises(organId: muscle.id);
+                              context.read<PartsCubit>().fetchParts(muscle.id);
+                            }
+                          });
+                          },
                       );
                     },
                   );
+                } else if (state is CategoriesFailure) {
+                  return Center(
+                    child: Text(
+                      state.errorMessage,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  );
+
+
                 }
                 return const SizedBox();
               },

@@ -169,15 +169,20 @@ class AppRouter {
     ),
         );
       case AppRoutes.searchScreen:
-        final categoryId = settings.arguments as int?;
+      // استخراج الـ Map بالكامل
+        final args = settings.arguments as Map<String, dynamic>?;
+
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
             providers: [
               BlocProvider(create: (_) => getIt<SearchCubit>()),
-              // 🔥 وهنا كمان ضفناه لتعمل أيقونة الحفظ جوا البحث
               BlocProvider(create: (_) => getIt<SavedExercisesCubit>()),
             ],
-            child: SearchExercisesScreen(categoryId: categoryId),
+            child: SearchExercisesScreen(
+              categoryId: args?['categoryId'], // مرريها من الـ Map
+              organId: args?['organId'],       // مرريها من الـ Map
+              partIds: args?['partIds'],       // مرريها من الـ Map
+            ),
           ),
         );
       default:
