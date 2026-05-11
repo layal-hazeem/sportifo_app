@@ -28,8 +28,8 @@ import '../../features/workout/presentation/view/muscle_groups_screen.dart';
 import '../../features/workout/presentation/view_model/categories_cubit/categories_cubit.dart';
 import '../../features/workout/presentation/view_model/exercises_cubit/exercises_cubit.dart';
 import '../../features/workout/presentation/view_model/parts_cubit/parts_cubit.dart';
-
 class AppRouter {
+
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case AppRoutes.splash:
@@ -169,10 +169,15 @@ class AppRouter {
     ),
         );
       case AppRoutes.searchScreen:
+        final categoryId = settings.arguments as int?;
         return MaterialPageRoute(
-          builder: (_) => BlocProvider(
-            create: (_) => getIt<SearchCubit>(),
-            child: const SearchExercisesScreen(),
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider(create: (_) => getIt<SearchCubit>()),
+              // 🔥 وهنا كمان ضفناه لتعمل أيقونة الحفظ جوا البحث
+              BlocProvider(create: (_) => getIt<SavedExercisesCubit>()),
+            ],
+            child: SearchExercisesScreen(categoryId: categoryId),
           ),
         );
       default:

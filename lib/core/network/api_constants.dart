@@ -1,7 +1,7 @@
 class ApiConstants {
-   static const String baseUrl = "http://192.168.1.111:8000/api/app/";
+    static const String baseUrl = "http://172.20.10.4:8000/api/app/";
  // static const String baseUrl = "http://192.168.1.2:8000/api/app/";
-  // static const String baseUrl = "http://10.0.2.2:8000/api/app/";
+ //  static const String baseUrl = "http://10.0.2.2:8000/api/app/";
   // هدول بتعدليهم حسب الـ Documentation اللي رح توصلك
 
   static const String register = "register";
@@ -22,4 +22,5 @@ class ApiConstants {
   static const String logout = "logout";
 
   static const String categories = "categories";
+
 }
