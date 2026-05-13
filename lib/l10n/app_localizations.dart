@@ -682,6 +682,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No email'**
   String get noEmail;
+
+  /// No description provided for @cancle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancle'**
+  String get cancle;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

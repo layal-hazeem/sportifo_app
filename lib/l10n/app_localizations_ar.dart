@@ -301,4 +301,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get noEmail => 'لا يوجد بريد الكتروني';
+
+  @override
+  String get cancle => 'إلغاء';
 }

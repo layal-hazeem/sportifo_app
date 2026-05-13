@@ -262,13 +262,14 @@ class CustomDrawer extends StatelessWidget {
 
       case DrawerItem.logout:
         final logoutCubit = context.read<LogoutCubit>();
+        final l10n = AppLocalizations.of(context)!;
 
         DialogHelper.showCustomDialog(
           context: context,
-          title: "Logout",
-          message: "Are you sure?",
+          title: l10n.logout,
+          message: l10n.confirmLogout,
           type: DialogType.warning,
-          confirmBtnText: "Logout",
+          confirmBtnText: l10n.logout,
           onConfirm: () => logoutCubit.logout(),
         );
         break;
