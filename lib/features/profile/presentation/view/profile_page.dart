@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
@@ -24,6 +26,8 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  File? selectedImage;
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -88,7 +92,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     children: [
                       ProfileTopSection(
                         imageUrl: user.profilePic,
-                        localImage: null,
+                        localImage: selectedImage,
                         firstName: user.firstName,
                         gender: user.gender,
                         onEditImage: () async {
@@ -97,6 +101,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                 context,
                               );
                           if (file != null) {
+                            setState(() {
+                              selectedImage = file;
+                            });
+
                             context.read<ProfileCubit>().updateProfileImage(
                               file,
                             );
@@ -111,7 +119,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      
+
                       ProfileTabsSection(profile: user),
 
                       const SizedBox(height: 230),

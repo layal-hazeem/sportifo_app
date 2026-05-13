@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sportifo_app/features/auth/presentation/view_model/logout/logout_cubit.dart';
+import 'package:sportifo_app/features/profile/data/models/profile_response.dart';
+import 'package:sportifo_app/features/profile/presentation/view/edit_profile_page.dart';
 import '../../features/auth/presentation/view/complete_profile_info.dart';
 import '../../features/auth/presentation/view/register_screen.dart';
 import '../../features/auth/presentation/view_model/complete_profile/complete_profile_cubit.dart';
@@ -51,26 +54,8 @@ class AppRouter {
       case AppRoutes.home:
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
-            providers: [
-              BlocProvider(create: (_) => getIt<CategoriesCubit>()),
-            ],
+            providers: [BlocProvider(create: (_) => getIt<CategoriesCubit>())],
             child: const HomePage(),
-          ),
-        );
-
-      case AppRoutes.getProfile:
-        return MaterialPageRoute(
-          builder: (_) => BlocProvider(
-            create: (_) => getIt<ProfileCubit>()..getProfile(),
-            child: ProfilePage(),
-          ),
-        );
-
-      case AppRoutes.editProfile:
-        return MaterialPageRoute(
-          builder: (_) => BlocProvider(
-            create: (_) => getIt<CompleteProfileCubit>(),
-            child: CompleteProfileInfoView(),
           ),
         );
 
@@ -106,6 +91,35 @@ class AppRouter {
           ),
         );
 
+      case AppRoutes.getProfile:
+        return MaterialPageRoute(
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider(create: (_) => getIt<ProfileCubit>()..getProfile()),
+              BlocProvider(create: (_) => getIt<LogoutCubit>()),
+            ],
+            child: MultiBlocProvider(
+              providers: [
+                BlocProvider(
+                  create: (_) => getIt<ProfileCubit>()..getProfile(),
+                ),
+                BlocProvider(create: (_) => getIt<LogoutCubit>()),
+              ],
+              child: const ProfilePage(),
+            ),
+          ),
+        );
+
+      case AppRoutes.editProfile:
+        final profile = settings.arguments as ProfileResponsModel;
+
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => getIt<ProfileCubit>(),
+            child: EditProfilePage(profile: profile),
+          ),
+        );
+
       case AppRoutes.otpScreen:
         final args = settings.arguments;
         String email = "";
@@ -129,7 +143,7 @@ class AppRouter {
         );
 
       default:
-      // 🔥 شاشة حماية في حال طلب مسار غير موجود
+        // 🔥 شاشة حماية في حال طلب مسار غير موجود
         return MaterialPageRoute(
           builder: (_) => Scaffold(
             appBar: AppBar(title: const Text('Error')),

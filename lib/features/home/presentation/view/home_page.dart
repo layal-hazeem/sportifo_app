@@ -9,11 +9,12 @@ import 'package:sportifo_app/features/home/presentation/view_model/home_view_mod
 import 'package:sportifo_app/features/home/presentation/widgets/custom_app_bar.dart';
 import 'package:sportifo_app/features/home/presentation/widgets/custom_bottom_nav_bar.dart';
 import 'package:sportifo_app/features/home/presentation/widgets/custom_drawer.dart';
+import 'package:sportifo_app/features/profile/presentation/view_model/profile_cubit.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
 import '../../../../core/di/service_locator.dart';
 import '../../../workout/presentation/view/workout_type_screen.dart';
-import '../../../workout/presentation/view_model/categories_cubit/categories_cubit.dart';
+import 'package:sportifo_app/core/enum/drawer_enum.dart';
 
 HomeViewModel homeViewModel = HomeViewModel();
 
@@ -25,13 +26,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int selectedDrawerIndex = 1;
+  DrawerItem selectedDrawerItem = DrawerItem.profile;
 
   final List<Widget> _screens = [
     const Center(child: Text("Progress Screen")),
     const Center(child: Text("My Plans Screen")),
     const Center(child: Text("Home Dashboard")),
-  const WorkoutTypeScreen(),
+    const WorkoutTypeScreen(),
     const Center(child: Text("Chat Screen")),
   ];
 
@@ -39,22 +40,29 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return BlocProvider(
-      create: (_) => LogoutCubit(GetIt.instance<AuthRepository>()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => LogoutCubit(GetIt.instance<AuthRepository>()),
+        ),
+
+        BlocProvider(create: (_) => getIt<ProfileCubit>()..getProfile()),
+      ],
+
       child: BlocListener<LogoutCubit, LogoutState>(
         listener: (context, state) {
           if (state is LogoutSuccess) {
             Navigator.pushNamedAndRemoveUntil(
               context,
               AppRoutes.login,
-                  (route) => false,
+              (route) => false,
             );
           }
 
           if (state is LogoutError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
-            );
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.message)));
           }
         },
         child: ListenableBuilder(
@@ -64,10 +72,10 @@ class _HomePageState extends State<HomePage> {
               body: _screens[homeViewModel.currentIndex],
 
               drawer: CustomDrawer(
-                selectedIndex: selectedDrawerIndex,
-                onItemTap: (index) {
+                selectedItem: selectedDrawerItem,
+                onItemTap: (item) {
                   setState(() {
-                    selectedDrawerIndex = index;
+                    selectedDrawerItem = item;
                   });
                 },
               ),
