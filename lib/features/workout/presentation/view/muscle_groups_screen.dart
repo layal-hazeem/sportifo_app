@@ -82,12 +82,10 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
               listener: (context, state) {
                 if (state is CategoriesSuccess && state.categories.isNotEmpty) {
                   setState(() {
-                    selectedMuscleId = null; // 🔥 لا نحدد شي ديفولت
+                    selectedMuscleId = null;
                     selectedPartIds.clear();
                   });
-                  // نجلب كل التمارين أول ما نفتح الواجهة
-                  context.read<ExercisesCubit>().fetchExercises();
-                }
+                  context.read<ExercisesCubit>().fetchExercises(categoryId: 1);                }
               },
               builder: (context, state) {
                 if (state is CategoriesLoading) {
@@ -109,18 +107,17 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                         onTap: () {
                           setState(() {
                             if (isSelected) {
-                              // 🔥 إذا ضغط على العضلة المختارة حالياً: نلغي التحديد
                               selectedMuscleId = null;
                               selectedPartIds.clear();
-                              // نجلب كل التمارين بدون فلتر العضلة
-                              context.read<ExercisesCubit>().fetchExercises();
-                              // نخفي أو نصفر العضلات الصغيرة
+                              context.read<ExercisesCubit>().fetchExercises(categoryId: 1);                              // نخفي أو نصفر العضلات الصغيرة
                               context.read<PartsCubit>().emit(PartsInitial());
                             } else {
                               // 🔥 إذا اختار عضلة جديدة
                               selectedMuscleId = muscle.id;
                               selectedPartIds.clear();
-                              context.read<ExercisesCubit>().fetchExercises(organId: muscle.id);
+                              context.read<ExercisesCubit>().fetchExercises(
+                                  categoryId: 1,
+                                  organId: muscle.id);
                               context.read<PartsCubit>().fetchParts(muscle.id);
                             }
                           });
@@ -176,6 +173,7 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                           });
 
                           context.read<ExercisesCubit>().fetchExercises(
+                            categoryId: 1,
                             organId: selectedMuscleId,
                             partIds: selectedPartIds.isEmpty ? null : selectedPartIds, // إذا اللستة فاضية بنبعت Null يعني الكل
                           );
