@@ -11,9 +11,17 @@ class ApiConstants {
   static const String verifyOtp = "verify-otp";
   static const String resendOtp = "resend-otp";
   static const String resetPassword = "reset-password";
+ // static const String editProfile = "edit";
+  static const String exercise= "exercise";
+   static const String saveExercise= "savedExercise";
+   static const String getSavedExercises= "savedExercises";
+
+
+  static const String getProfile = "profile";
   static const String profile = "profile";
   static const String editProfile = "profile/edit";
-  static const String exercise = "exercises";
-  static const String getProfile = "profile";
   static const String logout = "logout";
+
+  static const String categories = "categories";
+
 }

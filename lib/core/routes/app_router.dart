@@ -10,6 +10,12 @@ import '../../features/home/presentation/view/home_page.dart';
 import '../../features/onboarding/presentation/view/onboarding_screen.dart';
 import '../../features/profile/presentation/view/profile_page.dart';
 import '../../features/profile/presentation/view_model/profile_cubit.dart';
+import '../../features/workout/data/models/exercise_model.dart';
+import '../../features/workout/presentation/view/exercise_details_screen.dart';
+import '../../features/workout/presentation/view/workout_type_screen.dart';
+import '../../features/workout/presentation/view_model/saved_exercises/saved_exercises_cubit.dart';
+import '../../features/workout/presentation/view/search_screen.dart';
+import '../../features/workout/presentation/view_model/search_cubit/search_cubit.dart';
 import '../di/service_locator.dart';
 import 'app_routes.dart';
 import '../../features/auth/presentation/view/forgot_password_screen.dart';
@@ -25,8 +31,8 @@ import '../../features/workout/presentation/view/muscle_groups_screen.dart';
 import '../../features/workout/presentation/view_model/categories_cubit/categories_cubit.dart';
 import '../../features/workout/presentation/view_model/exercises_cubit/exercises_cubit.dart';
 import '../../features/workout/presentation/view_model/parts_cubit/parts_cubit.dart';
-
 class AppRouter {
+
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case AppRoutes.splash:
@@ -59,6 +65,14 @@ class AppRouter {
           ),
         );
 
+ 
+      case AppRoutes.workoutType:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => getIt<CategoriesCubit>(),
+            child: const WorkoutTypeScreen(), // تأكدي من عمل import لهذه الشاشة في الأعلى
+          ),
+        );
       case AppRoutes.muscleGroups:
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
@@ -66,6 +80,8 @@ class AppRouter {
               BlocProvider(create: (_) => getIt<CategoriesCubit>()),
               BlocProvider(create: (_) => getIt<ExercisesCubit>()),
               BlocProvider(create: (_) => getIt<PartsCubit>()),
+              // 🔥 أضيفي هذا السطر المفقود هنا
+              BlocProvider(create: (_) => getIt<SavedExercisesCubit>()),
             ],
             child: const MuscleGroupsScreen(),
           ),
@@ -142,14 +158,59 @@ class AppRouter {
           ),
         );
 
+// 1. شاشة قائمة التمارين
+      case AppRoutes.exercisesList:
+        final args = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (context) => getIt<ExercisesCubit>()..fetchExercises(categoryId: args['categoryId']),
+              ),
+              BlocProvider(
+                create: (context) => getIt<SavedExercisesCubit>(),
+              ),
+            ],
+            child: ExercisesListScreen(
+              categoryId: args['categoryId'],
+              categoryName: args['categoryName'] ?? "Exercises",
+            ),
+          ),
+        );
+
+      case AppRoutes.exerciseDetails:
+        final exercise = settings.arguments as ExerciseModel;
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => getIt<SavedExercisesCubit>(),
+            child: ExerciseDetailsScreen(exercise: exercise),
+    ),
+        );
+      case AppRoutes.searchScreen:
+      // استخراج الـ Map بالكامل
+        final args = settings.arguments as Map<String, dynamic>?;
+
+        return MaterialPageRoute(
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider(create: (_) => getIt<SearchCubit>()),
+              BlocProvider(create: (_) => getIt<SavedExercisesCubit>()),
+            ],
+            child: SearchExercisesScreen(
+              categoryId: args?['categoryId'], // مرريها من الـ Map
+              organId: args?['organId'],       // مرريها من الـ Map
+              partIds: args?['partIds'],       // مرريها من الـ Map
+            ),
+          ),
+        );
       default:
-        // 🔥 شاشة حماية في حال طلب مسار غير موجود
         return MaterialPageRoute(
           builder: (_) => Scaffold(
             appBar: AppBar(title: const Text('Error')),
             body: Center(child: Text('No route defined for ${settings.name}')),
           ),
         );
+
     }
   }
 }

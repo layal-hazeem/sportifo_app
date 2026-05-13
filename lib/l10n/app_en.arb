@@ -26,6 +26,8 @@
   "myPlans":"My Plans",
   "home":"Home",
   "workouts":"Workouts",
+  "workout":"Workout ",
+
   "settings":"Settings",
   "dontHaveAccount": "Don't have an account ?",
   "signUp": "Sign up",
@@ -93,11 +95,28 @@
       "confirmLogout":"Are you sure you want to log out?",
       "logoutApproval":"Yes, log out",
       "agreed":"Agreed",
+
+    "resistance_training": "Resistance Training",
+    "target_muscle": "Target Muscle",
+    "how_to_perform": "How to perform",
+    "gallery": "Gallery",
+    "no_exercises_found": "No exercises found",
+    "burn_fat": "Burn Fat",
+    "build_muscle": "Build Muscle",
+    "start_training": "Start Training",
+    "no_categories_found": "No categories found.",
+    "default_workout_name": "Workout",
+
+
       "information":"Info",
       "noBodyMeasurements":"No body measurements yet",
       "editProfile":"Edit Profile",
       "saveChanges":"Save Changes",
       "noPhone":"No phone",
       "noEmail":"No email",
-      "cancle":"Cancle"
+      "cancle":"Cancle",
+      "termsPart1": "By registering, you agree to our ",
+        "termsPart2": "Terms of Use",
+        "termsPart3": " and ",
+        "termsPart4": "Privacy Policy"
 }

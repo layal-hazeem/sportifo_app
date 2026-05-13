@@ -22,6 +22,7 @@ class ExerciseModel {
   final String description;
   final ExerciseCategory? category;
   final List<ExerciseMedia> images;
+  bool isSaved;
 
   ExerciseModel({
     required this.id,
@@ -29,6 +30,7 @@ class ExerciseModel {
     required this.description,
     this.category,
     required this.images,
+    this.isSaved = false,
   });
 
   factory ExerciseModel.fromJson(Map<String, dynamic> json) {
@@ -40,6 +42,7 @@ class ExerciseModel {
       images: json['images'] != null
           ? List<ExerciseMedia>.from(json['images'].map((x) => ExerciseMedia.fromJson(x)))
           : [],
+      isSaved: false,
     );
   }
 
@@ -110,8 +113,18 @@ class ExerciseMedia {
   ExerciseMedia({required this.url, required this.type});
 
   factory ExerciseMedia.fromJson(Map<String, dynamic> json) {
+    String rawUrl = json['url'] ?? '';
+
+    // 🔥 الحل الجذري: إذا الرابط بيحتوي على أي شكل من أشكال الـ local
+    if (rawUrl.contains('localhost') || rawUrl.contains('127.0.0.1')) {
+      // استبدال الجزء الأول من الرابط كاملاً بعنوان الـ IP تبع جهازك
+      // ملاحظة: تأكدي أن الـ IP في ApiConstants هو "192.168.1.111" بدون http://
+      rawUrl = rawUrl.replaceAll('localhost', '192.168.1.111')
+          .replaceAll('127.0.0.1', '192.168.1.111');
+    }
+
     return ExerciseMedia(
-      url: json['url'] ?? '',
+      url: rawUrl,
       type: json['type'] ?? '',
     );
   }

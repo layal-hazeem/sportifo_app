@@ -90,6 +90,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get workouts => 'Workouts';
 
   @override
+  String get workout => 'Workout ';
+
+  @override
   String get settings => 'Settings';
 
   @override
@@ -285,6 +288,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String get agreed => 'Agreed';
 
   @override
+  String get resistance_training => 'Resistance Training';
+
+  @override
+  String get target_muscle => 'Target Muscle';
+
+  @override
+  String get how_to_perform => 'How to perform';
+
+  @override
+  String get gallery => 'Gallery';
+
+  @override
+  String get no_exercises_found => 'No exercises found';
+
+  @override
+  String get burn_fat => 'Burn Fat';
+
+  @override
+  String get build_muscle => 'Build Muscle';
+
+  @override
+  String get start_training => 'Start Training';
+
+  @override
+  String get no_categories_found => 'No categories found.';
+
+  @override
+  String get default_workout_name => 'Workout';
+
+  @override
   String get information => 'Info';
 
   @override
@@ -304,4 +337,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cancle => 'Cancle';
+  
+  @override
+  String get termsPart1 => 'By registering, you agree to our ';
+
+  @override
+  String get termsPart2 => 'Terms of Use';
+
+  @override
+  String get termsPart3 => ' and ';
+
+  @override
+  String get termsPart4 => 'Privacy Policy';
 }

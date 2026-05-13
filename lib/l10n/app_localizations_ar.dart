@@ -90,6 +90,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get workouts => 'التمارين ';
 
   @override
+  String get workout => 'تمرين ';
+
+  @override
   String get settings => 'الإعدادات';
 
   @override
@@ -222,7 +225,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get getStarted => 'إبدأ';
 
   @override
-  String get termsText => 'بالمتابعة, أنت توافق على الشروط والأحكام وسياسة الخصوصية';
+  String get termsText => 'By continuing, you agree to our Terms & Conditions and Privacy Policy';
 
   @override
   String get onboardingTitle1 => 'بيتك هو ناديك';
@@ -285,6 +288,36 @@ class AppLocalizationsAr extends AppLocalizations {
   String get agreed => 'موافق';
 
   @override
+  String get resistance_training => 'تدريبات المقاومة';
+
+  @override
+  String get target_muscle => 'العضلة المستهدفة';
+
+  @override
+  String get how_to_perform => 'كيفية الأداء';
+
+  @override
+  String get gallery => 'معرض الصور';
+
+  @override
+  String get no_exercises_found => 'لم يتم العثور على تمارين';
+
+  @override
+  String get burn_fat => 'حرق الدهون';
+
+  @override
+  String get build_muscle => 'بناء العضلات';
+
+  @override
+  String get start_training => 'ابدأ التدريب';
+
+  @override
+  String get no_categories_found => 'لم يتم العثور على تصنيفات.';
+
+  @override
+  String get default_workout_name => 'تمرين';
+
+  @override
   String get information => 'معلومات الحساب';
 
   @override
@@ -304,4 +337,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get cancle => 'إلغاء';
+  
+  @override
+  String get termsPart1 => 'بالتسجيل، فإنك توافق على ';
+
+  @override
+  String get termsPart2 => 'شروط الاستخدام';
+
+  @override
+  String get termsPart3 => ' و ';
+
+  @override
+  String get termsPart4 => 'سياسة الخصوصية';
 }
