@@ -339,6 +339,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noEmail => 'No email';
 
   @override
+  String get cancle => 'Cancle';
+  
+  @override
   String get termsPart1 => 'By registering, you agree to our ';
 
   @override

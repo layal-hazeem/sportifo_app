@@ -69,6 +69,7 @@ Future<void> setupServiceLocator() async {
   getIt.registerFactory<CategoriesCubit>(
     () => CategoriesCubit(getIt<WorkoutRepository>()),
   );
+
   getIt.registerFactory<PartsCubit>(() => PartsCubit(getIt<WorkoutRepository>()));
 // داخل setupServiceLocator في قسم التمارين
   getIt.registerLazySingleton<SavedExercisesCubit>(() => SavedExercisesCubit(getIt<WorkoutRepository>()));

@@ -755,6 +755,11 @@ abstract class AppLocalizations {
   /// **'No email'**
   String get noEmail;
 
+  /// No description provided for @cancle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancle'**
+  String get cancle;
   /// No description provided for @termsPart1.
   ///
   /// In en, this message translates to:

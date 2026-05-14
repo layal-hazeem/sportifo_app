@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 
 /// تعريف أنواع الديالوغ المتاحة
 enum DialogType { success, error, warning }
@@ -9,9 +10,10 @@ class DialogHelper {
     required String title,
     required String message,
     required DialogType type,
-    String confirmBtnText = "موافق",
+    String? confirmBtnText,
     VoidCallback? onConfirm,
   }) {
+    final l10n = AppLocalizations.of(context)!;
     Color primaryColor;
     IconData icon;
 
@@ -35,7 +37,9 @@ class DialogHelper {
       barrierDismissible: false, // يجب التفاعل مع الديالوغ لإغلاقه
       builder: (BuildContext context) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
           title: Column(
             children: [
               Icon(icon, color: primaryColor, size: 50),
@@ -43,7 +47,10 @@ class DialogHelper {
               Text(
                 title,
                 textAlign: TextAlign.center,
-                style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  color: primaryColor,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),
@@ -54,19 +61,25 @@ class DialogHelper {
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(context).pop(), // زر الإلغاء الافتراضي
-              child: const Text("إلغاء", style: TextStyle(color: Colors.grey)),
+              onPressed: () =>
+                  Navigator.of(context).pop(), // زر الإلغاء الافتراضي
+              child: Text(l10n.cancle, style: TextStyle(color: Colors.grey)),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: primaryColor,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
               onPressed: () {
                 Navigator.of(context).pop(); // إغلاق الديالوغ أولاً
                 if (onConfirm != null) onConfirm(); // تنفيذ العملية المطلوبة
               },
-              child: Text(confirmBtnText, style: const TextStyle(color: Colors.white)),
+              child: Text(
+                confirmBtnText ?? l10n.agreed,
+                style: const TextStyle(color: Colors.white),
+              ),
             ),
           ],
           actionsAlignment: MainAxisAlignment.center,
