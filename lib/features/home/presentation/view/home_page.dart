@@ -11,8 +11,8 @@ import 'package:sportifo_app/features/home/presentation/widgets/custom_bottom_na
 import 'package:sportifo_app/features/home/presentation/widgets/custom_drawer.dart';
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_cubit.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
-
 import '../../../../core/di/service_locator.dart';
+import 'package:sportifo_app/features/workout/presentation/view_model/categories_cubit/categories_cubit.dart';
 import '../../../workout/presentation/view/workout_type_screen.dart';
 import 'package:sportifo_app/core/enum/drawer_enum.dart';
 
