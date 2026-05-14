@@ -42,7 +42,7 @@ class ExerciseModel {
       images: json['images'] != null
           ? List<ExerciseMedia>.from(json['images'].map((x) => ExerciseMedia.fromJson(x)))
           : [],
-      isSaved: false,
+      isSaved: json['is_saved'] == 1 || json['is_saved'] == true,
     );
   }
 

@@ -67,4 +67,23 @@ class WorkoutRepository {
       return Failure(ApiErrorHandler.handle(e));
     }
   }
+  Future<ApiResult<List<ExerciseModel>>> getSavedExercises() async {
+    try {
+      final response = await _webService.getSavedExercises();
+
+      if (response.data['data'] is List) {
+        final List data = response.data['data'];
+        final exercises = data.map((e) => ExerciseModel.fromJson(e)).toList();
+        return Success(exercises);
+      }
+
+      // إذا كانت الاستجابة هي الكائن نفسه (ResponseModel)
+      final responseModel = ExerciseResponseModel.fromJson(response.data);
+      return Success(responseModel.data);
+
+    } catch (e) {
+      print("Error fetching saved: $e");
+      return Failure(ApiErrorHandler.handle(e));
+    }
+  }
 }

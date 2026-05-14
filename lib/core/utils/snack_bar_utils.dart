@@ -6,6 +6,8 @@ class AppSnackBar {
       BuildContext context, {
         required String message,
         required SnackBarType type,
+        VoidCallback? onActionPressed, // إضافة هذا السطر
+        String? actionLabel,
       }) {
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -48,6 +50,14 @@ class AppSnackBar {
                 ),
               ),
             ),
+            if (onActionPressed != null)
+              TextButton(
+                onPressed: onActionPressed,
+                child: Text(
+                  actionLabel ?? "Show",
+                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+              ),
           ],
         ),
         backgroundColor: backgroundColor,

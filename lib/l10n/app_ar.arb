@@ -62,6 +62,7 @@
   "workouts":"التمارين ",
   "workout":"تمرين ",
 
+
   "settings":"الإعدادات",
   "dontHaveAccount": "ليس لديك حساب ؟",
   "signUp": "إنشاء حساب",
@@ -106,6 +107,9 @@
   "how_to_perform": "كيفية الأداء",
   "gallery": "معرض الصور",
   "no_exercises_found": "لم يتم العثور على تمارين",
+  "saved_exercises": "التمارين المحفوظة",
+
+
   "burn_fat": "حرق الدهون",
   "build_muscle": "بناء العضلات",
   "start_training": "ابدأ التدريب",

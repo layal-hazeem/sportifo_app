@@ -318,6 +318,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get default_workout_name => 'Workout';
 
   @override
+  String get saved_exercises => 'Saved Exercises';
+
+  @override
   String get information => 'Info';
 
   @override

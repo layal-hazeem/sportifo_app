@@ -318,6 +318,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get default_workout_name => 'تمرين';
 
   @override
+  String get saved_exercises => 'التمارين المحفوظة';
+
+  @override
   String get information => 'معلومات الحساب';
 
   @override

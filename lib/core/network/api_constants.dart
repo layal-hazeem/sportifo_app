@@ -1,4 +1,7 @@
 class ApiConstants {
+   // static const String baseUrl = "http://172.20.10.4:8000/api/app/";
+ // static const String baseUrl = "http://192.168.1.2:8000/api/app/";
+   static const String baseUrl = "http://192.168.1.111:8000/api/app/";
   static const String baseUrl = "http:// 172.29.77.72:8000/api/app/";
   // static const String baseUrl = "http://10.0.2.2:8000/api/app/";
   // static const String baseUrl = "http://192.168.27.147:8000/api/app/";
@@ -14,7 +17,7 @@ class ApiConstants {
  // static const String editProfile = "edit";
   static const String exercise= "exercise";
    static const String saveExercise= "savedExercise";
-   static const String getSavedExercises= "savedExercises";
+   static const String getSavedExercises= "savedExercise";
 
 
   static const String getProfile = "profile";

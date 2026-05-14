@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gif_view/gif_view.dart';
+import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/snack_bar_utils.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../data/models/exercise_model.dart';
 import '../view_model/saved_exercises/saved_exercises_cubit.dart';
+import '../view_model/saved_exercises/saved_exercises_state.dart';
 
 class ExerciseCard extends StatelessWidget {
   final ExerciseModel exercise;
@@ -72,20 +75,29 @@ class ExerciseCard extends StatelessWidget {
                   top: 8,
                   right: 8,
                   child: CircleAvatar(
-                    backgroundColor: Colors.white.withValues(alpha:0.8),
+                    backgroundColor: Colors.white.withValues(alpha: 0.8),
                     radius: 16,
-                    child: BlocBuilder<SavedExercisesCubit, void>(
+                    child: BlocConsumer<SavedExercisesCubit, SavedExercisesState>(
+                      listener: (context, state) {
+                        if (state is SavedExercisesToggleSuccess && state.exerciseId == exercise.id) {
+                          AppSnackBar.show(
+                            context,
+                            message: state.isSaved ? "Added to saved" : "Removed from saved",
+                            type: SnackBarType.success,
+                            onActionPressed: () => Navigator.pushNamed(context, AppRoutes.savedExercises),
+                          );
+                        }
+                      },
                       builder: (context, state) {
-                        return IconButton(
-                          padding: EdgeInsets.zero,
-                          icon: Icon(
-                            exercise.isSaved ? Icons.bookmark : Icons.bookmark_border,
-                            color: AppColors.primaryBtn,
-                            size: 18,
+                        return GestureDetector( // استبدلنا الـ IconButton بـ GestureDetector لتحكم كامل
+                          onTap: () => context.read<SavedExercisesCubit>().toggleSave(exercise),
+                          child: Center( // السنتر هون بيضمن وجود الأيقونة بالمنتصف تماماً
+                            child: Icon(
+                              exercise.isSaved ? Icons.bookmark : Icons.bookmark_border,
+                              color: AppColors.primaryBtn,
+                              size: 20, // حجم الأيقونة مناسب للـ radius 16
+                            ),
                           ),
-                          onPressed: () {
-                            context.read<SavedExercisesCubit>().toggleSave(exercise);
-                          },
                         );
                       },
                     ),
