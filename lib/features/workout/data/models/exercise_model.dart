@@ -119,8 +119,8 @@ class ExerciseMedia {
     if (rawUrl.contains('localhost') || rawUrl.contains('127.0.0.1')) {
       // استبدال الجزء الأول من الرابط كاملاً بعنوان الـ IP تبع جهازك
       // ملاحظة: تأكدي أن الـ IP في ApiConstants هو "192.168.1.111" بدون http://
-      rawUrl = rawUrl.replaceAll('localhost', '192.168.1.111')
-          .replaceAll('127.0.0.1', '192.168.1.111');
+      rawUrl = rawUrl.replaceAll('localhost', '10.219.206.72')
+          .replaceAll('127.0.0.1', '10.219.206.72');
     }
 
     return ExerciseMedia(
