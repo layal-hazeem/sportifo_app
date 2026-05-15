@@ -65,7 +65,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         if (!_isTermsAccepted) {
           AppSnackBar.show(
             context,
-            message: l10n.agreed ?? "Please accept the terms to continue",
+            message: l10n.agreed,
             type: SnackBarType.error,
           );
           return;
@@ -83,7 +83,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         } else {
           AppSnackBar.show(
             context,
-            message: l10n.messageOfIncompleteInfo ?? "Please provide an email or phone",
+            message: l10n.messageOfIncompleteInfo,
             type: SnackBarType.error,
           );
         }
@@ -211,7 +211,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         setState(() => currentPage = index);
                       },
                       children: [
-                        /// 🔥 STEP 1
+                        ///  STEP 1
                         _buildScrollablePage(
                           formKey: _step1FormKey,
                           l10n: l10n,
@@ -265,7 +265,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ],
                         ),
 
-                        /// 🔥 STEP 2
+                        ///  STEP 2
                         _buildScrollablePage(
                           formKey: _step2FormKey,
                           l10n: l10n,
@@ -302,7 +302,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  // 🔥 ويدجت السكرول المرن لحل مشكلة الكيبورد
   Widget _buildScrollablePage({
     required GlobalKey<FormState> formKey,
     required AppLocalizations l10n,
@@ -319,16 +318,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: IntrinsicHeight(
               child: Form(
                 key: formKey,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 child: Column(
                   children: [
                     ...children,
-                    const Spacer(), // يدفع المحتوى للأسفل
+                    const Spacer(),
                     const SizedBox(height: 20),
                     if (isLastStep) _buildPrivacyPolicy(l10n),
                     const SizedBox(height: 20),
                     CustomAuthButton(
                       text: !isLastStep ? l10n.next : l10n.register,
-                      onPressed: nextStep,
+                      onPressed: (isLastStep && !_isTermsAccepted) ? null : nextStep,
                       isLoading: state is RegisterLoading,
                     ),
                     const SizedBox(height: 10),
@@ -348,7 +348,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  // 🔥 ويدجت سياسة الخصوصية والـ Checkbox الملون
   Widget _buildPrivacyPolicy(AppLocalizations l10n) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,

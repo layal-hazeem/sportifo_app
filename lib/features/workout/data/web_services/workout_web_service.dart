@@ -29,7 +29,6 @@ class WorkoutWebService {
     if (organId != null) queryParams['organ_id'] = organId;
 
     if (partIds != null && partIds.isNotEmpty) {
-      // 🔥 التعديل هنا: إضافة الأقواس المربعة ليفهم السيرفر أنها مصفوفة (Array)
       queryParams['smallest_category_id[]'] = partIds;
     }
 
@@ -40,7 +39,6 @@ class WorkoutWebService {
     return await dio.get(
       ApiConstants.exercise,
       queryParameters: queryParams,
-      // 🔥 هذا الخيار مهم جداً لإرسال المصفوفات بشكل صحيح في Dio
       options: Options(
         listFormat: ListFormat.multiCompatible,
       ),

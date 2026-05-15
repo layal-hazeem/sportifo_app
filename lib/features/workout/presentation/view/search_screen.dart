@@ -42,12 +42,11 @@ class _SearchExercisesScreenState extends State<SearchExercisesScreen> {
         query,
         categoryId: widget.categoryId,
         organId: widget.organId,
-        partIds: widget.partIds, // 🔥 تأكدي إنو هاد السطر مكتوب هيك تماماً
+        partIds: widget.partIds,
       );
     });
   }
 
-  // 🔥 دالة للبحث السريع عند الضغط على الاقتراحات
   void _triggerQuickSearch(String keyword) {
     _controller.text = keyword;
     _onSearchChanged(keyword);
@@ -65,7 +64,6 @@ class _SearchExercisesScreenState extends State<SearchExercisesScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         titleSpacing: 0,
-        // 🔥 تصميم شريط بحث احترافي (يشبه تطبيق الآيفون)
         title: Container(
           height: 45,
           margin: const EdgeInsets.only(right: 20),
@@ -86,7 +84,7 @@ class _SearchExercisesScreenState extends State<SearchExercisesScreen> {
                 icon: Icon(Icons.cancel, color: Colors.grey.shade400, size: 20),
                 onPressed: () {
                   _controller.clear();
-                  _onSearchChanged(''); // تفريغ البحث للعودة لحالة الاقتراحات
+                  _onSearchChanged('');
                 },
               ),
             ),
@@ -121,29 +119,21 @@ class _SearchExercisesScreenState extends State<SearchExercisesScreen> {
               },
             );
           } else if (state is SearchFailure) {
-            // إذا كان الخطأ بسبب أن الحقل فارغ أو لا يوجد نتائج
             return _buildNoResults();
           }
 
-          // 🔥 الحالة الافتراضية (Initial State): عندما يكون الحقل فارغاً
           return _buildSuggestions();
         },
       ),
     );
   }
 
-  // ==========================================
-  // 1. واجهة الاقتراحات السريعة (عند فتح الشاشة)
-  // ==========================================
   Widget _buildSuggestions() {
-      // نفترض أن 1 = مقاومة ، و 2 = كارديو (عدلي الأرقام حسب الباك إند عندك)
       final bool isCardio = widget.categoryId == 2;
 
-      // القوائم المنفصلة
       final List<String> resistanceSearches = ['Chest', 'Abs', 'Legs', 'Back', 'Biceps', 'Shoulders'];
       final List<String> cardioSearches = ['Running', 'Jump Rope', 'Burpees', 'Cycling', 'High Knees'];
 
-      // نختار القائمة المناسبة
       final List<String> popularSearches = isCardio ? cardioSearches : resistanceSearches;
     return Padding(
       padding: const EdgeInsets.all(20),
@@ -180,9 +170,7 @@ class _SearchExercisesScreenState extends State<SearchExercisesScreen> {
     );
   }
 
-  // ==========================================
-  // 2. واجهة "لا يوجد نتائج" (عند البحث عن شيء غير موجود)
-  // ==========================================
+
   Widget _buildNoResults() {
     return Center(
       child: Column(
