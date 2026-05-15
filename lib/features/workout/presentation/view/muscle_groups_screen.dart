@@ -10,7 +10,6 @@ import '../view_model/exercises_cubit/exercises_cubit.dart';
 import '../view_model/exercises_cubit/exercises_state.dart';
 import '../view_model/parts_cubit/parts_cubit.dart';
 import '../view_model/parts_cubit/parts_state.dart';
-import '../widgets/exercise_card.dart';
 import '../widgets/exercises_grid_view.dart';
 import '../widgets/horizontal_muscle_card.dart';
 import '../widgets/part_filter_chip.dart';
@@ -24,7 +23,7 @@ class MuscleGroupsScreen extends StatefulWidget {
 
 class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
   int? selectedMuscleId;
-  // 🔥 التعديل هنا: تحول إلى List ليدعم التحديد المتعدد
+  // 🔥 القائمة تدعم التحديد المتعدد للأجزاء
   List<int> selectedPartIds = [];
 
   final Map<String, String> _muscleAssets = {
@@ -34,7 +33,7 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
     'Shoulders': 'assets/images/muscles/shoulders.jpg',
     'Biceps': 'assets/images/muscles/biceps.jpg',
     'Triceps': 'assets/images/muscles/triceps.jpg',
-    'ABS':'assets/images/muscles/ABS.jpg'
+    'ABS': 'assets/images/muscles/ABS.jpg'
   };
 
   @override
@@ -53,29 +52,27 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
         title: l10n.resistance_training,
         showBackButton: true,
         actions: [
-
-      IconButton(
-        icon: const Icon(Icons.search, color: AppColors.background),
-        onPressed: () {
-          Navigator.pushNamed(
-            context,
-            AppRoutes.searchScreen,
-            arguments: {
-              'categoryId': 1,
-              'organId': selectedMuscleId, // المتغير المعرف عندك فوق
-              'partIds': selectedPartIds,   // القائمة المعرفة عندك فوق
+          IconButton(
+            icon: const Icon(Icons.search, color: AppColors.background),
+            onPressed: () {
+              Navigator.pushNamed(
+                context,
+                AppRoutes.searchScreen,
+                arguments: {
+                  'categoryId': 1,
+                  'organId': selectedMuscleId,
+                  'partIds': selectedPartIds,
+                },
+              );
             },
-          );
-        },
-      ),
-          const SizedBox(width: 10), // مسافة صغيرة عن حافة الشاشة
+          ),
+          const SizedBox(width: 10),
         ],
-
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
+          // 1. قائمة العضلات الرئيسية
           SizedBox(
             height: 90,
             child: BlocConsumer<CategoriesCubit, CategoriesState>(
@@ -85,7 +82,8 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                     selectedMuscleId = null;
                     selectedPartIds.clear();
                   });
-                  context.read<ExercisesCubit>().fetchExercises(categoryId: 1);                }
+                  context.read<ExercisesCubit>().fetchExercises(categoryId: 1);
+                }
               },
               builder: (context, state) {
                 if (state is CategoriesLoading) {
@@ -109,19 +107,17 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                             if (isSelected) {
                               selectedMuscleId = null;
                               selectedPartIds.clear();
-                              context.read<ExercisesCubit>().fetchExercises(categoryId: 1);                              // نخفي أو نصفر العضلات الصغيرة
-                              context.read<PartsCubit>().emit(PartsInitial());
+                              context.read<ExercisesCubit>().fetchExercises(categoryId: 1);
+                              context.read<PartsCubit>().reset();
                             } else {
-                              // 🔥 إذا اختار عضلة جديدة
                               selectedMuscleId = muscle.id;
                               selectedPartIds.clear();
                               context.read<ExercisesCubit>().fetchExercises(
-                                  categoryId: 1,
-                                  organId: muscle.id);
+                                  categoryId: 1, organId: muscle.id);
                               context.read<PartsCubit>().fetchParts(muscle.id);
                             }
                           });
-                          },
+                        },
                       );
                     },
                   );
@@ -132,8 +128,6 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                       style: const TextStyle(color: Colors.red),
                     ),
                   );
-
-
                 }
                 return const SizedBox();
               },
@@ -142,7 +136,7 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
 
           const SizedBox(height: 15),
 
-
+          // 2. قائمة الأجزاء الفرعية (Chips)
           BlocBuilder<PartsCubit, PartsState>(
             builder: (context, state) {
               if (state is PartsSuccess && state.Parts.isNotEmpty) {
@@ -173,10 +167,10 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                           });
 
                           context.read<ExercisesCubit>().fetchExercises(
-                            categoryId: 1,
-                            organId: selectedMuscleId,
-                            partIds: selectedPartIds.isEmpty ? null : selectedPartIds, // إذا اللستة فاضية بنبعت Null يعني الكل
-                          );
+                                categoryId: 1,
+                                organId: selectedMuscleId,
+                                partIds: selectedPartIds.isEmpty ? null : selectedPartIds,
+                              );
                         },
                       );
                     },
@@ -192,9 +186,7 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
             child: Divider(color: Colors.black12, thickness: 1),
           ),
 
-          // ==========================================
-          // 3. قائمة التمارين (المعدلة إلى Grid)
-          // ==========================================
+          // 3. قائمة التمارين (Grid)
           Expanded(
             child: BlocBuilder<ExercisesCubit, ExercisesState>(
               builder: (context, state) {
@@ -203,10 +195,7 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                     child: CircularProgressIndicator(color: AppColors.primaryBtn),
                   );
                 } else if (state is ExercisesSuccess) {
-
-                  // 🔥 استدعاء الويدجت الذي أنشأتِه وتمرير البيانات له
                   return ExercisesGridView(exercises: state.exercises);
-
                 } else if (state is ExercisesFailure) {
                   return Center(
                     child: Text(

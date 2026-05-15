@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import '../../../../core/theme/app_colors.dart';
 
@@ -60,8 +59,7 @@ class _CustomNeumorphicFieldState extends State<CustomNeumorphicField> {
             fontSize: AppSizes.hintFontSize,
           ),
 
-         prefixIcon: Icon(widget.icon, color: AppColors.hintText, size: 20),
-//           prefixIcon: Icon(widget.icon, color: AppColors.hintText, size: 20),
+          prefixIcon: Icon(widget.icon, color: AppColors.hintText, size: 20),
 
           suffixIcon: widget.isPassword
               ? IconButton(

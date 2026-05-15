@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
+import '../../../../core/utils/wave_app_bar.dart';
+
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final int currentIndex;
   final String userName;
@@ -14,65 +16,67 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return _buildBody(context);
-  }
+  Size get preferredSize => const Size.fromHeight(150);
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
-
-  Widget _buildBody(BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+
+    String title = "";
+    List<Widget>? actions;
 
     switch (currentIndex) {
       case 0:
-        return AppBar(
-          title: Text(l10n.progress),
-        );
-
+        title = l10n.progress;
+        break;
       case 1:
-        return AppBar(
-          title: Text(l10n.myPlans),
-        );
-
+        title = l10n.myPlans;
+        break;
       case 2:
-        return AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          // title: Text(
-          //   // "${l10n.welcome} $userName",
-          //   // style: const TextStyle(color: Colors.black),
-          // ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.chat, color: AppColors.primaryBtn),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: const Icon(
-                Icons.notifications_none_outlined,
-                color: AppColors.primaryBtn,
-              ),
-              onPressed: () {},
-            ),
-            const SizedBox(width: 8),
-          ],
-        );
-
+        title = l10n.welcomeBack;
+        actions = [
+          IconButton(icon: const Icon(Icons.chat, color: Colors.white), onPressed: () {}),
+          IconButton(icon: const Icon(Icons.notifications_none_outlined, color: Colors.white), onPressed: () {}),
+        ];
+        break;
       case 3:
-        return AppBar(
-          title: Text(l10n.workouts),
-        );
-
+        title = l10n.workouts;
+        break;
       case 4:
-        return AppBar(
-          title: Text(l10n.chat),
-        );
-
-      default:
-        return AppBar(
-          title: Text(l10n.appName),
-        );
+        title = l10n.chat;
+        break;
     }
+
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 500),
+      transitionBuilder: (Widget child, Animation<double> animation) {
+        return ScaleTransition(
+          scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+            CurvedAnimation(parent: animation, curve: Curves.easeOutBack),
+          ),
+          // 2. أنيميشن الـ Fade (شفافية)
+          child: FadeTransition(
+            opacity: animation,
+            // 3. لمسة دورات بسيطة جداً (اختياري، إذا ما حبيتيها فيكِ تمسحي RotationTransition)
+            // child: RotationTransition(
+            //   turns: Tween<double>(begin: -0.02, end: 0.0).animate(
+            //     CurvedAnimation(parent: animation, curve: Curves.easeOut),
+            //   ),
+              child: child,
+            ),
+
+        );
+      },
+      child: WaveAppBar(
+        key: ValueKey<int>(currentIndex),
+        title: title,
+        actions: actions,
+        showBackButton: false,
+        leading: IconButton(
+          icon: const Icon(Icons.menu, color: Colors.white),
+          onPressed: () => Scaffold.of(context).openDrawer(),
+        ),
+      ),
+    );
   }
 }

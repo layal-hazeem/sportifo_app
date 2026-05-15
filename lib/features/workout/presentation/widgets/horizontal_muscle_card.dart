@@ -29,7 +29,6 @@ class HorizontalMuscleCard extends StatelessWidget {
             color: isSelected ? AppColors.primaryBtn : Colors.transparent,
             width: 2,
           ),
-          // 🔥 ظل خفيف بيظهر بس لما تتحدد العضلة
           boxShadow: isSelected
               ? [
             BoxShadow(
@@ -47,7 +46,7 @@ class HorizontalMuscleCard extends StatelessWidget {
             Image.asset(
               imagePath,
               fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => const Icon(Icons.fitness_center, color: Colors.grey),
+              errorBuilder: (_, _, _) => const Icon(Icons.fitness_center, color: Colors.grey),
             ),
             Container(
               decoration: BoxDecoration(

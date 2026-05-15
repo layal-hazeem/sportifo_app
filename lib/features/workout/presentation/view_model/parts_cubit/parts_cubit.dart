@@ -23,4 +23,8 @@ class PartsCubit extends Cubit<PartsState> {
         break;
     }
   }
+
+  void reset() {
+    emit(PartsInitial());
+  }
 }

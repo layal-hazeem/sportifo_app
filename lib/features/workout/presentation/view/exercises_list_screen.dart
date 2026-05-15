@@ -6,7 +6,6 @@ import '../../../../core/utils/wave_app_bar.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../view_model/exercises_cubit/exercises_cubit.dart';
 import '../view_model/exercises_cubit/exercises_state.dart';
-import '../widgets/exercise_card.dart';
 import '../widgets/exercises_grid_view.dart';
 
 class ExercisesListScreen extends StatelessWidget {
@@ -29,12 +28,20 @@ class ExercisesListScreen extends StatelessWidget {
         title: categoryName,
         showBackButton: true,
           actions: [
-      IconButton(
-      icon: const Icon(Icons.search, color: Colors.white, size: 28),
-      onPressed: () {
-        Navigator.pushNamed(context, AppRoutes.searchScreen, arguments: 2);
-      },
-    ),
+            IconButton(
+              icon: const Icon(Icons.search,color: AppColors.background),
+              onPressed: () {
+                Navigator.pushNamed(
+                  context,
+                  AppRoutes.searchScreen,
+                  arguments: {
+                    'categoryId': 2,
+                    'organId': null,
+                    'partIds': null,
+                  },
+                );
+              },
+            ),
     ]
       ),
       body: BlocBuilder<ExercisesCubit, ExercisesState>(
