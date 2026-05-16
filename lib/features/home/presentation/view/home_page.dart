@@ -10,6 +10,7 @@ import 'package:sportifo_app/features/home/presentation/widgets/custom_app_bar.d
 import 'package:sportifo_app/features/home/presentation/widgets/custom_bottom_nav_bar.dart';
 import 'package:sportifo_app/features/home/presentation/widgets/custom_drawer.dart';
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_cubit.dart';
+import 'package:sportifo_app/features/workout/presentation/view_model/categories_cubit/categories_cubit.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
 import '../../../../core/di/service_locator.dart';
