@@ -1,6 +1,6 @@
 class ResetPasswordRequestBody {
-  final String email; // أضيفي هذا
-  final String code;  // وهذا (أو token حسب الـ API)
+  final String email;
+  final String code;
   final String password;
   final String passwordConfirmation;
 
@@ -12,7 +12,7 @@ class ResetPasswordRequestBody {
   });
 
   Map<String, dynamic> toJson() => {
-    'login': email, // تأكدي من المسمى المطلوب من الباك إند (email أو login)
+    'login': email,
     'code': code,
     'password': password,
     'password_confirmation': passwordConfirmation,

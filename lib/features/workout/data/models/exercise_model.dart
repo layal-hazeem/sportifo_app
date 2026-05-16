@@ -3,14 +3,19 @@ class ExerciseResponseModel {
   final String message;
   final List<ExerciseModel> data;
 
-  ExerciseResponseModel({required this.success, required this.message, required this.data});
+  ExerciseResponseModel({
+    required this.success,
+    required this.message,
+    required this.data
+  });
 
   factory ExerciseResponseModel.fromJson(Map<String, dynamic> json) {
     return ExerciseResponseModel(
       success: json['success'] ?? false,
       message: json['message'] ?? '',
       data: json['data'] != null
-          ? List<ExerciseModel>.from(json['data'].map((x) => ExerciseModel.fromJson(x)))
+          ? List<ExerciseModel>.from(
+          json['data'].map((x) => ExerciseModel.fromJson(x)))
           : [],
     );
   }
@@ -38,25 +43,34 @@ class ExerciseModel {
       id: json['id'] ?? 0,
       name: json['name'] ?? '',
       description: json['description'] ?? '',
-      category: json['category'] != null ? ExerciseCategory.fromJson(json['category']) : null,
+      category: json['category'] != null
+          ? ExerciseCategory.fromJson(json['category'])
+          : null,
       images: json['images'] != null
-          ? List<ExerciseMedia>.from(json['images'].map((x) => ExerciseMedia.fromJson(x)))
+          ? List<ExerciseMedia>.from(
+          json['images'].map((x) => ExerciseMedia.fromJson(x)))
           : [],
+      // يدعم السيرفر الحقيقي سواء رجع 0/1 أو true/false
       isSaved: json['is_saved'] == 1 || json['is_saved'] == true,
     );
   }
 
-  // 🔥 دوال مساعدة ذكية (Helpers) لتسهيل جلب الصور في الـ UI
+  // 🔥 جلب رابط الـ GIF لعرضه مباشرة في الـ UI
   String? get gifUrl {
     try {
+      // نبحث عن أول عنصر نوعه gif ونعيد الرابط تبعه
       return images.firstWhere((media) => media.type == 'gif').url;
     } catch (e) {
-      return null;
+      return null; // إذا التمرين ما فيه GIF
     }
   }
 
+  // 🔥 جلب قائمة روابط الصور (بدون الـ GIF) لعرضها في Slider
   List<String> get pictureUrls {
-    return images.where((media) => media.type == 'pictures').map((e) => e.url).toList();
+    return images
+        .where((media) => media.type == 'pictures')
+        .map((e) => e.url)
+        .toList();
   }
 }
 
@@ -113,18 +127,10 @@ class ExerciseMedia {
   ExerciseMedia({required this.url, required this.type});
 
   factory ExerciseMedia.fromJson(Map<String, dynamic> json) {
-    String rawUrl = json['url'] ?? '';
-
-    // 🔥 الحل الجذري: إذا الرابط بيحتوي على أي شكل من أشكال الـ local
-    if (rawUrl.contains('localhost') || rawUrl.contains('127.0.0.1')) {
-      // استبدال الجزء الأول من الرابط كاملاً بعنوان الـ IP تبع جهازك
-      // ملاحظة: تأكدي أن الـ IP في ApiConstants هو "192.168.1.111" بدون http://
-      rawUrl = rawUrl.replaceAll('localhost', '10.219.206.72')
-          .replaceAll('127.0.0.1', '10.219.206.72');
-    }
-
+    // على السيرفر الحقيقي الروابط عم ترجع كاملة https
+    // لهيك ما عاد في داعي لعمليات الـ replace للـ localhost
     return ExerciseMedia(
-      url: rawUrl,
+      url: json['url'] ?? '',
       type: json['type'] ?? '',
     );
   }

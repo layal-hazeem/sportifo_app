@@ -215,6 +215,18 @@ abstract class AppLocalizations {
   /// **'A verification code has been sent'**
   String get otpSentMessage;
 
+  /// No description provided for @verifiedOtp.
+  ///
+  /// In en, this message translates to:
+  /// **'The code was successfully verified'**
+  String get verifiedOtp;
+
+  /// No description provided for @enterFullCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter full code'**
+  String get enterFullCode;
+
   /// No description provided for @resendCodeIn.
   ///
   /// In en, this message translates to:
@@ -760,6 +772,7 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cancle'**
   String get cancle;
+
   /// No description provided for @termsPart1.
   ///
   /// In en, this message translates to:

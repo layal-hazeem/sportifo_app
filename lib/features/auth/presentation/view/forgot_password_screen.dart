@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/snack_bar_utils.dart'; // تأكدي من استيراد ملف السناك بار الخاص بكِ
 import '../../../../l10n/app_localizations.dart';
 import '../view_model/login/forgot_password_cubit.dart';
-import '../view_model/login/login_cubit.dart'; // أو ForgotPasswordCubit
 import '../view_model/login/login_state.dart';
 import '../widgets/auth_header.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_neumorphic_field.dart';
-import 'otp_screen.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -28,11 +27,20 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0, iconTheme: const IconThemeData(color: AppColors.textDark)),
-      body: BlocListener<ForgotPasswordCubit, LoginState>( // تأكدي من نوع الـ Cubit المستخدم
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: AppColors.textDark),
+      ),
+      body: BlocListener<ForgotPasswordCubit, LoginState>(
         listener: (context, state) {
-          // داخل ForgotPasswordScreen
-          if (state is LoginSuccess) {
+          if (state is ForgotPasswordOtpSuccess) {
+            AppSnackBar.show(
+              context,
+              message: state.message,
+              type: SnackBarType.success,
+            );
+
             Navigator.pushNamed(
               context,
               AppRoutes.otpScreen,
@@ -41,15 +49,18 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 'isFromForgotPassword': true,
               },
             );
-          } else if (state is LoginError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: Colors.red),
+          }
+          else if (state is ForgotPasswordOtpError) {
+            AppSnackBar.show(
+              context,
+              message: state.message,
+              type: SnackBarType.error,
             );
           }
         },
         child: SafeArea(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: AppSizes.mainPadding),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Form(
               key: formKey,
               child: Column(
@@ -60,7 +71,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     subtitle: l10n.forgotPasswordDesc,
                   ),
                   const SizedBox(height: 50),
-                  Text(l10n.emailOrPhone, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: AppSizes.labelFontSize)),
+                  Text(
+                    l10n.emailOrPhone,
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
                   const SizedBox(height: 15),
                   CustomNeumorphicField(
                     controller: emailController,
@@ -72,18 +86,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     },
                   ),
                   const SizedBox(height: 40),
-                  // استبدلي الزر القديم بهذا الكود
-                  // ... بطلة الـ IT، استخدمي هذا الجزء داخل الـ Column بدلاً من القديم
+
                   BlocBuilder<ForgotPasswordCubit, LoginState>(
                     builder: (context, state) {
                       return CustomAuthButton(
-                        // 1. النص يظل ثابتاً لأن الـ Widget سيتولى إخفاءه عند التحميل
                         text: l10n.sendCode,
-
-                        // 2. تفعيل حالة التحميل بناءً على الـ state
                         isLoading: state is LoginLoading,
-
-                        // 3. تعطيل الزر يتم تلقائياً داخل الـ CustomAuthButton إذا كان isLoading true
                         onPressed: () {
                           if (formKey.currentState!.validate()) {
                             context.read<ForgotPasswordCubit>().emitForgotPasswordStates(

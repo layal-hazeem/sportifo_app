@@ -69,6 +69,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get otpSentMessage => 'A verification code has been sent';
 
   @override
+  String get verifiedOtp => 'The code was successfully verified';
+
+  @override
+  String get enterFullCode => 'Please enter full code';
+
+  @override
   String get resendCodeIn => 'Resend code in';
 
   @override
@@ -340,7 +346,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cancle => 'Cancle';
-  
+
   @override
   String get termsPart1 => 'By registering, you agree to our ';
 

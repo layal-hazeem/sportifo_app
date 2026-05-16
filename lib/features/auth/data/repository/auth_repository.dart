@@ -9,6 +9,7 @@ import 'package:sportifo_app/features/auth/data/models/complete_prfile/complete_
 import '../models/login/forgot_password_request_body.dart';
 import '../models/login/login_response.dart';
 import '../models/login/login_request.dart';
+import '../models/login/otp_response.dart';
 import '../models/login/reset_password_request.dart';
 
 
@@ -29,23 +30,19 @@ class AuthRepository {
       return Failure(ApiErrorHandler.handle(e));
     }
   }
-  Future<ApiResult<LoginResponse>> verifyOtp(VerifyOtpRequestBody verifyOtpRequestBody) async {
+  Future<ApiResult<OtpResponse>> verifyOtp(
+      VerifyOtpRequestBody verifyOtpRequestBody,
+      {bool isReset = false}
+      ) async {
     try {
-      final response = await _authWebService.verifyOtp(verifyOtpRequestBody);
-      final loginResponse = LoginResponse.fromJson(response.data);
-
-      // هنا نضع شرط التأكد من التوكن لضمان النجاح الحقيقي
-      if (loginResponse.data?.token != null) {
-        return Success(loginResponse);
-      } else {
-        return Failure(loginResponse.message ?? "Invalid or expired OTP");
-      }
+      final response = await _authWebService.verifyOtp(verifyOtpRequestBody, isReset: isReset);
+      final otpResponse = OtpResponse.fromJson(response.data);
+      return Success(otpResponse);
     } catch (e) {
       return Failure(ApiErrorHandler.handle(e));
     }
   }
 
-// في ملف auth_repository.dart
   Future<ApiResult<LoginResponse>> forgotPassword(ForgotPasswordRequestBody body) async {
     try {
       final response = await _authWebService.forgotPassword(body);
@@ -64,7 +61,6 @@ class AuthRepository {
     }
   }
 
-// بداخل كلاس AuthRepository
   Future<ApiResult<LoginResponse>> resendOtp(String login) async {
     try {
       final response = await _authWebService.resendOtp(login);
@@ -79,7 +75,6 @@ class AuthRepository {
       final formData = await request.toFormData();
       final response = await _authWebService.register(formData);
 
-      // 🔥 في حال النجاح نغلف الرد بـ Success
       return Success(RegisterResponseModel.fromJson(response.data));
 
     } on DioException catch (e) {

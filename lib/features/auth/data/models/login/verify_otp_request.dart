@@ -4,8 +4,10 @@ class VerifyOtpRequestBody {
 
   VerifyOtpRequestBody({required this.login, required this.otp});
 
-  Map<String, dynamic> toJson() => {
-    'login': login,
-    'otp': int.tryParse(otp) ?? 0, // أضمن بكتير من parse العادية
-  };
+  Map<String, dynamic> toJson() {
+    return {
+      'login': login,
+      'otp': int.parse(otp),
+    };
+  }
 }
