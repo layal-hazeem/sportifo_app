@@ -1,4 +1,5 @@
 import '../../../data/models/login/login_response.dart';
+import '../../../data/models/login/otp_response.dart';
 
 abstract class LoginState {}
 
@@ -6,19 +7,19 @@ class LoginInitial extends LoginState {}
 
 class LoginLoading extends LoginState {}
 
-// ✅ نجاح + verified
+//  verified
 class LoginSuccess extends LoginState {
   final LoginResponse response;
   LoginSuccess(this.response);
 }
 
-// ✅ لازم OTP
+//  OTP
 class LoginNeedsOtp extends LoginState {
   final String login;
   LoginNeedsOtp(this.login);
 }
 
-// ❌ خطأ
+// Error
 class LoginError extends LoginState {
   final String message;
   LoginError(this.message);
@@ -29,8 +30,10 @@ class OtpLoading extends LoginState {}
 
 // OTP Success
 class OtpSuccess extends LoginState {
-  final LoginResponse response;
-  OtpSuccess(this.response);
+  final OtpResponse response;
+  final OtpContext contextType;
+
+  OtpSuccess(this.response, this.contextType);
 }
 
 // OTP Error
@@ -38,7 +41,20 @@ class OtpError extends LoginState {
   final String message;
   OtpError(this.message);
 }
-// حالات إعادة إرسال الكود
+// Forgot Password OTP Success
+class ForgotPasswordOtpSuccess extends LoginState {
+  final String message;
+
+  ForgotPasswordOtpSuccess(this.message);
+}
+
+// Forgot Password OTP Error
+class ForgotPasswordOtpError extends LoginState {
+  final String message;
+
+  ForgotPasswordOtpError(this.message);
+}
+// Resent OTP
 class ResendOtpLoading extends LoginState {}
 class ResendOtpSuccess extends LoginState {
   final String message;
@@ -47,4 +63,9 @@ class ResendOtpSuccess extends LoginState {
 class ResendOtpError extends LoginState {
   final String message;
   ResendOtpError(this.message);
+}
+
+enum OtpContext {
+  login,
+  forgotPassword,
 }

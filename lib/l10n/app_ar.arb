@@ -18,6 +18,9 @@
   "confirmPassword": "تأكيد كلمة السر",
   "updatePassword": "تحديث كلمة السر",
   "loginSuccess": "تم تسجيل الدخول بنجاح ",
+  "verifiedOtp": "تم التحقق من الرمز بنجاح",
+  "enterFullCode": "يرجى إدخال الرمز الكامل",
+
   "otpSentMessage": "تم إرسال كود التحقق ",
   "resendCodeIn": "إعادة إرسال الكود خلال",
   "passwordChangedSuccess": "تم تحديث كلمة المرور بنجاح! يرجى تسجيل الدخول بكلمة المرور الجديدة.",

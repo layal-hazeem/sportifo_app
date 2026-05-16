@@ -16,32 +16,31 @@ class AuthWebService {
   Future<Response> login(LoginRequest loginRequest) async {
     return await dio.post(ApiConstants.login, data: loginRequest.toJson());
   }
-  Future<Response> verifyOtp(VerifyOtpRequestBody verifyOtpRequestBody) async {
-    return await dio.post(ApiConstants.verifyOtp, data: verifyOtpRequestBody.toJson());
+  Future<Response> verifyOtp(VerifyOtpRequestBody verifyOtpRequestBody, {bool isReset = false}) async {
+    final url = isReset ? ApiConstants.verifyResetOtp : ApiConstants.verifyOtp;
+
+    return await dio.post(url, data: verifyOtpRequestBody.toJson());
   }
 
-// في ملف auth_web_service.dart
   Future<Response> forgotPassword(ForgotPasswordRequestBody body) async {
     return await dio.post(
       ApiConstants.forgotPassword,
-      data: body.toJson(), // هون منبعت البيانات بصيغة Map
+      data: body.toJson(),
     );
   }
 
   Future<Response> resetPassword(ResetPasswordRequestBody body) async {
-    // تحويل الـ Map إلى FormData
     FormData formData = FormData.fromMap(body.toJson());
 
     return await dio.post(
       ApiConstants.resetPassword,
-      data: formData, // نرسل الـ formData هنا
+      data: formData,
     );
   }
-  // بداخل كلاس AuthWebService
   Future<Response> resendOtp(String login) async {
     return await dio.post(
       ApiConstants.resendOtp,
-      data: {'login': login}, // نرسل الإيميل بداخل Map
+      data: {'login': login},
     );
   }
 

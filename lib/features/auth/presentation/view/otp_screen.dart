@@ -1,16 +1,13 @@
-import 'dart:async'; // ضروري للمؤقت
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pinput/pinput.dart';
 import 'package:sportifo_app/core/routes/app_routes.dart';
-import 'package:sportifo_app/features/auth/presentation/view/complete_profile_info.dart';
-import 'package:sportifo_app/features/auth/presentation/view/reset_password_screen.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/storage/local_storage.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/snack_bar_utils.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../home/presentation/view/home_page.dart';
 import '../../data/models/login/verify_otp_request.dart';
 import '../view_model/login/login_cubit.dart';
 import '../view_model/login/login_state.dart';
@@ -26,6 +23,7 @@ class OTPScreen extends StatefulWidget {
     required this.loginEmail,
     this.isFromForgotPassword = false,
   });
+
   @override
   State<OTPScreen> createState() => _OTPScreenState();
 }
@@ -36,26 +34,7 @@ class _OTPScreenState extends State<OTPScreen> {
   Timer? _timer;
   int _start = 60;
   bool _isFinished = false;
-
-  void startTimer() {
-    setState(() {
-      _isFinished = false;
-      _start = 60;
-    });
-    _timer?.cancel();
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_start == 0) {
-        setState(() {
-          timer.cancel();
-          _isFinished = true;
-        });
-      } else {
-        setState(() {
-          _start--;
-        });
-      }
-    });
-  }
+  bool _isDialogShowing = false;
 
   @override
   void initState() {
@@ -68,6 +47,47 @@ class _OTPScreenState extends State<OTPScreen> {
     _timer?.cancel();
     pinController.dispose();
     super.dispose();
+  }
+
+  void startTimer() {
+    setState(() {
+      _isFinished = false;
+      _start = 60;
+    });
+
+    _timer?.cancel();
+
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_start == 0) {
+        timer.cancel();
+        setState(() => _isFinished = true);
+      } else {
+        setState(() => _start--);
+      }
+    });
+  }
+
+  void _showLoading(BuildContext context) {
+    _isDialogShowing = true;
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(
+        child: CircularProgressIndicator(
+          color: AppColors.primaryBtn,
+        ),
+      ),
+    ).then((_) {
+      _isDialogShowing = false;
+    });
+  }
+
+  void _hideLoading(BuildContext context) {
+    if (_isDialogShowing) {
+      Navigator.of(context, rootNavigator: true).pop();
+      _isDialogShowing = false;
+    }
   }
 
   @override
@@ -95,91 +115,101 @@ class _OTPScreenState extends State<OTPScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0),
+
       body: BlocListener<LoginCubit, LoginState>(
+        listenWhen: (previous, current) =>
+        current is OtpLoading ||
+            current is OtpSuccess ||
+            current is OtpError,
+
         listener: (context, state) async {
           if (state is OtpLoading) {
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (_) => const Center(child: CircularProgressIndicator()),
-            );
-          } else if (state is OtpSuccess) {
-            Navigator.pop(context);
-
-            // ✅ حفظ التوكن مرة واحدة فقط بشكل مركزي
-            final token = state.response.data?.token;
-            if (token != null) {
-              await getIt<LocalStorage>().saveToken(token);
-            }
+            _showLoading(context);
+          } else if (state is OtpError) {
+            _hideLoading(context);
+            AppSnackBar.show(context, message: state.message, type: SnackBarType.error);
+          }
+          else if (state is OtpSuccess) {
+            _hideLoading(context);
 
             if (widget.isFromForgotPassword) {
-              Navigator.pushReplacementNamed(
+              if (state.response.resetToken != null) {
+                await getIt<LocalStorage>().saveToken(state.response.resetToken!);
+              }
+              Navigator.pushNamed(
                 context,
                 AppRoutes.resetPasswordScreen,
                 arguments: {
                   'email': widget.loginEmail,
+                  'resetToken': state.response.resetToken,
                   'otpCode': pinController.text,
                 },
               );
             } else {
-              Navigator.pushReplacementNamed(context, AppRoutes.editProfile);
+              if (state.response.token != null) {
+                await getIt<LocalStorage>().saveToken(state.response.token!);
+                Navigator.pushNamedAndRemoveUntil(context, AppRoutes.home, (route) => false);
+              }
             }
           }
-          else if (state is OtpError) {
-            Navigator.pop(context);
-            AppSnackBar.show(
-              context,
-              message: state.message,
-              type: SnackBarType.error,
-            );
-
-          }
-          else if (state is ResendOtpLoading) {
-          } else if (state is ResendOtpSuccess) {
-            AppSnackBar.show(
-              context,
-              message: state.message,
-              type: SnackBarType.success,
-            );
-          }
         },
+
         child: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               children: [
+
                 AuthHeader(
                   title: l10n.otpTitle,
                   subtitle: l10n.otpSubtitle,
                   isCentered: true,
                 ),
+
                 const SizedBox(height: 60),
+
                 Pinput(
                   controller: pinController,
                   length: 6,
                   defaultPinTheme: defaultPinTheme,
                 ),
+
                 const SizedBox(height: 60),
+
                 CustomAuthButton(
                   text: l10n.verify,
-                  backgroundColor: _isFinished ? Colors.grey.shade400 : AppColors.primaryBtn,
+                  backgroundColor: _isFinished
+                      ? Colors.grey.shade400
+                      : AppColors.primaryBtn,
+
                   onPressed: _isFinished
                       ? null
                       : () {
                     final otpValue = pinController.text;
                     if (otpValue.length < 6) {
-                      AppSnackBar.show(context, message: "Please enter full code", type: SnackBarType.error);
+                      AppSnackBar.show(
+                        context,
+                        message: l10n.enterFullCode,
+                        type: SnackBarType.error,
+                      );
                       return;
+
                     }
+
                     context.read<LoginCubit>().verifyOtp(
                       VerifyOtpRequestBody(
                         login: widget.loginEmail,
                         otp: otpValue,
                       ),
+                      contextType: widget.isFromForgotPassword
+                          ? OtpContext.forgotPassword
+                          : OtpContext.login,
                     );
                   },
                 ),
+
                 const SizedBox(height: 20),
+
                 _isFinished
                     ? TextButton(
                   onPressed: () {

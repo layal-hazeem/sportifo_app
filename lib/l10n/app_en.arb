@@ -19,6 +19,9 @@
   "updatePassword": "Update Password",
   "loginSuccess": "Login Successes",
   "otpSentMessage": "A verification code has been sent",
+  "verifiedOtp": "The code was successfully verified",
+  "enterFullCode": "Please enter full code",
+
   "resendCodeIn": "Resend code in",
   "passwordChangedSuccess": "Password updated successfully! Please login with your new password.",
   "passwordsDontMatch": "Passwords do not match",

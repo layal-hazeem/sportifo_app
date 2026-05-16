@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/network/api_result.dart';
-import '../../../data/models/login/forgot_password_request_body.dart';
 import '../../../data/models/login/login_request.dart';
 import '../../../data/models/login/login_response.dart';
+import '../../../data/models/login/otp_response.dart';
 import '../../../data/models/login/reset_password_request.dart';
 import '../../../data/models/login/verify_otp_request.dart';
 import '../../../data/repository/auth_repository.dart';
@@ -13,7 +13,6 @@ class LoginCubit extends Cubit<LoginState> {
 
   LoginCubit(this._authRepository) : super(LoginInitial());
 
-  // دالة تسجيل الدخول
   void emitLoginStates(LoginRequest loginRequestBody) async {
     emit(LoginLoading());
 
@@ -22,7 +21,6 @@ class LoginCubit extends Cubit<LoginState> {
     if (result is Success<LoginResponse>) {
       final response = result.data;
 
-      // الحالة الخاصة بـ Sportifo: الحساب غير مفعل
       if (response.isNotVerified) {
         emit(LoginNeedsOtp(loginRequestBody.login));
       } else {
@@ -33,21 +31,20 @@ class LoginCubit extends Cubit<LoginState> {
     }
   }
 
-  // دالة التحقق من الـ OTP
-  void verifyOtp(VerifyOtpRequestBody body) async {
+  void verifyOtp(VerifyOtpRequestBody body, {required OtpContext contextType}) async {
     emit(OtpLoading());
 
-    final result = await _authRepository.verifyOtp(body);
+    final isReset = (contextType == OtpContext.forgotPassword);
 
-    if (result is Success<LoginResponse>) {
-      emit(OtpSuccess(result.data));
-    } else if (result is Failure<LoginResponse>) {
-      // هنا ستصل رسالة "Invalid or expired OTP" تلقائياً للسناك بار
-      emit(OtpError(result.message));
+    final result = await _authRepository.verifyOtp(body, isReset: isReset);
+
+    if (result is Success<OtpResponse>) {
+      emit(OtpSuccess(result.data, contextType));
+    } else {
+      emit(OtpError((result as Failure).message));
     }
   }
 
-  // دالة إعادة تعيين كلمة السر
   void emitResetPasswordStates(ResetPasswordRequestBody body) async {
     emit(LoginLoading());
 
@@ -60,14 +57,13 @@ class LoginCubit extends Cubit<LoginState> {
     }
   }
 
-  // دالة إعادة إرسال الكود
   void resendOtp(String email) async {
     emit(ResendOtpLoading());
 
     final result = await _authRepository.resendOtp(email);
 
     if (result is Success<LoginResponse>) {
-      emit(ResendOtpSuccess(result.data.message ?? "Code resent"));
+      emit(ResendOtpSuccess(result.data.message ));
     } else if (result is Failure<LoginResponse>) {
       emit(ResendOtpError(result.message));
     }

@@ -1,17 +1,14 @@
 class ApiConstants {
-   // static const String baseUrl = "http://172.20.10.4:8000/api/app/";
- // static const String baseUrl = "http://192.168.1.2:8000/api/app/";
-   //static const String baseUrl = "http://192.168.1.111:8000/api/app/";
-  static const String baseUrl = "http://10.219.206.72:8000/api/app/";
-  // static const String baseUrl = "http://10.0.2.2:8000/api/app/";
-  // static const String baseUrl = "http://192.168.27.147:8000/api/app/";
-  // static const String baseUrl = "http://10.0.2.2:8000/api/app/";
-  // هدول بتعدليهم حسب الـ Documentation اللي رح توصلك
+
+  static const String domainUrl = "https://sportifo.moayadismail.com";
+  static const String baseUrl = "$domainUrl/api/app/";
+
 
   static const String register = "register";
   static const String login = "login";
   static const String forgotPassword = "forgot-password";
   static const String verifyOtp = "verify-otp";
+  static const String verifyResetOtp = "verify-reset-otp";
   static const String resendOtp = "resend-otp";
   static const String resetPassword = "reset-password";
  // static const String editProfile = "edit";

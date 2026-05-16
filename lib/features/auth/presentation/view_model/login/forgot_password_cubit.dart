@@ -18,9 +18,11 @@ class ForgotPasswordCubit extends Cubit<LoginState> {
     );
 
     if (result is Success<LoginResponse>) {
-      emit(LoginSuccess(result.data));
+      emit(ForgotPasswordOtpSuccess(
+        result.data.message ,
+      ));
     } else if (result is Failure<LoginResponse>) {
-      emit(LoginError(result.message));
+      emit(ForgotPasswordOtpError(result.message));
     }
   }
 }

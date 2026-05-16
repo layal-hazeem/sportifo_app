@@ -4,7 +4,7 @@ import 'api_constants.dart';
 
 class DioFactory {
   late final Dio _dio;
-  final LocalStorage _localStorage; // 🔥 إضافة المتغير هنا
+  final LocalStorage _localStorage;
   // Constructor
   DioFactory(this._localStorage) {
     _dio = Dio(
@@ -14,17 +14,12 @@ class DioFactory {
         connectTimeout: const Duration(seconds: 20),
         receiveTimeout: const Duration(seconds: 20),
         headers: {'Accept': 'application/json', 'Accept-Language': 'en'},
-        validateStatus: (status) {
-          return status != null && status < 500;
-        },
       ),
     );
-    // إضافة Interceptors (الوسطاء)
-    // وظيفتهم مراقبة وتعديل أي طلب يخرج أو رد يدخل
+
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          // 🔥 جلب التوكن بسرعة الصاروخ بدون await
           final token = _localStorage.getToken();
           if (token != null) {
             options.headers['Authorization'] = 'Bearer $token';
@@ -40,8 +35,6 @@ class DioFactory {
       ),
     );
 
-    // إضافة LogInterceptor مفيد جداً أثناء التطوير لرؤية الطلبات والردود في الـ Console
-    // احرص على إيقافه في نسخة الـ Production (release mode)
     _dio.interceptors.add(
       LogInterceptor(
         request: true,

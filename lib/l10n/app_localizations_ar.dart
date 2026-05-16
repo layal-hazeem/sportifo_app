@@ -69,6 +69,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get otpSentMessage => 'تم إرسال كود التحقق ';
 
   @override
+  String get verifiedOtp => 'تم التحقق من الرمز بنجاح';
+
+  @override
+  String get enterFullCode => 'يرجى إدخال الرمز الكامل';
+
+  @override
   String get resendCodeIn => 'إعادة إرسال الكود خلال';
 
   @override
@@ -340,7 +346,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get cancle => 'إلغاء';
-  
+
   @override
   String get termsPart1 => 'بالتسجيل، فإنك توافق على ';
 
