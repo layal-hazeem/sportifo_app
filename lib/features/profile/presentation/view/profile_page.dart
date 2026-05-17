@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
@@ -125,68 +124,44 @@ class _ProfilePageState extends State<ProfilePage> {
                       const SizedBox(height: 230),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: SizedBox(
-                                width: double.infinity,
-                                height: 50,
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppColors.primaryBtn,
-                                    elevation: 5,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                        AppSizes.borderRadius,
-                                      ),
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    Navigator.pushNamed(
-                                      context,
-                                      AppRoutes.editProfile,
-                                      arguments: user,
-                                    );
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(Icons.edit, color: Colors.white),
-                                      SizedBox(width: 8),
-                                      Text(
-                                        l10n.editProfile,
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
+                        child: Center(
+                          child: SizedBox(
+                            width: 220,
+                            height: 50,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primaryBtn,
+                                elevation: 5,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                    AppSizes.borderRadius,
                                   ),
                                 ),
                               ),
-                            ),
-                            const SizedBox(width: 15),
-                            Expanded(
-                              child: LogoutButton(
-                                text: l10n.logout,
-                                onPressed: () {
-                                  final cubit = context.read<LogoutCubit>();
-
-                                  DialogHelper.showCustomDialog(
-                                    context: context,
-                                    title: l10n.logout,
-                                    message: l10n.confirmLogout,
-                                    type: DialogType.warning,
-                                    confirmBtnText: l10n.logoutApproval,
-                                    onConfirm: () {
-                                      cubit.logout();
-                                    },
-                                  );
-                                },
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  AppRoutes.editProfile,
+                                  arguments: user,
+                                );
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(Icons.edit, color: Colors.white),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    l10n.editProfile,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
+                          ),
                         ),
                       ),
                     ],

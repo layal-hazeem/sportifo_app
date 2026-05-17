@@ -28,20 +28,21 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   Future<void> updateProfileImage(File imageFile) async {
-    final currentState = state;
+    emit(ProfileLoading());
+
+    print("Uploading image: ${imageFile.path}");
 
     final result = await _profileRepository.updateProfileImage(imageFile);
 
     switch (result) {
       case Success(data: final updatedProfile):
+        print("Upload success");
         emit(ProfileSuccess(updatedProfile));
         break;
 
       case Failure(message: final errorMsg):
+        print("Upload failed: $errorMsg");
         emit(ProfileError(errorMsg));
-        if (currentState is ProfileSuccess) {
-          emit(currentState);
-        }
         break;
     }
   }

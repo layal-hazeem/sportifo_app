@@ -131,7 +131,7 @@ class CompleteProfileInfoView extends StatelessWidget {
                   onTap: () async {
                     DateTime? picked = await showDatePicker(
                       context: context,
-                      initialDate: DateTime.now(),
+                      initialDate: DateTime(2000),
                       firstDate: DateTime(1950),
                       lastDate: DateTime.now(),
                     );

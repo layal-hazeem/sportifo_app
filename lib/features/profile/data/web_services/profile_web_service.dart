@@ -14,6 +14,7 @@ class ProfileWebService {
   Future<Response> updateProfileImage(File imageFile) async {
     final formData = FormData.fromMap({
       "profile_pic": await MultipartFile.fromFile(imageFile.path),
+      "update_pic": 1,
     });
 
     return await dio.put(ApiConstants.editProfile, data: formData);
