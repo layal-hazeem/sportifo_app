@@ -39,16 +39,16 @@ class ProfileRepository {
   }
 
   Future<ApiResult<ProfileResponsModel>> updateProfile(
-  EditProfileRequestModel request,
-) async {
-  try {
-    final formData = await request.toFormData();
+    EditProfileRequestModel request,
+  ) async {
+    try {
+      final formData = await request.toFormData();
 
-    final response = await _profileWebService.updateProfile(formData);
+      final response = await _profileWebService.updateProfile(formData);
 
-    return Success(ProfileResponsModel.fromJson(response.data['data']));
-  } catch (e) {
-    return Failure(ApiErrorHandler.handle(e));
+      return Success(ProfileResponsModel.fromJson(response.data['data']));
+    } catch (e) {
+      return Failure(ApiErrorHandler.handle(e));
+    }
   }
-}
 }

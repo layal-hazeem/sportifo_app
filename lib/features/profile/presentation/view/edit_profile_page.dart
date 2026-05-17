@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
+import 'package:intl/intl.dart';
 import 'package:sportifo_app/core/routes/app_routes.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/core/utils/snack_bar_utils.dart';
@@ -26,9 +27,7 @@ class _EditProfilePageState extends State<EditProfilePage>
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _firstNameController;
   late TextEditingController _lastNameController;
-
-  late TextEditingController _emailController;
-  late TextEditingController _phoneController;
+  late TextEditingController _dateOfBirthController;
 
   late TextEditingController _heightController;
   late TextEditingController _weightController;
@@ -50,11 +49,10 @@ class _EditProfilePageState extends State<EditProfilePage>
     );
     _lastNameController = TextEditingController(text: widget.profile.lastName);
 
-    _emailController = TextEditingController(
-      text: widget.profile.email?.toString() ?? '',
-    );
-    _phoneController = TextEditingController(
-      text: widget.profile.phone?.toString() ?? '',
+    _dateOfBirthController = TextEditingController(
+      text: widget.profile.dateOfBirth == null
+          ? ''
+          : DateFormat('yyyy-MM-dd').format(widget.profile.dateOfBirth!),
     );
 
     _heightController = TextEditingController(
@@ -143,8 +141,7 @@ class _EditProfilePageState extends State<EditProfilePage>
     _firstNameController.dispose();
     _lastNameController.dispose();
 
-    _emailController.dispose();
-    _phoneController.dispose();
+    _dateOfBirthController.dispose();
 
     _heightController.dispose();
     _weightController.dispose();
@@ -189,9 +186,8 @@ class _EditProfilePageState extends State<EditProfilePage>
   Widget _buildInfoTab(ProfileState state) {
     final l10n = AppLocalizations.of(context)!;
 
-    return SingleChildScrollView(
-      key: const ValueKey("info"),
-      padding: EdgeInsets.all(20),
+    return Padding(
+      padding: const EdgeInsets.all(20),
       child: Form(
         key: _formKey,
         child: Column(
@@ -202,6 +198,7 @@ class _EditProfilePageState extends State<EditProfilePage>
               Icons.person_outline,
               controller: _firstNameController,
             ),
+
             const SizedBox(height: 20),
 
             buildField(
@@ -210,7 +207,37 @@ class _EditProfilePageState extends State<EditProfilePage>
               Icons.person_outline,
               controller: _lastNameController,
             ),
+
             const SizedBox(height: 20),
+
+            GestureDetector(
+              onTap: () async {
+                final pickedDate = await showDatePicker(
+                  context: context,
+                  initialDate: DateTime(2000),
+                  firstDate: DateTime(1950),
+                  lastDate: DateTime.now(),
+                );
+
+                if (pickedDate != null) {
+                  final formattedDate = DateFormat(
+                    'yyyy-MM-dd',
+                  ).format(pickedDate);
+
+                  _dateOfBirthController.text = formattedDate;
+                }
+              },
+              child: AbsorbPointer(
+                child: buildField(
+                  "Date of Birth",
+                  "YYYY-MM-DD",
+                  Icons.calendar_today_outlined,
+                  controller: _dateOfBirthController,
+                ),
+              ),
+            ),
+
+            const Spacer(),
 
             CustomAuthButton(
               text: state is ProfileLoading ? "Saving..." : "Save Changes",
@@ -222,10 +249,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                           EditProfileRequestModel(
                             first_name: _firstNameController.text,
                             last_name: _lastNameController.text,
-
-                            email: _emailController.text,
-                            phone: _phoneController.text,
-
+                            date_of_birth: _dateOfBirthController.text,
                             height: _heightController.text.isEmpty
                                 ? null
                                 : double.tryParse(_heightController.text),
@@ -261,87 +285,143 @@ class _EditProfilePageState extends State<EditProfilePage>
     );
   }
 
-  Widget _buildMeasurementsTab() {
+  Widget _buildMeasurementsTab(ProfileState state) {
     final l10n = AppLocalizations.of(context)!;
 
-    return SingleChildScrollView(
-      key: ValueKey(l10n.bodyMeasurements),
+    return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
         children: [
-          buildField(
-            l10n.height,
-            l10n.height,
-            Icons.height,
-            keyboardType: TextInputType.number,
-            controller: _heightController,
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  buildField(
+                    l10n.height,
+                    l10n.height,
+                    Icons.height,
+                    keyboardType: TextInputType.number,
+                    controller: _heightController,
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  buildField(
+                    l10n.weight,
+                    l10n.weight,
+                    Icons.monitor_weight_outlined,
+                    keyboardType: TextInputType.number,
+                    controller: _weightController,
+                  ),
+
+                  const SizedBox(height: 40),
+
+                  buildField(
+                    l10n.shoulders,
+                    l10n.shoulders,
+                    Icons.accessibility_new,
+                    keyboardType: TextInputType.number,
+                    controller: _shouldersWidthController,
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  buildField(
+                    l10n.chestCircumference,
+                    l10n.chestCircumference,
+                    Icons.fitness_center,
+                    keyboardType: TextInputType.number,
+                    controller: _chestPerimeterController,
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  buildField(
+                    l10n.waist,
+                    l10n.waist,
+                    Icons.radio_button_unchecked,
+                    keyboardType: TextInputType.number,
+                    controller: _waistPerimeterController,
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  buildField(
+                    l10n.thighCircumference,
+                    l10n.thighCircumference,
+                    Icons.accessibility,
+                    keyboardType: TextInputType.number,
+                    controller: _thighPerimeterController,
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  buildField(
+                    l10n.hipCircumference,
+                    l10n.hipCircumference,
+                    Icons.self_improvement,
+                    keyboardType: TextInputType.number,
+                    controller: _hipPerimeterController,
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  buildField(
+                    l10n.armCircumference,
+                    l10n.armCircumference,
+                    Icons.fitness_center,
+                    keyboardType: TextInputType.number,
+                    controller: _armPerimeterController,
+                  ),
+
+                  const SizedBox(height: 20),
+                ],
+              ),
+            ),
           ),
+
           const SizedBox(height: 20),
 
-          buildField(
-            l10n.weight,
-            l10n.weight,
-            Icons.monitor_weight_outlined,
-            keyboardType: TextInputType.number,
-            controller: _weightController,
+          CustomAuthButton(
+            text: state is ProfileLoading ? "Saving..." : "Save Changes",
+            onPressed: state is ProfileLoading
+                ? null
+                : () {
+                    if (_formKey.currentState!.validate()) {
+                      context.read<ProfileCubit>().updateProfile(
+                        EditProfileRequestModel(
+                          first_name: _firstNameController.text,
+                          last_name: _lastNameController.text,
+                          date_of_birth: _dateOfBirthController.text,
+                          height: _heightController.text.isEmpty
+                              ? null
+                              : double.tryParse(_heightController.text),
+                          weight: _weightController.text.isEmpty
+                              ? null
+                              : double.tryParse(_weightController.text),
+                          shoulders_width: double.tryParse(
+                            _shouldersWidthController.text,
+                          ),
+                          chest_perimeter: double.tryParse(
+                            _chestPerimeterController.text,
+                          ),
+                          waist_perimeter: double.tryParse(
+                            _waistPerimeterController.text,
+                          ),
+                          thigh_perimeter: double.tryParse(
+                            _thighPerimeterController.text,
+                          ),
+                          hip_perimeter: double.tryParse(
+                            _hipPerimeterController.text,
+                          ),
+                          arm_perimeter: double.tryParse(
+                            _armPerimeterController.text,
+                          ),
+                        ),
+                      );
+                    }
+                  },
           ),
-
-          const SizedBox(height: 40),
-
-          buildField(
-            l10n.shoulders,
-            l10n.shoulders,
-            Icons.accessibility_new,
-            keyboardType: TextInputType.number,
-            controller: _shouldersWidthController,
-          ),
-          const SizedBox(height: 20),
-
-          buildField(
-            l10n.chestCircumference,
-            l10n.chestCircumference,
-            Icons.fitness_center,
-            keyboardType: TextInputType.number,
-            controller: _chestPerimeterController,
-          ),
-          const SizedBox(height: 20),
-
-          buildField(
-            l10n.waist,
-            l10n.waist,
-            Icons.radio_button_unchecked,
-            keyboardType: TextInputType.number,
-            controller: _waistPerimeterController,
-          ),
-          const SizedBox(height: 20),
-
-          buildField(
-            l10n.thighCircumference,
-            l10n.thighCircumference,
-            Icons.accessibility,
-            keyboardType: TextInputType.number,
-            controller: _thighPerimeterController,
-          ),
-          const SizedBox(height: 20),
-
-          buildField(
-            l10n.hipCircumference,
-            l10n.hipCircumference,
-            Icons.self_improvement,
-            keyboardType: TextInputType.number,
-            controller: _hipPerimeterController,
-          ),
-          const SizedBox(height: 20),
-
-          buildField(
-            l10n.armCircumference,
-            l10n.armCircumference,
-            Icons.fitness_center,
-            keyboardType: TextInputType.number,
-            controller: _armPerimeterController,
-          ),
-
-          const SizedBox(height: 40),
         ],
       ),
     );
@@ -374,7 +454,7 @@ class _EditProfilePageState extends State<EditProfilePage>
             duration: const Duration(milliseconds: 300),
             child: selectedTab == 0
                 ? _buildInfoTab(state)
-                : _buildMeasurementsTab(),
+                : _buildMeasurementsTab(state),
           ),
         ),
       ],
@@ -393,8 +473,6 @@ class _EditProfilePageState extends State<EditProfilePage>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 20),
-
         Text(
           label,
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),

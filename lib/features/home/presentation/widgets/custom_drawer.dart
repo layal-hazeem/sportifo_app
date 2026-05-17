@@ -65,6 +65,12 @@ class CustomDrawer extends StatelessWidget {
                     context: context,
                   ),
                   _buildItem(
+                    icon: Icons.save,
+                    text: l10n.saved_exercises,
+                    item: DrawerItem.saved,
+                    context: context,
+                  ),
+                  _buildItem(
                     icon: Icons.settings,
                     text: l10n.settings,
                     item: DrawerItem.settings,
@@ -252,6 +258,10 @@ class CustomDrawer extends StatelessWidget {
     switch (item) {
       case DrawerItem.profile:
         Navigator.pushReplacementNamed(context, AppRoutes.getProfile);
+        break;
+
+      case DrawerItem.saved:
+        Navigator.pushReplacementNamed(context, AppRoutes.savedExercises);
         break;
 
       case DrawerItem.settings:
