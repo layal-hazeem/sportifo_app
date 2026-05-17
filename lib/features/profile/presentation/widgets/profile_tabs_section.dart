@@ -127,8 +127,10 @@ class _ProfileTabsSectionState extends State<ProfileTabsSection> {
         children: [
           _row(l10n.height, "${s.height ?? "-"} cm"),
           _row(l10n.weight, "${s.weight ?? "-"} kg"),
+          _row(l10n.shoulders, s.shouldersWidth?.toString() ?? "-"),
           _row(l10n.chestCircumference, s.chestPerimeter?.toString() ?? "-"),
           _row(l10n.waist, s.waistPerimeter?.toString() ?? "-"),
+          _row(l10n.thighCircumference, s.thighPerimeter?.toString() ?? "-"),
           _row(l10n.hipCircumference, s.hipPerimeter?.toString() ?? "-"),
           _row(l10n.armCircumference, s.armPerimeter?.toString() ?? "-"),
         ],
