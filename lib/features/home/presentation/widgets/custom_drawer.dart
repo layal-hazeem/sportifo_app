@@ -65,7 +65,7 @@ class CustomDrawer extends StatelessWidget {
                     context: context,
                   ),
                   _buildItem(
-                    icon: Icons.save,
+                    icon: Icons.bookmark_border,
                     text: l10n.saved_exercises,
                     item: DrawerItem.saved,
                     context: context,
