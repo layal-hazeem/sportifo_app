@@ -1,11 +1,14 @@
 import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sportifo_app/features/%20ads/presentation/view_model/ads_cubit.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/complete_profile/complete_profile_cubit.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/logout/logout_cubit.dart';
 import 'package:sportifo_app/features/profile/data/repository/profile_repository.dart';
 import 'package:sportifo_app/features/profile/data/web_services/profile_web_service.dart';
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_cubit.dart';
+import '../../features/ ads/data/repository/ads_repository.dart';
+import '../../features/ ads/data/web_services/ads_web_service.dart';
 import '../../features/auth/data/repository/auth_repository.dart';
 import '../../features/auth/data/web_services/auth_webService.dart';
 import '../../features/auth/presentation/view_model/login/forgot_password_cubit.dart';
@@ -95,4 +98,10 @@ Future<void> setupServiceLocator() async {
 
   getIt.registerFactory<SearchCubit>(() => SearchCubit(getIt<WorkoutRepository>()));
 
+
+  getIt.registerLazySingleton<AdsWebService>(() => AdsWebService(getIt<Dio>()));
+
+  getIt.registerLazySingleton<AdsRepository>(() => AdsRepository(getIt<AdsWebService>()));
+
+  getIt.registerFactory<AdsCubit>(() => AdsCubit(getIt<AdsRepository>()));
 }

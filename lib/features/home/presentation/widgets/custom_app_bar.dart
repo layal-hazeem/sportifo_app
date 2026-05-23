@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
-import '../../../../core/utils/wave_app_bar.dart';
+import '../../../../core/widgets/wave_app_bar.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final int currentIndex;

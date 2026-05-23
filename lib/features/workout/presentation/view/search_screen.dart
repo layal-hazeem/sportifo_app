@@ -4,17 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/routes/app_routes.dart';
-import '../../../../core/theme/app_colors.dart'; // تأكدي من مسار الألوان
+import '../../../../core/theme/app_colors.dart';
 import '../view_model/search_cubit/search_cubit.dart';
 import '../view_model/search_cubit/search_state.dart';
-import '../widgets/exercise_card.dart';
+
+// 🔥 التعديل 1: استدعينا الجريد فيو بدل الكرت المباشر
+import '../widgets/exercises_grid_view.dart';
 
 class SearchExercisesScreen extends StatefulWidget {
   final int? categoryId;
   final int? organId;
   final List<int>? partIds;
 
-  const SearchExercisesScreen({super.key, this.categoryId, this.organId, this.partIds});  @override
+  const SearchExercisesScreen({super.key, this.categoryId, this.organId, this.partIds});
+  @override
   State<SearchExercisesScreen> createState() => _SearchExercisesScreenState();
 }
 
@@ -102,22 +105,10 @@ class _SearchExercisesScreenState extends State<SearchExercisesScreen> {
             if (state.exercises.isEmpty) {
               return _buildNoResults();
             }
-            return ListView.builder(
-              physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.all(20),
-              itemCount: state.exercises.length,
-              itemBuilder: (context, index) {
-                final exercise = state.exercises[index];
-                return ExerciseCard(
-                  exercise: exercise,
-                  onTap: () => Navigator.pushNamed(
-                    context,
-                    AppRoutes.exerciseDetails,
-                    arguments: exercise,
-                  ),
-                );
-              },
-            );
+
+            // 🔥 التعديل 2: استخدمنا ويدجت الجريد فيو الجاهز تبعك، وداعاً لمشاكل الأبعاد!
+            return ExercisesGridView(exercises: state.exercises);
+
           } else if (state is SearchFailure) {
             return _buildNoResults();
           }
@@ -129,12 +120,12 @@ class _SearchExercisesScreenState extends State<SearchExercisesScreen> {
   }
 
   Widget _buildSuggestions() {
-      final bool isCardio = widget.categoryId == 2;
+    final bool isCardio = widget.categoryId == 2;
 
-      final List<String> resistanceSearches = ['Chest', 'Abs', 'Legs', 'Back', 'Biceps', 'Shoulders'];
-      final List<String> cardioSearches = ['Running', 'Jump Rope', 'Burpees', 'Cycling', 'High Knees'];
+    final List<String> resistanceSearches = ['Chest', 'Abs', 'Legs', 'Back', 'Biceps', 'Shoulders'];
+    final List<String> cardioSearches = ['Running', 'Jump Rope', 'Burpees', 'Cycling', 'High Knees'];
 
-      final List<String> popularSearches = isCardio ? cardioSearches : resistanceSearches;
+    final List<String> popularSearches = isCardio ? cardioSearches : resistanceSearches;
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -169,7 +160,6 @@ class _SearchExercisesScreenState extends State<SearchExercisesScreen> {
       ),
     );
   }
-
 
   Widget _buildNoResults() {
     return Center(

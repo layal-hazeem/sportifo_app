@@ -6,7 +6,7 @@ import 'package:sportifo_app/core/routes/app_routes.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/storage/local_storage.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/utils/snack_bar_utils.dart';
+import '../../../../core/helpers/snack_bar_utils.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../data/models/login/verify_otp_request.dart';
 import '../view_model/login/login_cubit.dart';

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/routes/app_routes.dart';
-import '../../../../core/utils/wave_app_bar.dart';
+import '../../../../core/widgets/wave_app_bar.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../view_model/categories_cubit/categories_cubit.dart';
 import '../view_model/categories_cubit/categories_state.dart';
@@ -23,7 +23,6 @@ class MuscleGroupsScreen extends StatefulWidget {
 
 class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
   int? selectedMuscleId;
-  // 🔥 القائمة تدعم التحديد المتعدد للأجزاء
   List<int> selectedPartIds = [];
 
   final Map<String, String> _muscleAssets = {
@@ -72,9 +71,8 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 1. قائمة العضلات الرئيسية
           SizedBox(
-            height: 90,
+            height: 115, // كبرنا الارتفاع قليلاً ليستوعب النص بالأسفل براحة
             child: BlocConsumer<CategoriesCubit, CategoriesState>(
               listener: (context, state) {
                 if (state is CategoriesSuccess && state.categories.isNotEmpty) {
@@ -102,13 +100,14 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                         name: muscle.name,
                         imagePath: imagePath,
                         isSelected: isSelected,
+                        anyMuscleSelected: selectedMuscleId != null, // 🔥 تمرير حالة الفلترة الحالية
                         onTap: () {
                           setState(() {
                             if (isSelected) {
                               selectedMuscleId = null;
                               selectedPartIds.clear();
                               context.read<ExercisesCubit>().fetchExercises(categoryId: 1);
-                              context.read<PartsCubit>().reset();
+                              context.read<PartsCubit>().emit(PartsInitial());
                             } else {
                               selectedMuscleId = muscle.id;
                               selectedPartIds.clear();
@@ -136,7 +135,6 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
 
           const SizedBox(height: 15),
 
-          // 2. قائمة الأجزاء الفرعية (Chips)
           BlocBuilder<PartsCubit, PartsState>(
             builder: (context, state) {
               if (state is PartsSuccess && state.Parts.isNotEmpty) {
@@ -167,10 +165,10 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                           });
 
                           context.read<ExercisesCubit>().fetchExercises(
-                                categoryId: 1,
-                                organId: selectedMuscleId,
-                                partIds: selectedPartIds.isEmpty ? null : selectedPartIds,
-                              );
+                            categoryId: 1,
+                            organId: selectedMuscleId,
+                            partIds: selectedPartIds.isEmpty ? null : selectedPartIds,
+                          );
                         },
                       );
                     },
@@ -186,7 +184,6 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
             child: Divider(color: Colors.black12, thickness: 1),
           ),
 
-          // 3. قائمة التمارين (Grid)
           Expanded(
             child: BlocBuilder<ExercisesCubit, ExercisesState>(
               builder: (context, state) {

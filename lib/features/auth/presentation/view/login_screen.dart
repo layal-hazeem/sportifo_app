@@ -5,7 +5,7 @@ import '../../../../core/di/service_locator.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/storage/local_storage.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/utils/snack_bar_utils.dart';
+import '../../../../core/helpers/snack_bar_utils.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../home/presentation/view/home_page.dart';
 import '../../data/models/login/login_request.dart';

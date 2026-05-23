@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gif_view/gif_view.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/utils/snack_bar_utils.dart';
+import '../../../../core/helpers/snack_bar_utils.dart';
+import '../../../../core/widgets/cached_static_gif.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../data/models/exercise_model.dart';
 import '../view_model/saved_exercises/saved_exercises_cubit.dart';
@@ -38,36 +38,21 @@ class ExerciseCard extends StatelessWidget {
           children: [
             Stack(
               children: [
+                // داخل الـ Stack في ExerciseCard:
                 Hero(
                   tag: 'exercise_${exercise.id}',
                   child: ClipRRect(
                     borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-                    child: GifView.network(
-                      exercise.gifUrl ?? '',
-                      height: 120,
+                    child: Container(
+                      height: 110,
                       width: double.infinity,
-                      fit: BoxFit.cover,
-                      autoPlay: false,
-                      frameRate: 30,
-                      progressBuilder: (context) => Container(
-                        height: 120,
-                        color: AppColors.background,
-                        child: const Center(
-                          child: SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: AppColors.primaryBtn,
-                            ),
-                          ),
-                        ),
+                      color: Colors.white,
+
+                      // 🔥 استدعاء الويدجت الخارق اللي بيكيش وبيجمد الـ GIF
+                      child: CachedStaticGif(
+                        imageUrl: exercise.gifUrl ?? '',
                       ),
-                      errorBuilder: (context, error, stackTrace) => Container(
-                        height: 120,
-                        color: AppColors.background,
-                        child: const Icon(Icons.fitness_center, color: AppColors.hintText),
-                      ),
+
                     ),
                   ),
                 ),
@@ -89,13 +74,13 @@ class ExerciseCard extends StatelessWidget {
                         }
                       },
                       builder: (context, state) {
-                        return GestureDetector( // استبدلنا الـ IconButton بـ GestureDetector لتحكم كامل
+                        return GestureDetector(
                           onTap: () => context.read<SavedExercisesCubit>().toggleSave(exercise),
-                          child: Center( // السنتر هون بيضمن وجود الأيقونة بالمنتصف تماماً
+                          child: Center(
                             child: Icon(
                               exercise.isSaved ? Icons.bookmark : Icons.bookmark_border,
                               color: AppColors.primaryBtn,
-                              size: 20, // حجم الأيقونة مناسب للـ radius 16
+                              size: 20,
                             ),
                           ),
                         );
@@ -106,43 +91,48 @@ class ExerciseCard extends StatelessWidget {
               ],
             ),
 
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    exercise.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                        color: AppColors.textDark,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    exercise.category?.organ?.name ?? l10n.workout,
-                    style: const TextStyle(
-                        color: AppColors.primaryBtn,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600
-                    ),
-                  ),
-
-                  if (exercise.category?.organ?.part != null) ...[
-                    const SizedBox(height: 2),
+            // قسم النصوص محمي بالـ Expanded للوقاية من الـ Overflow
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,                  children: [
                     Text(
-                      exercise.category!.organ!.part!.name,
-                      style: TextStyle(
-                          color: Colors.grey.shade600,
-                          fontSize: 10,
-                          fontWeight: FontWeight.w500,
+                      exercise.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          color: AppColors.textDark,
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold
                       ),
                     ),
+                  const SizedBox(height: 4),
+                    Text(
+                      exercise.category?.organ?.name ?? l10n.workout,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          color: AppColors.primaryBtn,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600
+                      ),
+                    ),
+                    if (exercise.category?.organ?.part != null)
+                      const SizedBox(height: 2), // 🔥 مسافة صغيرة ومرتبة
+                      Text(
+                        exercise.category!.organ!.part!.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.grey.shade500, // لون أهدى شوي
+                          fontSize: 10,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                   ],
-                ],
+                ),
               ),
             ),
           ],

@@ -23,5 +23,6 @@ class ApiConstants {
   static const String logout = "logout";
 
   static const String categories = "categories";
+  static const String advertisement = "advertisement";
 
 }

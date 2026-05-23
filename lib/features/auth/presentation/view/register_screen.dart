@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/helpers/app_validators.dart';
+import '../../../../core/utils/app_validators.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/utils/snack_bar_utils.dart';
+import '../../../../core/helpers/snack_bar_utils.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_neumorphic_field.dart';

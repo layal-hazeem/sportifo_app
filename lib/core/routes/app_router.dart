@@ -115,15 +115,7 @@ class AppRouter {
               BlocProvider(create: (_) => getIt<ProfileCubit>()..getProfile()),
               BlocProvider(create: (_) => getIt<LogoutCubit>()),
             ],
-            child: MultiBlocProvider(
-              providers: [
-                BlocProvider(
-                  create: (_) => getIt<ProfileCubit>()..getProfile(),
-                ),
-                BlocProvider(create: (_) => getIt<LogoutCubit>()),
-              ],
-              child: const ProfilePage(),
-            ),
+            child: const ProfilePage(),
           ),
         );
 

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gif_view/gif_view.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/utils/snack_bar_utils.dart';
+import '../../../../core/helpers/snack_bar_utils.dart';
+import '../../../../core/widgets/cached_static_gif.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../data/models/exercise_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -62,14 +63,13 @@ class ExerciseDetailsScreen extends StatelessWidget {
 
             flexibleSpace: FlexibleSpaceBar(
               title: Text(exercise.name, style: const TextStyle(color: Colors.white, fontSize: 16)),
-              background:Hero(
+              background: Hero(
                 tag: 'exercise_${exercise.id}',
                 child: Container(
                   color: Colors.white,
-                  child: GifView.network(
-                    exercise.gifUrl ?? '',
-                    fit: BoxFit.contain,
-                    autoPlay: true,
+                  child: CachedStaticGif( // 🔥 استخدمنا ويدجت الكاش تبعنا
+                    imageUrl: exercise.gifUrl ?? '',
+                    autoPlay: true, // 🔥 أمرناه يتحرك جوا التفاصيل
                   ),
                 ),
               ),

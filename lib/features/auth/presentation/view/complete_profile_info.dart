@@ -11,7 +11,7 @@ import 'package:sportifo_app/features/auth/presentation/widgets/custom_neumorphi
 import 'package:sportifo_app/features/home/presentation/view/home_page.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
-import '../../../../core/utils/snack_bar_utils.dart';
+import '../../../../core/helpers/snack_bar_utils.dart';
 
 class CompleteProfileInfoView extends StatelessWidget {
   CompleteProfileInfoView({super.key});
