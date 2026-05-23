@@ -131,7 +131,14 @@ class _OTPScreenState extends State<OTPScreen> {
           }
           else if (state is OtpSuccess) {
             _hideLoading(context);
-
+            AppSnackBar.show(
+              context,
+              message: state.response.message.isNotEmpty
+                  ? state.response.message
+                  : l10n.verifiedOtp,
+              type: SnackBarType.success,
+            );
+            await Future.delayed(const Duration(milliseconds: 500));
             if (widget.isFromForgotPassword) {
               if (state.response.resetToken != null) {
                 await getIt<LocalStorage>().saveToken(state.response.resetToken!);
@@ -152,6 +159,7 @@ class _OTPScreenState extends State<OTPScreen> {
               }
             }
           }
+
         },
 
         child: SafeArea(

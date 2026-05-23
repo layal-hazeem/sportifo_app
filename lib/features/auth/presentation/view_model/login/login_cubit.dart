@@ -46,7 +46,7 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   void emitResetPasswordStates(ResetPasswordRequestBody body) async {
-    emit(LoginLoading());
+    emit(ResetPasswordLoading());
 
     final result = await _authRepository.resetPassword(body);
 
@@ -68,4 +68,5 @@ class LoginCubit extends Cubit<LoginState> {
       emit(ResendOtpError(result.message));
     }
   }
+
 }

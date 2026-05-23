@@ -64,6 +64,7 @@ class ResendOtpError extends LoginState {
   final String message;
   ResendOtpError(this.message);
 }
+class ResetPasswordLoading extends LoginState {}
 
 enum OtpContext {
   login,

@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:sportifo_app/features/profile/data/models/profile_response.dart';
+import 'dart:convert';
 
 import '../../../../core/network/api_error_handler.dart';
 import '../../../../core/network/api_result.dart';
@@ -31,12 +31,23 @@ class AuthRepository {
     }
   }
   Future<ApiResult<OtpResponse>> verifyOtp(
-      VerifyOtpRequestBody verifyOtpRequestBody,
-      {bool isReset = false}
-      ) async {
+      VerifyOtpRequestBody verifyOtpRequestBody, {
+        bool isReset = false,
+      }) async {
     try {
       final response = await _authWebService.verifyOtp(verifyOtpRequestBody, isReset: isReset);
-      final otpResponse = OtpResponse.fromJson(response.data);
+
+      Map<String, dynamic> jsonMap;
+      if (response.data is Map<String, dynamic>) {
+        jsonMap = response.data;
+      } else if (response.data is String) {
+        jsonMap = jsonDecode(response.data);
+      } else {
+        return Failure("Unexpected response format from server");
+      }
+
+
+      final otpResponse = OtpResponse.fromJson(jsonMap);
       return Success(otpResponse);
     } catch (e) {
       return Failure(ApiErrorHandler.handle(e));

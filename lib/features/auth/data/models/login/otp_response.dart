@@ -14,13 +14,28 @@ class OtpResponse {
   });
 
   factory OtpResponse.fromJson(Map<String, dynamic> json) {
-    final data = json['data'] as Map<String, dynamic>?;
+    final dynamic data = json['data'];
+    String? token;
+    String? resetToken;
+    LoginData? user;
+
+    if (data is Map<String, dynamic>) {
+      token = data['token']?.toString();
+      resetToken = data['reset_token']?.toString();
+      if (data['user'] is Map<String, dynamic>) {
+        try {
+          user = LoginData.fromJson(data['user']);
+        } catch (e) {
+          print("Error parsing user: $e");
+        }
+      }
+    }
 
     return OtpResponse(
-      message: json['message'] ?? '',
-      token: data?['token'],
-      resetToken: data?['reset_token'],
-      user: data?['user'] != null ? LoginData.fromJson(data!['user']) : null,
+      message: json['message']?.toString() ?? '',
+      token: token,
+      resetToken: resetToken,
+      user: user,
     );
   }
 }
