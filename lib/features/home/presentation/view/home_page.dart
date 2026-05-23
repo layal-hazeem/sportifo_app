@@ -5,6 +5,7 @@ import 'package:sportifo_app/core/routes/app_routes.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/features/auth/data/repository/auth_repository.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/logout/logout_cubit.dart';
+import 'package:sportifo_app/features/home/presentation/view/user_screen.dart';
 import 'package:sportifo_app/features/home/presentation/view_model/home_view_model.dart';
 import 'package:sportifo_app/features/home/presentation/widgets/custom_app_bar.dart';
 import 'package:sportifo_app/features/home/presentation/widgets/custom_bottom_nav_bar.dart';
@@ -13,7 +14,6 @@ import 'package:sportifo_app/features/profile/presentation/view_model/profile_cu
 import 'package:sportifo_app/features/workout/presentation/view_model/categories_cubit/categories_cubit.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../../../../core/di/service_locator.dart';
-import 'package:sportifo_app/features/workout/presentation/view_model/categories_cubit/categories_cubit.dart';
 import '../../../workout/presentation/view/workout_type_screen.dart';
 import 'package:sportifo_app/core/enum/drawer_enum.dart';
 
@@ -32,11 +32,12 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> _screens = [
     const Center(child: Text("Progress Screen")),
     const Center(child: Text("My Plans Screen")),
-    const Center(child: Text("Home Dashboard")),
+    const UserScreen(),
     BlocProvider(
       create: (context) => getIt<CategoriesCubit>(),
       child: const WorkoutTypeScreen(),
     ),
+
     const Center(child: Text("Chat Screen")),
   ];
 
@@ -73,8 +74,10 @@ class _HomePageState extends State<HomePage> {
           listenable: homeViewModel,
           builder: (context, child) {
             return Scaffold(
-              body: _screens[homeViewModel.currentIndex],
-
+              body: IndexedStack(
+                index: homeViewModel.currentIndex,
+                children: _screens,
+              ),
               drawer: CustomDrawer(
                 selectedItem: selectedDrawerItem,
                 onItemTap: (item) {
@@ -110,7 +113,8 @@ class _HomePageState extends State<HomePage> {
                   CustomBottomNavBar.build(
                     icon: Icons.home,
                     label: l10n.home,
-                    isSelected: homeViewModel.currentIndex == 2,
+                    isSelected: homeViewModel.currentIndex == 2
+                    ,
                   ),
                   CustomBottomNavBar.build(
                     icon: Icons.fitness_center_outlined,
@@ -125,6 +129,7 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             );
+
           },
         ),
       ),

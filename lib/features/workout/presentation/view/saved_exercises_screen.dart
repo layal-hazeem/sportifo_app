@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/utils/wave_app_bar.dart'; // تأكدي من المسار الصحيح
+import '../../../../core/widgets/wave_app_bar.dart'; // تأكدي من المسار الصحيح
 import '../../../../l10n/app_localizations.dart';
 import '../view_model/saved_exercises/saved_exercises_cubit.dart';
 import '../view_model/saved_exercises/saved_exercises_state.dart';
