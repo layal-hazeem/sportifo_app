@@ -1,7 +1,10 @@
 // تأكدي من استيراد ApiResult و ApiErrorHandler
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+
 import '../../../../core/network/api_result.dart';
 import '../../../../core/network/api_error_handler.dart';
 
+import '../../../../core/network/dio_factory.dart';
 import '../models/exercise_model.dart';
 import '../models/filter_item_model.dart';
 import '../web_services/workout_web_service.dart';
@@ -43,12 +46,23 @@ class WorkoutRepository {
     String? searchQuery,
   }) async {
     try {
+      // 1. جلب إعدادات كاش الـ Hive المجهزة مسبقاً
+      final cacheOptions = await DioFactory.getCacheOptions();
+
+      // 2. تحويل السياسة وتوليد الـ Options الخاصة بـ دايو 5.9.2 لتمريرها بأمان
+      final dioOptions = cacheOptions.copyWith(
+        policy: CachePolicy.refreshForceCache, // جلب محلي فوري، وتحديث عند انتهاء الـ 7 أيام
+      ).toOptions();
+
+      // 3. تمرير الـ options المعدلة للـ WebService لتقوم بحقنها في الـ Request
       final response = await _webService.getExercises(
         categoryId: categoryId,
         organId: organId,
         partIds: partIds,
         searchQuery: searchQuery,
+        options: dioOptions, // مرري هذا المتغير إلى دالة الـ WebService
       );
+
       final responseModel = ExerciseResponseModel.fromJson(response.data);
       return Success(responseModel.data);
     } catch (e) {
