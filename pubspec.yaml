@@ -51,6 +51,9 @@ dependencies:
   carousel_slider: ^5.1.2
   url_launcher: ^6.3.2
   cached_network_image: ^3.4.1
+  dio_cache_interceptor: ^4.0.6
+  http_cache_hive_store: ^5.1.0
+  path_provider: ^2.1.5
 
 dev_dependencies:
   flutter_test:

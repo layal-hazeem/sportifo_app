@@ -1,11 +1,16 @@
 import 'package:dio/dio.dart';
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+import 'package:http_cache_hive_store/http_cache_hive_store.dart';
+import 'package:path_provider/path_provider.dart';
 import '../storage/local_storage.dart';
 import 'api_constants.dart';
 
 class DioFactory {
   late final Dio _dio;
   final LocalStorage _localStorage;
-  // Constructor
+  static CacheOptions? _cacheOptions;
+  DioCacheInterceptor? _cacheInterceptor;
+
   DioFactory(this._localStorage) {
     _dio = Dio(
       BaseOptions(
@@ -17,6 +22,7 @@ class DioFactory {
       ),
     );
 
+    // 1. Interceptor الخاص بالتوكن والأوتوريزيشن
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
@@ -35,6 +41,7 @@ class DioFactory {
       ),
     );
 
+    // 2. Interceptor الخاص باللوغز للطباعة
     _dio.interceptors.add(
       LogInterceptor(
         request: true,
@@ -45,6 +52,40 @@ class DioFactory {
         error: true,
       ),
     );
+  }
+
+  // 🔥 دالة التهيئة الرئيسية التي يتم استدعاؤها في الـ Service Locator واشترطنا انتهاءها
+  Future<void> init() async {
+    final options = await getCacheOptions();
+    _cacheInterceptor = DioCacheInterceptor(options: options);
+    _dio.interceptors.add(_cacheInterceptor!);
+  }
+
+  // دالة جلب إعدادات الكاش الذكية والمحدثة
+  static Future<CacheOptions> getCacheOptions() async {
+    if (_cacheOptions == null) {
+      final docDir = await getApplicationDocumentsDirectory();
+      final cachePath = '${docDir.path}/sportifo_http_cache';
+
+      _cacheOptions = CacheOptions(
+        // تخزين متطور عبر كاش الـ Hive السريع
+        store: HiveCacheStore(cachePath),
+
+        // سياسة الفحص محلياً أولاً لضمان سرعة التحميل الفورية
+        policy: CachePolicy.refreshForceCache,
+
+        // دمج الخاصية الذكية: إذا انقطع الإنترنت، اعرض الكاش القديم فوراً مهما كانت حالته لتجنب الشاشة الحمراء
+        hitCacheOnNetworkFailure: true,
+
+        // صلاحية بقاء داتا التمارين كاش (7 أيام)
+        maxStale: const Duration(days: 7),
+
+        priority: CachePriority.high,
+        keyBuilder: CacheOptions.defaultCacheKeyBuilder,
+        allowPostMethod: false, // الكاش مخصص فقط لعمليات جلب البيانات GET
+      );
+    }
+    return _cacheOptions!;
   }
 
   Dio get dio => _dio;

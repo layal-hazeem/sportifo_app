@@ -20,28 +20,19 @@ class WorkoutWebService {
   Future<Response> getExercises({
     int? categoryId,
     int? organId,
-    List<int>? partIds, // القائمة اللي فيها (Middle, Lower)
+    List<int>? partIds,
     String? searchQuery,
+    Options? options, // 🔥 السحر هنا: أضفنا المعامل الاختياري لاستقبال خيارات الكاش
   }) async {
-    Map<String, dynamic> queryParams = {};
-
-    if (categoryId != null) queryParams['category_id'] = categoryId;
-    if (organId != null) queryParams['organ_id'] = organId;
-
-    if (partIds != null && partIds.isNotEmpty) {
-      queryParams['smallest_category_id[]'] = partIds;
-    }
-
-    if (searchQuery != null && searchQuery.isNotEmpty) {
-      queryParams['search'] = searchQuery;
-    }
-
     return await dio.get(
-      ApiConstants.exercise,
-      queryParameters: queryParams,
-      options: Options(
-        listFormat: ListFormat.multiCompatible,
-      ),
+      'exercise', // المسار الخاص بكِ من الـ ApiConstants
+      queryParameters: {
+        if (categoryId != null) 'category_id': categoryId,
+        if (organId != null) 'organ_id': organId,
+        if (partIds != null) 'part_ids': partIds,
+        if (searchQuery != null) 'search': searchQuery,
+      },
+      options: options, // 🔥 هنا يتم دمج خيارات التخزين الذكي مع الريكويست الحالي
     );
   }
 

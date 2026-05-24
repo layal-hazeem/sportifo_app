@@ -32,76 +32,70 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<SharedPreferences>(() => sharedPrefs);
 
   getIt.registerLazySingleton<LocalStorage>(
-    () => LocalStorage(getIt<SharedPreferences>()),
+        () => LocalStorage(getIt<SharedPreferences>()),
   );
-  // 1. Dio
-  getIt.registerLazySingleton<Dio>(() => DioFactory(getIt<LocalStorage>()).dio);
 
-  // 2. Web Services
+  // 🔥 الخطوة 1: تسجيل DioFactory (بدون Dio بعد)
+
+  final dioFactory = DioFactory(getIt<LocalStorage>());
+  await dioFactory.init();
+  // 🔥 الخطوة 3: تسجيل Dio من الكائن المهيأ
+  getIt.registerSingleton<DioFactory>(dioFactory);
+  getIt.registerLazySingleton<Dio>(() => getIt<DioFactory>().dio);
+
+  // ✅ باقي التسجيلات تبقى كما هي تماماً
   getIt.registerLazySingleton<AuthWebService>(
-    () => AuthWebService(getIt<Dio>()),
+        () => AuthWebService(getIt<Dio>()),
   );
 
-  // 3. Repository
   getIt.registerLazySingleton<AuthRepository>(
-    () => AuthRepository(getIt<AuthWebService>()),
+        () => AuthRepository(getIt<AuthWebService>()),
   );
 
   getIt.registerFactory<LoginCubit>(() => LoginCubit(getIt<AuthRepository>()));
   getIt.registerFactory(() => ForgotPasswordCubit(getIt()));
 
   getIt.registerFactory<RegisterCubit>(
-    () => RegisterCubit(getIt<AuthRepository>()),
+        () => RegisterCubit(getIt<AuthRepository>()),
   );
 
   getIt.registerFactory<CompleteProfileCubit>(
-    () => CompleteProfileCubit(getIt<AuthRepository>()),
+        () => CompleteProfileCubit(getIt<AuthRepository>()),
   );
 
   // 🔥 4. قسم التمارين (Workouts)
-  // تأكدي من عمل import لهذه الملفات في الأعلى
   getIt.registerLazySingleton<WorkoutWebService>(
-    () => WorkoutWebService(getIt<Dio>()),
+        () => WorkoutWebService(getIt<Dio>()),
   );
   getIt.registerLazySingleton<WorkoutRepository>(
-    () => WorkoutRepository(getIt<WorkoutWebService>()),
+        () => WorkoutRepository(getIt<WorkoutWebService>()),
   );
   getIt.registerFactory<ExercisesCubit>(
-    () => ExercisesCubit(getIt<WorkoutRepository>()),
+        () => ExercisesCubit(getIt<WorkoutRepository>()),
   );
   getIt.registerFactory<CategoriesCubit>(
-    () => CategoriesCubit(getIt<WorkoutRepository>()),
+        () => CategoriesCubit(getIt<WorkoutRepository>()),
   );
 
   getIt.registerFactory<PartsCubit>(() => PartsCubit(getIt<WorkoutRepository>()));
-// داخل setupServiceLocator في قسم التمارين
   getIt.registerLazySingleton<SavedExercisesCubit>(() => SavedExercisesCubit(getIt<WorkoutRepository>()));
 
   getIt.registerLazySingleton<ProfileWebService>(
-    () => ProfileWebService(getIt<Dio>()),
+        () => ProfileWebService(getIt<Dio>()),
   );
-
   getIt.registerLazySingleton<ProfileRepository>(
-    () => ProfileRepository(getIt<ProfileWebService>()),
+        () => ProfileRepository(getIt<ProfileWebService>()),
   );
-
-  // Cubit
   getIt.registerFactory<ProfileCubit>(
-    () => ProfileCubit(getIt<ProfileRepository>()),
+        () => ProfileCubit(getIt<ProfileRepository>()),
   );
-
   getIt.registerFactory<LogoutCubit>(
-    () => LogoutCubit(getIt<AuthRepository>()),
+        () => LogoutCubit(getIt<AuthRepository>()),
   );
-  // إعدادات اللغة
   getIt.registerFactory<LocaleCubit>(() => LocaleCubit(getIt<LocalStorage>()));
-
   getIt.registerFactory<SearchCubit>(() => SearchCubit(getIt<WorkoutRepository>()));
 
-
   getIt.registerLazySingleton<AdsWebService>(() => AdsWebService(getIt<Dio>()));
-
   getIt.registerLazySingleton<AdsRepository>(() => AdsRepository(getIt<AdsWebService>()));
-
   getIt.registerFactory<AdsCubit>(() => AdsCubit(getIt<AdsRepository>()));
 }
