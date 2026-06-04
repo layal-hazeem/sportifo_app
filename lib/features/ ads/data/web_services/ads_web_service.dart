@@ -6,7 +6,9 @@ class AdsWebService {
 
   AdsWebService(this.dio);
 
-  Future<Response> getAds() async {
-    return await dio.get(ApiConstants.advertisement);
+  Future<Response> getAds({Options? options}) async {
+    return await dio.get(ApiConstants.advertisement,
+      options: options,
+    );
   }
 }

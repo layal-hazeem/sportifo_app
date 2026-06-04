@@ -85,7 +85,7 @@ class _CachedStaticGifState extends State<CachedStaticGif> {
             height: double.infinity,
             color: Colors.grey.shade100,
             child: const Center(
-              child: Icon(Icons.image_not_supported_outlined, color: Colors.grey, size: 24),
+              child: Icon(Icons.fitness_center, color: Colors.grey, size: 24),
             ),
           );
         }

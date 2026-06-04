@@ -5,15 +5,21 @@ class WorkoutWebService {
   final Dio dio;
   WorkoutWebService(this.dio);
 
-  Future<Response> getCategories(int id) async {
-    return await dio.get("${ApiConstants.categories}/$id");  }
+  Future<Response> getCategories(int id,{Options? options}) async {
 
-  Future<Response> getSubCategories(int organId) async {
+    return await dio.get("${ApiConstants.categories}/$id",
+      options: options,
+    );
+  }
+
+
+  Future<Response> getSubCategories(int organId,{Options? options}) async {
     return await dio.get(
-      "${ApiConstants.categories}/3",      queryParameters: {
 
-        'category_id': organId,
-      },
+      "${ApiConstants.categories}/3", queryParameters: {
+      'category_id': organId,
+    },
+      options: options,
     );
   }
 
@@ -22,10 +28,10 @@ class WorkoutWebService {
     int? organId,
     List<int>? partIds,
     String? searchQuery,
-    Options? options, // 🔥 السحر هنا: أضفنا المعامل الاختياري لاستقبال خيارات الكاش
+    Options? options, //  السحر هنا: أضفنا المعامل الاختياري لاستقبال خيارات الكاش
   }) async {
     return await dio.get(
-      'exercise', // المسار الخاص بكِ من الـ ApiConstants
+      ApiConstants.exercise, // المسار الخاص بكِ من الـ ApiConstants
       queryParameters: {
         if (categoryId != null) 'category_id': categoryId,
         if (organId != null) 'organ_id': organId,
