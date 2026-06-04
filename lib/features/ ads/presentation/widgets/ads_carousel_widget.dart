@@ -1,11 +1,14 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/custom_cached_image.dart';
+import '../../../../core/widgets/loading_shimmer.dart';
 import '../../data/models/ad_model.dart';
 import '../view_model/ads_cubit.dart';
 import '../view_model/ads_state.dart';
+import 'ads_details_bottom_sheet.dart';
 
 class AdsCarouselWidget extends StatefulWidget {
   const AdsCarouselWidget({super.key});
@@ -23,17 +26,48 @@ class _AdsCarouselWidgetState extends State<AdsCarouselWidget> {
     super.initState();
     context.read<AdsCubit>().fetchAds();
   }
-
+// 🔥 دالة سحرية تقوم بتحميل كل صور الإعلانات المتبقية مسبقاً في كاش الموبايل
+  void _precacheAllAdImages(List<AdModel> ads) {
+    for (var ad in ads) {
+      if (ad.images.length > 1) {
+        // نبدأ من الاندكس 1 لأن الصورة الأولى تم تكييشها تلقائياً بالـ Home
+        for (int i = 1; i < ad.images.length; i++) {
+          precacheImage(
+            CachedNetworkImageProvider(ad.images[i]), // سحب الصورة وحقنها بكاش الجهاز بالخلفية
+            context,
+          );
+        }
+      }
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AdsCubit, AdsState>(
       builder: (context, state) {
         if (state is AdsLoading) {
-          return const SizedBox(
-            height: 200,
-            child: Center(child: CircularProgressIndicator(color: AppColors.primaryBtn)),
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: CarouselSlider.builder(
+              itemCount: 3,
+              options: CarouselOptions(
+                height: 200,
+                enlargeCenterPage: true,
+                viewportFraction: 0.8,
+              ),
+              itemBuilder: (context, index, realIndex) {
+                return const LoadingShimmer(
+                  width: double.infinity,
+                  height: 200,
+                  borderRadius: 20,
+                );
+              },
+            ),
           );
         } else if (state is AdsSuccess && state.ads.isNotEmpty) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _precacheAllAdImages(state.ads);
+          });
+
           return Column(
             children: [
               CarouselSlider.builder(
@@ -44,14 +78,12 @@ class _AdsCarouselWidgetState extends State<AdsCarouselWidget> {
                   autoPlay: true,
                   enlargeCenterPage: true,
                   viewportFraction: 0.8,
-                  // enableInfiniteScroll: false, // Prevents leading and trailing items from overlapping
                   autoPlayInterval: const Duration(seconds: 3),
                   onPageChanged: (index, reason) {
                     setState(() {
                       _currentIndex = index;
                     });
 
-                    // Smooth custom loop to return to first item when reaching the end
                     if (index == state.ads.length - 1) {
                       Future.delayed(const Duration(seconds: 3), () {
                         if (mounted && _currentIndex == state.ads.length - 1) {
@@ -70,7 +102,6 @@ class _AdsCarouselWidgetState extends State<AdsCarouselWidget> {
                 },
               ),
               const SizedBox(height: 12),
-              // Dots Indicator perfectly synchronized with current image index
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: state.ads.asMap().entries.map((entry) {
@@ -100,7 +131,7 @@ class _AdsCarouselWidgetState extends State<AdsCarouselWidget> {
 
     return GestureDetector(
       onTap: () {
-        debugPrint("Clicked on Ad ID: ${ad.id}");
+        AdDetailsBottomSheet.show(context, ad);
       },
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 2),
@@ -119,14 +150,10 @@ class _AdsCarouselWidgetState extends State<AdsCarouselWidget> {
           child: Stack(
             fit: StackFit.expand,
             children: [
-              // Clean image layer filling the entire card area
-              // داخل الـ Stack في كرت الإعلان
               CustomCachedImage(
                 imageUrl: imageUrl,
                 fit: BoxFit.cover,
               ),
-
-              // Product Price Badge displayed on top-right corner if applicable
               if (ad.type == 'product' && ad.price != null)
                 Positioned(
                   top: 12,

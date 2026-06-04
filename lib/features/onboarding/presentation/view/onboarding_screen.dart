@@ -32,7 +32,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
       duration: const Duration(milliseconds: 500),
     );
 
-    fadeAnimation = Tween<double>(begin: 0.5, end: 1).animate(
+    fadeAnimation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(parent: animationController, curve: Curves.easeIn),
     );
 
@@ -46,14 +46,12 @@ class _OnboardingScreenState extends State<OnboardingScreen>
         curve: Curves.easeInOut,
       );
     } else {
-      // 🔥 حفظنا في الذاكرة أنه شاهد الافتتاحية
       await getIt<LocalStorage>().saveOnboardingSeen();
       if (mounted) Navigator.pushReplacementNamed(context, AppRoutes.register);
     }
   }
 
   void skip() async {
-    // 🔥 حفظنا في الذاكرة أنه تخطى الافتتاحية
     await getIt<LocalStorage>().saveOnboardingSeen();
     if (mounted) Navigator.pushReplacementNamed(context, AppRoutes.register);
   }

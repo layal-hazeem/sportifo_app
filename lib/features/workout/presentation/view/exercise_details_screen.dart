@@ -4,6 +4,7 @@ import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/helpers/snack_bar_utils.dart';
 import '../../../../core/widgets/cached_static_gif.dart';
+import '../../../../core/widgets/custom_cached_image.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../data/models/exercise_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,7 +28,7 @@ class ExerciseDetailsScreen extends StatelessWidget {
             pinned: true,
             backgroundColor: AppColors.primaryBtn,
             leading: IconButton(
-              icon:  Icon(Icons.arrow_back_ios,
+              icon: const Icon(Icons.arrow_back_ios,
                 color:Colors.black,),
               onPressed: () => Navigator.pop(context),
             ),
@@ -67,9 +68,9 @@ class ExerciseDetailsScreen extends StatelessWidget {
                 tag: 'exercise_${exercise.id}',
                 child: Container(
                   color: Colors.white,
-                  child: CachedStaticGif( // 🔥 استخدمنا ويدجت الكاش تبعنا
+                  child: CachedStaticGif( 
                     imageUrl: exercise.gifUrl ?? '',
-                    autoPlay: true, // 🔥 أمرناه يتحرك جوا التفاصيل
+                    autoPlay: true, 
                   ),
                 ),
               ),
@@ -93,7 +94,7 @@ class ExerciseDetailsScreen extends StatelessWidget {
                       children: [
                          Text(
                           l10n.target_muscle,
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black54),
+                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black54),
                         ),
                         const SizedBox(height: 8),
 
@@ -116,7 +117,7 @@ class ExerciseDetailsScreen extends StatelessWidget {
 
                    Text(
                     l10n.how_to_perform,
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black54),
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black54),
                   ),
                   const SizedBox(height: 10),
 
@@ -130,7 +131,7 @@ class ExerciseDetailsScreen extends StatelessWidget {
                   if (exercise.pictureUrls.isNotEmpty) ...[
                      Text(
                       l10n.gallery,
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black54),
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black54),
                     ),
                     const SizedBox(height: 15),
                     SizedBox(
@@ -141,13 +142,11 @@ class ExerciseDetailsScreen extends StatelessWidget {
                         itemBuilder: (context, index) {
                           return Padding(
                             padding: const EdgeInsets.only(right: 12),
-                            child: ClipRRect(
+                            child: CustomCachedImage(
+                              imageUrl: exercise.pictureUrls[index],
+                              width: 200,
+                              fit: BoxFit.cover,
                               borderRadius: BorderRadius.circular(15),
-                              child: Image.network(
-                                exercise.pictureUrls[index],
-                                width: 200,
-                                fit: BoxFit.cover,
-                              ),
                             ),
                           );
                         },
