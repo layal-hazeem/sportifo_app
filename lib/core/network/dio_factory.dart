@@ -68,21 +68,19 @@ class DioFactory {
       final cachePath = '${docDir.path}/sportifo_http_cache';
 
       _cacheOptions = CacheOptions(
-        // تخزين متطور عبر كاش الـ Hive السريع
         store: HiveCacheStore(cachePath),
+        // ✅ السياسة الصحيحة: RequestPolicy.request
+        // أو إذا لم يتوفر في إصدارك، استخدم CachePolicy.request
+        policy: CachePolicy.request,   // هام جداً
 
-        // سياسة الفحص محلياً أولاً لضمان سرعة التحميل الفورية
-        policy: CachePolicy.refreshForceCache,
+        // ✅ تجاهل توجيهات no-cache من السيرفر
+        // إذا كانت هذه الخاصية غير متوفرة، اتركها أو جرب respectCacheControl: false
+        // respectCacheControl: false,
 
-        // دمج الخاصية الذكية: إذا انقطع الإنترنت، اعرض الكاش القديم فوراً مهما كانت حالته لتجنب الشاشة الحمراء
         hitCacheOnNetworkFailure: true,
-
-        // صلاحية بقاء داتا التمارين كاش (7 أيام)
         maxStale: const Duration(days: 7),
-
         priority: CachePriority.high,
-        keyBuilder: CacheOptions.defaultCacheKeyBuilder,
-        allowPostMethod: false, // الكاش مخصص فقط لعمليات جلب البيانات GET
+        allowPostMethod: false,
       );
     }
     return _cacheOptions!;
