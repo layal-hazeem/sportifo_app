@@ -13,12 +13,22 @@ class WorkoutRepository {
   final WorkoutWebService _webService;
   WorkoutRepository(this._webService);
 
-  // =====================================
+
   // 1. دالة جلب العضلات الأساسية (للصور اللي فوق)
-  // =====================================
+
   Future<ApiResult<List<FilterItemModel>>> getCategories(int id) async {
     try {
-      final response = await _webService.getCategories(id);
+      // 1️⃣ جلب إعدادات كاش الـ Hive المجهزة مسبقاً من الـ DioFactory
+      final cacheOptions = await DioFactory.getCacheOptions();
+
+      // 2️⃣ تحويل السياسة وتوليد الـ Options الخاصة بـ دايو
+      final dioOptions = cacheOptions.copyWith(
+        policy: CachePolicy.refreshForceCache, // جلب محلي فوري، وتحديث تلقائي
+      ).toOptions();
+
+      // 3️⃣ تمرير الـ options المعدلة للـ WebService (تأكدي من تعديل الـ WebService ليستقبلها)
+      final response = await _webService.getCategories(id, options: dioOptions);
+
       final responseModel = FilterResponseModel.fromJson(response.data);
       return Success(responseModel.data);
     } catch (e) {
@@ -26,12 +36,18 @@ class WorkoutRepository {
     }
   }
 
-  // =====================================
+
   // 2. دالة جلب الأجزاء الدقيقة (للكبسولات)
-  // =====================================
   Future<ApiResult<List<FilterItemModel>>> getSubCategories(int organId) async {
     try {
-      final response = await _webService.getSubCategories(organId);
+      final cacheOptions = await DioFactory.getCacheOptions();
+
+      final dioOptions = cacheOptions.copyWith(
+        policy: CachePolicy.refreshForceCache,
+      ).toOptions();
+
+      final response = await _webService.getSubCategories(organId, options: dioOptions);
+
       final responseModel = FilterResponseModel.fromJson(response.data);
       return Success(responseModel.data);
     } catch (e) {

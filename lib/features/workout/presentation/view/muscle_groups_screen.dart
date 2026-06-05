@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/routes/app_routes.dart';
+import '../../../../core/widgets/loading_shimmer.dart';
 import '../../../../core/widgets/wave_app_bar.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../view_model/categories_cubit/categories_cubit.dart';
@@ -71,8 +72,9 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // 1️⃣ شيمر العضلات الأفقية العلوي
           SizedBox(
-            height: 115, // كبرنا الارتفاع قليلاً ليستوعب النص بالأسفل براحة
+            height: 115,
             child: BlocConsumer<CategoriesCubit, CategoriesState>(
               listener: (context, state) {
                 if (state is CategoriesSuccess && state.categories.isNotEmpty) {
@@ -85,7 +87,16 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
               },
               builder: (context, state) {
                 if (state is CategoriesLoading) {
-                  return const Center(child: CircularProgressIndicator());
+                  // 🔥 تأثير شيمر أفقي للكروت العلوية
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    itemCount: 4,
+                    itemBuilder: (context, index) => const Padding(
+                      padding: EdgeInsets.only(right: 12),
+                      child: LoadingShimmer(width: 100, height: 110, borderRadius: 16),
+                    ),
+                  );
                 } else if (state is CategoriesSuccess) {
                   return ListView.builder(
                     scrollDirection: Axis.horizontal,
@@ -100,7 +111,7 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                         name: muscle.name,
                         imagePath: imagePath,
                         isSelected: isSelected,
-                        anyMuscleSelected: selectedMuscleId != null, // 🔥 تمرير حالة الفلترة الحالية
+                        anyMuscleSelected: selectedMuscleId != null,
                         onTap: () {
                           setState(() {
                             if (isSelected) {
@@ -111,8 +122,7 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                             } else {
                               selectedMuscleId = muscle.id;
                               selectedPartIds.clear();
-                              context.read<ExercisesCubit>().fetchExercises(
-                                  categoryId: 1, organId: muscle.id);
+                              context.read<ExercisesCubit>().fetchExercises(categoryId: 1, organId: muscle.id);
                               context.read<PartsCubit>().fetchParts(muscle.id);
                             }
                           });
@@ -121,18 +131,12 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                     },
                   );
                 } else if (state is CategoriesFailure) {
-                  return Center(
-                    child: Text(
-                      state.errorMessage,
-                      style: const TextStyle(color: Colors.red),
-                    ),
-                  );
+                  return Center(child: Text(state.errorMessage, style: const TextStyle(color: Colors.red)));
                 }
                 return const SizedBox();
               },
             ),
           ),
-
           const SizedBox(height: 15),
 
           BlocBuilder<PartsCubit, PartsState>(
@@ -184,22 +188,34 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
             child: Divider(color: Colors.black12, thickness: 1),
           ),
 
+          // 2️⃣ شيمر قائمة التمارين الشبكية السفلية
           Expanded(
             child: BlocBuilder<ExercisesCubit, ExercisesState>(
               builder: (context, state) {
                 if (state is ExercisesLoading) {
-                  return const Center(
-                    child: CircularProgressIndicator(color: AppColors.primaryBtn),
+                  // 🔥 بناء شبكة شيمر (Grid Skeleton) تطابق مظهر التمارين بالزبط
+                  return GridView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 15,
+                      mainAxisSpacing: 15,
+                      childAspectRatio: 0.85,
+                    ),
+                    itemCount: 6,
+                    itemBuilder: (context, index) {
+                      return const LoadingShimmer(
+                        width: double.infinity,
+                        height: double.infinity,
+                        borderRadius: 16,
+                      );
+                    },
                   );
                 } else if (state is ExercisesSuccess) {
                   return ExercisesGridView(exercises: state.exercises);
                 } else if (state is ExercisesFailure) {
-                  return Center(
-                    child: Text(
-                      state.errorMessage,
-                      style: const TextStyle(color: Colors.red),
-                    ),
-                  );
+                  return Center(child: Text(state.errorMessage, style: const TextStyle(color: Colors.red)));
                 }
                 return const SizedBox();
               },
