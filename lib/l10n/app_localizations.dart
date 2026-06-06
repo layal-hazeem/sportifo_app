@@ -767,11 +767,11 @@ abstract class AppLocalizations {
   /// **'No email'**
   String get noEmail;
 
-  /// No description provided for @cancle.
+  /// No description provided for @cancel.
   ///
   /// In en, this message translates to:
-  /// **'Cancle'**
-  String get cancle;
+  /// **'Cancel'**
+  String get cancel;
 
   /// No description provided for @termsPart1.
   ///
@@ -796,6 +796,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Privacy Policy'**
   String get termsPart4;
+
+  /// No description provided for @coaches.
+  ///
+  /// In en, this message translates to:
+  /// **'Coaches'**
+  String get coaches;
+
+  /// No description provided for @see_all.
+  ///
+  /// In en, this message translates to:
+  /// **'See All'**
+  String get see_all;
+
+  /// Error message when loading coaches fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading data: {message}'**
+  String coaches_error_loading(String message);
+
+  /// No description provided for @no_coaches_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No matching coaches found'**
+  String get no_coaches_found;
+
+  /// No description provided for @coach_details_error.
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred: {message}'**
+  String coach_details_error(String message);
+
+  /// No description provided for @biography.
+  ///
+  /// In en, this message translates to:
+  /// **'Biography'**
+  String get biography;
+
+  /// No description provided for @no_biography.
+  ///
+  /// In en, this message translates to:
+  /// **'No biography available for this coach.'**
+  String get no_biography;
+
+  /// No description provided for @qualifications_certifications.
+  ///
+  /// In en, this message translates to:
+  /// **'QUALIFICATIONS & CERTIFICATIONS'**
+  String get qualifications_certifications;
+
+  /// No description provided for @book_consultation.
+  ///
+  /// In en, this message translates to:
+  /// **'BOOK A CONSULTATION'**
+  String get book_consultation;
+
+  /// No description provided for @specialist_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Strength & Conditioning Specialist'**
+  String get specialist_title;
+
+  /// No description provided for @years_exp_badge.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Years Exp'**
+  String years_exp_badge(int count);
+
+  /// No description provided for @age_badge.
+  ///
+  /// In en, this message translates to:
+  /// **'Age {count}'**
+  String age_badge(int count);
+
+  /// No description provided for @filter_coaches.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter Coaches'**
+  String get filter_coaches;
+
+  /// No description provided for @coach_gender.
+  ///
+  /// In en, this message translates to:
+  /// **'Coach Gender'**
+  String get coach_gender;
+
+  /// No description provided for @all.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get all;
+
+  /// No description provided for @coach_male.
+  ///
+  /// In en, this message translates to:
+  /// **'Male Coach'**
+  String get coach_male;
+
+  /// No description provided for @coach_female.
+  ///
+  /// In en, this message translates to:
+  /// **'Female Coach'**
+  String get coach_female;
+
+  /// No description provided for @years_sports_exp.
+  ///
+  /// In en, this message translates to:
+  /// **'Years of Sports Experience'**
+  String get years_sports_exp;
+
+  /// No description provided for @min_limit_year.
+  ///
+  /// In en, this message translates to:
+  /// **'Min Limit (Year)'**
+  String get min_limit_year;
+
+  /// No description provided for @max_limit_year.
+  ///
+  /// In en, this message translates to:
+  /// **'Max Limit (Year)'**
+  String get max_limit_year;
+
+  /// No description provided for @reset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get reset;
+
+  /// No description provided for @apply_filters.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply Filters'**
+  String get apply_filters;
+
+  /// No description provided for @all_coaches.
+  ///
+  /// In en, this message translates to:
+  /// **'All Coaches'**
+  String get all_coaches;
+
+  /// No description provided for @search_coach_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search for your sports coach...'**
+  String get search_coach_hint;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

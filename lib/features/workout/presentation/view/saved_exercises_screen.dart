@@ -17,10 +17,9 @@ class SavedExercisesScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
-      // 🔥 استبدال الـ AppBar القديم بـ WaveAppBar
       appBar: WaveAppBar(
         title: l10n.saved_exercises,
-        showBackButton: true, // لإظهار سهم الرجوع الأبيض الأنيق
+        showBackButton: true,
       ),
       body: BlocBuilder<SavedExercisesCubit, SavedExercisesState>(
         buildWhen: (previous, current) =>
@@ -41,7 +40,6 @@ class SavedExercisesScreen extends StatelessWidget {
 
             return GridView.builder(
               padding: const EdgeInsets.all(16),
-              // أضفنا هذا السطر لجعل التمرير ناعم
               physics: const BouncingScrollPhysics(),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
@@ -92,7 +90,6 @@ class SavedExercisesScreen extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // غيرت اللون ليتناسب مع هوية التطبيق البرتقالية بشكل خفيف
           Icon(Icons.bookmark_border, size: 80, color: AppColors.primaryBtn.withOpacity(0.2)),
           const SizedBox(height: 16),
           Text(

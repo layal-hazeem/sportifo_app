@@ -18,6 +18,9 @@ class ExercisesCubit extends Cubit<ExercisesState> {
       partIds: partIds, // 🔥 التعديل هون: صارت partIds
     );
 
+    // 🛡️ خط الدفاع الأساسي: إذا تم إغلاق الـ Cubit أثناء طلب البيانات، اخرج فوراً ولا تعمل emit
+    if (isClosed) return;
+
     switch (result) {
       case Success():
         emit(ExercisesSuccess(result.data));
