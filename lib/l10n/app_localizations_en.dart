@@ -438,4 +438,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get search_coach_hint => 'Search for your sports coach...';
+
+  @override
+  String get years_of_exp_suffix => 'Yrs Exp';
 }

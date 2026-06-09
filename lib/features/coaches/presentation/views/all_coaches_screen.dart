@@ -4,9 +4,9 @@ import 'package:sportifo_app/core/di/service_locator.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../view_model/all_coaches_cubit.dart';
 import '../view_model/all_coaches_state.dart';
-import '../widgets/coach_card.dart';
 import '../widgets/coaches_header.dart';
 import 'coach_details_screen.dart';
+ import '../widgets/coach_grid_card.dart';
 
 class AllCoachesScreen extends StatefulWidget {
   const AllCoachesScreen({super.key});
@@ -130,16 +130,15 @@ class _AllCoachesScreenState extends State<AllCoachesScreen> {
                           padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
                           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
-                            childAspectRatio: 0.68,
-                            crossAxisSpacing: 16,
-                            mainAxisSpacing: 16,
+                            childAspectRatio: 0.72,
+                            crossAxisSpacing: 14,
+                            mainAxisSpacing: 14,
                           ),
                           itemCount: coaches.length,
                           itemBuilder: (context, index) {
                             final coach = coaches[index];
-                            return CoachCard(
+                            return CoachGridCard(
                               coach: coach,
-                              isGridMode: true,
                               onTap: () {
                                 Navigator.push(
                                   context,

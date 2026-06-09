@@ -4,23 +4,20 @@ import '../../data/models/coach_model.dart';
 class CoachCard extends StatelessWidget {
   final CoachModel coach;
   final VoidCallback onTap;
-  final bool isGridMode;
 
   const CoachCard({
     super.key,
     required this.coach,
     required this.onTap,
-    this.isGridMode = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        width: isGridMode ? null : 115,
-        margin: isGridMode ? EdgeInsets.zero : const EdgeInsets.symmetric(horizontal: 6, vertical: 20),
+      child: Container(
+        width: 115,
+        margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 20),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -44,8 +41,8 @@ class CoachCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              width: isGridMode ? 110 : 90,
-              height: isGridMode ? 120 : 100,
+              width: 90,
+              height: 100,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 boxShadow: [
@@ -74,10 +71,10 @@ class CoachCard extends StatelessWidget {
 
             Text(
               coach.fullName,
-              style: TextStyle(
-                fontSize: isGridMode ? 15 : 13,
+              style: const TextStyle(
+                fontSize: 13,
                 fontWeight: FontWeight.bold,
-                color: const Color(0xFF1A1A1A),
+                color: Color(0xFF1A1A1A),
                 letterSpacing: 0.3,
               ),
               maxLines: 1,
@@ -89,7 +86,7 @@ class CoachCard extends StatelessWidget {
             Text(
               coach.description,
               style: TextStyle(
-                fontSize: isGridMode ? 12 : 10,
+                fontSize: 10,
                 fontWeight: FontWeight.w500,
                 color: Colors.grey[500],
               ),

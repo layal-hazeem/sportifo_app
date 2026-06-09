@@ -940,6 +940,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Search for your sports coach...'**
   String get search_coach_hint;
+
+  /// No description provided for @years_of_exp_suffix.
+  ///
+  /// In en, this message translates to:
+  /// **'Yrs Exp'**
+  String get years_of_exp_suffix;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

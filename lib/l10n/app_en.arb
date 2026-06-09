@@ -173,5 +173,6 @@
   "reset": "Reset",
   "apply_filters": "Apply Filters",
   "all_coaches": "All Coaches",
-  "search_coach_hint": "Search for your sports coach..."
+  "search_coach_hint": "Search for your sports coach...",
+  "years_of_exp_suffix": "Yrs Exp"
 }

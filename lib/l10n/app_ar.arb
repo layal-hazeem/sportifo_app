@@ -151,5 +151,6 @@
   "reset": "إعادة تعيين",
   "apply_filters": "تطبيق الفلاتر",
   "all_coaches": "جميع المدربين",
-  "search_coach_hint": "ابحث عن مدربك الرياضي..."
+  "search_coach_hint": "ابحث عن مدربك الرياضي...",
+  "years_of_exp_suffix": "سنوات خبرة"
 }
