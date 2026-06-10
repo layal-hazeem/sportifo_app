@@ -9,7 +9,7 @@ import 'package:sportifo_app/features/auth/presentation/view_model/logout/logout
 import 'package:sportifo_app/features/auth/presentation/widgets/custom_button.dart';
 import 'package:sportifo_app/features/auth/presentation/widgets/custom_neumorphic_field.dart';
 import 'package:sportifo_app/features/profile/data/models/edit_profile_request_model.dart';
-import 'package:sportifo_app/features/profile/data/models/profile_response.dart';
+import 'package:sportifo_app/features/profile/data/models/user_profile_response.dart';
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_cubit.dart';
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_state.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
@@ -108,7 +108,7 @@ class _EditProfilePageState extends State<EditProfilePage>
             Navigator.pop(context);
           }
 
-          if (state is ProfileError) {
+          if (state is ProfileFailure) {
             AppSnackBar.show(
               context,
               message: state.message,

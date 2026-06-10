@@ -4,8 +4,8 @@ import '../../../ ads/presentation/view_model/ads_cubit.dart';
 import '../../../ ads/presentation/widgets/ads_carousel_widget.dart';
 import '../../../../core/di/service_locator.dart';
 
-class UserScreen extends StatelessWidget {
-  const UserScreen({super.key});
+class TraineeScreen extends StatelessWidget {
+  const TraineeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

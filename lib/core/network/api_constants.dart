@@ -21,8 +21,11 @@ class ApiConstants {
   static const String profile = "profile";
   static const String editProfile = "profile/edit";
   static const String logout = "logout";
+    static const String coach = "coaches";
+
 
   static const String categories = "categories";
   static const String advertisement = "advertisement";
+
 
 }

@@ -50,9 +50,13 @@ class _LoginScreenState extends State<LoginScreen> {
               Navigator.pop(context);
 
               final token = state.response.data!.token;
+              final role = state.response.data!.user.role;
+              print("Current Role = $role");
 
               // 🔥 حفظ التوكن
               await getIt<LocalStorage>().saveToken(token);
+              await getIt<LocalStorage>().saveRole(role);
+
               AppSnackBar.show(
                 context,
                 message: l10n.loginSuccess, // أو نص مباشر "Login Successful!"

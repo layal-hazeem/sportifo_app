@@ -4,7 +4,6 @@ import 'package:sportifo_app/core/network/api_result.dart';
 import 'package:sportifo_app/core/storage/local_storage.dart';
 import 'package:sportifo_app/features/auth/data/repository/auth_repository.dart';
 
-
 part 'logout_state.dart';
 
 class LogoutCubit extends Cubit<LogoutState> {
@@ -20,6 +19,7 @@ class LogoutCubit extends Cubit<LogoutState> {
     switch (result) {
       case Success():
         await GetIt.instance<LocalStorage>().clearToken();
+        await GetIt.instance<LocalStorage>().clearRole();
         emit(LogoutSuccess());
         break;
 

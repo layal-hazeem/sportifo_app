@@ -7,6 +7,7 @@ import 'package:sportifo_app/core/helpers/dialog_helper.dart';
 import 'package:sportifo_app/core/routes/app_routes.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/logout/logout_cubit.dart';
 import 'package:sportifo_app/features/auth/presentation/widgets/custom_button.dart';
+import 'package:sportifo_app/features/profile/presentation/widgets/coach_tabs_section.dart';
 import 'package:sportifo_app/features/profile/presentation/widgets/logout_button.dart';
 import 'package:sportifo_app/features/profile/presentation/view/edit_profile_page.dart';
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_cubit.dart';
@@ -26,6 +27,15 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   File? selectedImage;
+  @override
+  void initState() {
+    super.initState();
+
+    final cubit = context.read<ProfileCubit>();
+
+    // 👤 user profile
+    cubit.getProfile();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +83,7 @@ class _ProfilePageState extends State<ProfilePage> {
               );
             }
 
-            if (state is ProfileError) {
+            if (state is ProfileFailure) {
               return Center(child: Text(state.message));
             }
 
@@ -119,7 +129,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       const SizedBox(height: 20),
 
-                      ProfileTabsSection(profile: user),
+                      ProfileTabsSection(userProfile: user, role: user.role!),
 
                       const SizedBox(height: 230),
                       Padding(
