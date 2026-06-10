@@ -194,8 +194,8 @@ class AppRouter {
             ],
             child: SearchExercisesScreen(
               categoryId: args?['categoryId'], // مرريها من الـ Map
-              organId: args?['organId'], // مرريها من الـ Map
-              partIds: args?['partIds'], // مرريها من الـ Map
+              organId: args?['organId'],       // مرريها من الـ Map
+              smallestCategoryId: args?['smallestCategoryId'],       // مرريها من الـ Map
             ),
           ),
         );

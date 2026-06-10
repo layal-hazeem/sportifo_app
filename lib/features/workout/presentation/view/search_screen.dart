@@ -14,9 +14,9 @@ import '../widgets/exercises_grid_view.dart';
 class SearchExercisesScreen extends StatefulWidget {
   final int? categoryId;
   final int? organId;
-  final List<int>? partIds;
+  final List<int>? smallestCategoryId;
 
-  const SearchExercisesScreen({super.key, this.categoryId, this.organId, this.partIds});
+  const SearchExercisesScreen({super.key, this.categoryId, this.organId, this.smallestCategoryId});
   @override
   State<SearchExercisesScreen> createState() => _SearchExercisesScreenState();
 }
@@ -45,7 +45,7 @@ class _SearchExercisesScreenState extends State<SearchExercisesScreen> {
         query,
         categoryId: widget.categoryId,
         organId: widget.organId,
-        partIds: widget.partIds,
+        smallestCategoryId: widget.smallestCategoryId,
       );
     });
   }

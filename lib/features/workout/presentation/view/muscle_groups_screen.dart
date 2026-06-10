@@ -24,7 +24,7 @@ class MuscleGroupsScreen extends StatefulWidget {
 
 class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
   int? selectedMuscleId;
-  List<int> selectedPartIds = [];
+  List<int> selectedSmallestCategoryId = [];
 
   final Map<String, String> _muscleAssets = {
     'Chest': 'assets/images/muscles/chest.jpg',
@@ -61,7 +61,7 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                 arguments: {
                   'categoryId': 1,
                   'organId': selectedMuscleId,
-                  'partIds': selectedPartIds,
+                  'smallestCategoryId': selectedSmallestCategoryId,
                 },
               );
             },
@@ -80,7 +80,7 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                 if (state is CategoriesSuccess && state.categories.isNotEmpty) {
                   setState(() {
                     selectedMuscleId = null;
-                    selectedPartIds.clear();
+                    selectedSmallestCategoryId.clear();
                   });
                   context.read<ExercisesCubit>().fetchExercises(categoryId: 1);
                 }
@@ -116,12 +116,12 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                           setState(() {
                             if (isSelected) {
                               selectedMuscleId = null;
-                              selectedPartIds.clear();
+                              selectedSmallestCategoryId.clear();
                               context.read<ExercisesCubit>().fetchExercises(categoryId: 1);
                               context.read<PartsCubit>().emit(PartsInitial());
                             } else {
                               selectedMuscleId = muscle.id;
-                              selectedPartIds.clear();
+                              selectedSmallestCategoryId.clear();
                               context.read<ExercisesCubit>().fetchExercises(categoryId: 1, organId: muscle.id);
                               context.read<PartsCubit>().fetchParts(muscle.id);
                             }
@@ -150,7 +150,7 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                     itemCount: state.Parts.length,
                     itemBuilder: (context, index) {
                       final part = state.Parts[index];
-                      final isSelected = selectedPartIds.contains(part.id);
+                      final isSelected = selectedSmallestCategoryId.contains(part.id);
 
                       return PartFilterChip(
                         label: part.name,
@@ -158,20 +158,29 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                         onSelected: (bool selected) {
                           setState(() {
                             if (selected) {
-                              selectedPartIds.add(part.id);
+                              // إذا كبس عليها بنضيف الـ id للمصفوفة لدمج التمارين
+                              selectedSmallestCategoryId.add(part.id);
                             } else {
-                              selectedPartIds.remove(part.id);
+                              // إذا ألغى تحديدها بنشيل الـ id
+                              selectedSmallestCategoryId.remove(part.id);
                             }
 
-                            if (selectedPartIds.length == state.Parts.length) {
-                              selectedPartIds.clear();
+                            // ⚡ الفلو الذكي اللّي طلبتيه:
+                            // إذا اختار الكوتش/المشترك كل الأجزاء الصغيرة المتاحة (مثلا اختار الـ 3 سوا)
+                            // بنصفر المصفوفة فوراً ليرجع للديفولت ويجيب كل تمارين العضلة الكبيرة
+                            if (selectedSmallestCategoryId.length == state.Parts.length) {
+                              selectedSmallestCategoryId.clear();
                             }
                           });
 
+                          // استدعاء الـ Cubit وتمرير البراميتارات مدموجة
                           context.read<ExercisesCubit>().fetchExercises(
                             categoryId: 1,
                             organId: selectedMuscleId,
-                            partIds: selectedPartIds.isEmpty ? null : selectedPartIds,
+                            // إذا المصفوفة فاضية بنبعت null عشان يجيب كل تمارين العضلة الكبيرة
+                            smallestCategoryId: selectedSmallestCategoryId.isEmpty
+                                ? null
+                                : selectedSmallestCategoryId,
                           );
                         },
                       );

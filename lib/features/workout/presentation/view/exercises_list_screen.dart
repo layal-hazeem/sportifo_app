@@ -33,7 +33,7 @@ class ExercisesListScreen extends StatelessWidget {
               icon: const Icon(Icons.search, color: AppColors.background),
               onPressed: () {
                 Navigator.pushNamed(context, AppRoutes.searchScreen, arguments: {
-                  'categoryId': 2,
+                  'categoryId': categoryId,
                   'organId': null,
                   'partIds': null,
                 });

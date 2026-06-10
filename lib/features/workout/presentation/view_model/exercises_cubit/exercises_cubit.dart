@@ -9,13 +9,13 @@ class ExercisesCubit extends Cubit<ExercisesState> {
   ExercisesCubit(this._repository) : super(ExercisesInitial());
 
   // الدالة التي سنستدعيها من الـ UI
-  Future<void> fetchExercises({int? categoryId, int? organId, List<int>? partIds}) async {
+  Future<void> fetchExercises({int? categoryId, int? organId, List<int>? smallestCategoryId}) async {
     emit(ExercisesLoading());
 
     final result = await _repository.getExercises(
       categoryId: categoryId,
       organId: organId,
-      partIds: partIds, // 🔥 التعديل هون: صارت partIds
+      smallestCategoryId: smallestCategoryId, // 🔥 التعديل هون: صارت partIds
     );
 
     // 🛡️ خط الدفاع الأساسي: إذا تم إغلاق الـ Cubit أثناء طلب البيانات، اخرج فوراً ولا تعمل emit
