@@ -11,6 +11,11 @@ class ProfileWebService {
     return await dio.get(ApiConstants.getProfile);
   }
 
+   Future<Response> getCoachProfile() async {
+      return await dio.get(ApiConstants.getProfile);
+
+  }
+
   Future<Response> updateProfileImage(File imageFile) async {
     final formData = FormData.fromMap({
       "profile_pic": await MultipartFile.fromFile(imageFile.path),

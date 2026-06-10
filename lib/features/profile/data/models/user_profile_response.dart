@@ -18,6 +18,7 @@ class ProfileResponsModel {
   final String? phone;
   final DateTime dateOfBirth;
   final bool gender;
+  final String? role;
   final double height;
   final double weight;
   final int? isActive;
@@ -33,6 +34,7 @@ class ProfileResponsModel {
     this.phone,
     required this.dateOfBirth,
     required this.gender,
+    this.role,
     required this.height,
     required this.weight,
     this.isActive,
@@ -48,12 +50,11 @@ class ProfileResponsModel {
       lastName: json["last_name"] ?? "",
       email: json["email"],
       phone: json["phone"],
-      // تحويل آمن للتاريخ
       dateOfBirth: json["date_of_birth"] != null 
           ? DateTime.parse(json["date_of_birth"]) 
           : DateTime.now(),
-      // تحويل الـ int (0 أو 1) القادم من السيرفر إلى bool
       gender: json["gender"] == 1, 
+      role: json["role"],
       height: (json["height"] ?? 0).toDouble(),
       weight: (json["weight"] ?? 0).toDouble(),
       isActive: json["is_active"],
@@ -69,8 +70,8 @@ Map<String, dynamic> toJson() => {
       "email": email,
       "phone": phone,
       "date_of_birth": "${dateOfBirth.year.toString().padLeft(4, '0')}-${dateOfBirth.month.toString().padLeft(2, '0')}-${dateOfBirth.day.toString().padLeft(2, '0')}",
-      // إرجاعها كـ int للسيرفر إذا كان يتوقع ذلك
       "gender": gender ? 1 : 0, 
+      "role": role,
       "height": height,
       "weight": weight,
       "is_active": isActive,

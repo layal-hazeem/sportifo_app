@@ -13,8 +13,10 @@ class AppRoutes {
   static const String exercisesList = "/exercisesList";
   static const String exerciseDetails = "/exerciseDetails";
   static const String getProfile= "/profile";
+  static const String coach = "/coaches";
   static const String editProfile = "profile/edit";
   static const String logout = "logout";
+
   static const String searchScreen = "/searchScreen";
   static const String savedExercises = "/savedExercises";
 }

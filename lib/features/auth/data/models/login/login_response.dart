@@ -18,11 +18,7 @@ class LoginResponse {
     // 1. حالة الـ Not Verified (فحص الرسالة أو الـ data)
     if (message.toLowerCase().contains("not verified") ||
         (rawData is String && rawData.contains("not verified"))) {
-      return LoginResponse(
-        message: message,
-        data: null,
-        isNotVerified: true,
-      );
+      return LoginResponse(message: message, data: null, isNotVerified: true);
     }
 
     // 2. حالة النجاح مع وجود بيانات (Login)
@@ -36,10 +32,6 @@ class LoginResponse {
 
     // 3. حالة النجاح بدون بيانات (Reset Password / Message Only)
     // هنا الحل: نعتبر النجاح إذا لم يكن هناك خطأ صريح من السيرفر
-    return LoginResponse(
-      message: message,
-      data: null,
-      isNotVerified: false,
-    );
+    return LoginResponse(message: message, data: null, isNotVerified: false);
   }
 }

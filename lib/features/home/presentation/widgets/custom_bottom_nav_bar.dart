@@ -10,7 +10,6 @@ class CustomBottomNavBar {
   }) {
     return BottomNavigationBarItem(
       label: label,
-
       icon: _buildNeumorphicIcon(icon, false),
       activeIcon: _buildNeumorphicIcon(icon, true),
     );

@@ -1,6 +1,7 @@
 // lib/features/home/presentation/view/user_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../../../ ads/presentation/view_model/ads_cubit.dart';
 import '../../../ ads/presentation/widgets/ads_carousel_widget.dart';
 import '../../../../core/di/service_locator.dart';
@@ -10,9 +11,8 @@ import '../../../coaches/presentation/views/all_coaches_screen.dart';
 import '../../../coaches/presentation/views/coach_details_screen.dart';
 import '../../../coaches/presentation/widgets/coach_card.dart';
 
-import '../../../../l10n/app_localizations.dart';
-class UserScreen extends StatelessWidget {
-  const UserScreen({super.key});
+class TraineeScreen extends StatelessWidget {
+  const TraineeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

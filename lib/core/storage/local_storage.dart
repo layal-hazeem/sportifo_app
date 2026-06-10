@@ -4,6 +4,7 @@ class LocalStorage {
   final SharedPreferences _prefs;
   static const String _tokenKey = "token";
   static const String _onboardingKey = "onboarding_seen";
+  static const String _roleKey = "role";
 
   // حقن الـ SharedPreferences من خلال الـ Constructor
   LocalStorage(this._prefs);
@@ -36,4 +37,17 @@ class LocalStorage {
   String getLanguage() {
     return _prefs.getString('lang') ?? 'en';
   }
+
+  //-------------role-----------------
+  Future<void> saveRole(String role) async {
+  await _prefs.setString(_roleKey, role);
+}
+
+String? getRole() {
+  return _prefs.getString(_roleKey);
+}
+
+Future<void> clearRole() async {
+  await _prefs.remove(_roleKey);
+}
 }

@@ -9,7 +9,7 @@ import 'package:sportifo_app/features/auth/presentation/view_model/logout/logout
 import 'package:sportifo_app/features/auth/presentation/widgets/custom_button.dart';
 import 'package:sportifo_app/features/auth/presentation/widgets/custom_neumorphic_field.dart';
 import 'package:sportifo_app/features/profile/data/models/edit_profile_request_model.dart';
-import 'package:sportifo_app/features/profile/data/models/profile_response.dart';
+import 'package:sportifo_app/features/profile/data/models/user_profile_response.dart';
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_cubit.dart';
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_state.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
@@ -108,7 +108,7 @@ class _EditProfilePageState extends State<EditProfilePage>
             Navigator.pop(context);
           }
 
-          if (state is ProfileError) {
+          if (state is ProfileFailure) {
             AppSnackBar.show(
               context,
               message: state.message,
@@ -383,45 +383,46 @@ class _EditProfilePageState extends State<EditProfilePage>
           const SizedBox(height: 20),
 
           CustomAuthButton(
-            text: state is ProfileLoading ? "Saving..." : "Save Changes",
-            onPressed: state is ProfileLoading
-                ? null
-                : () {
-                    if (_formKey.currentState!.validate()) {
-                      context.read<ProfileCubit>().updateProfile(
-                        EditProfileRequestModel(
-                          first_name: _firstNameController.text,
-                          last_name: _lastNameController.text,
-                          date_of_birth: _dateOfBirthController.text,
-                          height: _heightController.text.isEmpty
-                              ? null
-                              : double.tryParse(_heightController.text),
-                          weight: _weightController.text.isEmpty
-                              ? null
-                              : double.tryParse(_weightController.text),
-                          shoulders_width: double.tryParse(
-                            _shouldersWidthController.text,
+              text: state is ProfileLoading ? "Saving..." : "Save Changes",
+              onPressed: state is ProfileLoading
+                  ? null
+                  : () {
+                      if (_formKey.currentState!.validate()) {
+                        context.read<ProfileCubit>().updateProfile(
+                          EditProfileRequestModel(
+                            first_name: _firstNameController.text,
+                            last_name: _lastNameController.text,
+                            date_of_birth: _dateOfBirthController.text,
+                            height: _heightController.text.isEmpty
+                                ? null
+                                : double.tryParse(_heightController.text),
+                            weight: _weightController.text.isEmpty
+                                ? null
+                                : double.tryParse(_weightController.text),
+                            shoulders_width: double.tryParse(
+                              _shouldersWidthController.text,
+                            ),
+                            chest_perimeter: double.tryParse(
+                              _chestPerimeterController.text,
+                            ),
+                            waist_perimeter: double.tryParse(
+                              _waistPerimeterController.text,
+                            ),
+                            thigh_perimeter: double.tryParse(
+                              _thighPerimeterController.text,
+                            ),
+                            hip_perimeter: double.tryParse(
+                              _hipPerimeterController.text,
+                            ),
+                            arm_perimeter: double.tryParse(
+                              _armPerimeterController.text,
+                            ),
                           ),
-                          chest_perimeter: double.tryParse(
-                            _chestPerimeterController.text,
-                          ),
-                          waist_perimeter: double.tryParse(
-                            _waistPerimeterController.text,
-                          ),
-                          thigh_perimeter: double.tryParse(
-                            _thighPerimeterController.text,
-                          ),
-                          hip_perimeter: double.tryParse(
-                            _hipPerimeterController.text,
-                          ),
-                          arm_perimeter: double.tryParse(
-                            _armPerimeterController.text,
-                          ),
-                        ),
-                      );
-                    }
-                  },
-          ),
+                        );
+                      }
+                    },
+            ),
+git add .
         ],
       ),
     );
