@@ -422,7 +422,6 @@ class _EditProfilePageState extends State<EditProfilePage>
                       }
                     },
             ),
-git add .
         ],
       ),
     );
