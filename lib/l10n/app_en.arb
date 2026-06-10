@@ -118,9 +118,61 @@
       "saveChanges":"Save Changes",
       "noPhone":"No phone",
       "noEmail":"No email",
-      "cancle":"Cancle",
+      "cancel":"Cancel",
       "termsPart1": "By registering, you agree to our ",
         "termsPart2": "Terms of Use",
         "termsPart3": " and ",
-        "termsPart4": "Privacy Policy"
+        "termsPart4": "Privacy Policy",
+
+
+ "coaches": "Coaches",
+"see_all": "See All",
+  "coaches_error_loading": "Error loading data: {message}",
+  "@coaches_error_loading": {
+    "description": "Error message when loading coaches fails",
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "no_coaches_found": "No matching coaches found",
+  "coach_details_error": "An error occurred: {message}",
+  "@coach_details_error": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "biography": "Biography",
+  "no_biography": "No biography available for this coach.",
+  "qualifications_certifications": "QUALIFICATIONS & CERTIFICATIONS",
+  "book_consultation": "BOOK A CONSULTATION",
+  "specialist_title": "Strength & Conditioning Specialist",
+  "years_exp_badge": "{count} Years Exp",
+  "@years_exp_badge": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "age_badge": "Age {count}",
+  "@age_badge": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "filter_coaches": "Filter Coaches",
+  "coach_gender": "Coach Gender",
+  "all": "All",
+  "coach_male": "Male Coach",
+  "coach_female": "Female Coach",
+  "years_sports_exp": "Years of Sports Experience",
+  "min_limit_year": "Min Limit (Year)",
+  "max_limit_year": "Max Limit (Year)",
+  "reset": "Reset",
+  "apply_filters": "Apply Filters",
+  "all_coaches": "All Coaches",
+  "search_coach_hint": "Search for your sports coach...",
+  "years_of_exp_suffix": "Yrs Exp"
 }

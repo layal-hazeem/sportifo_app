@@ -124,5 +124,33 @@
     "saveChanges":"حفظ التغييرات",
     "noPhone":"لا يوجد رقم",
     "noEmail":"لا يوجد بريد الكتروني",
-    "cancle":"إلغاء"
+    "cancle":"إلغاء",
+
+
+     "coaches": "الكوتشات",
+     "see_all": "عرض المزيد",
+
+  "coaches_error_loading": "خطأ في تحميل البيانات: {message}",
+  "no_coaches_found": "لا توجد نتائج مطابقة للبحث الحالي",
+  "coach_details_error": "حدث خطأ: {message}",
+  "biography": "السيرة الذاتية",
+  "no_biography": "لا توجد سيرة ذاتية متاحة لهذا المدرب.",
+  "qualifications_certifications": "المؤهلات والشهادات",
+  "book_consultation": "احجز استشارة الآن",
+  "specialist_title": "إخصائي القوة والتكيف البدني",
+  "years_exp_badge": "خبرة {count} سنوات",
+  "age_badge": "العمر {count}",
+  "filter_coaches": "تصفية المدربين",
+  "coach_gender": "جنس الكوتش",
+  "all": "الكل",
+  "coach_male": "كوتش ذكر",
+  "coach_female": "كوتش أنثى",
+  "years_sports_exp": "سنوات الخبرة الرياضية",
+  "min_limit_year": "الحد الأدنى (سنة)",
+  "max_limit_year": "الحد الأقصى (سنة)",
+  "reset": "إعادة تعيين",
+  "apply_filters": "تطبيق الفلاتر",
+  "all_coaches": "جميع المدربين",
+  "search_coach_hint": "ابحث عن مدربك الرياضي...",
+  "years_of_exp_suffix": "سنوات خبرة"
 }

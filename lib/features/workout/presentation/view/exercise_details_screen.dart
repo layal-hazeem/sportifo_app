@@ -49,7 +49,6 @@ class ExerciseDetailsScreen extends StatelessWidget {
                     );
                   }
                 },
-                // حافظي على الـ builder كما هو لرسم الأيقونة
                 builder: (context, state) {
                   return IconButton(
                     icon: Icon(

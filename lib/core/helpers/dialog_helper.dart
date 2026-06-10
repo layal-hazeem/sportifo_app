@@ -63,7 +63,7 @@ class DialogHelper {
             TextButton(
               onPressed: () =>
                   Navigator.of(context).pop(), // زر الإلغاء الافتراضي
-              child: Text(l10n.cancle, style: TextStyle(color: Colors.grey)),
+              child: Text(l10n.cancel, style: TextStyle(color: Colors.grey)),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(

@@ -55,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
               await getIt<LocalStorage>().saveToken(token);
               AppSnackBar.show(
                 context,
-                message: l10n.loginSuccess, // أو نص مباشر "Login Successful!"
+                message: l10n.loginSuccess,
                 type: SnackBarType.success,
               );
 
