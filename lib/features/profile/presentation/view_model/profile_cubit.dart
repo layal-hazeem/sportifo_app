@@ -17,11 +17,11 @@ class ProfileCubit extends Cubit<ProfileState> {
 
     switch (result) {
       case Success(data: final profileModel):
-        emit(ProfileSuccess(profileModel));
+  emit(ProfileSuccess(profileModel));
         break;
 
       case Failure(message: final errorMsg):
-        emit(ProfileError(errorMsg));
+        emit(ProfileFailure(errorMsg));
         print(errorMsg);
         break;
     }
@@ -42,7 +42,7 @@ class ProfileCubit extends Cubit<ProfileState> {
 
       case Failure(message: final errorMsg):
         print("Upload failed: $errorMsg");
-        emit(ProfileError(errorMsg));
+        emit(ProfileFailure(errorMsg));
         break;
     }
   }
@@ -58,7 +58,23 @@ class ProfileCubit extends Cubit<ProfileState> {
         break;
 
       case Failure(message: final errorMsg):
-        emit(ProfileError(errorMsg));
+        emit(ProfileFailure(errorMsg));
+        break;
+    }
+  }
+
+  Future<void> getCoachProfile() async {
+    emit(ProfileLoading());
+
+    final result = await _profileRepository.getCoachProfile();
+
+    switch (result) {
+      case Success(data: final coachModel):
+          print("🔥COACH STATE EMITTED");
+        emit(CoachProfileSuccess(coachModel));
+        break;
+      case Failure(message: final errorMsg):
+        emit(ProfileFailure(errorMsg));
         break;
     }
   }

@@ -14,6 +14,11 @@ import '../../features/auth/data/web_services/auth_webService.dart';
 import '../../features/auth/presentation/view_model/login/forgot_password_cubit.dart';
 import '../../features/auth/presentation/view_model/login/login_cubit.dart';
 import '../../features/auth/presentation/view_model/register/register_cubit.dart';
+import '../../features/coaches/data/repositories/coach_repository.dart';
+import '../../features/coaches/data/web_services/coach_web_service.dart';
+import '../../features/coaches/presentation/view_model/all_coaches_cubit.dart';
+import '../../features/coaches/presentation/view_model/coach_details_cubit.dart';
+import '../../features/coaches/presentation/view_model/coaches_cubit.dart';
 import '../../features/workout/data/repository/workout_repository.dart';
 import '../../features/workout/data/web_services/workout_web_service.dart';
 import '../../features/workout/presentation/view_model/categories_cubit/categories_cubit.dart';
@@ -98,4 +103,15 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<AdsWebService>(() => AdsWebService(getIt<Dio>()));
   getIt.registerLazySingleton<AdsRepository>(() => AdsRepository(getIt<AdsWebService>()));
   getIt.registerFactory<AdsCubit>(() => AdsCubit(getIt<AdsRepository>()));
+
+  // تسجيل CoachWebService
+  getIt.registerLazySingleton<CoachWebService>(() => CoachWebService());
+
+// تسجيل CoachRepository
+  getIt.registerLazySingleton<CoachRepository>(() => CoachRepository(getIt<CoachWebService>()));
+
+// تسجيل الـ Cubits
+  getIt.registerFactory<CoachesCubit>(() => CoachesCubit(getIt<CoachRepository>()));
+  getIt.registerFactory<AllCoachesCubit>(() => AllCoachesCubit(getIt<CoachRepository>()));
+  getIt.registerFactory<CoachDetailsCubit>(() => CoachDetailsCubit(getIt<CoachRepository>()));
 }

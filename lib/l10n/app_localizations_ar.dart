@@ -345,7 +345,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get noEmail => 'لا يوجد بريد الكتروني';
 
   @override
-  String get cancle => 'إلغاء';
+  String get cancel => 'Cancel';
 
   @override
   String get termsPart1 => 'بالتسجيل، فإنك توافق على ';
@@ -358,4 +358,87 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get termsPart4 => 'سياسة الخصوصية';
+
+  @override
+  String get coaches => 'الكوتشات';
+
+  @override
+  String get see_all => 'عرض المزيد';
+
+  @override
+  String coaches_error_loading(String message) {
+    return 'خطأ في تحميل البيانات: $message';
+  }
+
+  @override
+  String get no_coaches_found => 'لا توجد نتائج مطابقة للبحث الحالي';
+
+  @override
+  String coach_details_error(String message) {
+    return 'حدث خطأ: $message';
+  }
+
+  @override
+  String get biography => 'السيرة الذاتية';
+
+  @override
+  String get no_biography => 'لا توجد سيرة ذاتية متاحة لهذا المدرب.';
+
+  @override
+  String get qualifications_certifications => 'المؤهلات والشهادات';
+
+  @override
+  String get book_consultation => 'احجز استشارة الآن';
+
+  @override
+  String get specialist_title => 'إخصائي القوة والتكيف البدني';
+
+  @override
+  String years_exp_badge(int count) {
+    return 'خبرة $count سنوات';
+  }
+
+  @override
+  String age_badge(int count) {
+    return 'العمر $count';
+  }
+
+  @override
+  String get filter_coaches => 'تصفية المدربين';
+
+  @override
+  String get coach_gender => 'جنس الكوتش';
+
+  @override
+  String get all => 'الكل';
+
+  @override
+  String get coach_male => 'كوتش ذكر';
+
+  @override
+  String get coach_female => 'كوتش أنثى';
+
+  @override
+  String get years_sports_exp => 'سنوات الخبرة الرياضية';
+
+  @override
+  String get min_limit_year => 'الحد الأدنى (سنة)';
+
+  @override
+  String get max_limit_year => 'الحد الأقصى (سنة)';
+
+  @override
+  String get reset => 'إعادة تعيين';
+
+  @override
+  String get apply_filters => 'تطبيق الفلاتر';
+
+  @override
+  String get all_coaches => 'جميع المدربين';
+
+  @override
+  String get search_coach_hint => 'ابحث عن مدربك الرياضي...';
+
+  @override
+  String get years_of_exp_suffix => 'سنوات خبرة';
 }

@@ -51,9 +51,16 @@ class CustomDrawer extends StatelessWidget {
                           email: user.email ?? "",
                           imageUrl: user.profilePic,
                         );
+                      } else if (state is CoachProfileSuccess) {
+                        final coach = state.coachModel;
+                        return _buildUserInfo(
+                          name: coach.fullName,
+                          email: "",
+                          imageUrl: coach.profilePic,
+                        );
                       }
 
-                      return const CircularProgressIndicator();
+                      return const Center(child: CircularProgressIndicator());
                     },
                   ),
                   const SizedBox(height: 20),
@@ -125,7 +132,7 @@ class CustomDrawer extends StatelessWidget {
                             imageProvider = NetworkImage(user.profilePic!);
                           } else if (user.gender != null) {
                             imageProvider = AssetImage(
-                              user.gender!
+                              user.gender == true
                                   ? "assets/images/male.jpg"
                                   : "assets/images/female.jpg",
                             );
@@ -257,7 +264,13 @@ class CustomDrawer extends StatelessWidget {
   void _navigateToPage(BuildContext context, DrawerItem item) {
     switch (item) {
       case DrawerItem.profile:
-        Navigator.pushReplacementNamed(context, AppRoutes.getProfile);
+        final profileCubit = context.read<ProfileCubit>();
+
+        if (profileCubit.state is CoachProfileSuccess) {
+          Navigator.pushNamed(context, AppRoutes.coach);
+        } else {
+          Navigator.pushNamed(context, AppRoutes.getProfile);
+        }
         break;
 
       case DrawerItem.saved:

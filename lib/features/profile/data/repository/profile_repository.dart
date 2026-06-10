@@ -2,8 +2,9 @@ import 'dart:io';
 
 import 'package:sportifo_app/core/network/api_error_handler.dart';
 import 'package:sportifo_app/core/network/api_result.dart';
+import 'package:sportifo_app/features/profile/data/models/coach_profile_response.dart';
 import 'package:sportifo_app/features/profile/data/models/edit_profile_request_model.dart';
-import 'package:sportifo_app/features/profile/data/models/profile_response.dart';
+import 'package:sportifo_app/features/profile/data/models/user_profile_response.dart';
 import 'package:sportifo_app/features/profile/data/web_services/profile_web_service.dart';
 
 class ProfileRepository {
@@ -21,6 +22,18 @@ class ProfileRepository {
       print(
         "Stacktrace: $stacktrace",
       ); // هذا سيخبرك في أي سطر بالضبط فشل التحويل
+      return Failure(ApiErrorHandler.handle(e));
+    }
+  }
+
+  Future<ApiResult<CoachProfileModel>> getCoachProfile() async {
+    try {
+      final response = await _profileWebService.getCoachProfile();
+      print(response.data);
+      return Success(CoachProfileModel.fromJson(response.data['data']));
+    } catch (e, stacktrace) {
+      print("Parsing Error: $e");
+      print("Stacktrace: $stacktrace"); 
       return Failure(ApiErrorHandler.handle(e));
     }
   }

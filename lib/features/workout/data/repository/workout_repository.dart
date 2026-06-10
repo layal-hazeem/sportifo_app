@@ -61,23 +61,13 @@ class WorkoutRepository {
     String? searchQuery,
   }) async {
     try {
-      // 1. جلب إعدادات كاش الـ Hive المجهزة مسبقاً
-      final cacheOptions = await DioFactory.getCacheOptions();
-
-      // 2. تحويل السياسة وتوليد الـ Options الخاصة بـ دايو 5.9.2 لتمريرها بأمان
-      final dioOptions = cacheOptions.copyWith(
-        policy: CachePolicy.refreshForceCache, // جلب محلي فوري، وتحديث عند انتهاء الـ 7 أيام
-      ).toOptions();
-
-      // 3. تمرير الـ options المعدلة للـ WebService لتقوم بحقنها في الـ Request
+      // ✅ إزالة كل شيء متعلق بـ cacheOptions و copyWith
       final response = await _webService.getExercises(
         categoryId: categoryId,
         organId: organId,
         smallestCategoryId: smallestCategoryId,
         searchQuery: searchQuery,
-        options: dioOptions, // مرري هذا المتغير إلى دالة الـ WebService
       );
-
       final responseModel = ExerciseResponseModel.fromJson(response.data);
       return Success(responseModel.data);
     } catch (e) {

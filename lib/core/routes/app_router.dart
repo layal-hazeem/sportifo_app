@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/logout/logout_cubit.dart';
-import 'package:sportifo_app/features/profile/data/models/profile_response.dart';
+import 'package:sportifo_app/features/profile/data/models/user_profile_response.dart';
 import 'package:sportifo_app/features/profile/presentation/view/edit_profile_page.dart';
 import '../../features/auth/presentation/view/complete_profile_info.dart';
 import '../../features/auth/presentation/view/register_screen.dart';
@@ -32,8 +32,8 @@ import '../../features/workout/presentation/view/muscle_groups_screen.dart';
 import '../../features/workout/presentation/view_model/categories_cubit/categories_cubit.dart';
 import '../../features/workout/presentation/view_model/exercises_cubit/exercises_cubit.dart';
 import '../../features/workout/presentation/view_model/parts_cubit/parts_cubit.dart';
-class AppRouter {
 
+class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case AppRoutes.splash:
@@ -66,12 +66,12 @@ class AppRouter {
           ),
         );
 
- 
       case AppRoutes.workoutType:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
             create: (_) => getIt<CategoriesCubit>(),
-            child: const WorkoutTypeScreen(), // تأكدي من عمل import لهذه الشاشة في الأعلى
+            child:
+                const WorkoutTypeScreen(), // تأكدي من عمل import لهذه الشاشة في الأعلى
           ),
         );
       case AppRoutes.muscleGroups:
@@ -119,6 +119,7 @@ class AppRouter {
           ),
         );
 
+
       case AppRoutes.editProfile:
         final profile = settings.arguments as ProfileResponsModel;
 
@@ -151,19 +152,19 @@ class AppRouter {
           ),
         );
 
-// 1. شاشة قائمة التمارين
+      // 1. شاشة قائمة التمارين
       case AppRoutes.exercisesList:
         final args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
             providers: [
               BlocProvider(
-                create: (context) => getIt<ExercisesCubit>()..fetchExercises(categoryId: args['categoryId']),
+                create: (context) =>
+                    getIt<ExercisesCubit>()
+                      ..fetchExercises(categoryId: args['categoryId']),
               ),
               // تعديل هنا: استخدمي .value بدلاً من create
-              BlocProvider.value(
-                value: getIt<SavedExercisesCubit>(),
-              ),
+              BlocProvider.value(value: getIt<SavedExercisesCubit>()),
             ],
             child: ExercisesListScreen(
               categoryId: args['categoryId'],
@@ -182,7 +183,7 @@ class AppRouter {
         );
 
       case AppRoutes.searchScreen:
-      // استخراج الـ Map بالكامل
+        // استخراج الـ Map بالكامل
         final args = settings.arguments as Map<String, dynamic>?;
 
         return MaterialPageRoute(
@@ -212,7 +213,6 @@ class AppRouter {
             body: Center(child: Text('No route defined for ${settings.name}')),
           ),
         );
-
     }
   }
 }
