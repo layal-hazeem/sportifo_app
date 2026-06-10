@@ -345,7 +345,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noEmail => 'No email';
 
   @override
-  String get cancle => 'Cancle';
+  String get cancel => 'Cancel';
 
   @override
   String get termsPart1 => 'By registering, you agree to our ';
@@ -358,4 +358,87 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get termsPart4 => 'Privacy Policy';
+
+  @override
+  String get coaches => 'Coaches';
+
+  @override
+  String get see_all => 'See All';
+
+  @override
+  String coaches_error_loading(String message) {
+    return 'Error loading data: $message';
+  }
+
+  @override
+  String get no_coaches_found => 'No matching coaches found';
+
+  @override
+  String coach_details_error(String message) {
+    return 'An error occurred: $message';
+  }
+
+  @override
+  String get biography => 'Biography';
+
+  @override
+  String get no_biography => 'No biography available for this coach.';
+
+  @override
+  String get qualifications_certifications => 'QUALIFICATIONS & CERTIFICATIONS';
+
+  @override
+  String get book_consultation => 'BOOK A CONSULTATION';
+
+  @override
+  String get specialist_title => 'Strength & Conditioning Specialist';
+
+  @override
+  String years_exp_badge(int count) {
+    return '$count Years Exp';
+  }
+
+  @override
+  String age_badge(int count) {
+    return 'Age $count';
+  }
+
+  @override
+  String get filter_coaches => 'Filter Coaches';
+
+  @override
+  String get coach_gender => 'Coach Gender';
+
+  @override
+  String get all => 'All';
+
+  @override
+  String get coach_male => 'Male Coach';
+
+  @override
+  String get coach_female => 'Female Coach';
+
+  @override
+  String get years_sports_exp => 'Years of Sports Experience';
+
+  @override
+  String get min_limit_year => 'Min Limit (Year)';
+
+  @override
+  String get max_limit_year => 'Max Limit (Year)';
+
+  @override
+  String get reset => 'Reset';
+
+  @override
+  String get apply_filters => 'Apply Filters';
+
+  @override
+  String get all_coaches => 'All Coaches';
+
+  @override
+  String get search_coach_hint => 'Search for your sports coach...';
+
+  @override
+  String get years_of_exp_suffix => 'Yrs Exp';
 }
