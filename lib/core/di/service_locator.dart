@@ -19,6 +19,9 @@ import '../../features/coaches/data/web_services/coach_web_service.dart';
 import '../../features/coaches/presentation/view_model/all_coaches_cubit.dart';
 import '../../features/coaches/presentation/view_model/coach_details_cubit.dart';
 import '../../features/coaches/presentation/view_model/coaches_cubit.dart';
+import '../../features/targets/data/repository/target_repository.dart';
+import '../../features/targets/data/web_services/target_web_service.dart';
+import '../../features/targets/presentation/view_model/target_cubit/target_cubit.dart';
 import '../../features/workout/data/repository/workout_repository.dart';
 import '../../features/workout/data/web_services/workout_web_service.dart';
 import '../../features/workout/presentation/view_model/categories_cubit/categories_cubit.dart';
@@ -26,6 +29,7 @@ import '../../features/workout/presentation/view_model/exercises_cubit/exercises
 import '../../features/workout/presentation/view_model/saved_exercises/saved_exercises_cubit.dart';
 import '../../features/workout/presentation/view_model/parts_cubit/parts_cubit.dart';
 import '../../features/workout/presentation/view_model/search_cubit/search_cubit.dart';
+
 import '../localization/locale_cubit.dart';
 import '../network/dio_factory.dart';
 import '../storage/local_storage.dart';
@@ -40,15 +44,12 @@ Future<void> setupServiceLocator() async {
         () => LocalStorage(getIt<SharedPreferences>()),
   );
 
-  // 🔥 الخطوة 1: تسجيل DioFactory (بدون Dio بعد)
-
   final dioFactory = DioFactory(getIt<LocalStorage>());
   await dioFactory.init();
-  // 🔥 الخطوة 3: تسجيل Dio من الكائن المهيأ
+
   getIt.registerSingleton<DioFactory>(dioFactory);
   getIt.registerLazySingleton<Dio>(() => getIt<DioFactory>().dio);
 
-  // ✅ باقي التسجيلات تبقى كما هي تماماً
   getIt.registerLazySingleton<AuthWebService>(
         () => AuthWebService(getIt<Dio>()),
   );
@@ -68,7 +69,6 @@ Future<void> setupServiceLocator() async {
         () => CompleteProfileCubit(getIt<AuthRepository>()),
   );
 
-  // 🔥 4. قسم التمارين (Workouts)
   getIt.registerLazySingleton<WorkoutWebService>(
         () => WorkoutWebService(getIt<Dio>()),
   );
@@ -104,14 +104,21 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<AdsRepository>(() => AdsRepository(getIt<AdsWebService>()));
   getIt.registerFactory<AdsCubit>(() => AdsCubit(getIt<AdsRepository>()));
 
-  // تسجيل CoachWebService
   getIt.registerLazySingleton<CoachWebService>(() => CoachWebService());
-
-// تسجيل CoachRepository
   getIt.registerLazySingleton<CoachRepository>(() => CoachRepository(getIt<CoachWebService>()));
 
-// تسجيل الـ Cubits
   getIt.registerFactory<CoachesCubit>(() => CoachesCubit(getIt<CoachRepository>()));
   getIt.registerFactory<AllCoachesCubit>(() => AllCoachesCubit(getIt<CoachRepository>()));
   getIt.registerFactory<CoachDetailsCubit>(() => CoachDetailsCubit(getIt<CoachRepository>()));
+
+  // 🔥 🎯 تسجيل ميزة الأهداف والاحتياجات الغذائية الجديدة هنا
+  getIt.registerLazySingleton<TargetWebService>(
+        () => TargetWebService(getIt<Dio>()),
+  );
+  getIt.registerLazySingleton<TargetRepository>(
+        () => TargetRepository(getIt<TargetWebService>()),
+  );
+  getIt.registerFactory<TargetCubit>(
+        () => TargetCubit(getIt<TargetRepository>()),
+  );
 }

@@ -24,7 +24,11 @@ final _step2FormKey = GlobalKey<FormState>();
 class _RegisterScreenState extends State<RegisterScreen> {
   final PageController _controller = PageController();
   int currentPage = 0;
-  bool _isTermsAccepted = false; // 🔥 حالة الـ Checkbox
+  bool _isTermsAccepted = false;
+
+  // 🔥 متغيرات التحكم بحالة التحقق التلقائي لكل خطوة
+  AutovalidateMode _step1AutovalidateMode = AutovalidateMode.disabled;
+  AutovalidateMode _step2AutovalidateMode = AutovalidateMode.disabled;
 
   // Controllers
   final TextEditingController _firstNameController = TextEditingController();
@@ -58,10 +62,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
           duration: const Duration(milliseconds: 400),
           curve: Curves.easeInOut,
         );
+      } else {
+        // 🔥 إذا فشل التحقق عند الضغط، نُفعل التحقق التلقائي لتظهر الأخطاء للمستخدم ويعدلها
+        setState(() {
+          _step1AutovalidateMode = AutovalidateMode.onUserInteraction;
+        });
       }
     } else {
       if (_step2FormKey.currentState!.validate()) {
-        // 🔥 التحقق من الـ Checkbox
         if (!_isTermsAccepted) {
           AppSnackBar.show(
             context,
@@ -87,6 +95,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
             type: SnackBarType.error,
           );
         }
+      } else {
+        // 🔥 إذا فشل التحقق في الخطوة الثانية، نُفعل التحقق التلقائي لها
+        setState(() {
+          _step2AutovalidateMode = AutovalidateMode.onUserInteraction;
+        });
       }
     }
   }
@@ -190,14 +203,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
         builder: (context, state) {
           return SafeArea(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0), // AppSizes.mainPadding
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
                 children: [
                   const SizedBox(height: 40),
                   Text(
                     l10n.createAccount,
                     style: const TextStyle(
-                      fontSize: 24, // AppSizes.titleFontSize
+                      fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: AppColors.textDark,
                     ),
@@ -214,6 +227,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ///  STEP 1
                         _buildScrollablePage(
                           formKey: _step1FormKey,
+                          autovalidateMode: _step1AutovalidateMode, // 🔥 تمرير الحالة الديناميكية
                           l10n: l10n,
                           state: state,
                           isLastStep: false,
@@ -268,6 +282,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ///  STEP 2
                         _buildScrollablePage(
                           formKey: _step2FormKey,
+                          autovalidateMode: _step2AutovalidateMode, // 🔥 تمرير الحالة الديناميكية
                           l10n: l10n,
                           state: state,
                           isLastStep: true,
@@ -304,6 +319,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Widget _buildScrollablePage({
     required GlobalKey<FormState> formKey,
+    required AutovalidateMode autovalidateMode, // 🔥 أصبحت تستقبل الـ mode كمعامل مرن
     required AppLocalizations l10n,
     required RegisterState state,
     required bool isLastStep,
@@ -318,7 +334,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: IntrinsicHeight(
               child: Form(
                 key: formKey,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
+                autovalidateMode: autovalidateMode, // 🔥 ربطها بالمتغير الممرر
                 child: Column(
                   children: [
                     ...children,
