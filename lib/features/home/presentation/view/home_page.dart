@@ -13,6 +13,8 @@ import 'package:sportifo_app/features/home/presentation/widgets/custom_bottom_na
 import 'package:sportifo_app/features/home/presentation/widgets/custom_drawer.dart';
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_cubit.dart';
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_state.dart';
+import 'package:sportifo_app/features/subscriptions/presentation/view/subscriptions_screen.dart';
+import 'package:sportifo_app/features/subscriptions/presentation/view_model/subscription_cubit.dart';
 import 'package:sportifo_app/features/workout/presentation/view_model/categories_cubit/categories_cubit.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../../../../core/di/service_locator.dart';
@@ -47,7 +49,10 @@ class _HomePageState extends State<HomePage> {
 
   List<Widget> _getCoachScreens() {
     return [
-      const Center(child: Text("Subscriptions Screen")),
+      BlocProvider(
+        create: (context) => getIt<SubscriptionCubit>()..getSubscriptions(),
+        child: SubscriptionsScreen(),
+      ),
       const Center(child: Text("My Plans Screen")),
       const CoachScreen(),
       BlocProvider(
@@ -126,6 +131,7 @@ class _HomePageState extends State<HomePage> {
                     appBar: CustomAppBar(
                       currentIndex: homeViewModel.currentIndex,
                       userName: profile.firstName,
+                      isCoach: isCoach,
                     ),
                     bottomNavigationBar: BottomNavigationBar(
                       currentIndex: homeViewModel.currentIndex,

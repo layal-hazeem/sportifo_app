@@ -8,11 +8,13 @@ import '../../../../core/widgets/wave_app_bar.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final int currentIndex;
   final String userName;
+  final bool isCoach;
 
   const CustomAppBar({
     super.key,
     required this.currentIndex,
     required this.userName,
+    required this.isCoach,
   });
 
   @override
@@ -27,7 +29,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     switch (currentIndex) {
       case 0:
-        title = l10n.progress;
+        title = isCoach ? "Subscriptions" : l10n.progress;
         break;
       case 1:
         title = l10n.myPlans;
@@ -35,8 +37,17 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       case 2:
         title = l10n.welcomeBack;
         actions = [
-          IconButton(icon: const Icon(Icons.chat, color: Colors.white), onPressed: () {}),
-          IconButton(icon: const Icon(Icons.notifications_none_outlined, color: Colors.white), onPressed: () {}),
+          IconButton(
+            icon: const Icon(Icons.chat, color: Colors.white),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: const Icon(
+              Icons.notifications_none_outlined,
+              color: Colors.white,
+            ),
+            onPressed: () {},
+          ),
         ];
         break;
       case 3:
@@ -62,9 +73,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             //   turns: Tween<double>(begin: -0.02, end: 0.0).animate(
             //     CurvedAnimation(parent: animation, curve: Curves.easeOut),
             //   ),
-              child: child,
-            ),
-
+            child: child,
+          ),
         );
       },
       child: WaveAppBar(

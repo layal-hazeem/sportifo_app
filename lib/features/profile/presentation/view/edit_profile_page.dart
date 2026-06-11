@@ -383,45 +383,47 @@ class _EditProfilePageState extends State<EditProfilePage>
           const SizedBox(height: 20),
 
           CustomAuthButton(
-              text: state is ProfileLoading ? "Saving..." : "Save Changes",
-              onPressed: state is ProfileLoading
-                  ? null
-                  : () {
-                      if (_formKey.currentState!.validate()) {
-                        context.read<ProfileCubit>().updateProfile(
-                          EditProfileRequestModel(
-                            first_name: _firstNameController.text,
-                            last_name: _lastNameController.text,
-                            date_of_birth: _dateOfBirthController.text,
-                            height: _heightController.text.isEmpty
-                                ? null
-                                : double.tryParse(_heightController.text),
-                            weight: _weightController.text.isEmpty
-                                ? null
-                                : double.tryParse(_weightController.text),
-                            shoulders_width: double.tryParse(
-                              _shouldersWidthController.text,
-                            ),
-                            chest_perimeter: double.tryParse(
-                              _chestPerimeterController.text,
-                            ),
-                            waist_perimeter: double.tryParse(
-                              _waistPerimeterController.text,
-                            ),
-                            thigh_perimeter: double.tryParse(
-                              _thighPerimeterController.text,
-                            ),
-                            hip_perimeter: double.tryParse(
-                              _hipPerimeterController.text,
-                            ),
-                            arm_perimeter: double.tryParse(
-                              _armPerimeterController.text,
-                            ),
+            isLoading: state is ProfileLoading,
+            text: state is ProfileLoading ? "Saving..." : "Save Changes",
+            onPressed: state is ProfileLoading
+                ? null
+                : () {
+                    final isValid = _formKey.currentState?.validate() ?? true;
+                    if (isValid) {
+                      context.read<ProfileCubit>().updateProfile(
+                        EditProfileRequestModel(
+                          first_name: _firstNameController.text,
+                          last_name: _lastNameController.text,
+                          date_of_birth: _dateOfBirthController.text,
+                          height: _heightController.text.isEmpty
+                              ? null
+                              : double.tryParse(_heightController.text),
+                          weight: _weightController.text.isEmpty
+                              ? null
+                              : double.tryParse(_weightController.text),
+                          shoulders_width: double.tryParse(
+                            _shouldersWidthController.text,
                           ),
-                        );
-                      }
-                    },
-            ),
+                          chest_perimeter: double.tryParse(
+                            _chestPerimeterController.text,
+                          ),
+                          waist_perimeter: double.tryParse(
+                            _waistPerimeterController.text,
+                          ),
+                          thigh_perimeter: double.tryParse(
+                            _thighPerimeterController.text,
+                          ),
+                          hip_perimeter: double.tryParse(
+                            _hipPerimeterController.text,
+                          ),
+                          arm_perimeter: double.tryParse(
+                            _armPerimeterController.text,
+                          ),
+                        ),
+                      );
+                    }
+                  },
+          ),
         ],
       ),
     );

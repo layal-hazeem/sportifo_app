@@ -1,20 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sportifo_app/core/di/service_locator.dart';
 
 import '../theme/app_colors.dart';
 
 class WaveAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final String title;
+  final String? title;
+  final int? currentIndex;
+  final bool? isCoach;
   final List<Widget>? actions;
   final Widget? leading;
   final bool showBackButton;
 
   const WaveAppBar({
     super.key,
-    required this.title,
+    this.title,
+    this.currentIndex,
+    this.isCoach,
     this.actions,
     this.leading,
     this.showBackButton = true,
   });
+
+  String _getAppBarTitle() {
+    if (title != null) {
+      return title!;
+    }
+    final String? role = getIt<SharedPreferences>().getString('user_role');
+    final bool userIsCoach = isCoach ?? (role == 'coach');
+    switch (currentIndex) {
+      case 0:
+        return (!userIsCoach) ? "Subscriptions" : "Progress";
+      case 1:
+        return "My Plans";
+      case 2:
+        return "Home";
+      case 3:
+        return "Workouts";
+      case 4:
+        return "Chat";
+      default:
+        return "Sportifo";
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +58,8 @@ class WaveAppBar extends StatelessWidget implements PreferredSizeWidget {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                AppColors.primaryBtn, // البرتقالي الأساسي
-                Color(0xFFFF9D42),
+                  AppColors.primaryBtn, // البرتقالي الأساسي
+                  Color(0xFFFF9D42),
                 ],
               ),
             ),
@@ -53,13 +81,17 @@ class WaveAppBar extends StatelessWidget implements PreferredSizeWidget {
                           leading!
                         else if (showBackButton)
                           IconButton(
-                            icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 20),
+                            icon: const Icon(
+                              Icons.arrow_back_ios_new,
+                              color: Colors.white,
+                              size: 20,
+                            ),
                             onPressed: () => Navigator.pop(context),
                           ),
                         const SizedBox(width: 5),
                         Expanded(
                           child: Text(
-                            title,
+                            _getAppBarTitle(),
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 25,
@@ -94,13 +126,24 @@ class WaveClipper extends CustomClipper<Path> {
 
     var firstControlPoint = Offset(size.width / 4, size.height);
     var firstEndPoint = Offset(size.width / 2.25, size.height - 30);
-    path.quadraticBezierTo(firstControlPoint.dx, firstControlPoint.dy,
-        firstEndPoint.dx, firstEndPoint.dy);
+    path.quadraticBezierTo(
+      firstControlPoint.dx,
+      firstControlPoint.dy,
+      firstEndPoint.dx,
+      firstEndPoint.dy,
+    );
 
-    var secondControlPoint = Offset(size.width - (size.width / 3.25), size.height - 80);
+    var secondControlPoint = Offset(
+      size.width - (size.width / 3.25),
+      size.height - 80,
+    );
     var secondEndPoint = Offset(size.width, size.height - 40);
-    path.quadraticBezierTo(secondControlPoint.dx, secondControlPoint.dy,
-        secondEndPoint.dx, secondEndPoint.dy);
+    path.quadraticBezierTo(
+      secondControlPoint.dx,
+      secondControlPoint.dy,
+      secondEndPoint.dx,
+      secondEndPoint.dy,
+    );
 
     path.lineTo(size.width, 0);
     path.close();
