@@ -441,4 +441,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get years_of_exp_suffix => 'Yrs Exp';
+
+  @override
+  String get subscriptions => 'Subscriptions';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get pendingApproval => 'Pending Approval';
+
+  @override
+  String get actionRequired => 'ACTION REQUIRED';
+
+  @override
+  String get noPendingSubscriptions => 'No pending subscriptions';
+
+  @override
+  String get activeSubscriptions => 'Active Subscriptions';
+
+  @override
+  String get noActiveSubscriptions => 'No active subscriptions found';
 }

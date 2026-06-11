@@ -6,6 +6,7 @@ import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/features/subscriptions/data/models/users_subscribed_model.dart';
 import 'package:sportifo_app/features/subscriptions/presentation/widgets/pending_card.dart';
 import 'package:sportifo_app/features/subscriptions/presentation/widgets/subscription_card.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../view_model/subscription_cubit.dart';
 
 class SubscriptionsScreen extends StatefulWidget {
@@ -23,6 +24,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: BlocBuilder<SubscriptionCubit, SubscriptionState>(
@@ -48,7 +50,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                     onPressed: () {
                       context.read<SubscriptionCubit>().getSubscriptions();
                     },
-                    child: const Text("Retry"),
+                    child: Text(l10n.retry),
                   ),
                 ],
               ),
@@ -58,7 +60,6 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
           if (state is SubscriptionSuccess) {
             final allUsers = state.usersWithSubscriptions;
 
-            // 1. تصفية طلبات الاشتراك المعلقة
             final pendingSubscriptions = allUsers.where((user) {
               return user.userSubscriptions?.any(
                     (sub) =>
@@ -68,7 +69,6 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                   false;
             }).toList();
 
-            // 2. تصفية جميع الاشتراكات النشطة بدون التقييد بنوع باقة معين بعد الآن ✅
             final activeSubscriptions = allUsers.where((user) {
               return user.userSubscriptions?.any((sub) => sub.isActive == 1) ??
                   false;
@@ -84,12 +84,10 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                   vertical: 20.0,
                 ),
                 children: [
-                  // قسم الاشتراكات المعلقة التمرير الأفقي
                   _buildPendingSection(pendingSubscriptions),
 
                   const SizedBox(height: 24),
 
-                  // قسم الاشتراكات النشطة المنبثق
                   _buildActiveSection(activeSubscriptions),
                 ],
               ),
@@ -103,6 +101,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
   }
 
   Widget _buildPendingSection(List<dynamic> pendingList) {
+    final l10n = AppLocalizations.of(context)!;
     final screenWidth = MediaQuery.of(context).size.width;
     final cardWidth = screenWidth * 0.8;
 
@@ -112,8 +111,8 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
-              "Pending Approval",
+            Text(
+              l10n.pendingApproval,
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -131,7 +130,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
-                  "${pendingList.length} ACTION REQUIRED",
+                  "${pendingList.length} ${l10n.actionRequired}",
                   style: const TextStyle(
                     color: Color(0xFF8A1F1F),
                     fontSize: 11,
@@ -143,9 +142,9 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
         ),
         const SizedBox(height: 16),
         pendingList.isEmpty
-            ? const Text("No pending subscriptions")
+            ? Text(l10n.noPendingSubscriptions)
             : SizedBox(
-                height: 220, // زيادة الارتفاع لضمان عدم حدوث Overflow
+                height: 160,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   physics: const BouncingScrollPhysics(),
@@ -175,24 +174,25 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
   }
 
   Widget _buildActiveSection(List<dynamic> activeList) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Active Subscriptions",
+        Text(
+          l10n.activeSubscriptions,
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
             color: Colors.black,
           ),
         ),
-        const SizedBox(height: 16), // تم اختصار مساحة التابس المحذوفة هنا ✅
+        const SizedBox(height: 16),
         activeList.isEmpty
-            ? const Padding(
+            ? Padding(
                 padding: EdgeInsets.symmetric(vertical: 20.0),
                 child: Center(
                   child: Text(
-                    "No active subscriptions found",
+                    l10n.noPendingSubscriptions,
                     style: TextStyle(
                       color: Colors.grey,
                       fontWeight: FontWeight.w500,
@@ -209,8 +209,6 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
 
                   return SubscriptionCard(
                     userModel: user,
-                    onAccept: null,
-                    onReject: null,
                   );
                 },
               ),

@@ -5,25 +5,23 @@ import '../../data/models/users_subscribed_model.dart';
 
 class SubscriptionCard extends StatelessWidget {
   final UsersSubscribedModel userModel;
-  final VoidCallback? onAccept;
-  final VoidCallback? onReject;
 
-  const SubscriptionCard({
-    super.key,
-    required this.userModel,
-    this.onAccept,
-    this.onReject,
-  });
+  const SubscriptionCard({super.key, required this.userModel});
 
   @override
   Widget build(BuildContext context) {
-    // التحقق من وجود اشتراكات للمستخدم
     final hasSubscriptions =
         userModel.userSubscriptions != null &&
         userModel.userSubscriptions!.isNotEmpty;
     final subscriptionsList = userModel.userSubscriptions ?? [];
 
-    Color accentColor = AppColors.primaryBtn;
+    // نتحقق مما إذا كان لدى المستخدم أي اشتراك بحالة "نشطة" ومؤكدة حالياً
+    final bool hasActivePlan =
+        userModel.userSubscriptions?.any(
+          (sub) => sub.status?.toLowerCase() == 'active' && sub.isActive == 1,
+        ) ??
+        false;
+    Color mainAccentColor = hasActivePlan ? Colors.green : Colors.deepOrange;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -37,10 +35,9 @@ class SubscriptionCard extends StatelessWidget {
             offset: const Offset(0, 4),
           ),
         ],
-        border: Border(left: BorderSide(color: accentColor, width: 6)),
+        border: Border(left: BorderSide(color: mainAccentColor, width: 6)),
       ),
       child: Theme(
-        // إزالة الحواف والخطوط الافتراضية المزعجة من الـ ExpansionTile
         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
         child: ExpansionTile(
           tilePadding: const EdgeInsets.all(14.0),
@@ -50,17 +47,16 @@ class SubscriptionCard extends StatelessWidget {
             bottom: 14.0,
           ),
 
-          // 1. الواجهة الخارجية الثابتة (بيانات اليوزر)
           title: Row(
             children: [
               CircleAvatar(
                 radius: 26,
-                backgroundColor: accentColor.withOpacity(0.2),
+                backgroundColor: mainAccentColor.withOpacity(0.2),
                 backgroundImage: userModel.profilePic != null
                     ? NetworkImage(userModel.profilePic!)
                     : null,
                 child: userModel.profilePic == null
-                    ? Icon(Icons.person, color: accentColor, size: 26)
+                    ? Icon(Icons.person, color: mainAccentColor, size: 26)
                     : null,
               ),
               const SizedBox(width: 12),
@@ -85,6 +81,49 @@ class SubscriptionCard extends StatelessWidget {
                         fontSize: 12,
                         color: Colors.grey[600],
                         fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: hasActivePlan
+                      ? Colors.green.shade50
+                      : Colors.deepOrange.shade50,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: hasActivePlan
+                        ? Colors.green.shade200
+                        : Colors.deepOrange.shade200,
+                    width: 0.5,
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      hasActivePlan
+                          ? Icons.check_circle_rounded
+                          : Icons.error_outline_rounded,
+                      size: 13,
+                      color: hasActivePlan ? Colors.green : Colors.deepOrange,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      hasActivePlan ? "Plan Active" : "Needs Plan",
+                      style: TextStyle(
+                        color: hasActivePlan
+                            ? Colors.green.shade700
+                            : Colors.deepOrange.shade700,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ],
@@ -139,7 +178,6 @@ class SubscriptionCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // سطر الباقة والسعر للمستند الفردي
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -152,7 +190,7 @@ class SubscriptionCard extends StatelessWidget {
                               ),
                               const SizedBox(width: 6),
                               Text(
-                                '${plan?.title ?? "No Plan"} (${planType.toUpperCase()})',
+                                '${plan?.title ?? "No Plan"}',
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
@@ -172,7 +210,6 @@ class SubscriptionCard extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 8),
-                      // تفاصيل التواريخ والمدة لكل باقة
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -197,6 +234,34 @@ class SubscriptionCard extends StatelessWidget {
                   ),
                 );
               }).toList(),
+            if (!hasActivePlan) ...[
+              const SizedBox(height: 10),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    // الانتقال لشاشة عمل الخطة للمشترك الحالي
+                    print(
+                      "Navigate to create plan for: ${userModel.firstName}",
+                    );
+                  },
+                  icon: const Icon(Icons.add_task_rounded, size: 18),
+                  label: const Text(
+                    "Create Training Plan Now",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepOrange,
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ],
         ),
       ),

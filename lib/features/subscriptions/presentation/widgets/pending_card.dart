@@ -25,12 +25,33 @@ class PendingCard extends StatelessWidget {
     final price = pendingSub?.subscription?.price ?? 0;
     final currency = pendingSub?.subscription?.currency ?? "SYP";
 
+    Color planColor;
+    IconData planIcon;
+    switch (planType) {
+      case 'gold':
+        planColor = const Color(0xFFFFB300); // ذهبي
+        planIcon = Icons.stars_rounded;
+        break;
+      case 'silver':
+        planColor = const Color(0xFF78909C); // فضي
+        planIcon = Icons.workspace_premium_rounded;
+        break;
+      case 'bronze':
+      default:
+        planColor = const Color(0xffa87c43); // برونزي
+        planIcon = Icons.emoji_events_rounded;
+        break;
+    }
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
+        border: Border(
+          left: BorderSide(color: planColor.withOpacity(0.4), width: 4),
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.04),
@@ -80,7 +101,6 @@ class PendingCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 6),
-                    // عرض اسم الباقة وسعرها
                     Row(
                       children: [
                         Container(
@@ -93,11 +113,11 @@ class PendingCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(
-                            "$planTitle ($planType)",
-                            style: const TextStyle(
+                            "$planTitle",
+                            style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.w600,
-                              color: Color(0xFF495057),
+                              color: planColor,
                             ),
                           ),
                         ),
@@ -121,55 +141,6 @@ class PendingCard extends StatelessWidget {
           const SizedBox(height: 16),
           const Divider(height: 1, color: Color(0xFFEDF2F7)),
           const SizedBox(height: 12),
-
-          // 3. أزرار التحكم (Accept / Reject) متطابقة مع التصميم
-          Row(
-            children: [
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: onAccept,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        Colors.green,
-                    padding: const EdgeInsets.all(12),
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: const Text(
-                    "Accept",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: onReject,
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Color(0xFFE2E8F0)),
-                    padding: const EdgeInsets.all(12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: const Text(
-                    "Reject",
-                    style: TextStyle(
-                      color: Color(0xFFE53E3E),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
         ],
       ),
     );

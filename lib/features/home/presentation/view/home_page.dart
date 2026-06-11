@@ -33,33 +33,34 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   DrawerItem selectedDrawerItem = DrawerItem.profile;
 
-  // شاشات مخصصة للمتدرب (Trainee / User)
   List<Widget> _getTraineeScreens() {
+    final l10n = AppLocalizations.of(context)!;
     return [
-      const Center(child: Text("Progress Screen")), // شاشة التقدم للمتدرب
-      const Center(child: Text("My Plans Screen")),
-      const TraineeScreen(), // واجهة المتدرب الرئيسية
+      Center(child: Text(l10n.progress)), 
+      Center(child: Text(l10n.myPlans)),
+      const TraineeScreen(), 
       BlocProvider(
         create: (context) => getIt<CategoriesCubit>(),
         child: const WorkoutTypeScreen(),
       ),
-      const Center(child: Text("Chat Screen")),
+       Center(child: Text(l10n.chat)),
     ];
   }
 
   List<Widget> _getCoachScreens() {
+    final l10n = AppLocalizations.of(context)!;
     return [
       BlocProvider(
         create: (context) => getIt<SubscriptionCubit>()..getSubscriptions(),
         child: SubscriptionsScreen(),
       ),
-      const Center(child: Text("My Plans Screen")),
+       Center(child: Text(l10n.myPlans)),
       const CoachScreen(),
       BlocProvider(
         create: (context) => getIt<CategoriesCubit>(),
         child: const WorkoutTypeScreen(),
       ),
-      const Center(child: Text("Chat Screen")),
+       Center(child: Text(l10n.chat)),
     ];
   }
 
@@ -145,7 +146,7 @@ class _HomePageState extends State<HomePage> {
                           icon: isCoach
                               ? Icons.people_outline
                               : Icons.show_chart,
-                          label: isCoach ? "Subscriptions" : l10n.progress,
+                          label: isCoach ? l10n.subscriptions : l10n.progress,
                           isSelected: homeViewModel.currentIndex == 0,
                         ),
                         CustomBottomNavBar.build(
@@ -175,8 +176,8 @@ class _HomePageState extends State<HomePage> {
               );
             }
 
-            return const Scaffold(
-              body: Center(child: Text("Something went wrong")),
+            return Scaffold(
+              body: Center(child: Text(l10n.error)),
             );
           },
         ),

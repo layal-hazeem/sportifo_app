@@ -174,5 +174,13 @@
   "apply_filters": "Apply Filters",
   "all_coaches": "All Coaches",
   "search_coach_hint": "Search for your sports coach...",
-  "years_of_exp_suffix": "Yrs Exp"
+  "years_of_exp_suffix": "Yrs Exp",
+  "subscriptions":"Subscriptions",
+  "retry":"Retry",
+  "pendingApproval":"Pending Approval",
+  "actionRequired":"ACTION REQUIRED",
+  "noPendingSubscriptions":"No pending subscriptions",
+  "activeSubscriptions":"Active Subscriptions",
+  "noActiveSubscriptions":"No active subscriptions found"
+
 }

@@ -946,6 +946,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Yrs Exp'**
   String get years_of_exp_suffix;
+
+  /// No description provided for @subscriptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscriptions'**
+  String get subscriptions;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @pendingApproval.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending Approval'**
+  String get pendingApproval;
+
+  /// No description provided for @actionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'ACTION REQUIRED'**
+  String get actionRequired;
+
+  /// No description provided for @noPendingSubscriptions.
+  ///
+  /// In en, this message translates to:
+  /// **'No pending subscriptions'**
+  String get noPendingSubscriptions;
+
+  /// No description provided for @activeSubscriptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Subscriptions'**
+  String get activeSubscriptions;
+
+  /// No description provided for @noActiveSubscriptions.
+  ///
+  /// In en, this message translates to:
+  /// **'No active subscriptions found'**
+  String get noActiveSubscriptions;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
