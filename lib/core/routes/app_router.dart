@@ -65,7 +65,13 @@ class AppRouter {
             child: const HomePage(),
           ),
         );
-
+      case AppRoutes.completeProfile:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => getIt<CompleteProfileCubit>(),
+            child: CompleteProfileInfoView(),
+          ),
+        );
       case AppRoutes.workoutType:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
