@@ -124,7 +124,7 @@
     "saveChanges":"حفظ التغييرات",
     "noPhone":"لا يوجد رقم",
     "noEmail":"لا يوجد بريد الكتروني",
-    "cancle":"إلغاء",
+    "cancel":"إلغاء",
 
 
      "coaches": "الكوتشات",
@@ -133,6 +133,7 @@
   "coaches_error_loading": "خطأ في تحميل البيانات: {message}",
   "no_coaches_found": "لا توجد نتائج مطابقة للبحث الحالي",
   "coach_details_error": "حدث خطأ: {message}",
+
   "biography": "السيرة الذاتية",
   "no_biography": "لا توجد سيرة ذاتية متاحة لهذا المدرب.",
   "qualifications_certifications": "المؤهلات والشهادات",
@@ -152,5 +153,13 @@
   "apply_filters": "تطبيق الفلاتر",
   "all_coaches": "جميع المدربين",
   "search_coach_hint": "ابحث عن مدربك الرياضي...",
-  "years_of_exp_suffix": "سنوات خبرة"
+  "years_of_exp_suffix": "سنوات خبرة",
+  "subscriptions":"الاشتراكات",
+  "retry":"أعد المحاولة",
+  "pendingApproval":"بانتظار الموافقة",
+  "actionRequired":"يلزم اتخاذ إجراء",
+  "noPendingSubscriptions":"لا توجد اشتراكات معلقة",
+  "activeSubscriptions":"الاشتراكات النشطة",
+  "noActiveSubscriptions":"لم يتم العثور على اشتراكات نشطة"
+
 }

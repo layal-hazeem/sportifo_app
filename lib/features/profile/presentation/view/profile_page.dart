@@ -32,8 +32,6 @@ class _ProfilePageState extends State<ProfilePage> {
     super.initState();
 
     final cubit = context.read<ProfileCubit>();
-
-    // 👤 user profile
     cubit.getProfile();
   }
 
@@ -148,12 +146,17 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                 ),
                               ),
-                              onPressed: () {
-                                Navigator.pushNamed(
+
+                              onPressed: () async {
+                                final result = await Navigator.pushNamed(
                                   context,
                                   AppRoutes.editProfile,
                                   arguments: user,
                                 );
+
+                                if (result == true) {
+                                  context.read<ProfileCubit>().getProfile();
+                                }
                               },
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,

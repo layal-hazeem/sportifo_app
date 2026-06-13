@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/features/profile/data/models/coach_profile_response.dart';
 import 'package:sportifo_app/features/profile/data/models/user_profile_response.dart';
@@ -31,7 +32,6 @@ class _ProfileTabsSectionState extends State<ProfileTabsSection> {
 
     return Column(
       children: [
-        // 🔘 Tabs
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 20),
           padding: const EdgeInsets.all(6),
@@ -55,7 +55,30 @@ class _ProfileTabsSectionState extends State<ProfileTabsSection> {
         const SizedBox(height: 20),
 
         AnimatedSwitcher(
-          duration: const Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 350),
+          switchInCurve: Curves.easeOut,
+          switchOutCurve: Curves.easeIn,
+          layoutBuilder: (currentChild, previousChildren) {
+            return Stack(
+              alignment: Alignment.topCenter,
+              children: [
+                ...previousChildren,
+                if (currentChild != null) currentChild,
+              ],
+            );
+          },
+          transitionBuilder: (child, animation) {
+            return FadeTransition(
+              opacity: animation,
+              child: SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(0.03, 0),
+                  end: Offset.zero,
+                ).animate(animation),
+                child: child,
+              ),
+            );
+          },
           child: _buildContent(),
         ),
       ],
@@ -182,31 +205,11 @@ class _ProfileTabsSectionState extends State<ProfileTabsSection> {
     );
   }
 
-  // 🧾 INFO TAB
-  Widget _buildInfoTab() {
-    final l10n = AppLocalizations.of(context)!;
-    final p = widget.userProfile;
-
-    return Container(
-      key: ValueKey(l10n.information),
-      padding: const EdgeInsets.all(16),
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      decoration: _cardStyle(),
-      child: BasicInfoSection(
-        email: p.email,
-        phone: p.phone,
-        birth: p.dateOfBirth,
-      ),
-    );
-  }
-
-  // 📏 BODY TAB
   Widget _buildBodyTab() {
     final l10n = AppLocalizations.of(context)!;
 
     final s = widget.userProfile.sizes;
 
-    // 🔥 إذا ما في بيانات
     if (s == null) {
       return Container(
         key: ValueKey(l10n.bodyMeasurements),
@@ -216,7 +219,7 @@ class _ProfileTabsSectionState extends State<ProfileTabsSection> {
         child: Center(
           child: Text(
             l10n.noBodyMeasurements,
-            style: TextStyle(color: Colors.grey),
+            style: TextStyle(color: AppColors.textDark),
           ),
         ),
       );
@@ -229,14 +232,46 @@ class _ProfileTabsSectionState extends State<ProfileTabsSection> {
       decoration: _cardStyle(),
       child: Column(
         children: [
-          _row(l10n.height, "${s.height ?? "-"} cm"),
-          _row(l10n.weight, "${s.weight ?? "-"} kg"),
-          _row(l10n.shoulders, s.shouldersWidth?.toString() ?? "-"),
-          _row(l10n.chestCircumference, s.chestPerimeter?.toString() ?? "-"),
-          _row(l10n.waist, s.waistPerimeter?.toString() ?? "-"),
-          _row(l10n.thighCircumference, s.thighPerimeter?.toString() ?? "-"),
-          _row(l10n.hipCircumference, s.hipPerimeter?.toString() ?? "-"),
-          _row(l10n.armCircumference, s.armPerimeter?.toString() ?? "-"),
+          _measurementRow(
+            l10n.height,
+            "${s.height ?? "-"} cm",
+            "assets/icons/height.svg",
+          ),
+          _measurementRow(
+            l10n.weight,
+            "${s.weight ?? "-"} kg",
+            "assets/icons/weight.svg",
+          ),
+          _measurementRow(
+            l10n.shoulders,
+            s.shouldersWidth?.toString() ?? "-",
+            "assets/icons/shoulders.svg",
+          ),
+          _measurementRow(
+            l10n.chestCircumference,
+            s.chestPerimeter?.toString() ?? "-",
+            "assets/icons/chest.svg",
+          ),
+          _measurementRow(
+            l10n.waist,
+            s.waistPerimeter?.toString() ?? "-",
+            "assets/icons/waist.svg",
+          ),
+          _measurementRow(
+            l10n.thighCircumference,
+            s.thighPerimeter?.toString() ?? "-",
+            "assets/icons/leg.svg",
+          ),
+          _measurementRow(
+            l10n.hipCircumference,
+            s.hipPerimeter?.toString() ?? "-",
+            "assets/icons/chest.svg",
+          ),
+          _measurementRow(
+            l10n.armCircumference,
+            s.armPerimeter?.toString() ?? "-",
+            "assets/icons/hand.svg",
+          ),
         ],
       ),
     );
@@ -249,7 +284,40 @@ class _ProfileTabsSectionState extends State<ProfileTabsSection> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
-          Text(value, style: const TextStyle(color: Colors.grey)),
+          Text(value, style: const TextStyle(color: AppColors.textDark)),
+        ],
+      ),
+    );
+  }
+
+  Widget _measurementRow(String title, String value, String iconPath) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        children: [
+          // icon
+          SvgPicture.asset(
+            iconPath,
+            width: 30,
+            height: 25,
+            colorFilter: const ColorFilter.mode(
+              AppColors.primaryBtn,
+              BlendMode.srcIn,
+            ),
+          ),
+
+          const SizedBox(width: 12),
+
+          // title
+          Expanded(
+            child: Text(
+              title,
+              style: const TextStyle(fontWeight: FontWeight.w500),
+            ),
+          ),
+
+          // value
+          Text(value, style: const TextStyle(color: AppColors.textDark)),
         ],
       ),
     );

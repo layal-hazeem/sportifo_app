@@ -19,5 +19,7 @@ class AppRoutes {
 
   static const String searchScreen = "/searchScreen";
   static const String savedExercises = "/savedExercises";
+    static const String usersSubscribed = "/coaches/users/subscribed";
+
   static const String completeProfile = "/completeProfile";
 }

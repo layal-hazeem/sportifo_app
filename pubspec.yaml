@@ -55,6 +55,7 @@ dependencies:
   http_cache_hive_store: ^5.1.0
   path_provider: ^2.1.5
   shimmer: ^3.0.0
+  flutter_svg: ^2.0.10
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -79,6 +80,7 @@ flutter:
   assets:
     - assets/images/
     - assets/images/muscles/
+    - assets/icons/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 

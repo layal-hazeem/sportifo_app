@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:sportifo_app/core/routes/app_routes.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
@@ -105,7 +106,7 @@ class _EditProfilePageState extends State<EditProfilePage>
               message: "Profile updated successfully",
               type: SnackBarType.success,
             );
-            Navigator.pop(context);
+            Navigator.pop(context, true);
           }
 
           if (state is ProfileFailure) {
@@ -192,52 +193,58 @@ class _EditProfilePageState extends State<EditProfilePage>
         key: _formKey,
         child: Column(
           children: [
-            buildField(
-              l10n.firstName,
-              l10n.firstName,
-              Icons.person_outline,
-              controller: _firstNameController,
-            ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    buildField(
+                      l10n.firstName,
+                      l10n.firstName,
+                      Icons.person_outline,
+                      controller: _firstNameController,
+                    ),
 
-            const SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
-            buildField(
-              l10n.lastName,
-              l10n.lastName,
-              Icons.person_outline,
-              controller: _lastNameController,
-            ),
+                    buildField(
+                      l10n.lastName,
+                      l10n.lastName,
+                      Icons.person_outline,
+                      controller: _lastNameController,
+                    ),
 
-            const SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
-            GestureDetector(
-              onTap: () async {
-                final pickedDate = await showDatePicker(
-                  context: context,
-                  initialDate: DateTime(2000),
-                  firstDate: DateTime(1950),
-                  lastDate: DateTime.now(),
-                );
+                    GestureDetector(
+                      onTap: () async {
+                        final pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime(2000),
+                          firstDate: DateTime(1950),
+                          lastDate: DateTime.now(),
+                        );
 
-                if (pickedDate != null) {
-                  final formattedDate = DateFormat(
-                    'yyyy-MM-dd',
-                  ).format(pickedDate);
-
-                  _dateOfBirthController.text = formattedDate;
-                }
-              },
-              child: AbsorbPointer(
-                child: buildField(
-                  "Date of Birth",
-                  "YYYY-MM-DD",
-                  Icons.calendar_today_outlined,
-                  controller: _dateOfBirthController,
+                        if (pickedDate != null) {
+                          _dateOfBirthController.text = DateFormat(
+                            'yyyy-MM-dd',
+                          ).format(pickedDate);
+                        }
+                      },
+                      child: AbsorbPointer(
+                        child: buildField(
+                          "Date of Birth",
+                          "YYYY-MM-DD",
+                          Icons.calendar_today_outlined,
+                          controller: _dateOfBirthController,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
 
-            const Spacer(),
+            const SizedBox(height: 20),
 
             CustomAuthButton(
               text: state is ProfileLoading ? "Saving..." : "Save Changes",
@@ -383,45 +390,47 @@ class _EditProfilePageState extends State<EditProfilePage>
           const SizedBox(height: 20),
 
           CustomAuthButton(
-              text: state is ProfileLoading ? "Saving..." : "Save Changes",
-              onPressed: state is ProfileLoading
-                  ? null
-                  : () {
-                      if (_formKey.currentState!.validate()) {
-                        context.read<ProfileCubit>().updateProfile(
-                          EditProfileRequestModel(
-                            first_name: _firstNameController.text,
-                            last_name: _lastNameController.text,
-                            date_of_birth: _dateOfBirthController.text,
-                            height: _heightController.text.isEmpty
-                                ? null
-                                : double.tryParse(_heightController.text),
-                            weight: _weightController.text.isEmpty
-                                ? null
-                                : double.tryParse(_weightController.text),
-                            shoulders_width: double.tryParse(
-                              _shouldersWidthController.text,
-                            ),
-                            chest_perimeter: double.tryParse(
-                              _chestPerimeterController.text,
-                            ),
-                            waist_perimeter: double.tryParse(
-                              _waistPerimeterController.text,
-                            ),
-                            thigh_perimeter: double.tryParse(
-                              _thighPerimeterController.text,
-                            ),
-                            hip_perimeter: double.tryParse(
-                              _hipPerimeterController.text,
-                            ),
-                            arm_perimeter: double.tryParse(
-                              _armPerimeterController.text,
-                            ),
+            isLoading: state is ProfileLoading,
+            text: state is ProfileLoading ? "Saving..." : "Save Changes",
+            onPressed: state is ProfileLoading
+                ? null
+                : () {
+                    final isValid = _formKey.currentState?.validate() ?? true;
+                    if (isValid) {
+                      context.read<ProfileCubit>().updateProfile(
+                        EditProfileRequestModel(
+                          first_name: _firstNameController.text,
+                          last_name: _lastNameController.text,
+                          date_of_birth: _dateOfBirthController.text,
+                          height: _heightController.text.isEmpty
+                              ? null
+                              : double.tryParse(_heightController.text),
+                          weight: _weightController.text.isEmpty
+                              ? null
+                              : double.tryParse(_weightController.text),
+                          shoulders_width: double.tryParse(
+                            _shouldersWidthController.text,
                           ),
-                        );
-                      }
-                    },
-            ),
+                          chest_perimeter: double.tryParse(
+                            _chestPerimeterController.text,
+                          ),
+                          waist_perimeter: double.tryParse(
+                            _waistPerimeterController.text,
+                          ),
+                          thigh_perimeter: double.tryParse(
+                            _thighPerimeterController.text,
+                          ),
+                          hip_perimeter: double.tryParse(
+                            _hipPerimeterController.text,
+                          ),
+                          arm_perimeter: double.tryParse(
+                            _armPerimeterController.text,
+                          ),
+                        ),
+                      );
+                    }
+                  },
+          ),
         ],
       ),
     );
@@ -464,7 +473,7 @@ class _EditProfilePageState extends State<EditProfilePage>
   Widget buildField(
     String label,
     String hint,
-    IconData icon, {
+    dynamic icon, {
     bool isPassword = false,
     TextInputType? keyboardType,
     required TextEditingController controller,
@@ -489,6 +498,43 @@ class _EditProfilePageState extends State<EditProfilePage>
           validator: validator,
         ),
       ],
+    );
+  }
+
+  Widget _iconRow(String title, String value, String iconPath) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              color: AppColors.primaryBtn.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: SvgPicture.asset(
+              iconPath,
+              width: 20,
+              height: 20,
+              colorFilter: const ColorFilter.mode(
+                AppColors.primaryBtn,
+                BlendMode.srcIn,
+              ),
+            ),
+          ),
+
+          const SizedBox(width: 12),
+
+          Expanded(
+            child: Text(
+              title,
+              style: const TextStyle(fontWeight: FontWeight.w500),
+            ),
+          ),
+
+          Text(value, style: const TextStyle(color: AppColors.textDark)),
+        ],
+      ),
     );
   }
 }

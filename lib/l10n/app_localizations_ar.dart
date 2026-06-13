@@ -345,7 +345,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get noEmail => 'لا يوجد بريد الكتروني';
 
   @override
-  String get cancel => 'Cancel';
+  String get cancel => 'إلغاء';
 
   @override
   String get termsPart1 => 'بالتسجيل، فإنك توافق على ';
@@ -441,4 +441,25 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get years_of_exp_suffix => 'سنوات خبرة';
+
+  @override
+  String get subscriptions => 'الاشتراكات';
+
+  @override
+  String get retry => 'أعد المحاولة';
+
+  @override
+  String get pendingApproval => 'بانتظار الموافقة';
+
+  @override
+  String get actionRequired => 'يلزم اتخاذ إجراء';
+
+  @override
+  String get noPendingSubscriptions => 'لا توجد اشتراكات معلقة';
+
+  @override
+  String get activeSubscriptions => 'الاشتراكات النشطة';
+
+  @override
+  String get noActiveSubscriptions => 'لم يتم العثور على اشتراكات نشطة';
 }

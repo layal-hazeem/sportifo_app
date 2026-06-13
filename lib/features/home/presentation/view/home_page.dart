@@ -13,6 +13,8 @@ import 'package:sportifo_app/features/home/presentation/widgets/custom_bottom_na
 import 'package:sportifo_app/features/home/presentation/widgets/custom_drawer.dart';
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_cubit.dart';
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_state.dart';
+import 'package:sportifo_app/features/subscriptions/presentation/view/subscriptions_screen.dart';
+import 'package:sportifo_app/features/subscriptions/presentation/view_model/subscription_cubit.dart';
 import 'package:sportifo_app/features/workout/presentation/view_model/categories_cubit/categories_cubit.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../../../../core/di/service_locator.dart';
@@ -31,30 +33,34 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   DrawerItem selectedDrawerItem = DrawerItem.profile;
 
-  // شاشات مخصصة للمتدرب (Trainee / User)
   List<Widget> _getTraineeScreens() {
+    final l10n = AppLocalizations.of(context)!;
     return [
-      const Center(child: Text("Progress Screen")), // شاشة التقدم للمتدرب
-      const Center(child: Text("My Plans Screen")),
-      const TraineeScreen(), // واجهة المتدرب الرئيسية
+      Center(child: Text(l10n.progress)), 
+      Center(child: Text(l10n.myPlans)),
+      const TraineeScreen(), 
       BlocProvider(
         create: (context) => getIt<CategoriesCubit>(),
         child: const WorkoutTypeScreen(),
       ),
-      const Center(child: Text("Chat Screen")),
+       Center(child: Text(l10n.chat)),
     ];
   }
 
   List<Widget> _getCoachScreens() {
+    final l10n = AppLocalizations.of(context)!;
     return [
-      const Center(child: Text("Subscriptions Screen")),
-      const Center(child: Text("My Plans Screen")),
+      BlocProvider(
+        create: (context) => getIt<SubscriptionCubit>()..getSubscriptions(),
+        child: SubscriptionsScreen(),
+      ),
+       Center(child: Text(l10n.myPlans)),
       const CoachScreen(),
       BlocProvider(
         create: (context) => getIt<CategoriesCubit>(),
         child: const WorkoutTypeScreen(),
       ),
-      const Center(child: Text("Chat Screen")),
+       Center(child: Text(l10n.chat)),
     ];
   }
 
@@ -126,6 +132,7 @@ class _HomePageState extends State<HomePage> {
                     appBar: CustomAppBar(
                       currentIndex: homeViewModel.currentIndex,
                       userName: profile.firstName,
+                      isCoach: isCoach,
                     ),
                     bottomNavigationBar: BottomNavigationBar(
                       currentIndex: homeViewModel.currentIndex,
@@ -139,7 +146,7 @@ class _HomePageState extends State<HomePage> {
                           icon: isCoach
                               ? Icons.people_outline
                               : Icons.show_chart,
-                          label: isCoach ? "Subscriptions" : l10n.progress,
+                          label: isCoach ? l10n.subscriptions : l10n.progress,
                           isSelected: homeViewModel.currentIndex == 0,
                         ),
                         CustomBottomNavBar.build(
@@ -169,8 +176,8 @@ class _HomePageState extends State<HomePage> {
               );
             }
 
-            return const Scaffold(
-              body: Center(child: Text("Something went wrong")),
+            return Scaffold(
+              body: Center(child: Text(l10n.error)),
             );
           },
         ),

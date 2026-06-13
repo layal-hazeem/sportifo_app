@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/logout/logout_cubit.dart';
 import 'package:sportifo_app/features/profile/data/models/user_profile_response.dart';
 import 'package:sportifo_app/features/profile/presentation/view/edit_profile_page.dart';
+import 'package:sportifo_app/features/subscriptions/presentation/view/subscriptions_screen.dart';
+import 'package:sportifo_app/features/subscriptions/presentation/view_model/subscription_cubit.dart';
 import '../../features/auth/presentation/view/complete_profile_info.dart';
 import '../../features/auth/presentation/view/register_screen.dart';
 import '../../features/auth/presentation/view_model/complete_profile/complete_profile_cubit.dart';
@@ -65,6 +67,15 @@ class AppRouter {
             child: const HomePage(),
           ),
         );
+
+        case AppRoutes.usersSubscribed:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => getIt<SubscriptionCubit>()..getSubscriptions(),
+            child: const SubscriptionsScreen(),
+          ),
+        );
+
       case AppRoutes.completeProfile:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(

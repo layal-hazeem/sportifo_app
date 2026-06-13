@@ -7,6 +7,9 @@ import 'package:sportifo_app/features/auth/presentation/view_model/logout/logout
 import 'package:sportifo_app/features/profile/data/repository/profile_repository.dart';
 import 'package:sportifo_app/features/profile/data/web_services/profile_web_service.dart';
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_cubit.dart';
+import 'package:sportifo_app/features/subscriptions/data/repository/subscription_repository.dart';
+import 'package:sportifo_app/features/subscriptions/data/web_services/subscriptions_web_service.dart';
+import 'package:sportifo_app/features/subscriptions/presentation/view_model/subscription_cubit.dart';
 import '../../features/ ads/data/repository/ads_repository.dart';
 import '../../features/ ads/data/web_services/ads_web_service.dart';
 import '../../features/auth/data/repository/auth_repository.dart';
@@ -111,6 +114,17 @@ Future<void> setupServiceLocator() async {
   getIt.registerFactory<AllCoachesCubit>(() => AllCoachesCubit(getIt<CoachRepository>()));
   getIt.registerFactory<CoachDetailsCubit>(() => CoachDetailsCubit(getIt<CoachRepository>()));
 
+  //  قسم الاشتراكات (Subscriptions)
+  getIt.registerLazySingleton<SubscriptionWebService>(
+    () => SubscriptionWebService(getIt<Dio>()),
+  );
+
+  getIt.registerLazySingleton<SubscriptionRepository>(
+    () => SubscriptionRepository(getIt<SubscriptionWebService>()),
+  );
+
+  getIt.registerFactory<SubscriptionCubit>(
+    () => SubscriptionCubit(getIt<SubscriptionRepository>()),
   // 🔥 🎯 تسجيل ميزة الأهداف والاحتياجات الغذائية الجديدة هنا
   getIt.registerLazySingleton<TargetWebService>(
         () => TargetWebService(getIt<Dio>()),
