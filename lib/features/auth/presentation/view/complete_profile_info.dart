@@ -178,27 +178,23 @@ class CompleteProfileInfoView extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                Text(l10n.gender),
+
                 Row(
                   children: [
                     _buildGenderCard(
                       label: l10n.male,
                       icon: Icons.male,
-                      // نتحقق إذا كانت القيمة true (Male)
                       isSelected: state.gender == true,
-                      onTap: () => context
-                          .read<CompleteProfileCubit>()
-                          .setGender(true), // نرسل true للذكر
+                      onTap: () =>
+                          context.read<CompleteProfileCubit>().setGender(true),
                     ),
                     const SizedBox(width: 15),
                     _buildGenderCard(
                       label: l10n.female,
                       icon: Icons.female,
-                      // نتحقق إذا كانت القيمة false (Female)
                       isSelected: state.gender == false,
-                      onTap: () => context
-                          .read<CompleteProfileCubit>()
-                          .setGender(false), // نرسل false للأنثى
+                      onTap: () =>
+                          context.read<CompleteProfileCubit>().setGender(false),
                     ),
                   ],
                 ),

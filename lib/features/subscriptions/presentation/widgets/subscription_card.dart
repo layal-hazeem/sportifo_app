@@ -15,13 +15,12 @@ class SubscriptionCard extends StatelessWidget {
         userModel.userSubscriptions!.isNotEmpty;
     final subscriptionsList = userModel.userSubscriptions ?? [];
 
-    // نتحقق مما إذا كان لدى المستخدم أي اشتراك بحالة "نشطة" ومؤكدة حالياً
     final bool hasActivePlan =
         userModel.userSubscriptions?.any(
           (sub) => sub.status?.toLowerCase() == 'active' && sub.isActive == 1,
         ) ??
         false;
-    Color mainAccentColor = hasActivePlan ? Colors.green : Colors.deepOrange;
+    Color mainAccentColor = hasActivePlan ? Colors.green : AppColors.primaryBtn;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
