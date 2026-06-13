@@ -155,7 +155,7 @@ class _OTPScreenState extends State<OTPScreen> {
             } else {
               if (state.response.token != null) {
                 await getIt<LocalStorage>().saveToken(state.response.token!);
-                Navigator.pushNamedAndRemoveUntil(context, AppRoutes.home, (route) => false);
+                Navigator.pushNamedAndRemoveUntil(context, AppRoutes.completeProfile, (route) => false);
               }
             }
           }

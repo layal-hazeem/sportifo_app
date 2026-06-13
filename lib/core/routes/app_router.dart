@@ -76,6 +76,13 @@ class AppRouter {
           ),
         );
 
+      case AppRoutes.completeProfile:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => getIt<CompleteProfileCubit>(),
+            child: CompleteProfileInfoView(),
+          ),
+        );
       case AppRoutes.workoutType:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
@@ -204,8 +211,8 @@ class AppRouter {
             ],
             child: SearchExercisesScreen(
               categoryId: args?['categoryId'], // مرريها من الـ Map
-              organId: args?['organId'], // مرريها من الـ Map
-              partIds: args?['partIds'], // مرريها من الـ Map
+              organId: args?['organId'],       // مرريها من الـ Map
+              smallestCategoryId: args?['smallestCategoryId'],       // مرريها من الـ Map
             ),
           ),
         );

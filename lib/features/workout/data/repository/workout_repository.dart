@@ -1,4 +1,3 @@
-// تأكدي من استيراد ApiResult و ApiErrorHandler
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 
 import '../../../../core/network/api_result.dart';
@@ -58,7 +57,7 @@ class WorkoutRepository {
   Future<ApiResult<List<ExerciseModel>>> getExercises({
     int? categoryId,
     int? organId,
-    List<int>? partIds,
+    List<int>? smallestCategoryId,
     String? searchQuery,
   }) async {
     try {
@@ -66,7 +65,7 @@ class WorkoutRepository {
       final response = await _webService.getExercises(
         categoryId: categoryId,
         organId: organId,
-        partIds: partIds,
+        smallestCategoryId: smallestCategoryId,
         searchQuery: searchQuery,
       );
       final responseModel = ExerciseResponseModel.fromJson(response.data);

@@ -26,7 +26,7 @@ class WorkoutWebService {
   Future<Response> getExercises({
     int? categoryId,
     int? organId,
-    List<int>? partIds,
+    List<int>? smallestCategoryId,
     String? searchQuery,
     Options? options, //  السحر هنا: أضفنا المعامل الاختياري لاستقبال خيارات الكاش
   }) async {
@@ -35,7 +35,7 @@ class WorkoutWebService {
       queryParameters: {
         if (categoryId != null) 'category_id': categoryId,
         if (organId != null) 'organ_id': organId,
-        if (partIds != null) 'part_ids': partIds,
+        if (smallestCategoryId != null && smallestCategoryId.isNotEmpty) 'smallest_category_id[]': smallestCategoryId,
         if (searchQuery != null) 'search': searchQuery,
       },
       options: options, // 🔥 هنا يتم دمج خيارات التخزين الذكي مع الريكويست الحالي

@@ -21,7 +21,7 @@ class ApiConstants {
 
   static const String categories = "categories";
   static const String advertisement = "advertisement";
-
+  static const String targets = "targets";
   static const String coaches = "coaches";
   static const String usersSubscribed = "coaches/users/subscribed";
 }
