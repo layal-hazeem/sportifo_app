@@ -434,7 +434,7 @@ abstract class AppLocalizations {
   /// No description provided for @measuermentsHint.
   ///
   /// In en, this message translates to:
-  /// **'These measurements help us provide a more accurate analysis of your physical progress.'**
+  /// **'These measurements help us provide a more accurate analysis of your physical progress (optional)'**
   String get measuermentsHint;
 
   /// No description provided for @saving.

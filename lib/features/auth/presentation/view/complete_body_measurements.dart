@@ -23,7 +23,6 @@ class CompleteBodyMeasurementsView extends StatelessWidget {
       appBar: NeumorphicAppBar(title: Text(l10n.bodyMeasurements)),
       body: BlocConsumer<CompleteProfileCubit, CompleteProfileState>(
         listener: (context, state) {
-          // ✅ التعديل هنا: افحص الـ status وليس نوع الكلاس
           if (state.status == ProfileStatus.success) {
             Navigator.pushReplacement(
               context,
@@ -34,9 +33,7 @@ class CompleteBodyMeasurementsView extends StatelessWidget {
           if (state.status == ProfileStatus.error) {
             AppSnackBar.show(
               context,
-              message:
-                  state.errorMessage ??
-                  l10n.unexpectedError, // تأكدي من وجود unexpectedError في الترجمة
+              message: state.errorMessage ?? l10n.unexpectedError,
               type: SnackBarType.error,
             );
           }
@@ -65,12 +62,12 @@ class CompleteBodyMeasurementsView extends StatelessWidget {
 
                 _buildMeasurementRow(
                   label1: l10n.shoulders,
-                  icon1: Icons.horizontal_rule,
+                  icon1: "assets/icons/shoulders.svg",
                   onChanged1: (v) => context
                       .read<CompleteProfileCubit>()
                       .setShoulders(double.tryParse(v)),
                   label2: l10n.chestCircumference,
-                  icon2: Icons.architecture,
+                  icon2: "assets/icons/chest.svg",
                   onChanged2: (v) {
                     final value = double.tryParse(v);
                     context.read<CompleteProfileCubit>().setChest(value);
@@ -80,12 +77,12 @@ class CompleteBodyMeasurementsView extends StatelessWidget {
 
                 _buildMeasurementRow(
                   label1: l10n.waist,
-                  icon1: Icons.straighten,
+                  icon1: "assets/icons/waist.svg",
                   onChanged1: (v) => context
                       .read<CompleteProfileCubit>()
                       .setWaist(double.tryParse(v)),
                   label2: l10n.hipCircumference,
-                  icon2: Icons.accessibility_new,
+                  icon2: "assets/icons/chest.svg",
                   onChanged2: (v) {
                     final value = double.tryParse(v);
                     context.read<CompleteProfileCubit>().setHip(value);
@@ -95,12 +92,12 @@ class CompleteBodyMeasurementsView extends StatelessWidget {
 
                 _buildMeasurementRow(
                   label1: l10n.thighCircumference,
-                  icon1: Icons.boy_rounded,
+                  icon1: "assets/icons/leg.svg",
                   onChanged1: (v) => context
                       .read<CompleteProfileCubit>()
                       .setThigh(double.tryParse(v)),
                   label2: l10n.armCircumference,
-                  icon2: Icons.front_hand_outlined,
+                  icon2: "assets/icons/hand.svg",
                   onChanged2: (v) {
                     final value = double.tryParse(v);
                     context.read<CompleteProfileCubit>().setHand(value);
@@ -123,8 +120,7 @@ class CompleteBodyMeasurementsView extends StatelessWidget {
                             AppSnackBar.show(
                               context,
                               message: l10n.messageOfIncompleteInfo,
-                              type: SnackBarType
-                                  .warning, 
+                              type: SnackBarType.warning,
                             );
                             return;
                           }
@@ -141,10 +137,10 @@ class CompleteBodyMeasurementsView extends StatelessWidget {
 
   Widget _buildMeasurementRow({
     required String label1,
-    required IconData icon1,
+    required String icon1,
     required Function(String) onChanged1,
     required String label2,
-    required IconData icon2,
+    required String icon2,
     required Function(String) onChanged2,
   }) {
     return Row(
@@ -152,7 +148,7 @@ class CompleteBodyMeasurementsView extends StatelessWidget {
         Expanded(
           child: CustomNeumorphicField(
             hint: label1,
-            icon: icon1,
+            iconPath: icon1,
             keyboardType: TextInputType.number,
             onChanged: onChanged1,
           ),
@@ -161,7 +157,7 @@ class CompleteBodyMeasurementsView extends StatelessWidget {
         Expanded(
           child: CustomNeumorphicField(
             hint: label2,
-            icon: icon2,
+            iconPath: icon2,
             keyboardType: TextInputType.number,
             onChanged: onChanged2,
           ),

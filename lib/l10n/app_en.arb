@@ -57,7 +57,7 @@
   "thighCircumference": "Thigh",
   "armCircumference": "Hand",
   "startingTheSportsJourney":"Starting the sports journey",
-    "measuermentsHint":"These measurements help us provide a more accurate analysis of your physical progress.",
+    "measuermentsHint":"These measurements help us provide a more accurate analysis of your physical progress (optional)",
     "saving":"Saving....",
   "createAccount": "Create Account",
   "firstName": "First Name",
