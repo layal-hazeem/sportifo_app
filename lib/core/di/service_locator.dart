@@ -124,7 +124,8 @@ Future<void> setupServiceLocator() async {
   );
 
   getIt.registerFactory<SubscriptionCubit>(
-    () => SubscriptionCubit(getIt<SubscriptionRepository>()),
+    () => SubscriptionCubit(getIt<SubscriptionRepository>()),);
+    
   // 🔥 🎯 تسجيل ميزة الأهداف والاحتياجات الغذائية الجديدة هنا
   getIt.registerLazySingleton<TargetWebService>(
         () => TargetWebService(getIt<Dio>()),
