@@ -100,6 +100,7 @@ class _ProfileTabsSectionState extends State<ProfileTabsSection> {
       key: const ValueKey("user_info"),
       padding: const EdgeInsets.all(16),
       margin: const EdgeInsets.symmetric(horizontal: 20),
+      decoration: _cardStyle(),
       child: BasicInfoSection(
         email: p.email,
         phone: p.phone,

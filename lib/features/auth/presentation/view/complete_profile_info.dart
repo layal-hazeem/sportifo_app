@@ -5,6 +5,7 @@ import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:sportifo_app/core/di/service_locator.dart';
 import 'package:sportifo_app/core/helpers/app_image_picker.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/widgets/wave_app_bar.dart';
 import 'package:sportifo_app/features/auth/presentation/view/complete_body_measurements.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/complete_profile/complete_profile_cubit.dart';
 import 'package:sportifo_app/features/auth/presentation/widgets/custom_neumorphic_field.dart';
@@ -21,11 +22,9 @@ class CompleteProfileInfoView extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          l10n.completeProfileInfo,
-          style: TextStyle(fontSize: AppSizes.labelFontSize),
-        ),
+      appBar: WaveAppBar(
+        title: l10n.completeProfileInfo,
+        showBackButton: false,
       ),
       body: BlocConsumer<CompleteProfileCubit, CompleteProfileState>(
         listener: (context, state) {
@@ -51,19 +50,19 @@ class CompleteProfileInfoView extends StatelessWidget {
             ),
             child: Column(
               children: [
-                const SizedBox(height: 60),
+                const SizedBox(height: 20),
                 Center(
                   child: Stack(
                     children: [
                       CircleAvatar(
-                        radius: 60,
+                        radius: 80,
                         backgroundColor: AppColors.background,
                         backgroundImage: state.imagePath != null
                             ? FileImage(File(state.imagePath!))
-                            : null,
-                        child: state.imagePath == null
-                            ? Icon(Icons.person)
-                            : null,
+                            : const AssetImage(
+                                    "assets/images/default_avatar.jpg",
+                                  )
+                                  as ImageProvider,
                       ),
                       Positioned(
                         bottom: 0,
@@ -101,7 +100,7 @@ class CompleteProfileInfoView extends StatelessWidget {
                     Expanded(
                       child: CustomNeumorphicField(
                         hint: "${l10n.weight} (${l10n.kg})",
-                        icon: Icons.monitor_weight_outlined,
+                        iconPath: "assets/icons/weight.svg",
                         keyboardType: TextInputType.number,
                         onChanged: (val) {
                           final cubit = context.read<CompleteProfileCubit>();
@@ -114,7 +113,7 @@ class CompleteProfileInfoView extends StatelessWidget {
                     Expanded(
                       child: CustomNeumorphicField(
                         hint: "${l10n.height} (${l10n.cm})",
-                        icon: Icons.height,
+                        iconPath: "assets/icons/height.svg",
                         keyboardType: TextInputType.number,
                         onChanged: (val) {
                           context.read<CompleteProfileCubit>().setHeight(
@@ -137,7 +136,7 @@ class CompleteProfileInfoView extends StatelessWidget {
                     );
                     if (picked != null) {
                       context.read<CompleteProfileCubit>().setBirthDate(
-                        picked.toString(),
+                        "${picked.year}-${picked.month}-${picked.day}",
                       );
                     }
                   },

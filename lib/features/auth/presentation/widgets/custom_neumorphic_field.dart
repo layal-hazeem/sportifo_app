@@ -1,9 +1,11 @@
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
+import 'package:flutter_svg/svg.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class CustomNeumorphicField extends StatefulWidget {
   final String hint;
-  final IconData icon;
+  final IconData? icon;
+  final String? iconPath;
   final bool isPassword;
   final Function(String)? onChanged;
   final TextInputType? keyboardType;
@@ -13,8 +15,9 @@ class CustomNeumorphicField extends StatefulWidget {
   const CustomNeumorphicField({
     super.key,
     required this.hint,
-    required this.icon,
+    this.icon,
     this.isPassword = false,
+    this.iconPath,
     this.onChanged,
     this.keyboardType,
     this.controller,
@@ -59,22 +62,38 @@ class _CustomNeumorphicFieldState extends State<CustomNeumorphicField> {
             fontSize: AppSizes.hintFontSize,
           ),
 
-          prefixIcon: Icon(widget.icon, color: AppColors.hintText, size: 20),
+          prefixIcon: widget.iconPath != null
+              ? Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: SvgPicture.asset(
+                    widget.iconPath!,
+                    colorFilter: const ColorFilter.mode(
+                      AppColors.primaryBtn,
+                      BlendMode.srcIn,
+                    ),
+                    width: 15,
+                    height: 15,
+                  ),
+                )
+              : widget.icon != null
+              ? Icon(widget.icon, color: AppColors.hintText, size: 20)
+              : null,
 
           suffixIcon: widget.isPassword
               ? IconButton(
-            icon: Icon(
-              _obscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-              color: AppColors.hintText,
-              size: 20,
-            ),
-            onPressed: () {
-              // تغيير الحالة عند الضغط على العين
-              setState(() {
-                _obscureText = !_obscureText;
-              });
-            },
-          )
+                  icon: Icon(
+                    _obscureText
+                        ? Icons.visibility_off_outlined
+                        : Icons.visibility_outlined,
+                    color: AppColors.hintText,
+                    size: 20,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _obscureText = !_obscureText;
+                    });
+                  },
+                )
               : null,
 
           border: InputBorder.none,

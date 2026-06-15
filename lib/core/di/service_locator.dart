@@ -44,7 +44,7 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<SharedPreferences>(() => sharedPrefs);
 
   getIt.registerLazySingleton<LocalStorage>(
-        () => LocalStorage(getIt<SharedPreferences>()),
+    () => LocalStorage(getIt<SharedPreferences>()),
   );
 
   final dioFactory = DioFactory(getIt<LocalStorage>());
@@ -54,86 +54,100 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<Dio>(() => getIt<DioFactory>().dio);
 
   getIt.registerLazySingleton<AuthWebService>(
-        () => AuthWebService(getIt<Dio>()),
+    () => AuthWebService(getIt<Dio>()),
   );
 
   getIt.registerLazySingleton<AuthRepository>(
-        () => AuthRepository(getIt<AuthWebService>()),
+    () => AuthRepository(getIt<AuthWebService>()),
   );
 
   getIt.registerFactory<LoginCubit>(() => LoginCubit(getIt<AuthRepository>()));
   getIt.registerFactory(() => ForgotPasswordCubit(getIt()));
 
   getIt.registerFactory<RegisterCubit>(
-        () => RegisterCubit(getIt<AuthRepository>()),
+    () => RegisterCubit(getIt<AuthRepository>()),
   );
 
   getIt.registerFactory<CompleteProfileCubit>(
-        () => CompleteProfileCubit(getIt<AuthRepository>()),
+    () => CompleteProfileCubit(getIt<AuthRepository>()),
   );
 
   getIt.registerLazySingleton<WorkoutWebService>(
-        () => WorkoutWebService(getIt<Dio>()),
+    () => WorkoutWebService(getIt<Dio>()),
   );
   getIt.registerLazySingleton<WorkoutRepository>(
-        () => WorkoutRepository(getIt<WorkoutWebService>()),
+    () => WorkoutRepository(getIt<WorkoutWebService>()),
   );
   getIt.registerFactory<ExercisesCubit>(
-        () => ExercisesCubit(getIt<WorkoutRepository>()),
+    () => ExercisesCubit(getIt<WorkoutRepository>()),
   );
   getIt.registerFactory<CategoriesCubit>(
-        () => CategoriesCubit(getIt<WorkoutRepository>()),
+    () => CategoriesCubit(getIt<WorkoutRepository>()),
   );
 
-  getIt.registerFactory<PartsCubit>(() => PartsCubit(getIt<WorkoutRepository>()));
-  getIt.registerLazySingleton<SavedExercisesCubit>(() => SavedExercisesCubit(getIt<WorkoutRepository>()));
+  getIt.registerFactory<PartsCubit>(
+    () => PartsCubit(getIt<WorkoutRepository>()),
+  );
+  getIt.registerLazySingleton<SavedExercisesCubit>(
+    () => SavedExercisesCubit(getIt<WorkoutRepository>()),
+  );
 
   getIt.registerLazySingleton<ProfileWebService>(
-        () => ProfileWebService(getIt<Dio>()),
+    () => ProfileWebService(getIt<Dio>()),
   );
   getIt.registerLazySingleton<ProfileRepository>(
-        () => ProfileRepository(getIt<ProfileWebService>()),
+    () => ProfileRepository(getIt<ProfileWebService>()),
   );
   getIt.registerFactory<ProfileCubit>(
-        () => ProfileCubit(getIt<ProfileRepository>()),
+    () => ProfileCubit(getIt<ProfileRepository>()),
   );
   getIt.registerFactory<LogoutCubit>(
-        () => LogoutCubit(getIt<AuthRepository>()),
+    () => LogoutCubit(getIt<AuthRepository>()),
   );
   getIt.registerFactory<LocaleCubit>(() => LocaleCubit(getIt<LocalStorage>()));
-  getIt.registerFactory<SearchCubit>(() => SearchCubit(getIt<WorkoutRepository>()));
+  getIt.registerFactory<SearchCubit>(
+    () => SearchCubit(getIt<WorkoutRepository>()),
+  );
 
   getIt.registerLazySingleton<AdsWebService>(() => AdsWebService(getIt<Dio>()));
-  getIt.registerLazySingleton<AdsRepository>(() => AdsRepository(getIt<AdsWebService>()));
+  getIt.registerLazySingleton<AdsRepository>(
+    () => AdsRepository(getIt<AdsWebService>()),
+  );
   getIt.registerFactory<AdsCubit>(() => AdsCubit(getIt<AdsRepository>()));
 
   getIt.registerLazySingleton<CoachWebService>(() => CoachWebService());
-  getIt.registerLazySingleton<CoachRepository>(() => CoachRepository(getIt<CoachWebService>()));
+  getIt.registerLazySingleton<CoachRepository>(
+    () => CoachRepository(getIt<CoachWebService>()),
+  );
 
-  getIt.registerFactory<CoachesCubit>(() => CoachesCubit(getIt<CoachRepository>()));
-  getIt.registerFactory<AllCoachesCubit>(() => AllCoachesCubit(getIt<CoachRepository>()));
-  getIt.registerFactory<CoachDetailsCubit>(() => CoachDetailsCubit(getIt<CoachRepository>()));
+  getIt.registerFactory<CoachesCubit>(
+    () => CoachesCubit(getIt<CoachRepository>()),
+  );
+  getIt.registerFactory<AllCoachesCubit>(
+    () => AllCoachesCubit(getIt<CoachRepository>()),
+  );
+  getIt.registerFactory<CoachDetailsCubit>(
+    () => CoachDetailsCubit(getIt<CoachRepository>()),
+  );
 
-  //  قسم الاشتراكات (Subscriptions)
   getIt.registerLazySingleton<SubscriptionWebService>(
     () => SubscriptionWebService(getIt<Dio>()),
   );
-
   getIt.registerLazySingleton<SubscriptionRepository>(
     () => SubscriptionRepository(getIt<SubscriptionWebService>()),
   );
-
   getIt.registerFactory<SubscriptionCubit>(
-    () => SubscriptionCubit(getIt<SubscriptionRepository>()),);
-    
+    () => SubscriptionCubit(getIt<SubscriptionRepository>()),
+  );
+
   // 🔥 🎯 تسجيل ميزة الأهداف والاحتياجات الغذائية الجديدة هنا
   getIt.registerLazySingleton<TargetWebService>(
-        () => TargetWebService(getIt<Dio>()),
+    () => TargetWebService(getIt<Dio>()),
   );
   getIt.registerLazySingleton<TargetRepository>(
-        () => TargetRepository(getIt<TargetWebService>()),
+    () => TargetRepository(getIt<TargetWebService>()),
   );
   getIt.registerFactory<TargetCubit>(
-        () => TargetCubit(getIt<TargetRepository>()),
+    () => TargetCubit(getIt<TargetRepository>()),
   );
 }

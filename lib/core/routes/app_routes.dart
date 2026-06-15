@@ -22,4 +22,5 @@ class AppRoutes {
     static const String usersSubscribed = "/coaches/users/subscribed";
 
   static const String completeProfile = "/completeProfile";
+  static const String createPlan = "/plans";
 }

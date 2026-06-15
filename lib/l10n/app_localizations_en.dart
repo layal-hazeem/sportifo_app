@@ -177,7 +177,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get startingTheSportsJourney => 'Starting the sports journey';
 
   @override
-  String get measuermentsHint => 'These measurements help us provide a more accurate analysis of your physical progress.';
+  String get measuermentsHint => 'These measurements help us provide a more accurate analysis of your physical progress (optional)';
 
   @override
   String get saving => 'Saving....';

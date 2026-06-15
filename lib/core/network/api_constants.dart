@@ -9,7 +9,6 @@ class ApiConstants {
   static const String verifyResetOtp = "verify-reset-otp";
   static const String resendOtp = "resend-otp";
   static const String resetPassword = "reset-password";
-  // static const String editProfile = "edit";
   static const String exercise = "exercise";
   static const String saveExercise = "savedExercise";
   static const String getSavedExercises = "savedExercise";
@@ -24,4 +23,6 @@ class ApiConstants {
   static const String targets = "targets";
   static const String coaches = "coaches";
   static const String usersSubscribed = "coaches/users/subscribed";
+    static const String createPlan = "plans";
+
 }
