@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sportifo_app/core/routes/app_routes.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import '../../data/models/users_subscribed_model.dart';
 
@@ -14,12 +15,9 @@ class SubscriptionCard extends StatelessWidget {
         userModel.userSubscriptions != null &&
         userModel.userSubscriptions!.isNotEmpty;
     final subscriptionsList = userModel.userSubscriptions ?? [];
+    final bool hasActivePlan = userModel.hasPlan ?? false;
+    final bool showCreatePlanButton = hasSubscriptions && !hasActivePlan;
 
-    final bool hasActivePlan =
-        userModel.userSubscriptions?.any(
-          (sub) => sub.status?.toLowerCase() == 'active' && sub.isActive == 1,
-        ) ??
-        false;
     Color mainAccentColor = hasActivePlan ? Colors.green : AppColors.primaryBtn;
 
     return Container(
@@ -75,7 +73,7 @@ class SubscriptionCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      "Total Subscriptions: ${subscriptionsList.length}",
+                      "Total Subs: ${subscriptionsList.length}",
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.grey[600],
@@ -233,15 +231,16 @@ class SubscriptionCard extends StatelessWidget {
                   ),
                 );
               }).toList(),
-            if (!hasActivePlan) ...[
+            if (showCreatePlanButton) ...[
               const SizedBox(height: 10),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   onPressed: () {
-                    // الانتقال لشاشة عمل الخطة للمشترك الحالي
-                    print(
-                      "Navigate to create plan for: ${userModel.firstName}",
+                    Navigator.pushNamed(
+                      context,
+                      AppRoutes.createPlan,
+                      arguments: userModel,
                     );
                   },
                   icon: const Icon(Icons.add_task_rounded, size: 18),

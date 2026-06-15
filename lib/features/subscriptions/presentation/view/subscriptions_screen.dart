@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sportifo_app/core/di/service_locator.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/features/subscriptions/data/models/users_subscribed_model.dart';
 import 'package:sportifo_app/features/subscriptions/presentation/widgets/pending_card.dart';
@@ -17,11 +15,6 @@ class SubscriptionsScreen extends StatefulWidget {
 }
 
 class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
-  static bool isUserCoach() {
-    String? role = getIt<SharedPreferences>().getString('user_role');
-    return role == 'coach';
-  }
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -64,13 +57,15 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
               return user.userSubscriptions?.any(
                     (sub) =>
                         sub.status?.toLowerCase() == 'pending' &&
-                        sub.isActive == 0,
+                        (sub.isActive ?? 0) == 0,
                   ) ??
                   false;
             }).toList();
 
             final activeSubscriptions = allUsers.where((user) {
-              return user.userSubscriptions?.any((sub) => sub.isActive == 1) ??
+              return user.userSubscriptions?.any(
+                    (sub) => (sub.isActive ?? 0) == 1,
+                  ) ??
                   false;
             }).toList();
 
@@ -100,7 +95,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
     );
   }
 
-  Widget _buildPendingSection(List<dynamic> pendingList) {
+  Widget _buildPendingSection(List<UsersSubscribedModel> pendingList) {
     final l10n = AppLocalizations.of(context)!;
     final screenWidth = MediaQuery.of(context).size.width;
     final cardWidth = screenWidth * 0.8;
@@ -173,7 +168,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
     );
   }
 
-  Widget _buildActiveSection(List<dynamic> activeList) {
+  Widget _buildActiveSection(List<UsersSubscribedModel> activeList) {
     final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -205,11 +200,8 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: activeList.length,
                 itemBuilder: (context, index) {
-                  final user = activeList[index] as UsersSubscribedModel;
-
-                  return SubscriptionCard(
-                    userModel: user,
-                  );
+                  final user = activeList[index];
+                  return SubscriptionCard(userModel: user);
                 },
               ),
       ],

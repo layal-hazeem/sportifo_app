@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/logout/logout_cubit.dart';
+import 'package:sportifo_app/features/plans/presentation/view/create_plan_screen.dart';
+import 'package:sportifo_app/features/plans/presentation/view_model/create_plan_cubit.dart';
 import 'package:sportifo_app/features/profile/data/models/user_profile_response.dart';
 import 'package:sportifo_app/features/profile/presentation/view/edit_profile_page.dart';
+import 'package:sportifo_app/features/subscriptions/data/models/users_subscribed_model.dart';
 import 'package:sportifo_app/features/subscriptions/presentation/view/subscriptions_screen.dart';
 import 'package:sportifo_app/features/subscriptions/presentation/view_model/subscription_cubit.dart';
 import '../../features/auth/presentation/view/complete_profile_info.dart';
@@ -68,7 +71,7 @@ class AppRouter {
           ),
         );
 
-        case AppRoutes.usersSubscribed:
+      case AppRoutes.usersSubscribed:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
             create: (_) => getIt<SubscriptionCubit>()..getSubscriptions(),
@@ -135,7 +138,6 @@ class AppRouter {
             child: const ProfilePage(),
           ),
         );
-
 
       case AppRoutes.editProfile:
         final profile = settings.arguments as ProfileResponsModel;
@@ -211,8 +213,9 @@ class AppRouter {
             ],
             child: SearchExercisesScreen(
               categoryId: args?['categoryId'], // مرريها من الـ Map
-              organId: args?['organId'],       // مرريها من الـ Map
-              smallestCategoryId: args?['smallestCategoryId'],       // مرريها من الـ Map
+              organId: args?['organId'], // مرريها من الـ Map
+              smallestCategoryId:
+                  args?['smallestCategoryId'], // مرريها من الـ Map
             ),
           ),
         );
@@ -223,6 +226,15 @@ class AppRouter {
             child: const SavedExercisesScreen(),
           ),
         );
+
+      case AppRoutes.createPlan:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => getIt<CreatePlanCubit>(),
+            child: const CreatePlanScreen(),
+          ),
+        );
+
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
