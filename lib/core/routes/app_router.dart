@@ -38,6 +38,7 @@ import '../../features/workout/presentation/view/muscle_groups_screen.dart';
 import '../../features/workout/presentation/view_model/categories_cubit/categories_cubit.dart';
 import '../../features/workout/presentation/view_model/exercises_cubit/exercises_cubit.dart';
 import '../../features/workout/presentation/view_model/parts_cubit/parts_cubit.dart';
+import '../../features/coaches/data/models/subscription_model.dart';
 
 class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -238,6 +239,7 @@ class AppRouter {
             child: const CreatePlanScreen(),
           ),
         );
+
 
       default:
         return MaterialPageRoute(
