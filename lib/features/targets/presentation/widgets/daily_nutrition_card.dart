@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sportifo_app/features/targets/data/models/target_model.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../data/models/target_model.dart';
+import '../../../profile/presentation/view_model/profile_cubit.dart';
+import '../../../profile/presentation/view_model/profile_state.dart';
+import '../view_model/target_cubit/target_cubit.dart'; // 🔥 أضفنا الـ Import للكوبيت
+import 'goal_selector_bottom_sheet.dart'; // 🔥 أضفنا الـ Import للبوتوم شيت
 
 class DailyNutritionCard extends StatelessWidget {
   final TargetModel target;
@@ -33,16 +38,59 @@ class DailyNutritionCard extends StatelessWidget {
                 "Daily Nutrition Targets",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark),
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryBtn.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  target.goal.toUpperCase(),
-                  style: const TextStyle(color: AppColors.primaryBtn, fontSize: 11, fontWeight: FontWeight.bold),
-                ),
+
+              // 🔥 جمعنا التاغ مع زر القلم جّوا Row واحد أنيق
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryBtn.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      target.goal.toUpperCase(),
+                      style: const TextStyle(color: AppColors.primaryBtn, fontSize: 11, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+
+                  // 🔥 أيقونة القلم لتعديل الهدف الحالي بكبسة واحدة فخمة
+                  InkWell(
+                    borderRadius: BorderRadius.circular(50),
+                    // جّوا زر القلم في ملف daily_nutrition_card.dart:
+                    onTap: () {
+    // 🔥 لقطة برمجية ذكية: بنجيب وزن اليوزر الحالي المخزن بـ ProfileCubit
+    final profileState = context.read<ProfileCubit>().state;
+    double? userWeight;
+
+    if (profileState is ProfileSuccess) {
+    userWeight = profileState.profileModel.weight; // لقطنا الوزن من الموديل تَبَعِك بالظبط!
+    }
+
+    // مناداة البوتوم شيت وتمرير الوزن الحقيقي الطازج
+    GoalSelectorBottomSheet.show(
+    context,
+    context.read<TargetCubit>(),
+    initialGoal: target.goal,
+    currentWeight: userWeight, // طلقة جّوا الجبهة! 🚀
+    );
+    },
+
+                    child: Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade100,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.edit_rounded,
+                        size: 14,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -57,7 +105,7 @@ class DailyNutritionCard extends StatelessWidget {
                     width: 90,
                     height: 90,
                     child: CircularProgressIndicator(
-                      value: 0.0, // Can be bound later to the user's consumed intake ratio
+                      value: 0.0,
                       strokeWidth: 8,
                       backgroundColor: Colors.grey.shade100,
                       valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primaryBtn),
