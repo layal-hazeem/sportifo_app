@@ -50,7 +50,7 @@ class _AdsCarouselWidgetState extends State<AdsCarouselWidget> {
             child: CarouselSlider.builder(
               itemCount: 3,
               options: CarouselOptions(
-                height: 200,
+                height: 150,
                 enlargeCenterPage: true,
                 viewportFraction: 0.8,
               ),
@@ -74,7 +74,7 @@ class _AdsCarouselWidgetState extends State<AdsCarouselWidget> {
                 carouselController: _carouselController,
                 itemCount: state.ads.length,
                 options: CarouselOptions(
-                  height: 200,
+                  height: 150,
                   autoPlay: true,
                   enlargeCenterPage: true,
                   viewportFraction: 0.8,

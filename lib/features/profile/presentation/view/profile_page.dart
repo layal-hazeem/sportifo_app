@@ -17,7 +17,7 @@ import 'package:sportifo_app/features/profile/presentation/widgets/profile_tabs_
 import 'package:sportifo_app/features/profile/presentation/widgets/profile_top_section.dart';
 import '../../../../core/theme/app_colors.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
-
+import 'package:sportifo_app/features/targets/presentation/view_model/target_cubit/target_cubit.dart'; // 🔥 أضيفي هذا السطر فوق
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
@@ -154,8 +154,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                   arguments: user,
                                 );
 
-                                if (result == true) {
+                                if (result == true&& context.mounted) {
                                   context.read<ProfileCubit>().getProfile();
+                                  context.read<TargetCubit>().fetchLatestTarget();
                                 }
                               },
                               child: Row(

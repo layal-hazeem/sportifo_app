@@ -2,14 +2,19 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/theme/app_colors.dart';
+import '../../../../core/routes/app_routes.dart';
 import '../view_model/target_cubit/target_cubit.dart';
 import '../view_model/target_cubit/target_state.dart';
 
 class GoalSelectorBottomSheet extends StatefulWidget {
-  const GoalSelectorBottomSheet({super.key});
+  final String? initialGoal;
+  // 🔥 أضفنا متغير لاستقبال الوزن الحالي الديناميكي من صفحة الهوم أو البروفايل
+  final double? currentWeight;
 
-  // 🔥 تعديل الدالة لتستقبل الكوبيت وتمرره بأمان للبوتوم شيت
-  static void show(BuildContext context, TargetCubit targetCubit) {
+  const GoalSelectorBottomSheet({super.key, this.initialGoal, this.currentWeight});
+
+  // 🔥 حدثنا دالة الـ show لتستقبل الـ currentWeight وتمرره للـ Widget بأمان
+  static void show(BuildContext context, TargetCubit targetCubit, {String? initialGoal, double? currentWeight}) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -18,32 +23,42 @@ class GoalSelectorBottomSheet extends StatefulWidget {
       builder: (_) {
         return BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-          // الـسحر هنا: حقن الكوبيت الحالي جّوا سياق البوتوم شيت المنفصل
           child: BlocProvider.value(
             value: targetCubit,
-            child: const GoalSelectorBottomSheet(),
+            // تمرير الهدف الحالي + الوزن الحالي هنا
+            child: GoalSelectorBottomSheet(initialGoal: initialGoal, currentWeight: currentWeight),
           ),
         );
       },
     );
   }
 
-  // باقي الكود تَبَع الشيت بضل متل ما هو بالظبط بدون أي تغيير...
   @override
   State<GoalSelectorBottomSheet> createState() => _GoalSelectorBottomSheetState();
 }
 
+class _ProfilePageState extends State<GoalSelectorBottomSheet> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
 
 class _GoalSelectorBottomSheetState extends State<GoalSelectorBottomSheet> {
-  // Default goal selected locally before submitting (bulk, cut, maintain)
-  String _selectedGoal = 'bulk';
+  late String _selectedGoal;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedGoal = widget.initialGoal ?? 'bulk';
+  }
 
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return DraggableScrollableSheet(
-      initialChildSize: 0.65, // Appropriate size to safely hold the 3 goal cards without clutter
+      initialChildSize: 0.65,
       minChildSize: 0.4,
       maxChildSize: 0.85,
       expand: false,
@@ -54,7 +69,7 @@ class _GoalSelectorBottomSheetState extends State<GoalSelectorBottomSheet> {
           ),
           child: Stack(
             children: [
-              // 🌌 1. Premium Glassmorphism Overlay (Copied from Ad structure layout)
+              // 🌌 1. الحاوية الضبابية الخلفية
               Positioned.fill(
                 child: ClipRRect(
                   borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
@@ -67,13 +82,12 @@ class _GoalSelectorBottomSheetState extends State<GoalSelectorBottomSheet> {
                 ),
               ),
 
-              // 📜 2. Main Sheet Content wrapped inside a scrollController list
+              // 📜 2. محتوى القائمة الساحبة
               ListView(
                 controller: scrollController,
                 physics: const BouncingScrollPhysics(),
                 padding: EdgeInsets.zero,
                 children: [
-                  // Gray drag handle indicator
                   const SizedBox(height: 12),
                   Center(
                     child: Container(
@@ -87,7 +101,6 @@ class _GoalSelectorBottomSheetState extends State<GoalSelectorBottomSheet> {
                   ),
                   const SizedBox(height: 25),
 
-                  // Header Sparkle Icon
                   const Center(
                     child: CircleAvatar(
                       radius: 35,
@@ -97,7 +110,7 @@ class _GoalSelectorBottomSheetState extends State<GoalSelectorBottomSheet> {
                   ),
                   const SizedBox(height: 25),
 
-                  // ⬜ 3. White bottom content sheet displaying the selection cards
+                  // ⬜ 3. الحاوية البيضاء للخيارات
                   Container(
                     width: double.infinity,
                     constraints: BoxConstraints(minHeight: screenHeight * 0.5),
@@ -105,18 +118,37 @@ class _GoalSelectorBottomSheetState extends State<GoalSelectorBottomSheet> {
                       color: Colors.white,
                       borderRadius: BorderRadius.vertical(top: Radius.circular(35)),
                     ),
-                    padding: const EdgeInsets.fromLTRB(24, 30, 24, 120), // Spacious padding to avoid fixed button overlapping
+                    padding: const EdgeInsets.fromLTRB(24, 30, 24, 120),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // 🔥 السحر هنا: عرض الوزن الحقيقي القادم من الموديل تلقائياً، وإذا مش موجود بنحط 0.0 كاحتياط
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Current Weight: ${widget.currentWeight ?? 0.0} kg",
+                              style: const TextStyle(fontSize: 13, color: Colors.grey, fontWeight: FontWeight.w600),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context); // نغلق الشيت أولاً
+                                Navigator.pushNamed(context, AppRoutes.getProfile);
+                              },
+                              child: const Text(
+                                "Change",
+                                style: TextStyle(color: AppColors.primaryBtn, fontSize: 13, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Divider(height: 10, thickness: 0.5),
+                        const SizedBox(height: 15),
+
                         const Center(
                           child: Text(
                             "Select Your Fitness Goal ⚡",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.textDark,
-                            ),
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textDark),
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -128,7 +160,7 @@ class _GoalSelectorBottomSheetState extends State<GoalSelectorBottomSheet> {
                         ),
                         const SizedBox(height: 25),
 
-                        // 🔥 Bulk Card
+                        // 🔥 كرت التضخيم
                         _buildGoalCard(
                           title: "Bulk / Gain Muscle",
                           subtitle: "Increase calorie targets systematically to optimize lean muscle growth",
@@ -136,7 +168,7 @@ class _GoalSelectorBottomSheetState extends State<GoalSelectorBottomSheet> {
                           goalValue: "bulk",
                         ),
 
-                        // 🔥 Cut Card
+                        // 🔥 كرت التنشيف
                         _buildGoalCard(
                           title: "Cut / Lose Fat",
                           subtitle: "Decrease calorie targets to accelerate smart fat burn and increase definition",
@@ -144,7 +176,7 @@ class _GoalSelectorBottomSheetState extends State<GoalSelectorBottomSheet> {
                           goalValue: "cut",
                         ),
 
-                        // 🔥 Maintain Card
+                        // 🔥 كرت المحافظة
                         _buildGoalCard(
                           title: "Maintain / Stay Fit",
                           subtitle: "Stabilize current weight while steadily optimizing athletic stamina and recovery",
@@ -157,7 +189,7 @@ class _GoalSelectorBottomSheetState extends State<GoalSelectorBottomSheet> {
                 ],
               ),
 
-              // 🧡 4. Fixed bottom Action Button (Linked directly with TargetCubit)
+              // 🧡 4. زر الحفظ السفلي المربوط بالـ Cubit
               Positioned(
                 bottom: 0,
                 left: 0,
@@ -167,9 +199,8 @@ class _GoalSelectorBottomSheetState extends State<GoalSelectorBottomSheet> {
                   color: Colors.white,
                   child: ElevatedButton(
                     onPressed: () {
-                      // Dispatches selected goal value to server
                       context.read<TargetCubit>().updateTargetGoal(_selectedGoal);
-                      Navigator.pop(context); // Instantly dismiss panel
+                      Navigator.pop(context);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primaryBtn,
@@ -194,7 +225,6 @@ class _GoalSelectorBottomSheetState extends State<GoalSelectorBottomSheet> {
     );
   }
 
-  // Internal component helper to construct clean animated row cards
   Widget _buildGoalCard({
     required String title,
     required String subtitle,
@@ -206,7 +236,7 @@ class _GoalSelectorBottomSheetState extends State<GoalSelectorBottomSheet> {
     return GestureDetector(
       onTap: () {
         setState(() {
-          _selectedGoal = goalValue; // Updates selection index locally
+          _selectedGoal = goalValue;
         });
       },
       child: AnimatedContainer(
@@ -245,7 +275,6 @@ class _GoalSelectorBottomSheetState extends State<GoalSelectorBottomSheet> {
                 ],
               ),
             ),
-            // Check indicator radio button icon wrapper
             Icon(
               isSelected ? Icons.check_circle : Icons.radio_button_off,
               color: isSelected ? AppColors.primaryBtn : Colors.grey.shade300,
