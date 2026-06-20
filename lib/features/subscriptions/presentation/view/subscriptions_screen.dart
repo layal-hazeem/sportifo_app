@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/features/auth/presentation/widgets/custom_button.dart';
 import 'package:sportifo_app/features/subscriptions/data/models/users_subscribed_model.dart';
 import 'package:sportifo_app/features/subscriptions/presentation/widgets/pending_card.dart';
 import 'package:sportifo_app/features/subscriptions/presentation/widgets/subscription_card.dart';
@@ -33,17 +34,21 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    state.errorMessage,
-                    style: const TextStyle(color: Colors.red),
-                    textAlign: TextAlign.center,
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "Connection Error :\n please check your internet connection",
+                      style: const TextStyle(color: Colors.red),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                   const SizedBox(height: 16),
-                  ElevatedButton(
+                  CustomAuthButton(
+                    isFullWidth: false,
+                    text: l10n.retry,
                     onPressed: () {
                       context.read<SubscriptionCubit>().getSubscriptions();
                     },
-                    child: Text(l10n.retry),
                   ),
                 ],
               ),

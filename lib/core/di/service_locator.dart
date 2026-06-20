@@ -4,6 +4,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sportifo_app/features/%20ads/presentation/view_model/ads_cubit.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/complete_profile/complete_profile_cubit.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/logout/logout_cubit.dart';
+import 'package:sportifo_app/features/existing_days/data/repository/existing_days_repository.dart';
+import 'package:sportifo_app/features/existing_days/data/web_services/existing_days_web_services.dart';
+import 'package:sportifo_app/features/existing_days/presentation/view_model/existing_days_cubit.dart';
+import 'package:sportifo_app/features/plans/data/repository/create_plan_repository.dart';
+import 'package:sportifo_app/features/plans/data/web_services/create_plan_service.dart';
+import 'package:sportifo_app/features/plans/presentation/view_model/create_plan_cubit.dart';
 import 'package:sportifo_app/features/profile/data/repository/profile_repository.dart';
 import 'package:sportifo_app/features/profile/data/web_services/profile_web_service.dart';
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_cubit.dart';
@@ -149,5 +155,32 @@ Future<void> setupServiceLocator() async {
   );
   getIt.registerFactory<TargetCubit>(
     () => TargetCubit(getIt<TargetRepository>()),
+  );
+
+  // تسجيل WebService و Repository الخاص بالخطط (بما فيها الأيام)
+  getIt.registerLazySingleton<ExistingDaysWebService>(
+    () => ExistingDaysWebService(getIt<Dio>()),
+  );
+  getIt.registerLazySingleton<ExistingDaysRepository>(
+    () => ExistingDaysRepository(getIt<ExistingDaysWebService>()),
+  );
+
+  // تسجيل الـ Cubit الخاص بالأيام الموجودة مسبقاً
+  getIt.registerFactory<ExistingDaysCubit>(
+    () => ExistingDaysCubit(getIt<ExistingDaysRepository>()),
+  );
+
+  // Create Plan feature
+
+  getIt.registerLazySingleton<CreatePlanService>(
+    () => CreatePlanService(getIt<Dio>()),
+  );
+
+  getIt.registerLazySingleton<CreatePlanRepository>(
+    () => CreatePlanRepository(getIt<CreatePlanService>()),
+  );
+
+  getIt.registerFactory<CreatePlanCubit>(
+    () => CreatePlanCubit(getIt<CreatePlanRepository>()),
   );
 }

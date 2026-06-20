@@ -6,15 +6,16 @@ import '../../../../core/routes/app_routes.dart';
 
 class ExercisesGridView extends StatelessWidget {
   final List<ExerciseModel> exercises;
+  final Function(ExerciseModel)? onSelect;
 
-  const ExercisesGridView({super.key, required this.exercises});
+  const ExercisesGridView({super.key, required this.exercises, this.onSelect});
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
     if (exercises.isEmpty) {
-      return  Center(child: Text(l10n.no_exercises_found));
+      return Center(child: Text(l10n.no_exercises_found));
     }
 
     return GridView.builder(
@@ -33,11 +34,15 @@ class ExercisesGridView extends StatelessWidget {
         return ExerciseCard(
           exercise: exercise,
           onTap: () {
-            Navigator.pushNamed(
-              context,
-              AppRoutes.exerciseDetails,
-              arguments: exercise,
-            );
+            if (onSelect != null) {
+              onSelect!(exercise);
+            } else {
+              Navigator.pushNamed(
+                context,
+                AppRoutes.exerciseDetails,
+                arguments: exercise,
+              );
+            }
           },
         );
       },

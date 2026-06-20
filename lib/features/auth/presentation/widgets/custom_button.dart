@@ -6,6 +6,7 @@ class CustomAuthButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final bool isLoading;
   final Color? backgroundColor;
+  final bool isFullWidth;
 
   const CustomAuthButton({
     super.key,
@@ -13,12 +14,13 @@ class CustomAuthButton extends StatelessWidget {
     required this.onPressed,
     this.isLoading = false,
     this.backgroundColor,
+    this.isFullWidth = true,
   });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: double.infinity,
+      width: isFullWidth ? double.infinity : null,
       height: 55,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
@@ -32,21 +34,21 @@ class CustomAuthButton extends StatelessWidget {
 
         child: isLoading
             ? const SizedBox(
-          width: 25,
-          height: 25,
-          child: CircularProgressIndicator(
-            color: Colors.white,
-            strokeWidth: 2.5,
-          ),
-        )
+                width: 25,
+                height: 25,
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                  strokeWidth: 2.5,
+                ),
+              )
             : Text(
-          text,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: AppSizes.buttonFontSize,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+                text,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: AppSizes.buttonFontSize,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
       ),
     );
   }

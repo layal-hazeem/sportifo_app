@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/features/auth/presentation/widgets/custom_button.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
 /// تعريف أنواع الديالوغ المتاحة
-enum DialogType { success, error, warning }
+enum DialogType { success, error, warning, input }
 
 class DialogHelper {
   static void showCustomDialog({
     required BuildContext context,
     required String title,
-    required String message,
+    String? message,
+    String? hintText,
+    TextEditingController? controller, // إضافة Controller
     required DialogType type,
     String? confirmBtnText,
+    Function(String)? onConfirmWithInput,
     VoidCallback? onConfirm,
   }) {
     final l10n = AppLocalizations.of(context)!;
@@ -27,8 +32,12 @@ class DialogHelper {
         icon = Icons.error_outline;
         break;
       case DialogType.warning:
-        primaryColor = Colors.orange;
+        primaryColor = AppColors.primaryBtn;
         icon = Icons.warning_amber_rounded;
+        break;
+      case DialogType.input:
+        primaryColor = AppColors.primaryBtn;
+        icon = Icons.check_circle_outline;
         break;
     }
 
@@ -40,46 +49,51 @@ class DialogHelper {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
-          title: Column(
-            children: [
-              Icon(icon, color: primaryColor, size: 50),
-              const SizedBox(height: 10),
-              Text(
-                title,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: primaryColor,
-                  fontWeight: FontWeight.bold,
+          title: type == DialogType.input
+              ? Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: primaryColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                )
+              : Column(
+                  children: [
+                    Icon(icon, color: primaryColor, size: 50),
+                    Text(
+                      title,
+                      style: TextStyle(
+                        color: primaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-          content: Text(
-            message,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 16),
-          ),
+
+          content: type == DialogType.input
+              ? TextField(
+                  controller: controller,
+                  decoration: InputDecoration(hintText: hintText),
+                )
+              : Text(message ?? ""),
+
           actions: [
             TextButton(
-              onPressed: () =>
-                  Navigator.of(context).pop(), // زر الإلغاء الافتراضي
+              onPressed: () => Navigator.of(context).pop(),
               child: Text(l10n.cancel, style: TextStyle(color: Colors.grey)),
             ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: primaryColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
+            CustomAuthButton(
+              text: confirmBtnText ?? l10n.agreed,
+              isFullWidth: false,
               onPressed: () {
-                Navigator.of(context).pop(); // إغلاق الديالوغ أولاً
-                if (onConfirm != null) onConfirm(); // تنفيذ العملية المطلوبة
+                Navigator.of(context).pop();
+                if (type == DialogType.input && onConfirmWithInput != null) {
+                  onConfirmWithInput(controller?.text ?? "");
+                } else if (onConfirm != null) {
+                  onConfirm();
+                }
               },
-              child: Text(
-                confirmBtnText ?? l10n.agreed,
-                style: const TextStyle(color: Colors.white),
-              ),
             ),
           ],
           actionsAlignment: MainAxisAlignment.center,
