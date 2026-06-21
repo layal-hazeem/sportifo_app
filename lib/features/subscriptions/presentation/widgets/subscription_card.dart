@@ -110,7 +110,9 @@ class SubscriptionCard extends StatelessWidget {
                           ? Icons.check_circle_rounded
                           : Icons.error_outline_rounded,
                       size: 13,
-                      color: hasActivePlan ? Colors.green : Colors.deepOrange,
+                      color: hasActivePlan
+                          ? Colors.green
+                          : AppColors.primaryBtn,
                     ),
                     const SizedBox(width: 4),
                     Text(
@@ -118,7 +120,7 @@ class SubscriptionCard extends StatelessWidget {
                       style: TextStyle(
                         color: hasActivePlan
                             ? Colors.green.shade700
-                            : Colors.deepOrange.shade700,
+                            : AppColors.primaryBtn,
                         fontSize: 10,
                         fontWeight: FontWeight.bold,
                       ),
@@ -249,7 +251,7 @@ class SubscriptionCard extends StatelessWidget {
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.deepOrange,
+                    backgroundColor: AppColors.primaryBtn,
                     foregroundColor: Colors.white,
                     elevation: 0,
                     padding: const EdgeInsets.symmetric(vertical: 12),

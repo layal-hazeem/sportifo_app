@@ -125,12 +125,12 @@ class CustomDrawer extends StatelessWidget {
                         if (state is ProfileSuccess) {
                           final user = state.profileModel;
 
-                          age = calculateAge(user.dateOfBirth!);
+                          age = calculateAge(user.dateOfBirth);
 
                           if (user.profilePic != null &&
                               user.profilePic!.isNotEmpty) {
                             imageProvider = NetworkImage(user.profilePic!);
-                          } else if (user.gender != null) {
+                          } else if (user.gender) {
                             imageProvider = AssetImage(
                               user.gender == true
                                   ? "assets/images/male.jpg"

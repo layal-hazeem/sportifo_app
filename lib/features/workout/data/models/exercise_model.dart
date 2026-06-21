@@ -55,6 +55,29 @@ class ExerciseModel {
     );
   }
 
+  // أضف هذه الدالة داخل كلاس ExerciseModel
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+      'category': category != null ? {
+        'id': category!.id,
+        'name': category!.name,
+        'organ': category!.organ != null ? {
+          'id': category!.organ!.id,
+          'name': category!.organ!.name,
+          'part': category!.organ!.part != null ? {
+            'id': category!.organ!.part!.id,
+            'name': category!.organ!.part!.name,
+          } : null,
+        } : null,
+      } : null,
+      'images': images.map((x) => {'url': x.url, 'type': x.type}).toList(),
+      'is_saved': isSaved ? 1 : 0,
+    };
+  }
+
   // 🔥 جلب رابط الـ GIF لعرضه مباشرة في الـ UI
   String? get gifUrl {
     try {

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/logout/logout_cubit.dart';
+import 'package:sportifo_app/features/existing_days/presentation/view/existing_days_screen.dart';
+import 'package:sportifo_app/features/existing_days/presentation/view_model/existing_days_cubit.dart';
 import 'package:sportifo_app/features/plans/presentation/view/create_plan_screen.dart';
 import 'package:sportifo_app/features/plans/presentation/view_model/create_plan_cubit.dart';
 import 'package:sportifo_app/features/profile/data/models/user_profile_response.dart';
 import 'package:sportifo_app/features/profile/presentation/view/edit_profile_page.dart';
-import 'package:sportifo_app/features/subscriptions/data/models/users_subscribed_model.dart';
 import 'package:sportifo_app/features/subscriptions/presentation/view/subscriptions_screen.dart';
 import 'package:sportifo_app/features/subscriptions/presentation/view_model/subscription_cubit.dart';
 import '../../features/auth/presentation/view/complete_profile_info.dart';
@@ -236,7 +237,15 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
             create: (_) => getIt<CreatePlanCubit>(),
-            child: const CreatePlanScreen(),
+            child: CreatePlanScreen(),
+          ),
+        );
+
+      case AppRoutes.existingDays:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => getIt<ExistingDaysCubit>(),
+            child: ExistingDaysListBottomSheet(),
           ),
         );
 
