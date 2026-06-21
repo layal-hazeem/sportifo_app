@@ -24,4 +24,6 @@ class AppRoutes {
   static const String completeProfile = "/completeProfile";
   static const String createPlan = "/plans";
   static const String existingDays = '/plans/coach/days';
+
+  static const String subscriptionDetails = "/subscriptionDetails";
 }

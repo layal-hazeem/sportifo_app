@@ -41,7 +41,7 @@ class CoachGridCard extends StatelessWidget {
                 ),
                 child: Image.network(
                   coach.profilePic,
-                  fit: BoxFit.fill,
+                  fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
                     return Container(
                       color: Colors.grey[100],

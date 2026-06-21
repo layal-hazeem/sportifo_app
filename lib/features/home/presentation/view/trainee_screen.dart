@@ -100,9 +100,8 @@ class TraineeScreen extends StatelessWidget {
                             ],
                           ),
                         ),
-                        const SizedBox(height: 12),
                         SizedBox(
-                          height: 220,
+                          height: 175,
                           child: ListView.separated(
                             scrollDirection: Axis.horizontal,
                             padding: const EdgeInsets.symmetric(horizontal: 12),

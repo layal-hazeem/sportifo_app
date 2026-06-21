@@ -16,6 +16,7 @@ import '../../features/home/presentation/view/home_page.dart';
 import '../../features/onboarding/presentation/view/onboarding_screen.dart';
 import '../../features/profile/presentation/view/profile_page.dart';
 import '../../features/profile/presentation/view_model/profile_cubit.dart';
+import '../../features/targets/presentation/view_model/target_cubit/target_cubit.dart';
 import '../../features/workout/data/models/exercise_model.dart';
 import '../../features/workout/presentation/view/exercise_details_screen.dart';
 import '../../features/workout/presentation/view/saved_exercises_screen.dart';
@@ -38,6 +39,7 @@ import '../../features/workout/presentation/view/muscle_groups_screen.dart';
 import '../../features/workout/presentation/view_model/categories_cubit/categories_cubit.dart';
 import '../../features/workout/presentation/view_model/exercises_cubit/exercises_cubit.dart';
 import '../../features/workout/presentation/view_model/parts_cubit/parts_cubit.dart';
+import '../../features/coaches/data/models/subscription_model.dart';
 
 class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -67,7 +69,9 @@ class AppRouter {
       case AppRoutes.home:
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
-            providers: [BlocProvider(create: (_) => getIt<CategoriesCubit>())],
+            providers: [BlocProvider(create: (_) => getIt<CategoriesCubit>()),
+              BlocProvider(create: (_) => getIt<TargetCubit>()..fetchLatestTarget()),
+            ],
             child: const HomePage(),
           ),
         );
@@ -135,6 +139,7 @@ class AppRouter {
             providers: [
               BlocProvider(create: (_) => getIt<ProfileCubit>()..getProfile()),
               BlocProvider(create: (_) => getIt<LogoutCubit>()),
+              BlocProvider.value(value: getIt<TargetCubit>()),
             ],
             child: const ProfilePage(),
           ),
@@ -243,6 +248,7 @@ class AppRouter {
             child: ExistingDaysListBottomSheet(),
           ),
         );
+
 
       default:
         return MaterialPageRoute(
