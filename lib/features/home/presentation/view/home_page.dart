@@ -36,14 +36,14 @@ class _HomePageState extends State<HomePage> {
   List<Widget> _getTraineeScreens() {
     final l10n = AppLocalizations.of(context)!;
     return [
-      Center(child: Text(l10n.progress)), 
+      Center(child: Text(l10n.progress)),
       Center(child: Text(l10n.myPlans)),
-      const TraineeScreen(), 
+      const TraineeScreen(),
       BlocProvider(
         create: (context) => getIt<CategoriesCubit>(),
         child: const WorkoutTypeScreen(),
       ),
-       Center(child: Text(l10n.chat)),
+      Center(child: Text(l10n.chat)),
     ];
   }
 
@@ -54,13 +54,13 @@ class _HomePageState extends State<HomePage> {
         create: (context) => getIt<SubscriptionCubit>()..getSubscriptions(),
         child: SubscriptionsScreen(),
       ),
-       Center(child: Text(l10n.myPlans)),
+      Center(child: Text(l10n.myPlans)),
       const CoachScreen(),
       BlocProvider(
         create: (context) => getIt<CategoriesCubit>(),
         child: const WorkoutTypeScreen(),
       ),
-       Center(child: Text(l10n.chat)),
+      Center(child: Text(l10n.chat)),
     ];
   }
 
@@ -146,7 +146,7 @@ class _HomePageState extends State<HomePage> {
                           icon: isCoach
                               ? Icons.people_outline
                               : Icons.show_chart,
-                          label: isCoach ? l10n.subscriptions : l10n.progress,
+                          label: isCoach ? "Sub's" : l10n.progress,
                           isSelected: homeViewModel.currentIndex == 0,
                         ),
                         CustomBottomNavBar.build(
@@ -176,9 +176,7 @@ class _HomePageState extends State<HomePage> {
               );
             }
 
-            return Scaffold(
-              body: Center(child: Text(l10n.error)),
-            );
+            return Scaffold(body: Center(child: Text(l10n.error)));
           },
         ),
       ),

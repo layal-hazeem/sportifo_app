@@ -15,15 +15,18 @@ class ApiConstants {
 
   static const String getProfile = "profile";
   static const String profile = "profile";
-  static const String editProfile = "profile/edit";
+  static const String editProfile = "profile-edit";
   static const String logout = "logout";
 
   static const String categories = "categories";
   static const String advertisement = "advertisement";
   static const String targets = "targets";
   static const String coaches = "coaches";
-  static const String usersSubscribed = "coaches/users/subscribed";
-    static const String createPlan = "plans";
+  static const String usersSubscribed = "users-subscribed";
+  static const String createPlan = "plans";
+
+  static const String existingDays = 'coaches-days';
+
 
   static const String subscribe = "subscriptions/subscribe";
 

@@ -38,13 +38,13 @@ class TargetActivationCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      "Activate Your Smart Plan ⚡",
+                      "Activate Your Smart Plan ",
                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       "Set your main physical target now to dynamically evaluate your necessary daily calories and macronutrients.",
-                      style: TextStyle(fontSize: 12, color: Colors.grey.shade500, height: 1.3),
+                      style: TextStyle(fontSize: 12, color: Colors.grey.shade500, height: 1),
                     ),
                   ],
                 ),

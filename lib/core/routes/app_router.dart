@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/logout/logout_cubit.dart';
+import 'package:sportifo_app/features/existing_days/presentation/view/existing_days_screen.dart';
+import 'package:sportifo_app/features/existing_days/presentation/view_model/existing_days_cubit.dart';
 import 'package:sportifo_app/features/plans/presentation/view/create_plan_screen.dart';
 import 'package:sportifo_app/features/plans/presentation/view_model/create_plan_cubit.dart';
 import 'package:sportifo_app/features/profile/data/models/user_profile_response.dart';
@@ -17,6 +19,7 @@ import '../../features/home/presentation/view/home_page.dart';
 import '../../features/onboarding/presentation/view/onboarding_screen.dart';
 import '../../features/profile/presentation/view/profile_page.dart';
 import '../../features/profile/presentation/view_model/profile_cubit.dart';
+import '../../features/targets/presentation/view_model/target_cubit/target_cubit.dart';
 import '../../features/workout/data/models/exercise_model.dart';
 import '../../features/workout/presentation/view/exercise_details_screen.dart';
 import '../../features/workout/presentation/view/saved_exercises_screen.dart';
@@ -71,7 +74,9 @@ class AppRouter {
       case AppRoutes.home:
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
-            providers: [BlocProvider(create: (_) => getIt<CategoriesCubit>())],
+            providers: [BlocProvider(create: (_) => getIt<CategoriesCubit>()),
+              BlocProvider(create: (_) => getIt<TargetCubit>()..fetchLatestTarget()),
+            ],
             child: const HomePage(),
           ),
         );
@@ -139,6 +144,7 @@ class AppRouter {
             providers: [
               BlocProvider(create: (_) => getIt<ProfileCubit>()..getProfile()),
               BlocProvider(create: (_) => getIt<LogoutCubit>()),
+              BlocProvider.value(value: getIt<TargetCubit>()),
             ],
             child: const ProfilePage(),
           ),
@@ -236,7 +242,15 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
             create: (_) => getIt<CreatePlanCubit>(),
-            child: const CreatePlanScreen(),
+            child: CreatePlanScreen(),
+          ),
+        );
+
+      case AppRoutes.existingDays:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => getIt<ExistingDaysCubit>(),
+            child: ExistingDaysListBottomSheet(),
           ),
         );
 
