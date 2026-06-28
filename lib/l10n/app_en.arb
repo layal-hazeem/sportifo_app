@@ -181,6 +181,138 @@
   "actionRequired":"ACTION REQUIRED",
   "noPendingSubscriptions":"No pending subscriptions",
   "activeSubscriptions":"Active Subscriptions",
-  "noActiveSubscriptions":"No active subscriptions found"
+  "noActiveSubscriptions":"No active subscriptions found",
 
+
+
+
+
+
+  "subscription_payment_title": "Complete Payment",
+  "subscription_payment_paymentMethod": "Pay via: Cham Cash",
+  "subscription_payment_confirmTransfer": "Confirm Transfer",
+  "subscription_payment_uploadReceiptFirst": "Please upload payment file first",
+  "subscription_payment_requestFailed": "Request failed: {error}",
+  "@subscription_payment_requestFailed": {
+    "description": "Request failure message with error reason",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Connection failed"
+      }
+    }
+  },
+  "subscription_payment_unexpectedError": "Unexpected error occurred: {error}",
+  "@subscription_payment_unexpectedError": {
+    "description": "Unexpected error message",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "NullPointerException"
+      }
+    }
+  },
+  "subscription_payment_successTitle": "Request Submitted Successfully",
+  "subscription_payment_transactionId": "Transaction ID: {id}",
+  "@subscription_payment_transactionId": {
+    "description": "Transaction reference ID",
+    "placeholders": {
+      "id": {
+        "type": "String",
+        "example": "TX-12345"
+      }
+    }
+  },
+  "subscription_payment_ok": "OK",
+  "subscription_payment_confirmButton": "Confirm & Submit",
+  "subscription_payment_accountNameLabel": "Account Name",
+  "subscription_payment_walletNumberLabel": "Wallet Number",
+  "subscription_payment_copySuccess": "Wallet number copied successfully",
+  "subscription_payment_orderSummary": "Order Summary",
+  "subscription_payment_planLabel": "Plan",
+  "subscription_payment_durationLabel": "Duration",
+  "subscription_payment_totalLabel": "Total Amount",
+  "subscription_payment_uploadHint": "Tap to upload payment file ",
+  "subscription_payment_fileUploaded": "File uploaded: {fileName}",
+  "@subscription_payment_fileUploaded": {
+    "description": "File upload success message with file name",
+    "placeholders": {
+      "fileName": {
+        "type": "String",
+        "example": "receipt.pdf"
+      }
+    }
+  },
+  "subscription_payment_fileSelected": "File selected: {fileName}",
+  "@subscription_payment_fileSelected": {
+    "description": "File selection message with file name",
+    "placeholders": {
+      "fileName": {
+        "type": "String",
+        "example": "receipt.pdf"
+      }
+    }
+  },
+  "subscription_payment_noFileSelected": "No file selected",
+  "subscription_payment_filePickError": "Error selecting file: {error}",
+  "@subscription_payment_filePickError": {
+    "description": "File selection error message",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Permission denied"
+      }
+    }
+  },
+
+  "subscription_selectMonth_title": "Subscription Duration",
+  "subscription_selectMonth_availablePlans": "Available Plans",
+  "subscription_selectMonth_continueButton": "Continue to Payment",
+  "subscription_selectMonth_choosePlan": "Choose a plan to continue",
+  "subscription_selectMonth_monthSelected": "{months} month(s) selected",
+  "@subscription_selectMonth_monthSelected": {
+    "description": "Month selection confirmation",
+    "placeholders": {
+      "months": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "subscription_selectMonth_monthsLabel": "{months} month(s)",
+  "@subscription_selectMonth_monthsLabel": {
+    "description": "Month count label in card",
+    "placeholders": {
+      "months": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "subscription_selectMonth_pricePerMonth": "{price} {currency} / month",
+  "@subscription_selectMonth_pricePerMonth": {
+    "description": "Approximate price per month",
+    "placeholders": {
+      "price": {
+        "type": "double",
+        "example": "100"
+      },
+      "currency": {
+        "type": "String",
+        "example": "SYP"
+      }
+    }
+  },
+
+  "subscription_details_featuresTitle": "Plan Features",
+  "subscription_details_subscribeButton": "Subscribe",
+  "subscription_details_noFeatures": "No specific features for this plan",
+  "subscription_payment_transaction_label": "Transaction ID",
+  "subscription_payment_transaction_hint": "Enter the reference transaction ID",
+
+  "subscription_selectMonth_continueToPayment": "Continue to Payment",
+  "subscription_selectMonth_selectToContinue": "Choose a plan to continue",
+  "subscription_selectMonth_selectionConfirmed": "{count} month(s) selected",
+  "subscription_selectMonth_durationLabel": "{count} months",
+  "subscription_selectMonth_monthlyPriceDetail": "{price} {currency} / month"
 }

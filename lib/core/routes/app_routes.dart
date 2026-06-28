@@ -26,4 +26,6 @@ class AppRoutes {
   static const String existingDays = '/plans/coach/days';
 
   static const String subscriptionDetails = "/subscriptionDetails";
+  static const String selectMonth = "/selectMonth";
+  static const String payment = "/payment";
 }

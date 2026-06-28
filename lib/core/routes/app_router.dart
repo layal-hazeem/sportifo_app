@@ -12,6 +12,9 @@ import 'package:sportifo_app/features/subscriptions/presentation/view_model/subs
 import '../../features/auth/presentation/view/complete_profile_info.dart';
 import '../../features/auth/presentation/view/register_screen.dart';
 import '../../features/auth/presentation/view_model/complete_profile/complete_profile_cubit.dart';
+import '../../features/trainee_subscriptions/data/models/subscription_month_model.dart';
+import '../../features/trainee_subscriptions/presentation/views/payment_screen.dart';
+import '../../features/trainee_subscriptions/presentation/views/select_month_screen.dart';
 import '../../features/home/presentation/view/home_page.dart';
 import '../../features/onboarding/presentation/view/onboarding_screen.dart';
 import '../../features/profile/presentation/view/profile_page.dart';
@@ -39,7 +42,9 @@ import '../../features/workout/presentation/view/muscle_groups_screen.dart';
 import '../../features/workout/presentation/view_model/categories_cubit/categories_cubit.dart';
 import '../../features/workout/presentation/view_model/exercises_cubit/exercises_cubit.dart';
 import '../../features/workout/presentation/view_model/parts_cubit/parts_cubit.dart';
-import '../../features/coaches/data/models/subscription_model.dart';
+import '../../features/trainee_subscriptions/data/models/subscription_model.dart';
+
+
 
 class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -202,7 +207,7 @@ class AppRouter {
         final exercise = settings.arguments as ExerciseModel;
         return MaterialPageRoute(
           builder: (_) => BlocProvider.value(
-            value: getIt<SavedExercisesCubit>(), // تعديل هنا أيضاً
+            value: getIt<SavedExercisesCubit>(),
             child: ExerciseDetailsScreen(exercise: exercise),
           ),
         );
@@ -250,6 +255,24 @@ class AppRouter {
         );
 
 
+      case AppRoutes.selectMonth:
+        final args = settings.arguments as Map<String, dynamic>?;
+        return MaterialPageRoute(
+          builder: (_) => SelectMonthScreen(
+            coachId: args?['coachId'] as int,
+            subscription: args?['subscription'] as SubscriptionModel,
+          ),
+        );
+
+      case AppRoutes.payment:
+        final args = settings.arguments as Map<String, dynamic>?;
+        return MaterialPageRoute(
+          builder: (_) => PaymentScreen(
+            coachId: args?['coachId'] as int,
+            subscription: args?['subscription'] as SubscriptionModel,
+            selectedMonth: args?['selectedMonth'] as SubscriptionMonthModel,
+          ),
+        );
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

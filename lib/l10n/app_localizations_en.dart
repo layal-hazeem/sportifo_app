@@ -462,4 +462,145 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noActiveSubscriptions => 'No active subscriptions found';
+
+  @override
+  String get subscription_payment_title => 'Complete Payment';
+
+  @override
+  String get subscription_payment_paymentMethod => 'Pay via: Cham Cash';
+
+  @override
+  String get subscription_payment_confirmTransfer => 'Confirm Transfer';
+
+  @override
+  String get subscription_payment_uploadReceiptFirst => 'Please upload payment file first';
+
+  @override
+  String subscription_payment_requestFailed(String error) {
+    return 'Request failed: $error';
+  }
+
+  @override
+  String subscription_payment_unexpectedError(String error) {
+    return 'Unexpected error occurred: $error';
+  }
+
+  @override
+  String get subscription_payment_successTitle => 'Request Submitted Successfully';
+
+  @override
+  String subscription_payment_transactionId(String id) {
+    return 'Transaction ID: $id';
+  }
+
+  @override
+  String get subscription_payment_ok => 'OK';
+
+  @override
+  String get subscription_payment_confirmButton => 'Confirm & Submit';
+
+  @override
+  String get subscription_payment_accountNameLabel => 'Account Name';
+
+  @override
+  String get subscription_payment_walletNumberLabel => 'Wallet Number';
+
+  @override
+  String get subscription_payment_copySuccess => 'Wallet number copied successfully';
+
+  @override
+  String get subscription_payment_orderSummary => 'Order Summary';
+
+  @override
+  String get subscription_payment_planLabel => 'Plan';
+
+  @override
+  String get subscription_payment_durationLabel => 'Duration';
+
+  @override
+  String get subscription_payment_totalLabel => 'Total Amount';
+
+  @override
+  String get subscription_payment_uploadHint => 'Tap to upload payment file ';
+
+  @override
+  String subscription_payment_fileUploaded(String fileName) {
+    return 'File uploaded: $fileName';
+  }
+
+  @override
+  String subscription_payment_fileSelected(String fileName) {
+    return 'File selected: $fileName';
+  }
+
+  @override
+  String get subscription_payment_noFileSelected => 'No file selected';
+
+  @override
+  String subscription_payment_filePickError(String error) {
+    return 'Error selecting file: $error';
+  }
+
+  @override
+  String get subscription_selectMonth_title => 'Subscription Duration';
+
+  @override
+  String get subscription_selectMonth_availablePlans => 'Available Plans';
+
+  @override
+  String get subscription_selectMonth_continueButton => 'Continue to Payment';
+
+  @override
+  String get subscription_selectMonth_choosePlan => 'Choose a plan to continue';
+
+  @override
+  String subscription_selectMonth_monthSelected(int months) {
+    return '$months month(s) selected';
+  }
+
+  @override
+  String subscription_selectMonth_monthsLabel(int months) {
+    return '$months month(s)';
+  }
+
+  @override
+  String subscription_selectMonth_pricePerMonth(double price, String currency) {
+    return '$price $currency / month';
+  }
+
+  @override
+  String get subscription_details_featuresTitle => 'Plan Features';
+
+  @override
+  String get subscription_details_subscribeButton => 'Subscribe';
+
+  @override
+  String get subscription_details_noFeatures => 'No specific features for this plan';
+
+  @override
+  String get subscription_payment_transaction_label => 'Transaction ID';
+
+  @override
+  String get subscription_payment_transaction_hint => 'Enter the reference transaction ID';
+
+  @override
+  String get subscription_selectMonth_continueToPayment => 'Continue to Payment';
+
+  @override
+  String get subscription_selectMonth_selectToContinue => 'Choose a plan to continue';
+
+  @override
+  String subscription_selectMonth_selectionConfirmed(Object count) {
+    return '$count month(s) selected';
+  }
+
+  @override
+  String subscription_selectMonth_durationLabel(Object count) {
+    return '$count months';
+  }
+
+  @override
+  String subscription_selectMonth_monthlyPriceDetail(Object currency, Object price) {
+    return '$price $currency / month';
+  }
 }

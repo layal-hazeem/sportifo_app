@@ -28,4 +28,6 @@ class ApiConstants {
   static const String existingDays = 'coaches-days';
 
 
+  static const String subscribe = "subscriptions/subscribe";
+
 }

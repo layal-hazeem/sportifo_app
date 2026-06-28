@@ -160,6 +160,138 @@
   "actionRequired":"يلزم اتخاذ إجراء",
   "noPendingSubscriptions":"لا توجد اشتراكات معلقة",
   "activeSubscriptions":"الاشتراكات النشطة",
-  "noActiveSubscriptions":"لم يتم العثور على اشتراكات نشطة"
+  "noActiveSubscriptions":"لم يتم العثور على اشتراكات نشطة",
 
+
+
+
+  "subscription_payment_title": "إتمام الدفع",
+  "subscription_payment_paymentMethod": "الدفع عبر: شام كاش (Cham Cash)",
+  "subscription_payment_confirmTransfer": "تأكيد إرسال الحوالة",
+  "subscription_payment_uploadReceiptFirst": "يرجى رفع ملف إيصال الدفع أولاً",
+  "subscription_payment_requestFailed": "فشل الطلب: {error}",
+  "@subscription_payment_requestFailed": {
+    "description": "رسالة فشل الطلب مع سبب الخطأ",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "فشل الاتصال"
+      }
+    }
+  },
+  "subscription_payment_unexpectedError": "حدث خطأ غير متوقع: {error}",
+  "@subscription_payment_unexpectedError": {
+    "description": "رسالة خطأ غير متوقع",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "NullPointerException"
+      }
+    }
+  },
+  "subscription_payment_successTitle": "تم الطلب بنجاح",
+  "subscription_payment_transactionId": "رقم العملية: {id}",
+  "@subscription_payment_transactionId": {
+    "description": "رقم العملية المرجعية",
+    "placeholders": {
+      "id": {
+        "type": "String",
+        "example": "TX-12345"
+      }
+    }
+  },
+  "subscription_payment_ok": "حسناً",
+  "subscription_payment_confirmButton": "تأكيد وإرسال الطلب",
+  "subscription_payment_accountNameLabel": "اسم الحساب",
+  "subscription_payment_walletNumberLabel": "رقم المحفظة",
+  "subscription_payment_copySuccess": "تم نسخ رقم المحفظة بنجاح",
+  "subscription_payment_orderSummary": "ملخص الطلب",
+  "subscription_payment_planLabel": "الباقة",
+  "subscription_payment_durationLabel": "المدة",
+  "subscription_payment_totalLabel": "المبلغ الإجمالي",
+  "subscription_payment_uploadHint": "اضغط لرفع ملف إيصال الدفع ",
+  "subscription_payment_fileUploaded": "تم رفع الملف: {fileName}",
+  "@subscription_payment_fileUploaded": {
+    "description": "رسالة نجاح رفع الملف مع اسم الملف",
+    "placeholders": {
+      "fileName": {
+        "type": "String",
+        "example": "receipt.pdf"
+      }
+    }
+  },
+  "subscription_payment_fileSelected": "تم اختيار الملف: {fileName}",
+  "@subscription_payment_fileSelected": {
+    "description": "رسالة اختيار الملف مع اسم الملف",
+    "placeholders": {
+      "fileName": {
+        "type": "String",
+        "example": "receipt.pdf"
+      }
+    }
+  },
+  "subscription_payment_noFileSelected": "لم يتم اختيار أي ملف",
+  "subscription_payment_filePickError": "حدث خطأ أثناء اختيار الملف: {error}",
+  "@subscription_payment_filePickError": {
+    "description": "رسالة خطأ عند اختيار الملف",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Permission denied"
+      }
+    }
+  },
+
+  "subscription_selectMonth_title": "مدة الاشتراك",
+  "subscription_selectMonth_availablePlans": "الخطط المتاحة",
+  "subscription_selectMonth_continueButton": "متابعة لاختيار طريقة الدفع",
+  "subscription_selectMonth_choosePlan": "اختر باقة للاستمرار",
+  "subscription_selectMonth_monthSelected": "تم اختيار {months} شهر",
+  "@subscription_selectMonth_monthSelected": {
+    "description": "رسالة تأكيد اختيار عدد الأشهر",
+    "placeholders": {
+      "months": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "subscription_selectMonth_monthsLabel": "اشتراك {months} شهر",
+  "@subscription_selectMonth_monthsLabel": {
+    "description": "تسمية عدد الأشهر في الكارد",
+    "placeholders": {
+      "months": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "subscription_selectMonth_pricePerMonth": "بـ {price} {currency} / شهرياً",
+  "@subscription_selectMonth_pricePerMonth": {
+    "description": "السعر الشهري التقريبي",
+    "placeholders": {
+      "price": {
+        "type": "double",
+        "example": "100"
+      },
+      "currency": {
+        "type": "String",
+        "example": "SYP"
+      }
+    }
+  },
+
+  "subscription_details_featuresTitle": "مميزات الباقة",
+  "subscription_details_subscribeButton": "اشتراك",
+  "subscription_details_noFeatures": "لا توجد ميزات محددة لهذه الباقة",
+
+  "subscription_payment_transaction_label": "رقم العملية",
+  "subscription_payment_transaction_hint": "أدخل رقم العملية المرجعي",
+
+
+  "subscription_selectMonth_continueToPayment": "متابعة لاختيار طريقة الدفع",
+  "subscription_selectMonth_selectToContinue": "اختر باقة للاستمرار",
+  "subscription_selectMonth_selectionConfirmed": "تم اختيار {count} شهر",
+  "subscription_selectMonth_durationLabel": "اشتراك {count} أشهر",
+  "subscription_selectMonth_monthlyPriceDetail": "بـ {price} {currency} / شهرياً"
 }

@@ -1,5 +1,3 @@
-// lib/features/coaches/presentation/pages/coach_details_screen.dart
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/di/service_locator.dart';
@@ -9,7 +7,6 @@ import '../view_model/coach_details_state.dart';
 import '../widgets/coach_banner.dart';
 import '../widgets/coach_info_badges.dart';
 import '../widgets/certifications_list.dart';
-import '../widgets/book_consultation_button.dart';
 import '../widgets/coach_subscriptions_list.dart';
 
 class CoachDetailsScreen extends StatelessWidget {
@@ -93,10 +90,11 @@ class CoachDetailsScreen extends StatelessWidget {
                           ),
                         ),
 
-                        // ✨ [تم حذف الـ Padding المكرر للـ biography الذي كان هنا بنجاح] ✨
-
                         const SizedBox(height: 28),
-                        CoachSubscriptionsList(subscriptions: coach.subscriptions),
+                      CoachSubscriptionsList(
+                        subscriptions: coach.subscriptions,
+                        coachId: coach.id,
+                      ),
                         const SizedBox(height: 28),
                         if (coach.pics.isNotEmpty) ...[
                           Padding(
