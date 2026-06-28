@@ -1,16 +1,14 @@
-// lib/features/coaches/presentation/widgets/coach_subscriptions_list.dart
-
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../data/models/subscription_model.dart';
-// 👇 قمنا بإضافة هذا الـ import لنستدعي الـ BottomSheet الجديد
-import 'SubscriptionDetailsBottomSheet.dart';
+import '../../../trainee_subscriptions/data/models/subscription_model.dart';
+import '../../../trainee_subscriptions/presentation/widgets/SubscriptionDetailsBottomSheet.dart';
 
 class CoachSubscriptionsList extends StatelessWidget {
   final List<SubscriptionModel> subscriptions;
+  final int coachId;
 
-  const CoachSubscriptionsList({super.key, required this.subscriptions});
+  const CoachSubscriptionsList({super.key,required this.coachId, required this.subscriptions});
 
   Color _getTypeColor(String type) {
     switch (type.toLowerCase()) {
@@ -23,6 +21,32 @@ class CoachSubscriptionsList extends StatelessWidget {
       default:
         return AppColors.primaryBtn;
     }
+  }
+
+  String _getPriceRange(SubscriptionModel sub) {
+    if (sub.months.isEmpty) return '0';
+    if (sub.months.length == 1) {
+      return '${sub.months.first.price}';
+    }
+    // إذا كان هناك أكثر من شهر، نعرض أقل وأعلى سعر
+    final prices = sub.months.map((m) => m.price).toList();
+    final minPrice = prices.reduce((a, b) => a < b ? a : b);
+    final maxPrice = prices.reduce((a, b) => a > b ? a : b);
+    if (minPrice == maxPrice) {
+      return '$minPrice';
+    }
+    return '$minPrice - $maxPrice';
+  }
+
+  String _getMonthRange(SubscriptionModel sub) {
+    if (sub.months.isEmpty) return '0';
+    if (sub.months.length == 1) {
+      return '${sub.months.first.number} Month';
+    }
+    final numbers = sub.months.map((m) => m.number).toList();
+    final minNum = numbers.reduce((a, b) => a < b ? a : b);
+    final maxNum = numbers.reduce((a, b) => a > b ? a : b);
+    return '$minNum - $maxNum Months';
   }
 
   @override
@@ -46,7 +70,7 @@ class CoachSubscriptionsList extends StatelessWidget {
         ),
         const SizedBox(height: 15),
         SizedBox(
-          height: 140,
+          height: 150,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             physics: const BouncingScrollPhysics(),
@@ -57,10 +81,8 @@ class CoachSubscriptionsList extends StatelessWidget {
               return Padding(
                 padding: const EdgeInsets.only(right: 15),
                 child: GestureDetector(
-                  // 🎯 التعديل السحري هنا عند الضغط على الكارد 🎯
                   onTap: () {
-                    // 👇 استدعاء الـ BottomSheet لعرض التفاصيل بشكل ضبابي احترافي دون مغادرة الصفحة
-                    SubscriptionDetailsBottomSheet.show(context, sub);
+                    SubscriptionDetailsBottomSheet.show(context, sub, coachId);
                   },
                   child: Neumorphic(
                     style: NeumorphicStyle(
@@ -70,27 +92,41 @@ class CoachSubscriptionsList extends StatelessWidget {
                       lightSource: LightSource.topLeft,
                     ),
                     child: Container(
-                      width: 140,
+                      width: 150,
                       padding: const EdgeInsets.all(12),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.workspace_premium, color: _getTypeColor(sub.type), size: 30),
+                          Icon(
+                            Icons.workspace_premium,
+                            color: _getTypeColor(sub.type),
+                            size: 30,
+                          ),
                           const SizedBox(height: 8),
                           Text(
                             sub.title,
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                           const SizedBox(height: 5),
                           Text(
-                            "${sub.price} ${sub.currency}",
-                            style: TextStyle(color: AppColors.primaryBtn, fontWeight: FontWeight.w600, fontSize: 14),
+                            "${_getPriceRange(sub)} ${sub.currency}",
+                            style: TextStyle(
+                              color: AppColors.primaryBtn,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                            ),
                           ),
                           Text(
-                            "${sub.months} Month(s)",
-                            style: const TextStyle(color: Colors.grey, fontSize: 12),
+                            _getMonthRange(sub),
+                            style: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 12,
+                            ),
                           ),
                         ],
                       ),

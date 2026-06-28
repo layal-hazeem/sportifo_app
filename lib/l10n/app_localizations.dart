@@ -988,6 +988,240 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No active subscriptions found'**
   String get noActiveSubscriptions;
+
+  /// No description provided for @subscription_payment_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete Payment'**
+  String get subscription_payment_title;
+
+  /// No description provided for @subscription_payment_paymentMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay via: Cham Cash'**
+  String get subscription_payment_paymentMethod;
+
+  /// No description provided for @subscription_payment_confirmTransfer.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Transfer'**
+  String get subscription_payment_confirmTransfer;
+
+  /// No description provided for @subscription_payment_uploadReceiptFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Please upload payment file first'**
+  String get subscription_payment_uploadReceiptFirst;
+
+  /// Request failure message with error reason
+  ///
+  /// In en, this message translates to:
+  /// **'Request failed: {error}'**
+  String subscription_payment_requestFailed(String error);
+
+  /// Unexpected error message
+  ///
+  /// In en, this message translates to:
+  /// **'Unexpected error occurred: {error}'**
+  String subscription_payment_unexpectedError(String error);
+
+  /// No description provided for @subscription_payment_successTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Request Submitted Successfully'**
+  String get subscription_payment_successTitle;
+
+  /// Transaction reference ID
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction ID: {id}'**
+  String subscription_payment_transactionId(String id);
+
+  /// No description provided for @subscription_payment_ok.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get subscription_payment_ok;
+
+  /// No description provided for @subscription_payment_confirmButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm & Submit'**
+  String get subscription_payment_confirmButton;
+
+  /// No description provided for @subscription_payment_accountNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Account Name'**
+  String get subscription_payment_accountNameLabel;
+
+  /// No description provided for @subscription_payment_walletNumberLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet Number'**
+  String get subscription_payment_walletNumberLabel;
+
+  /// No description provided for @subscription_payment_copySuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet number copied successfully'**
+  String get subscription_payment_copySuccess;
+
+  /// No description provided for @subscription_payment_orderSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Summary'**
+  String get subscription_payment_orderSummary;
+
+  /// No description provided for @subscription_payment_planLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan'**
+  String get subscription_payment_planLabel;
+
+  /// No description provided for @subscription_payment_durationLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get subscription_payment_durationLabel;
+
+  /// No description provided for @subscription_payment_totalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Amount'**
+  String get subscription_payment_totalLabel;
+
+  /// No description provided for @subscription_payment_uploadHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to upload payment file '**
+  String get subscription_payment_uploadHint;
+
+  /// File upload success message with file name
+  ///
+  /// In en, this message translates to:
+  /// **'File uploaded: {fileName}'**
+  String subscription_payment_fileUploaded(String fileName);
+
+  /// File selection message with file name
+  ///
+  /// In en, this message translates to:
+  /// **'File selected: {fileName}'**
+  String subscription_payment_fileSelected(String fileName);
+
+  /// No description provided for @subscription_payment_noFileSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'No file selected'**
+  String get subscription_payment_noFileSelected;
+
+  /// File selection error message
+  ///
+  /// In en, this message translates to:
+  /// **'Error selecting file: {error}'**
+  String subscription_payment_filePickError(String error);
+
+  /// No description provided for @subscription_selectMonth_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscription Duration'**
+  String get subscription_selectMonth_title;
+
+  /// No description provided for @subscription_selectMonth_availablePlans.
+  ///
+  /// In en, this message translates to:
+  /// **'Available Plans'**
+  String get subscription_selectMonth_availablePlans;
+
+  /// No description provided for @subscription_selectMonth_continueButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue to Payment'**
+  String get subscription_selectMonth_continueButton;
+
+  /// No description provided for @subscription_selectMonth_choosePlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a plan to continue'**
+  String get subscription_selectMonth_choosePlan;
+
+  /// Month selection confirmation
+  ///
+  /// In en, this message translates to:
+  /// **'{months} month(s) selected'**
+  String subscription_selectMonth_monthSelected(int months);
+
+  /// Month count label in card
+  ///
+  /// In en, this message translates to:
+  /// **'{months} month(s)'**
+  String subscription_selectMonth_monthsLabel(int months);
+
+  /// Approximate price per month
+  ///
+  /// In en, this message translates to:
+  /// **'{price} {currency} / month'**
+  String subscription_selectMonth_pricePerMonth(double price, String currency);
+
+  /// No description provided for @subscription_details_featuresTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan Features'**
+  String get subscription_details_featuresTitle;
+
+  /// No description provided for @subscription_details_subscribeButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscribe'**
+  String get subscription_details_subscribeButton;
+
+  /// No description provided for @subscription_details_noFeatures.
+  ///
+  /// In en, this message translates to:
+  /// **'No specific features for this plan'**
+  String get subscription_details_noFeatures;
+
+  /// No description provided for @subscription_payment_transaction_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction ID'**
+  String get subscription_payment_transaction_label;
+
+  /// No description provided for @subscription_payment_transaction_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the reference transaction ID'**
+  String get subscription_payment_transaction_hint;
+
+  /// No description provided for @subscription_selectMonth_continueToPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue to Payment'**
+  String get subscription_selectMonth_continueToPayment;
+
+  /// No description provided for @subscription_selectMonth_selectToContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a plan to continue'**
+  String get subscription_selectMonth_selectToContinue;
+
+  /// No description provided for @subscription_selectMonth_selectionConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} month(s) selected'**
+  String subscription_selectMonth_selectionConfirmed(Object count);
+
+  /// No description provided for @subscription_selectMonth_durationLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} months'**
+  String subscription_selectMonth_durationLabel(Object count);
+
+  /// No description provided for @subscription_selectMonth_monthlyPriceDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'{price} {currency} / month'**
+  String subscription_selectMonth_monthlyPriceDetail(Object currency, Object price);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

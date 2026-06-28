@@ -462,4 +462,145 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get noActiveSubscriptions => 'لم يتم العثور على اشتراكات نشطة';
+
+  @override
+  String get subscription_payment_title => 'إتمام الدفع';
+
+  @override
+  String get subscription_payment_paymentMethod => 'الدفع عبر: شام كاش (Cham Cash)';
+
+  @override
+  String get subscription_payment_confirmTransfer => 'تأكيد إرسال الحوالة';
+
+  @override
+  String get subscription_payment_uploadReceiptFirst => 'يرجى رفع ملف إيصال الدفع أولاً';
+
+  @override
+  String subscription_payment_requestFailed(String error) {
+    return 'فشل الطلب: $error';
+  }
+
+  @override
+  String subscription_payment_unexpectedError(String error) {
+    return 'حدث خطأ غير متوقع: $error';
+  }
+
+  @override
+  String get subscription_payment_successTitle => 'تم الطلب بنجاح';
+
+  @override
+  String subscription_payment_transactionId(String id) {
+    return 'رقم العملية: $id';
+  }
+
+  @override
+  String get subscription_payment_ok => 'حسناً';
+
+  @override
+  String get subscription_payment_confirmButton => 'تأكيد وإرسال الطلب';
+
+  @override
+  String get subscription_payment_accountNameLabel => 'اسم الحساب';
+
+  @override
+  String get subscription_payment_walletNumberLabel => 'رقم المحفظة';
+
+  @override
+  String get subscription_payment_copySuccess => 'تم نسخ رقم المحفظة بنجاح';
+
+  @override
+  String get subscription_payment_orderSummary => 'ملخص الطلب';
+
+  @override
+  String get subscription_payment_planLabel => 'الباقة';
+
+  @override
+  String get subscription_payment_durationLabel => 'المدة';
+
+  @override
+  String get subscription_payment_totalLabel => 'المبلغ الإجمالي';
+
+  @override
+  String get subscription_payment_uploadHint => 'اضغط لرفع ملف إيصال الدفع ';
+
+  @override
+  String subscription_payment_fileUploaded(String fileName) {
+    return 'تم رفع الملف: $fileName';
+  }
+
+  @override
+  String subscription_payment_fileSelected(String fileName) {
+    return 'تم اختيار الملف: $fileName';
+  }
+
+  @override
+  String get subscription_payment_noFileSelected => 'لم يتم اختيار أي ملف';
+
+  @override
+  String subscription_payment_filePickError(String error) {
+    return 'حدث خطأ أثناء اختيار الملف: $error';
+  }
+
+  @override
+  String get subscription_selectMonth_title => 'مدة الاشتراك';
+
+  @override
+  String get subscription_selectMonth_availablePlans => 'الخطط المتاحة';
+
+  @override
+  String get subscription_selectMonth_continueButton => 'متابعة لاختيار طريقة الدفع';
+
+  @override
+  String get subscription_selectMonth_choosePlan => 'اختر باقة للاستمرار';
+
+  @override
+  String subscription_selectMonth_monthSelected(int months) {
+    return 'تم اختيار $months شهر';
+  }
+
+  @override
+  String subscription_selectMonth_monthsLabel(int months) {
+    return 'اشتراك $months شهر';
+  }
+
+  @override
+  String subscription_selectMonth_pricePerMonth(double price, String currency) {
+    return 'بـ $price $currency / شهرياً';
+  }
+
+  @override
+  String get subscription_details_featuresTitle => 'مميزات الباقة';
+
+  @override
+  String get subscription_details_subscribeButton => 'اشتراك';
+
+  @override
+  String get subscription_details_noFeatures => 'لا توجد ميزات محددة لهذه الباقة';
+
+  @override
+  String get subscription_payment_transaction_label => 'رقم العملية';
+
+  @override
+  String get subscription_payment_transaction_hint => 'أدخل رقم العملية المرجعي';
+
+  @override
+  String get subscription_selectMonth_continueToPayment => 'متابعة لاختيار طريقة الدفع';
+
+  @override
+  String get subscription_selectMonth_selectToContinue => 'اختر باقة للاستمرار';
+
+  @override
+  String subscription_selectMonth_selectionConfirmed(Object count) {
+    return 'تم اختيار $count شهر';
+  }
+
+  @override
+  String subscription_selectMonth_durationLabel(Object count) {
+    return 'اشتراك $count أشهر';
+  }
+
+  @override
+  String subscription_selectMonth_monthlyPriceDetail(Object currency, Object price) {
+    return 'بـ $price $currency / شهرياً';
+  }
 }

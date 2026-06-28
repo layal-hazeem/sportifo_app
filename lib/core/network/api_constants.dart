@@ -25,4 +25,6 @@ class ApiConstants {
   static const String usersSubscribed = "coaches/users/subscribed";
     static const String createPlan = "plans";
 
+  static const String subscribe = "subscriptions/subscribe";
+
 }

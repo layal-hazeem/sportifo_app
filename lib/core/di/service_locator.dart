@@ -25,6 +25,8 @@ import '../../features/coaches/presentation/view_model/coaches_cubit.dart';
 import '../../features/targets/data/repository/target_repository.dart';
 import '../../features/targets/data/web_services/target_web_service.dart';
 import '../../features/targets/presentation/view_model/target_cubit/target_cubit.dart';
+import '../../features/trainee_subscriptions/data/repositories/trainee_subscription_repository.dart';
+import '../../features/trainee_subscriptions/data/web_services/trainee_subscription_web_service.dart';
 import '../../features/workout/data/repository/workout_repository.dart';
 import '../../features/workout/data/web_services/workout_web_service.dart';
 import '../../features/workout/presentation/view_model/categories_cubit/categories_cubit.dart';
@@ -131,13 +133,15 @@ Future<void> setupServiceLocator() async {
   );
 
   getIt.registerLazySingleton<SubscriptionWebService>(
-    () => SubscriptionWebService(getIt<Dio>()),
+        () => SubscriptionWebService(getIt<Dio>()),
   );
+
   getIt.registerLazySingleton<SubscriptionRepository>(
-    () => SubscriptionRepository(getIt<SubscriptionWebService>()),
+        () => SubscriptionRepository(getIt<SubscriptionWebService>()),
   );
+
   getIt.registerFactory<SubscriptionCubit>(
-    () => SubscriptionCubit(getIt<SubscriptionRepository>()),
+        () => SubscriptionCubit(getIt<SubscriptionRepository>()),
   );
 
   // 🔥 🎯 تسجيل ميزة الأهداف والاحتياجات الغذائية الجديدة هنا
@@ -150,4 +154,12 @@ Future<void> setupServiceLocator() async {
   getIt.registerFactory<TargetCubit>(
     () => TargetCubit(getIt<TargetRepository>()),
   );
+
+  getIt.registerLazySingleton<TraineeSubscriptionWebService>(
+        () => TraineeSubscriptionWebService(getIt<Dio>()),
+  );
+  getIt.registerLazySingleton<TraineeSubscriptionRepository>(
+        () => TraineeSubscriptionRepository(getIt<TraineeSubscriptionWebService>()),
+  );
+
 }

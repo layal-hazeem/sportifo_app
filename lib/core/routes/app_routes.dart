@@ -25,4 +25,6 @@ class AppRoutes {
   static const String createPlan = "/plans";
 
   static const String subscriptionDetails = "/subscriptionDetails";
+  static const String selectMonth = "/selectMonth";
+  static const String payment = "/payment";
 }
