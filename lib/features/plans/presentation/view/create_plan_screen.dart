@@ -19,7 +19,8 @@ import 'package:sportifo_app/features/workout/data/models/exercise_model.dart';
 import 'package:sportifo_app/features/workout/data/repository/workout_repository.dart';
 
 class CreatePlanScreen extends StatefulWidget {
-  const CreatePlanScreen({super.key});
+  final int userId;
+  const CreatePlanScreen({super.key,required this.userId,});
   @override
   State<CreatePlanScreen> createState() => _CreatePlanScreenState();
 }
@@ -107,7 +108,7 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
         }
 
         if (state is CreatePlanSuccess) {
-          Navigator.pop(context);
+          Navigator.pop(context,true);
 
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text("Plan created successfully 🎉")),
@@ -363,29 +364,24 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
     if (days.isEmpty) {
       return;
     }
-
     if (days.any((day) => day.exercises.isEmpty)) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Every day must have at least one exercise"),
         ),
       );
-
       return;
     }
 
     final request = CreatePlanRequest(
-      userId: 1,
-
+        userId: widget.userId,
       days: days.map((day) {
         return PlanDayRequest(
           name: day.name,
-
           exerciseIds: day.exercises.map((e) => e.id).toList(),
         );
       }).toList(),
     );
-
     context.read<CreatePlanCubit>().createPlan(request);
   }
 }

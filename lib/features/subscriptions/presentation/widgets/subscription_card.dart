@@ -6,8 +6,10 @@ import '../../data/models/users_subscribed_model.dart';
 
 class SubscriptionCard extends StatelessWidget {
   final UsersSubscribedModel userModel;
+  final VoidCallback onCreatePlan;
 
-  const SubscriptionCard({super.key, required this.userModel});
+  const SubscriptionCard({super.key, required this.userModel,  required this.onCreatePlan,
+});
 
   @override
   Widget build(BuildContext context) {
@@ -198,14 +200,6 @@ class SubscriptionCard extends StatelessWidget {
                               ),
                             ],
                           ),
-                          Text(
-                            '${plan?.price ?? 0} ${plan?.currency ?? 'SYP'}',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF2D3142),
-                            ),
-                          ),
                         ],
                       ),
                       const SizedBox(height: 8),
@@ -222,11 +216,6 @@ class SubscriptionCard extends StatelessWidget {
                             "Ends",
                             formattedEndDate,
                           ),
-                          _buildSubDetailsItem(
-                            Icons.timelapse_rounded,
-                            "Duration",
-                            '${plan?.months ?? 1} M',
-                          ),
                         ],
                       ),
                     ],
@@ -238,13 +227,7 @@ class SubscriptionCard extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.pushNamed(
-                      context,
-                      AppRoutes.createPlan,
-                      arguments: userModel,
-                    );
-                  },
+                 onPressed: onCreatePlan,
                   icon: const Icon(Icons.add_task_rounded, size: 18),
                   label: const Text(
                     "Create Training Plan Now",

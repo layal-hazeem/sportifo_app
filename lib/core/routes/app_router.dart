@@ -7,6 +7,7 @@ import 'package:sportifo_app/features/plans/presentation/view/create_plan_screen
 import 'package:sportifo_app/features/plans/presentation/view_model/create_plan_cubit.dart';
 import 'package:sportifo_app/features/profile/data/models/user_profile_response.dart';
 import 'package:sportifo_app/features/profile/presentation/view/edit_profile_page.dart';
+import 'package:sportifo_app/features/subscriptions/data/models/users_subscribed_model.dart';
 import 'package:sportifo_app/features/subscriptions/presentation/view/subscriptions_screen.dart';
 import 'package:sportifo_app/features/subscriptions/presentation/view_model/subscription_cubit.dart';
 import '../../features/auth/presentation/view/complete_profile_info.dart';
@@ -234,12 +235,16 @@ class AppRouter {
         );
 
       case AppRoutes.createPlan:
-        return MaterialPageRoute(
-          builder: (_) => BlocProvider(
-            create: (_) => getIt<CreatePlanCubit>(),
-            child: CreatePlanScreen(),
-          ),
-        );
+  final user = settings.arguments as UsersSubscribedModel;
+
+  return MaterialPageRoute(
+    builder: (_) => BlocProvider(
+      create: (_) => getIt<CreatePlanCubit>(),
+      child: CreatePlanScreen(
+        userId: user.id!,
+      ),
+    ),
+  );
 
       case AppRoutes.existingDays:
         return MaterialPageRoute(
