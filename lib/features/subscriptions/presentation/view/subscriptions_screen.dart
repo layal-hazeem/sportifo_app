@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sportifo_app/core/routes/app_routes.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/features/auth/presentation/widgets/custom_button.dart';
 import 'package:sportifo_app/features/subscriptions/data/models/users_subscribed_model.dart';
@@ -36,13 +37,37 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      "Connection Error :\n please check your internet connection",
-                      style: const TextStyle(color: Colors.red),
-                      textAlign: TextAlign.center,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.wifi_off,
+                          size: 50,
+                          color: Colors.grey.shade400,
+                        ),
+                        const SizedBox(height: 10),
+                        const Text(
+                          "No Internet Connection",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 40,
+                            vertical: 8,
+                          ),
+                          child: Text(
+                            "Please check your network settings and try again.",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 16),
+
                   CustomAuthButton(
                     isFullWidth: false,
                     text: l10n.retry,
@@ -206,7 +231,21 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                 itemCount: activeList.length,
                 itemBuilder: (context, index) {
                   final user = activeList[index];
-                  return SubscriptionCard(userModel: user);
+                  return SubscriptionCard(
+  userModel: user,
+  onCreatePlan: () async {
+
+    final result = await Navigator.pushNamed(
+      context,
+      AppRoutes.createPlan,
+      arguments: user,
+    );
+
+    if (result == true) {
+      context.read<SubscriptionCubit>().getSubscriptions();
+    }
+  },
+);
                 },
               ),
       ],

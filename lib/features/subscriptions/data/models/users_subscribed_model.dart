@@ -116,22 +116,18 @@ class Subscription {
     final String? title;
     final String? description;
     final String? type;
-    final int? price;
     final String? currency;
     final bool? isGeneral;
     final bool? isActive;
-    final int? months;
 
     Subscription({
         this.id,
         this.title,
         this.description,
         this.type,
-        this.price,
         this.currency,
         this.isGeneral,
         this.isActive,
-        this.months,
     });
 
     factory Subscription.fromJson(Map<String, dynamic> json) => Subscription(
@@ -139,11 +135,9 @@ class Subscription {
         title: json["title"],
         description: json["description"],
         type: json["type"],
-        price: json["price"],
         currency: json["currency"],
         isGeneral: json["is_general"],
         isActive: json["is_active"],
-        months: json["months"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -151,10 +145,8 @@ class Subscription {
         "title": title,
         "description": description,
         "type": type,
-        "price": price,
         "currency": currency,
         "is_general": isGeneral,
         "is_active": isActive,
-        "months": months,
     };
 }

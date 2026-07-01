@@ -22,7 +22,6 @@ class PendingCard extends StatelessWidget {
 
     final planTitle = pendingSub?.subscription?.title ?? "Unknown Plan";
     final planType = pendingSub?.subscription?.type?.toUpperCase() ?? "";
-    final price = pendingSub?.subscription?.price ?? 0;
     final currency = pendingSub?.subscription?.currency ?? "SYP";
 
     Color planColor;
@@ -121,15 +120,6 @@ class PendingCard extends StatelessWidget {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 8),
-                        Text(
-                          "$price $currency",
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.green,
-                          ),
-                        ),
                       ],
                     ),
                   ],
@@ -137,10 +127,8 @@ class PendingCard extends StatelessWidget {
               ),
             ],
           ),
-
           const SizedBox(height: 16),
           const Divider(height: 1, color: Color(0xFFEDF2F7)),
-          const SizedBox(height: 12),
         ],
       ),
     );
