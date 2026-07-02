@@ -15,13 +15,12 @@ class ProfileRepository {
   Future<ApiResult<ProfileResponsModel>> getProfile() async {
     try {
       final response = await _profileWebService.getProfile();
-      print(response.data);
       return Success(ProfileResponsModel.fromJson(response.data['data']));
     } catch (e, stacktrace) {
       print("Parsing Error: $e");
       print(
         "Stacktrace: $stacktrace",
-      ); // هذا سيخبرك في أي سطر بالضبط فشل التحويل
+      ); 
       return Failure(ApiErrorHandler.handle(e));
     }
   }
@@ -29,11 +28,10 @@ class ProfileRepository {
   Future<ApiResult<CoachProfileModel>> getCoachProfile() async {
     try {
       final response = await _profileWebService.getCoachProfile();
-      print(response.data);
       return Success(CoachProfileModel.fromJson(response.data['data']));
     } catch (e, stacktrace) {
       print("Parsing Error: $e");
-      print("Stacktrace: $stacktrace"); 
+      print("Stacktrace: $stacktrace");
       return Failure(ApiErrorHandler.handle(e));
     }
   }

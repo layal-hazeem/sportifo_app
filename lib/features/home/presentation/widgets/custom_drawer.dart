@@ -130,11 +130,11 @@ class CustomDrawer extends StatelessWidget {
                           if (user.profilePic != null &&
                               user.profilePic!.isNotEmpty) {
                             imageProvider = NetworkImage(user.profilePic!);
-                          } else if (user.gender) {
+                          } else {
                             imageProvider = AssetImage(
-                              user.gender == true
-                                  ? "assets/images/male.jpg"
-                                  : "assets/images/female.jpg",
+                              user.gender == false
+                                  ? "assets/images/female.jpg"
+                                  : "assets/images/male.jpg",
                             );
                           }
                         }
@@ -149,6 +149,10 @@ class CustomDrawer extends StatelessWidget {
                                 child: CircleAvatar(
                                   radius: 45,
                                   backgroundImage: imageProvider,
+                                  onBackgroundImageError: (_, _) {},
+                                  child: imageProvider == null
+                                      ? const Icon(Icons.person, size: 40)
+                                      : null,
                                 ),
                               ),
 

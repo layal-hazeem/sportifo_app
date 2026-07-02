@@ -15,7 +15,7 @@ class ApiConstants {
 
   static const String getProfile = "profile";
   static const String profile = "profile";
-  static const String editProfile = "profile-edit";
+  static const String editProfile = "profile/edit";
   static const String logout = "logout";
 
   static const String categories = "categories";

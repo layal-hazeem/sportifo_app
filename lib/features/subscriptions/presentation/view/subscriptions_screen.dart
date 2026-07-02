@@ -93,11 +93,13 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
             }).toList();
 
             final activeSubscriptions = allUsers.where((user) {
-              return user.userSubscriptions?.any(
-                    (sub) => (sub.isActive ?? 0) == 1,
-                  ) ??
-                  false;
-            }).toList();
+  return user.userSubscriptions?.any(
+        (sub) =>
+            sub.status?.toLowerCase() == 'active' &&
+            (sub.isActive ?? 0) == 1,
+      ) ??
+      false;
+}).toList();
 
             return RefreshIndicator(
               onRefresh: () async {
@@ -182,12 +184,6 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                         width: cardWidth,
                         child: PendingCard(
                           user: user,
-                          onAccept: () {
-                            print("Accepted user: ${user.firstName}");
-                          },
-                          onReject: () {
-                            print("Rejected user: ${user.firstName}");
-                          },
                         ),
                       ),
                     );

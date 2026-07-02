@@ -3,14 +3,10 @@ import '../../data/models/users_subscribed_model.dart'; // تأكد من مطا�
 
 class PendingCard extends StatelessWidget {
   final UsersSubscribedModel user;
-  final VoidCallback onAccept;
-  final VoidCallback onReject;
 
   const PendingCard({
     super.key,
     required this.user,
-    required this.onAccept,
-    required this.onReject,
   });
 
   @override
@@ -28,16 +24,16 @@ class PendingCard extends StatelessWidget {
     IconData planIcon;
     switch (planType) {
       case 'gold':
-        planColor = const Color(0xFFFFB300); // ذهبي
+        planColor = const Color(0xFFFFB300); 
         planIcon = Icons.stars_rounded;
         break;
       case 'silver':
-        planColor = const Color(0xFF78909C); // فضي
+        planColor = const Color(0xFF78909C);
         planIcon = Icons.workspace_premium_rounded;
         break;
       case 'bronze':
       default:
-        planColor = const Color(0xffa87c43); // برونزي
+        planColor = const Color(0xffa87c43);
         planIcon = Icons.emoji_events_rounded;
         break;
     }
@@ -64,7 +60,6 @@ class PendingCard extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // 1. صورة المستخدم الشخصية مع التعامل مع الصورة الفارغة (Null)
               CircleAvatar(
                 radius: 28,
                 backgroundColor: Colors.grey.shade200,
@@ -112,7 +107,7 @@ class PendingCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(
-                            "$planTitle",
+                            planTitle,
                             style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.w600,
