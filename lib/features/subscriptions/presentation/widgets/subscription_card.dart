@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sportifo_app/core/routes/app_routes.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import '../../data/models/users_subscribed_model.dart';
 
@@ -8,15 +7,18 @@ class SubscriptionCard extends StatelessWidget {
   final UsersSubscribedModel userModel;
   final VoidCallback onCreatePlan;
 
-  const SubscriptionCard({super.key, required this.userModel,  required this.onCreatePlan,
-});
+  const SubscriptionCard({
+    super.key,
+    required this.userModel,
+    required this.onCreatePlan,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final hasSubscriptions =
-        userModel.userSubscriptions != null &&
-        userModel.userSubscriptions!.isNotEmpty;
-    final subscriptionsList = userModel.userSubscriptions ?? [];
+    final subscriptionsList = (userModel.userSubscriptions ?? [])
+        .where((sub) => sub.status?.toLowerCase() == 'active')
+        .toList();
+        final hasSubscriptions = subscriptionsList.isNotEmpty;
     final bool hasActivePlan = userModel.hasPlan ?? false;
     final bool showCreatePlanButton = hasSubscriptions && !hasActivePlan;
 
@@ -227,7 +229,7 @@ class SubscriptionCard extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
-                 onPressed: onCreatePlan,
+                  onPressed: onCreatePlan,
                   icon: const Icon(Icons.add_task_rounded, size: 18),
                   label: const Text(
                     "Create Training Plan Now",
