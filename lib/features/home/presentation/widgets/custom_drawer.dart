@@ -278,7 +278,7 @@ class CustomDrawer extends StatelessWidget {
         break;
 
       case DrawerItem.saved:
-        Navigator.pushReplacementNamed(context, AppRoutes.savedExercises);
+        Navigator.pushNamed(context, AppRoutes.savedExercises);
         break;
 
       case DrawerItem.settings:
