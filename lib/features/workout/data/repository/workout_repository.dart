@@ -86,6 +86,13 @@ class WorkoutRepository {
   Future<ApiResult<bool>> toggleSaveExercise(int exerciseId) async {
     try {
       final response = await _webService.toggleSaveExercise(exerciseId);
+      // السيرفر يرجع {"message":201,"data":"..."}  أو {"success":true}
+      // نتحقق من status code وليس success field
+      final isSuccess = response.statusCode == 200 || response.statusCode == 201;
+      if (isSuccess) {
+        return Success(true);
+      }
+      return Failure("Failed to save exercise");
       return Success(response.data['success'] ?? true);
     } catch (e) {
       return Failure(ApiErrorHandler.handle(e));

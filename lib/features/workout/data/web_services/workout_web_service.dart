@@ -33,10 +33,10 @@ class WorkoutWebService {
     return await dio.get(
       ApiConstants.exercise, // المسار الخاص بكِ من الـ ApiConstants
       queryParameters: {
-        if (categoryId != null) 'category_id': categoryId,
-        if (organId != null) 'organ_id': organId,
+        'category_id': ?categoryId,
+        'organ_id': ?organId,
         if (smallestCategoryId != null && smallestCategoryId.isNotEmpty) 'smallest_category_id[]': smallestCategoryId,
-        if (searchQuery != null) 'search': searchQuery,
+        'search': ?searchQuery,
       },
       options: options, // 🔥 هنا يتم دمج خيارات التخزين الذكي مع الريكويست الحالي
     );
@@ -51,6 +51,11 @@ class WorkoutWebService {
   }
   // دالة لجلب التمارين التي حفظها المستخدم فقط
   Future<Response> getSavedExercises() async {
-    return await dio.get(ApiConstants.getSavedExercises); // اللي هو "savedExercises"
+    return await dio.get(
+      ApiConstants.getSavedExercises,
+      options: Options(
+        extra: <String, dynamic>{'dio_cache_interceptor': 'noCache'},
+      ),
+    );
   }
 }

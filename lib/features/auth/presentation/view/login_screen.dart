@@ -13,8 +13,6 @@ import '../view_model/login/login_cubit.dart';
 import '../view_model/login/login_state.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_neumorphic_field.dart';
-import 'forgot_password_screen.dart';
-import 'otp_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

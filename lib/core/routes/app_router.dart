@@ -72,11 +72,15 @@ class AppRouter {
           ),
         );
 
+ 
       case AppRoutes.home:
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
-            providers: [BlocProvider(create: (_) => getIt<CategoriesCubit>()),
+            providers: [
+              BlocProvider(create: (_) => getIt<CategoriesCubit>()),
               BlocProvider(create: (_) => getIt<TargetCubit>()..fetchLatestTarget()),
+              // ✅ أضفنا SavedExercisesCubit هون
+              BlocProvider.value(value: getIt<SavedExercisesCubit>()),
             ],
             child: const HomePage(),
           ),
@@ -101,14 +105,19 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
             create: (_) => getIt<CategoriesCubit>(),
-            child:
-                const WorkoutTypeScreen(), // تأكدي من عمل import لهذه الشاشة في الأعلى
+            child: const WorkoutTypeScreen(),
           ),
         );
-      case AppRoutes.muscleGroups:
+
+   case AppRoutes.muscleGroups:
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
             providers: [
+              BlocProvider(create: (_) => getIt<CategoriesCubit>()),
+              BlocProvider(create: (_) => getIt<ExercisesCubit>()),
+              BlocProvider(create: (_) => getIt<PartsCubit>()),
+              // ✅ أضفنا SavedExercisesCubit هون
+              BlocProvider.value(value: getIt<SavedExercisesCubit>()),
               BlocProvider.value(value: getIt<CategoriesCubit>()), // ✅ صح
               BlocProvider.value(value: getIt<ExercisesCubit>()), // ✅ صح
               BlocProvider.value(value: getIt<PartsCubit>()), // ✅ صح
@@ -191,6 +200,11 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
             providers: [
+              BlocProvider(
+                create: (context) => getIt<ExercisesCubit>()
+                  ..fetchExercises(categoryId: args['categoryId']),
+              ),
+              // ✅ أضفنا SavedExercisesCubit هون
               BlocProvider.value(value: getIt<ExercisesCubit>()), // ✅ التعديل السحري هنا
               BlocProvider.value(value: getIt<SavedExercisesCubit>()),
             ],
@@ -201,6 +215,7 @@ class AppRouter {
           ),
         );
 
+
       case AppRoutes.exerciseDetails:
         final exercise = settings.arguments as ExerciseModel;
         return MaterialPageRoute(
@@ -210,25 +225,24 @@ class AppRouter {
           ),
         );
 
-      case AppRoutes.searchScreen:
-        // استخراج الـ Map بالكامل
+    case AppRoutes.searchScreen:
         final args = settings.arguments as Map<String, dynamic>?;
-
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
             providers: [
               BlocProvider(create: (_) => getIt<SearchCubit>()),
+              // ✅ أضفنا SavedExercisesCubit هون (كان ناقص!)
               BlocProvider.value(value: getIt<SavedExercisesCubit>()),
             ],
             child: SearchExercisesScreen(
-              categoryId: args?['categoryId'], // مرريها من الـ Map
-              organId: args?['organId'], // مرريها من الـ Map
-              smallestCategoryId:
-                  args?['smallestCategoryId'], // مرريها من الـ Map
+              categoryId: args?['categoryId'],
+              organId: args?['organId'],
+              smallestCategoryId: args?['smallestCategoryId'],
             ),
           ),
         );
-      case AppRoutes.savedExercises:
+
+     case AppRoutes.savedExercises:
         return MaterialPageRoute(
           builder: (_) => BlocProvider.value(
             value: getIt<SavedExercisesCubit>()..fetchSavedExercises(),

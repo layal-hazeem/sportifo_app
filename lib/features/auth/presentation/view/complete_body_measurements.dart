@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
-import 'package:sportifo_app/core/di/service_locator.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/complete_profile/complete_profile_cubit.dart';
 import 'package:sportifo_app/features/auth/presentation/widgets/custom_button.dart';

@@ -167,9 +167,9 @@ class _AdDetailsBottomSheetState extends State<AdDetailsBottomSheet> {
                         ),
                         const SizedBox(height: 6),
 
-                        if (widget.ad.companyName != null && widget.ad.companyName!.isNotEmpty) ...[
+                        if (widget.ad.companyName.isNotEmpty) ...[
                           Text(
-                            widget.ad.companyName!,
+                            widget.ad.companyName,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 14,

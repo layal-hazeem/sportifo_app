@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/network/api_result.dart';
 import '../../../data/models/register/register_request_model.dart';

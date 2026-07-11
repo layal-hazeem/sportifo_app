@@ -34,7 +34,7 @@ class CertificationsList extends StatelessWidget {
               child: Image.network(
                 pics[index].url,
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => Container(
+                errorBuilder: (_, _, _) => Container(
                   color: Colors.grey[100],
                   child: const Icon(Icons.image_not_supported_rounded, color: Colors.grey),
                 ),

@@ -1,5 +1,3 @@
-import 'package:sportifo_app/features/profile/data/models/coach_profile_response.dart';
-import 'package:sportifo_app/features/profile/data/models/user_profile_response.dart';
 
 class ProfileDisplayModel {
   final String id;

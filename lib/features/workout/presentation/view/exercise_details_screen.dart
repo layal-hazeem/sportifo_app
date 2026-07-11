@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gif_view/gif_view.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/helpers/snack_bar_utils.dart';
@@ -28,54 +27,58 @@ class ExerciseDetailsScreen extends StatelessWidget {
             pinned: true,
             backgroundColor: AppColors.primaryBtn,
             leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios,
-                color:Colors.black,),
+              icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
               onPressed: () => Navigator.pop(context),
             ),
-
             actions: [
-              // داخل الـ Actions في الـ AppBar وداخل الـ Stack في الكارد
-              // استبدلي الـ BlocBuilder القديم بهذا المزيج
               BlocConsumer<SavedExercisesCubit, SavedExercisesState>(
-                // استمعي للتغييرات لإظهار السناك بار
                 listener: (context, state) {
-                  // نتحقق أن الحالة هي نجاح التبديل "لهذا التمرين بالتحديد"
                   if (state is SavedExercisesToggleSuccess && state.exerciseId == exercise.id) {
                     AppSnackBar.show(
                       context,
                       message: state.isSaved ? "Added to saved" : "Removed from saved",
                       type: SnackBarType.success,
-                      onActionPressed: () => Navigator.pushNamed(context, AppRoutes.savedExercises),
+                      onActionPressed: () {
+                        if (!context.mounted) return;
+                        final currentRoute = ModalRoute.of(context)?.settings.name;
+                        if (currentRoute == AppRoutes.savedExercises) {
+                          Navigator.of(context).pop();
+                          return;
+                        }
+                        Navigator.of(context).pushNamed(AppRoutes.savedExercises);
+                      },
                     );
                   }
                 },
                 builder: (context, state) {
+                  // ✅ نقرأ من الـ Cubit مباشرة
+                  final cubit = context.read<SavedExercisesCubit>();
+                  final isCurrentlySaved = cubit.isSaved(exercise.id);
+
                   return IconButton(
                     icon: Icon(
-                      exercise.isSaved ? Icons.bookmark : Icons.bookmark_border,
+                      isCurrentlySaved ? Icons.bookmark : Icons.bookmark_border,
                       color: AppColors.primaryBtn,
                     ),
-                    onPressed: () => context.read<SavedExercisesCubit>().toggleSave(exercise),
+                    onPressed: () => cubit.toggleSave(exercise),
                   );
                 },
               )
             ],
-
             flexibleSpace: FlexibleSpaceBar(
               title: Text(exercise.name, style: const TextStyle(color: Colors.white, fontSize: 16)),
               background: Hero(
                 tag: 'exercise_${exercise.id}',
                 child: Container(
                   color: Colors.white,
-                  child: CachedStaticGif( 
+                  child: CachedStaticGif(
                     imageUrl: exercise.gifUrl ?? '',
-                    autoPlay: true, 
+                    autoPlay: true,
                   ),
                 ),
               ),
             ),
           ),
-
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(20),
@@ -91,14 +94,12 @@ class ExerciseDetailsScreen extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                         Text(
+                        Text(
                           l10n.target_muscle,
                           style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black54),
                         ),
                         const SizedBox(height: 8),
-
                         _buildChip(exercise.category!.organ!.name, AppColors.primaryBtn),
-
                         const SizedBox(height: 16),
                         if (exercise.category!.organ!.part != null) ...[
                           Wrap(
@@ -113,22 +114,18 @@ class ExerciseDetailsScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 25),
                   ],
-
-                   Text(
+                  Text(
                     l10n.how_to_perform,
                     style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black54),
                   ),
                   const SizedBox(height: 10),
-
                   Text(
                     exercise.description,
                     style: TextStyle(fontSize: 15, color: Colors.grey.shade800, height: 1.6),
                   ),
-
                   const SizedBox(height: 30),
-
                   if (exercise.pictureUrls.isNotEmpty) ...[
-                     Text(
+                    Text(
                       l10n.gallery,
                       style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black54),
                     ),

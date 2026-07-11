@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../trainee_subscriptions/data/models/subscription_model.dart';

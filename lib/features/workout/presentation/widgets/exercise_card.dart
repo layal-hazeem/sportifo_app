@@ -53,6 +53,9 @@ class ExerciseCard extends StatelessWidget {
                       height: 110,
                       width: double.infinity,
                       color: Colors.white,
+                      child: CachedStaticGif(
+                        imageUrl: exercise.gifUrl ?? '',
+                      ),
 
                       // 🔥 عرض الصورة المستخرجة
                       child: displayImageUrl.isNotEmpty
@@ -81,16 +84,28 @@ class ExerciseCard extends StatelessWidget {
                             context,
                             message: state.isSaved ? "Added to saved" : "Removed from saved",
                             type: SnackBarType.success,
-                            onActionPressed: () => Navigator.pushNamed(context, AppRoutes.savedExercises),
+                            onActionPressed: () {
+                              if (!context.mounted) return;
+                              final currentRoute = ModalRoute.of(context)?.settings.name;
+                              if (currentRoute == AppRoutes.savedExercises) {
+                                Navigator.of(context).pop();
+                                return;
+                              }
+                              Navigator.of(context).pushNamed(AppRoutes.savedExercises);
+                            },
                           );
                         }
                       },
                       builder: (context, state) {
+                        // ✅ نقرأ من الـ Cubit مباشرة — مش من الكائن المحلي
+                        final cubit = context.read<SavedExercisesCubit>();
+                        final isCurrentlySaved = cubit.isSaved(exercise.id);
+
                         return GestureDetector(
-                          onTap: () => context.read<SavedExercisesCubit>().toggleSave(exercise),
+                          onTap: () => cubit.toggleSave(exercise),
                           child: Center(
                             child: Icon(
-                              exercise.isSaved ? Icons.bookmark : Icons.bookmark_border,
+                              isCurrentlySaved ? Icons.bookmark : Icons.bookmark_border,
                               color: AppColors.primaryBtn,
                               size: 20,
                             ),
@@ -133,6 +148,16 @@ class ExerciseCard extends StatelessWidget {
                     ),
                     if (exercise.category?.organ?.part != null)
                       const SizedBox(height: 2),
+                    if (exercise.category?.organ?.part != null)
+                      Text(
+                        exercise.category!.organ!.part!.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.grey.shade500,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w500,
+                        ),
                     Text(
                       exercise.category!.organ!.part!.name,
                       maxLines: 1,

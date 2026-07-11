@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
 
 class AppSnackBar {
   static void show(
       BuildContext context, {
         required String message,
         required SnackBarType type,
-        VoidCallback? onActionPressed, // إضافة هذا السطر
+        VoidCallback? onActionPressed,
         String? actionLabel,
       }) {
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+    final messenger = ScaffoldMessenger.maybeOf(context);
+    if (messenger == null) return;
+
+    messenger.hideCurrentSnackBar();
 
     Color backgroundColor;
     IconData icon;
@@ -34,7 +37,7 @@ class AppSnackBar {
         break;
     }
 
-    ScaffoldMessenger.of(context).showSnackBar(
+    messenger.showSnackBar(
       SnackBar(
         content: Row(
           children: [
