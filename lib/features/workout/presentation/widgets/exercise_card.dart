@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:cached_network_image/cached_network_image.dart'; // تأكدي من وجود هالامبورت
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/helpers/snack_bar_utils.dart';
-import '../../../../core/widgets/cached_static_gif.dart';
+// import '../../../../core/widgets/cached_static_gif.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../data/models/exercise_model.dart';
 import '../view_model/saved_exercises/saved_exercises_cubit.dart';
@@ -18,6 +19,12 @@ class ExerciseCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+
+    // 🔥 استخراج رابط أول صورة بأمان
+    // إذا المصفوفة مو null وفيها عناصر، بناخد رابط أول عنصر، وإلا بنحط رابط فاضي
+    final String displayImageUrl = (exercise.images != null && exercise.images!.isNotEmpty)
+        ? exercise.images!.first.url ?? ''
+        : '';
 
     return GestureDetector(
       onTap: onTap,
@@ -38,7 +45,6 @@ class ExerciseCard extends StatelessWidget {
           children: [
             Stack(
               children: [
-                // داخل الـ Stack في ExerciseCard:
                 Hero(
                   tag: 'exercise_${exercise.id}',
                   child: ClipRRect(
@@ -48,11 +54,17 @@ class ExerciseCard extends StatelessWidget {
                       width: double.infinity,
                       color: Colors.white,
 
-                      // 🔥 استدعاء الويدجت الخارق اللي بيكيش وبيجمد الـ GIF
-                      child: CachedStaticGif(
-                        imageUrl: exercise.gifUrl ?? '',
-                      ),
-
+                      // 🔥 عرض الصورة المستخرجة
+                      child: displayImageUrl.isNotEmpty
+                          ? CachedNetworkImage(
+                        imageUrl: displayImageUrl,
+                        fit: BoxFit.cover, // لحتى تعبي المكان بشكل متناسق
+                        placeholder: (context, url) => const Center(
+                          child: CircularProgressIndicator(color: AppColors.primaryBtn, strokeWidth: 2),
+                        ),
+                        errorWidget: (context, url, error) => const Icon(Icons.fitness_center, color: Colors.grey),
+                      )
+                          : const Icon(Icons.image_not_supported, color: Colors.grey), // في حال مافي صورة أبداً
                     ),
                   ),
                 ),
@@ -91,13 +103,13 @@ class ExerciseCard extends StatelessWidget {
               ],
             ),
 
-            // قسم النصوص محمي بالـ Expanded للوقاية من الـ Overflow
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,                  children: [
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
                     Text(
                       exercise.name,
                       maxLines: 1,
@@ -108,7 +120,7 @@ class ExerciseCard extends StatelessWidget {
                           fontWeight: FontWeight.bold
                       ),
                     ),
-                  const SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     Text(
                       exercise.category?.organ?.name ?? l10n.workout,
                       maxLines: 1,
@@ -120,17 +132,17 @@ class ExerciseCard extends StatelessWidget {
                       ),
                     ),
                     if (exercise.category?.organ?.part != null)
-                      const SizedBox(height: 2), // 🔥 مسافة صغيرة ومرتبة
-                      Text(
-                        exercise.category!.organ!.part!.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: Colors.grey.shade500, // لون أهدى شوي
-                          fontSize: 10,
-                          fontWeight: FontWeight.w500,
-                        ),
+                      const SizedBox(height: 2),
+                    Text(
+                      exercise.category!.organ!.part!.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: Colors.grey.shade500,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w500,
                       ),
+                    ),
                   ],
                 ),
               ),

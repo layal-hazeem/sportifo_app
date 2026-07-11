@@ -8,20 +8,28 @@ class TargetCubit extends Cubit<TargetState> {
 
   TargetCubit(this._repository) : super(TargetInitial());
 
-  // 1️⃣ دالة جلب السعرات والماكروز لشاشة الهوم (GET)
   Future<void> fetchLatestTarget() async {
-    emit(TargetLoading());
+    //  لا تظهري التحميل إلا إذا لم يكن لدينا داتا سابقة
+    if (state is! TargetSuccess) {
+      emit(TargetLoading());
+    }
 
     final result = await _repository.getLatestTarget();
+
+    if (isClosed) return; // حماية من الكراش
 
     switch (result) {
       case Success():
         emit(TargetSuccess(result.data));
         break;
-      case Failure():
-      // إذا السيرفر فاضي لسه واليوزر ماله حاطط هدف، بنبعث Initial أو حالة مخصصة
+      case Failure(message: final errorMsg):
+      // 🔥 الحماية القصوى: إذا الخطأ سببه "لا يوجد إنترنت"
+        if (errorMsg.contains("No Internet") || errorMsg.contains("Connection timeout")) {
+          // 🔥 إذا كان هناك داتا مكيشة (Success)، لا تظهري رسالة فشل
+          if (state is TargetSuccess) return;
+        }
         if (result.message.contains("no targets") || result.message.contains("not found")) {
-          emit(TargetInitial()); // ليعرض كرت التفعيل الذكي بالهوم
+          emit(TargetInitial());
         } else {
           emit(TargetFailure(result.message));
         }
@@ -29,18 +37,18 @@ class TargetCubit extends Cubit<TargetState> {
     }
   }
 
-  // 2️⃣ دالة حفظ أو تعديل الهدف (POST)
   Future<void> updateTargetGoal(String goal) async {
     emit(TargetLoading());
 
     final result = await _repository.setTarget(goal);
 
+    if (isClosed) return;
+
     switch (result) {
       case Success():
-        emit(TargetSuccess(result.data)); // تحديث فوري وسلس للـ UI
+        emit(TargetSuccess(result.data));
         break;
       case Failure():
-      // ⚡ الفحص الذكي: لو رسالة الخطأ من السيرفر بتقول لازم إدخال وزن
         if (result.message.toLowerCase().contains("weight")) {
           emit(TargetWeightMissing(result.message));
         } else {

@@ -20,7 +20,7 @@ class CoachRepository {
     try {
       final cacheOptions = await DioFactory.getCacheOptions();
       final dioOptions = cacheOptions.copyWith(
-        policy: CachePolicy.refreshForceCache,
+        policy: CachePolicy.forceCache,
       ).toOptions();
 
       final response = await _coachWebService.getCoaches(
@@ -47,7 +47,7 @@ class CoachRepository {
     try {
       final cacheOptions = await DioFactory.getCacheOptions();
       final dioOptions = cacheOptions.copyWith(
-        policy: CachePolicy.refreshForceCache,
+        policy: CachePolicy.forceCache,
       ).toOptions();
 
       final response = await _coachWebService.getCoachDetails(
