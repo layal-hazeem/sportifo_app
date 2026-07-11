@@ -106,7 +106,7 @@ class TraineeScreen extends StatelessWidget {
                             scrollDirection: Axis.horizontal,
                             padding: const EdgeInsets.symmetric(horizontal: 12),
                             itemCount: coaches.length,
-                            separatorBuilder: (_, __) => const SizedBox(width: 8),
+                            separatorBuilder: (_, _) => const SizedBox(width: 8),
                             itemBuilder: (context, index) {
                               final coach = coaches[index];
                               return CoachCard(

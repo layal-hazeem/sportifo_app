@@ -69,14 +69,7 @@ class DioFactory {
 
       _cacheOptions = CacheOptions(
         store: HiveCacheStore(cachePath),
-        // ✅ السياسة الصحيحة: RequestPolicy.request
-        // أو إذا لم يتوفر في إصدارك، استخدم CachePolicy.request
-        policy: CachePolicy.request,   // هام جداً
-
-        // ✅ تجاهل توجيهات no-cache من السيرفر
-        // إذا كانت هذه الخاصية غير متوفرة، اتركها أو جرب respectCacheControl: false
-        // respectCacheControl: false,
-
+        policy: CachePolicy.refresh, 
         hitCacheOnNetworkFailure: true,
         maxStale: const Duration(days: 7),
         priority: CachePriority.high,

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 import 'package:sportifo_app/core/routes/app_routes.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
-import 'package:sportifo_app/features/auth/data/repository/auth_repository.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/logout/logout_cubit.dart';
 import 'package:sportifo_app/features/home/presentation/view/trainee_screen.dart';
 import 'package:sportifo_app/features/home/presentation/view/coach_screen.dart';
@@ -16,6 +14,7 @@ import 'package:sportifo_app/features/profile/presentation/view_model/profile_st
 import 'package:sportifo_app/features/subscriptions/presentation/view/subscriptions_screen.dart';
 import 'package:sportifo_app/features/subscriptions/presentation/view_model/subscription_cubit.dart';
 import 'package:sportifo_app/features/workout/presentation/view_model/categories_cubit/categories_cubit.dart';
+import 'package:sportifo_app/features/workout/presentation/view_model/saved_exercises/saved_exercises_cubit.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../workout/presentation/view/workout_type_screen.dart';
@@ -32,6 +31,17 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   DrawerItem selectedDrawerItem = DrawerItem.profile;
+
+  @override
+  void initState() {
+    super.initState();
+    // 🔥 حمّل قائمة التمارين المحفوظة عند فتح التطبيق
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        context.read<SavedExercisesCubit>().initialize();
+      }
+    });
+  }
 
   List<Widget> _getTraineeScreens() {
     final l10n = AppLocalizations.of(context)!;
@@ -72,6 +82,8 @@ class _HomePageState extends State<HomePage> {
       providers: [
         BlocProvider(create: (_) => getIt<LogoutCubit>()),
         BlocProvider(create: (_) => getIt<ProfileCubit>()..getProfile()),
+        // 🔥 توفير الـ SavedExercisesCubit للاستخدام في كل مكان
+        BlocProvider.value(value: getIt<SavedExercisesCubit>()),
       ],
       child: BlocListener<LogoutCubit, LogoutState>(
         listener: (context, state) {

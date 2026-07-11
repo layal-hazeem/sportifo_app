@@ -8,8 +8,20 @@ import '../view_model/saved_exercises/saved_exercises_cubit.dart';
 import '../view_model/saved_exercises/saved_exercises_state.dart';
 import '../widgets/exercise_card.dart';
 
-class SavedExercisesScreen extends StatelessWidget {
+class SavedExercisesScreen extends StatefulWidget {
   const SavedExercisesScreen({super.key});
+
+  @override
+  State<SavedExercisesScreen> createState() => _SavedExercisesScreenState();
+}
+
+class _SavedExercisesScreenState extends State<SavedExercisesScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // 🔥 جلب البيانات من السيرفر في كل مرة نفتح الشاشة
+    context.read<SavedExercisesCubit>().fetchSavedExercises();
+  }
 
   @override
   Widget build(BuildContext context) {

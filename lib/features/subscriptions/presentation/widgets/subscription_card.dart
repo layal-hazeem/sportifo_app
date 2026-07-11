@@ -193,7 +193,7 @@ class SubscriptionCard extends StatelessWidget {
                               ),
                               const SizedBox(width: 6),
                               Text(
-                                '${plan?.title ?? "No Plan"}',
+                                plan?.title ?? "No Plan",
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
@@ -223,7 +223,7 @@ class SubscriptionCard extends StatelessWidget {
                     ],
                   ),
                 );
-              }).toList(),
+              }),
             if (showCreatePlanButton) ...[
               const SizedBox(height: 10),
               SizedBox(

@@ -105,6 +105,7 @@ class CompleteProfileSuccess extends CompleteProfileState {
 }
 
 class CompleteProfileError extends CompleteProfileState {
+  @override
   final String errorMessage;
   CompleteProfileError(this.errorMessage);
 }

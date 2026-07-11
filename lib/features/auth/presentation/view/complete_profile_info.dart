@@ -1,8 +1,6 @@
 import 'dart:io';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
-import 'package:sportifo_app/core/di/service_locator.dart';
 import 'package:sportifo_app/core/helpers/app_image_picker.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/core/widgets/wave_app_bar.dart';
@@ -15,7 +13,7 @@ import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../../../../core/helpers/snack_bar_utils.dart';
 
 class CompleteProfileInfoView extends StatelessWidget {
-  CompleteProfileInfoView({super.key});
+  const CompleteProfileInfoView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -159,7 +157,7 @@ class CompleteProfileInfoView extends StatelessWidget {
                           Text(
                             state.birthDate == null
                                 ? l10n.birthDate
-                                : "${state.birthDate!}",
+                                : state.birthDate!,
                             style: TextStyle(
                               color: state.birthDate == null
                                   ? AppColors.hintText

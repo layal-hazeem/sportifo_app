@@ -207,7 +207,7 @@ class SubscriptionDetailsBottomSheet extends StatelessWidget {
                                 ],
                               ),
                             );
-                          }).toList(),
+                          }),
                         ],
                         if (features.isEmpty) ...[
                           Center(

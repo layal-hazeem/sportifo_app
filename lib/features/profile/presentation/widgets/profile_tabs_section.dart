@@ -63,7 +63,7 @@ class _ProfileTabsSectionState extends State<ProfileTabsSection> {
               alignment: Alignment.topCenter,
               children: [
                 ...previousChildren,
-                if (currentChild != null) currentChild,
+                ?currentChild,
               ],
             );
           },
@@ -94,7 +94,7 @@ class _ProfileTabsSectionState extends State<ProfileTabsSection> {
   }
 
   Widget _buildUserInfo() {
-    final p = widget.userProfile!;
+    final p = widget.userProfile;
 
     return Container(
       key: const ValueKey("user_info"),

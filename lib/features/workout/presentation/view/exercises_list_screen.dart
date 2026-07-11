@@ -66,12 +66,16 @@ class ExercisesListScreen extends StatelessWidget {
             final exercises = state.exercises;
 
             if (exercises.isEmpty) {
-              return Center(child: Text(l10n.no_exercises_found, style: const TextStyle(color: Colors.white)));
+              return Center(
+                child: Text(l10n.no_exercises_found, style: const TextStyle(color: Colors.white)),
+              );
             }
 
-            return ExercisesGridView(exercises: state.exercises);
+            return ExercisesGridView(exercises: exercises);
           } else if (state is ExercisesFailure) {
-            return Center(child: Text(state.errorMessage, style: const TextStyle(color: Colors.red)));
+            return Center(
+              child: Text(state.errorMessage, style: const TextStyle(color: Colors.red)),
+            );
           }
           return const SizedBox();
         },
