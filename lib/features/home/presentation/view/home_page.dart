@@ -111,19 +111,43 @@ class _HomePageState extends State<HomePage> {
               );
             }
 
-            if (profileState is ProfileFailure) {
-              return Scaffold(
-                body: Center(child: Text("Error: ${profileState.message}")),
+            // 1. حالة التحميل
+            if (profileState is ProfileLoading || profileState is ProfileInitial) {
+              return const Scaffold(
+                body: Center(
+                  child: CircularProgressIndicator(color: AppColors.primaryBtn),
+                ),
               );
             }
 
+            // 2. حالة الفشل (لا يوجد كاش ولا يوجد إنترنت) - هنا تصميم السينيور
+            if (profileState is ProfileFailure) {
+              return Scaffold(
+                body: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.wifi_off, size: 80, color: Colors.grey),
+                      const SizedBox(height: 16),
+                      Text(profileState.message, textAlign: TextAlign.center),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: () => context.read<ProfileCubit>().getProfile(),
+                        style: ElevatedButton.styleFrom(backgroundColor: AppColors.primaryBtn),
+                        child: const Text("Retry", style: TextStyle(color: Colors.white)),
+                      )
+                    ],
+                  ),
+                ),
+              );
+            }
+
+            // 3. حالة النجاح (الإنترنت شغال أو الداتا مكيشة)
             if (profileState is ProfileSuccess) {
               final profile = profileState.profileModel;
               final isCoach = profile.role == 'coach';
 
-              final screens = isCoach
-                  ? _getCoachScreens()
-                  : _getTraineeScreens();
+              final screens = isCoach ? _getCoachScreens() : _getTraineeScreens();
 
               return ListenableBuilder(
                 listenable: homeViewModel,
@@ -188,7 +212,8 @@ class _HomePageState extends State<HomePage> {
               );
             }
 
-            return Scaffold(body: Center(child: Text(l10n.error)));
+            // return Scaffold(body: Center(child: Text(l10n.error)));
+            return const SizedBox.shrink(); // حالة افتراضية آمنة
           },
         ),
       ),

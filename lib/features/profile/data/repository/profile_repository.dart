@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:sportifo_app/core/network/api_error_handler.dart';
 import 'package:sportifo_app/core/network/api_result.dart';
 import 'package:sportifo_app/features/profile/data/models/coach_profile_response.dart';
@@ -7,20 +8,28 @@ import 'package:sportifo_app/features/profile/data/models/edit_profile_request_m
 import 'package:sportifo_app/features/profile/data/models/user_profile_response.dart';
 import 'package:sportifo_app/features/profile/data/web_services/profile_web_service.dart';
 
+import '../../../../core/network/dio_factory.dart';
+
 class ProfileRepository {
   final ProfileWebService _profileWebService;
 
   ProfileRepository(this._profileWebService);
 
+  // داخل ProfileRepository.dart
   Future<ApiResult<ProfileResponsModel>> getProfile() async {
     try {
-      final response = await _profileWebService.getProfile();
+      // 🔥 تفعيل الكاش للبروفايل بسياسة ذكية (النت أولاً، والكاش كخطة بديلة)
+      final cacheOptions = await DioFactory.getCacheOptions();
+      final dioOptions = cacheOptions.copyWith(
+        policy: CachePolicy.forceCache,
+      ).toOptions();
+
+      // مرري الـ dioOptions للـ WebService
+      final response = await _profileWebService.getProfile(options: dioOptions);
       return Success(ProfileResponsModel.fromJson(response.data['data']));
     } catch (e, stacktrace) {
       print("Parsing Error: $e");
-      print(
-        "Stacktrace: $stacktrace",
-      ); 
+      print("Stacktrace: $stacktrace");
       return Failure(ApiErrorHandler.handle(e));
     }
   }

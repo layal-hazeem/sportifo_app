@@ -10,19 +10,37 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   ProfileCubit(this._profileRepository) : super(ProfileInitial());
 
+  // داخل ProfileCubit.dart - دالة getProfile
+// داخل profile_cubit.dart
+
   Future<void> getProfile() async {
-    emit(ProfileLoading());
+    // 1. لا تطلعي التحميل إذا كانت الواجهة معروضة سابقاً
+    if (state is! ProfileSuccess) {
+      emit(ProfileLoading());
+    }
 
     final result = await _profileRepository.getProfile();
 
+    if (isClosed) return;
+
     switch (result) {
       case Success(data: final profileModel):
-  emit(ProfileSuccess(profileModel));
+        emit(ProfileSuccess(profileModel));
         break;
 
       case Failure(message: final errorMsg):
+      // 🔥 الحماية القصوى: إذا الخطأ سببه "لا يوجد إنترنت"
+        if (errorMsg.contains("No Internet") || errorMsg.contains("Connection timeout")) {
+          // إذا عندنا داتا سابقة بنبقى عليها
+          if (state is ProfileSuccess) return;
+
+          // إذا ماعندنا داتا بالـ State، لكن التطبيق عم يفتح أوفلاين:
+          // هنا بنعمل emit(Failure) بس الواجهة رح تعالجها
+        }
+
+        // إذا الخطأ سيرفر حقيقي، بنطلعه
         emit(ProfileFailure(errorMsg));
-        print(errorMsg);
+        print("Profile Error: $errorMsg");
         break;
     }
   }

@@ -118,6 +118,10 @@ class AppRouter {
               BlocProvider(create: (_) => getIt<PartsCubit>()),
               // ✅ أضفنا SavedExercisesCubit هون
               BlocProvider.value(value: getIt<SavedExercisesCubit>()),
+              BlocProvider.value(value: getIt<CategoriesCubit>()), // ✅ صح
+              BlocProvider.value(value: getIt<ExercisesCubit>()), // ✅ صح
+              BlocProvider.value(value: getIt<PartsCubit>()), // ✅ صح
+              BlocProvider.value(value: getIt<SavedExercisesCubit>()), // ✅ صح
             ],
             child: const MuscleGroupsScreen(),
           ),
@@ -190,6 +194,9 @@ class AppRouter {
       // 1. شاشة قائمة التمارين
       case AppRoutes.exercisesList:
         final args = settings.arguments as Map<String, dynamic>;
+        // 🔥 هنا لازم نطلب الـ fetch يدوياً بدون ما نعمل create جديد!
+        getIt<ExercisesCubit>().fetchExercises(categoryId: args['categoryId']);
+
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
             providers: [
@@ -198,6 +205,7 @@ class AppRouter {
                   ..fetchExercises(categoryId: args['categoryId']),
               ),
               // ✅ أضفنا SavedExercisesCubit هون
+              BlocProvider.value(value: getIt<ExercisesCubit>()), // ✅ التعديل السحري هنا
               BlocProvider.value(value: getIt<SavedExercisesCubit>()),
             ],
             child: ExercisesListScreen(

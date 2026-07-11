@@ -12,6 +12,7 @@ class DioFactory {
   DioCacheInterceptor? _cacheInterceptor;
 
   DioFactory(this._localStorage) {
+    // بناء إعدادات الـ Dio الأساسية بدون إضافة أي Interceptors هنا
     _dio = Dio(
       BaseOptions(
         baseUrl: ApiConstants.baseUrl,
@@ -21,8 +22,18 @@ class DioFactory {
         headers: {'Accept': 'application/json', 'Accept-Language': 'en'},
       ),
     );
+  }
 
-    // 1. Interceptor الخاص بالتوكن والأوتوريزيشن
+  // 🔥 دالة التهيئة الرئيسية التي يتم استدعاؤها في الـ Service Locator
+  Future<void> init() async {
+    // 1. جلب وتجهيز إعدادات الكاش
+    final options = await getCacheOptions();
+    _cacheInterceptor = DioCacheInterceptor(options: options);
+
+    // 2. تنظيف أي إنترسبتورز قديمة لضمان الترتيب الصحيح
+    _dio.interceptors.clear();
+
+    // 3. إضافة Interceptor التوكن (يجب أن يكون أولاً لتوثيق أي ريكويست طالع)
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
@@ -41,7 +52,10 @@ class DioFactory {
       ),
     );
 
-    // 2. Interceptor الخاص باللوغز للطباعة
+    // 4. إضافة Interceptor الكاش (يجب أن يكون قبل الطباعة ليصطاد الريكويست المكيش)
+    _dio.interceptors.add(_cacheInterceptor!);
+
+    // 5. إضافة Interceptor الطباعة للكونسول (يكون آخر واحد)
     _dio.interceptors.add(
       LogInterceptor(
         request: true,
@@ -54,13 +68,6 @@ class DioFactory {
     );
   }
 
-  // 🔥 دالة التهيئة الرئيسية التي يتم استدعاؤها في الـ Service Locator واشترطنا انتهاءها
-  Future<void> init() async {
-    final options = await getCacheOptions();
-    _cacheInterceptor = DioCacheInterceptor(options: options);
-    _dio.interceptors.add(_cacheInterceptor!);
-  }
-
   // دالة جلب إعدادات الكاش الذكية والمحدثة
   static Future<CacheOptions> getCacheOptions() async {
     if (_cacheOptions == null) {
@@ -70,6 +77,8 @@ class DioFactory {
       _cacheOptions = CacheOptions(
         store: HiveCacheStore(cachePath),
         policy: CachePolicy.refresh, 
+        // نترك السياسة الافتراضية هنا Request، ونتحكم بها من الـ Repository
+        policy:CachePolicy.forceCache,
         hitCacheOnNetworkFailure: true,
         maxStale: const Duration(days: 7),
         priority: CachePriority.high,
