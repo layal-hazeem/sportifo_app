@@ -13,7 +13,7 @@ class PartsCubit extends Cubit<PartsState> {
     emit(PartsLoading());
 
     final result = await _repository.getSubCategories(levelId);
-
+    if (isClosed) return;
     switch (result) {
       case Success():
         emit(PartsSuccess(result.data));

@@ -16,7 +16,7 @@ class AdsRepository {
       final cacheOptions = await DioFactory.getCacheOptions();
 
       final dioOptions = cacheOptions.copyWith(
-        policy: CachePolicy.refreshForceCache,
+        policy: CachePolicy.forceCache,
       ).toOptions();
 
       final response = await _webService.getAds(options: dioOptions);

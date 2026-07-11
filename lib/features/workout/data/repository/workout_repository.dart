@@ -12,20 +12,16 @@ class WorkoutRepository {
   final WorkoutWebService _webService;
   WorkoutRepository(this._webService);
 
-
   // 1. دالة جلب العضلات الأساسية (للصور اللي فوق)
-
   Future<ApiResult<List<FilterItemModel>>> getCategories(int id) async {
     try {
-      // 1️⃣ جلب إعدادات كاش الـ Hive المجهزة مسبقاً من الـ DioFactory
       final cacheOptions = await DioFactory.getCacheOptions();
 
-      // 2️⃣ تحويل السياسة وتوليد الـ Options الخاصة بـ دايو
+      // 🔥 التعديل السحري 1: forceCache
       final dioOptions = cacheOptions.copyWith(
-        policy: CachePolicy.refreshForceCache, // جلب محلي فوري، وتحديث تلقائي
+        policy: CachePolicy.forceCache,
       ).toOptions();
 
-      // 3️⃣ تمرير الـ options المعدلة للـ WebService (تأكدي من تعديل الـ WebService ليستقبلها)
       final response = await _webService.getCategories(id, options: dioOptions);
 
       final responseModel = FilterResponseModel.fromJson(response.data);
@@ -35,14 +31,14 @@ class WorkoutRepository {
     }
   }
 
-
   // 2. دالة جلب الأجزاء الدقيقة (للكبسولات)
   Future<ApiResult<List<FilterItemModel>>> getSubCategories(int organId) async {
     try {
       final cacheOptions = await DioFactory.getCacheOptions();
 
+      // 🔥 التعديل السحري 2: forceCache
       final dioOptions = cacheOptions.copyWith(
-        policy: CachePolicy.refreshForceCache,
+        policy: CachePolicy.forceCache,
       ).toOptions();
 
       final response = await _webService.getSubCategories(organId, options: dioOptions);
@@ -54,6 +50,7 @@ class WorkoutRepository {
     }
   }
 
+  // 3. دالة جلب التمارين الأساسية
   Future<ApiResult<List<ExerciseModel>>> getExercises({
     int? categoryId,
     int? organId,
@@ -61,31 +58,40 @@ class WorkoutRepository {
     String? searchQuery,
   }) async {
     try {
-      // ✅ إزالة كل شيء متعلق بـ cacheOptions و copyWith
+      final cacheOptions = await DioFactory.getCacheOptions();
+
+      // 🔥 التعديل السحري 3: forceCache
+      final dioOptions = cacheOptions.copyWith(
+        policy: CachePolicy.forceCache,
+      ).toOptions();
+
       final response = await _webService.getExercises(
         categoryId: categoryId,
         organId: organId,
         smallestCategoryId: smallestCategoryId,
         searchQuery: searchQuery,
+        options: dioOptions, // ✅ ممتاز، أنتِ ممررتيها هنا بشكل صحيح
       );
+
       final responseModel = ExerciseResponseModel.fromJson(response.data);
+
       return Success(responseModel.data);
     } catch (e) {
       return Failure(ApiErrorHandler.handle(e));
     }
   }
 
+  // ---------------- باقي الدوال (بدون كاش لأنها عمليات حيوية) ----------------
 
-  // داخل WorkoutRepository
   Future<ApiResult<bool>> toggleSaveExercise(int exerciseId) async {
     try {
       final response = await _webService.toggleSaveExercise(exerciseId);
-      // إذا كان الباك إند يرجع success: true عند النجاح
       return Success(response.data['success'] ?? true);
     } catch (e) {
       return Failure(ApiErrorHandler.handle(e));
     }
   }
+
   Future<ApiResult<List<ExerciseModel>>> getSavedExercises() async {
     try {
       final response = await _webService.getSavedExercises();
@@ -96,7 +102,6 @@ class WorkoutRepository {
         return Success(exercises);
       }
 
-      // إذا كانت الاستجابة هي الكائن نفسه (ResponseModel)
       final responseModel = ExerciseResponseModel.fromJson(response.data);
       return Success(responseModel.data);
 
