@@ -78,7 +78,7 @@ class DioFactory {
         store: HiveCacheStore(cachePath),
         policy: CachePolicy.refresh, 
         // نترك السياسة الافتراضية هنا Request، ونتحكم بها من الـ Repository
-        policy:CachePolicy.forceCache,
+        //policy:CachePolicy.forceCache,
         hitCacheOnNetworkFailure: true,
         maxStale: const Duration(days: 7),
         priority: CachePriority.high,

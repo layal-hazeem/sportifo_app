@@ -53,9 +53,7 @@ class ExerciseCard extends StatelessWidget {
                       height: 110,
                       width: double.infinity,
                       color: Colors.white,
-                      child: CachedStaticGif(
-                        imageUrl: exercise.gifUrl ?? '',
-                      ),
+                   
 
                       // 🔥 عرض الصورة المستخرجة
                       child: displayImageUrl.isNotEmpty
@@ -149,15 +147,7 @@ class ExerciseCard extends StatelessWidget {
                     if (exercise.category?.organ?.part != null)
                       const SizedBox(height: 2),
                     if (exercise.category?.organ?.part != null)
-                      Text(
-                        exercise.category!.organ!.part!.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: Colors.grey.shade500,
-                          fontSize: 10,
-                          fontWeight: FontWeight.w500,
-                        ),
+                   
                     Text(
                       exercise.category!.organ!.part!.name,
                       maxLines: 1,
