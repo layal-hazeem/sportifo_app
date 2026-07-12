@@ -52,3 +52,19 @@ class CoachProfileSuccess extends ProfileState {
   final CoachProfileModel coachModel;
   CoachProfileSuccess(this.coachModel);
 }
+
+// ================= حذف الحساب =================
+
+class DeleteAccountLoading extends ProfileState {}
+
+class DeleteAccountSuccess extends ProfileState {
+  final String message;
+
+  DeleteAccountSuccess(this.message);
+}
+
+class DeleteAccountFailure extends ProfileState {
+  final String message;
+
+  DeleteAccountFailure(this.message);
+}
