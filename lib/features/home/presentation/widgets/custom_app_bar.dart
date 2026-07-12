@@ -1,6 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
 import '../../../../core/widgets/wave_app_bar.dart';

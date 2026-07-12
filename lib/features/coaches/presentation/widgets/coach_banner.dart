@@ -45,7 +45,7 @@ class CoachBanner extends StatelessWidget {
                 child: Image.network(
                   profilePic,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => Container(
+                  errorBuilder: (_, _, _) => Container(
                     color: Colors.grey[200],
                     child: const Icon(Icons.person, size: 80, color: Colors.grey),
                   ),

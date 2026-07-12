@@ -16,7 +16,7 @@ class TargetWebService {
   }
 
   // 2️⃣ دالة جلب آخر هدف نشط والسعرات الحالية (GET)
-  Future<Response> getLatestTarget() async {
-    return await dio.get(ApiConstants.targets);
+  Future<Response> getLatestTarget({Options? options}) async {
+    return await dio.get(ApiConstants.targets, options: options);
   }
 }

@@ -2,7 +2,6 @@
 //
 //     final completeProfileResponsModel = completeProfileResponsModelFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 CompleteProfileResponsModel completeProfileResponsModelFromJson(String str) => 

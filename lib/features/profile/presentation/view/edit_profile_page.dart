@@ -1,12 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
-import 'package:sportifo_app/core/routes/app_routes.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/core/helpers/snack_bar_utils.dart';
-import 'package:sportifo_app/features/auth/presentation/view_model/logout/logout_cubit.dart';
 import 'package:sportifo_app/features/auth/presentation/widgets/custom_button.dart';
 import 'package:sportifo_app/features/auth/presentation/widgets/custom_neumorphic_field.dart';
 import 'package:sportifo_app/features/profile/data/models/edit_profile_request_model.dart';
@@ -51,16 +48,14 @@ class _EditProfilePageState extends State<EditProfilePage>
     _lastNameController = TextEditingController(text: widget.profile.lastName);
 
     _dateOfBirthController = TextEditingController(
-      text: widget.profile.dateOfBirth == null
-          ? ''
-          : DateFormat('yyyy-MM-dd').format(widget.profile.dateOfBirth!),
+      text: DateFormat('yyyy-MM-dd').format(widget.profile.dateOfBirth),
     );
 
     _heightController = TextEditingController(
-      text: widget.profile.height?.toString() ?? '',
+      text: widget.profile.height.toString() ?? '',
     );
     _weightController = TextEditingController(
-      text: widget.profile.weight?.toString() ?? '',
+      text: widget.profile.weight.toString() ?? '',
     );
 
     final s = widget.profile.sizes;

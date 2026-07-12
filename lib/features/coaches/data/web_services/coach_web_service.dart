@@ -17,9 +17,9 @@ class CoachWebService {
       options: options,
       queryParameters: {
         if (search != null && search.isNotEmpty) 'search': search,
-        if (gender != null) 'gender': gender,
-        if (minExp != null) 'min_exp': minExp,
-        if (maxExp != null) 'max_exp': maxExp,
+        'gender': ?gender,
+        'min_exp': ?minExp,
+        'max_exp': ?maxExp,
       },
     );
   }

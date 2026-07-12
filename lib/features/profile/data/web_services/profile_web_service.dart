@@ -7,8 +7,12 @@ class ProfileWebService {
   final Dio dio;
   ProfileWebService(this.dio);
 
-  Future<Response> getProfile() async {
-    return await dio.get(ApiConstants.getProfile);
+  Future<Response> getProfile( { Options? options}) async {
+    return await dio.get(ApiConstants.getProfile,
+      options: options,
+
+    );
+
   }
 
    Future<Response> getCoachProfile() async {

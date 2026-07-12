@@ -6,8 +6,6 @@ import 'package:sportifo_app/core/routes/app_routes.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/logout/logout_cubit.dart';
 import 'package:sportifo_app/features/home/presentation/view/home_page.dart';
-import 'package:sportifo_app/features/home/presentation/view_model/home_view_model.dart';
-import 'package:sportifo_app/features/profile/presentation/view/profile_page.dart';
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_cubit.dart';
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_state.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
