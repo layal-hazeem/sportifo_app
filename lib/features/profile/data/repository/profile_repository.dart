@@ -38,9 +38,7 @@ class ProfileRepository {
     try {
       final response = await _profileWebService.getCoachProfile();
       return Success(CoachProfileModel.fromJson(response.data['data']));
-    } catch (e, stacktrace) {
-      print("Parsing Error: $e");
-      print("Stacktrace: $stacktrace");
+    } catch (e) {
       return Failure(ApiErrorHandler.handle(e));
     }
   }
@@ -71,4 +69,17 @@ class ProfileRepository {
       return Failure(ApiErrorHandler.handle(e));
     }
   }
+
+  Future<ApiResult<String>> deleteAccount() async {
+  try {
+    final response = await _profileWebService.deleteAccount();
+
+    return Success(
+      response.data['message'] ?? "Account deleted successfully",
+    );
+
+  } catch (e) {
+    return Failure(ApiErrorHandler.handle(e));
+  }
+}
 }

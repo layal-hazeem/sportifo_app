@@ -7,6 +7,8 @@ import 'package:sportifo_app/features/plans/presentation/view/create_plan_screen
 import 'package:sportifo_app/features/plans/presentation/view_model/create_plan_cubit.dart';
 import 'package:sportifo_app/features/profile/data/models/user_profile_response.dart';
 import 'package:sportifo_app/features/profile/presentation/view/edit_profile_page.dart';
+import 'package:sportifo_app/features/settings/presentation/view/delete_account_screen.dart';
+import 'package:sportifo_app/features/settings/presentation/view/settings_screen.dart';
 import 'package:sportifo_app/features/subscriptions/data/models/users_subscribed_model.dart';
 import 'package:sportifo_app/features/subscriptions/presentation/view/subscriptions_screen.dart';
 import 'package:sportifo_app/features/subscriptions/presentation/view_model/subscription_cubit.dart';
@@ -45,8 +47,6 @@ import '../../features/workout/presentation/view_model/exercises_cubit/exercises
 import '../../features/workout/presentation/view_model/parts_cubit/parts_cubit.dart';
 import '../../features/trainee_subscriptions/data/models/subscription_model.dart';
 
-
-
 class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -78,6 +78,9 @@ class AppRouter {
           builder: (_) => MultiBlocProvider(
             providers: [
               BlocProvider(create: (_) => getIt<CategoriesCubit>()),
+              BlocProvider(
+                create: (_) => getIt<TargetCubit>()..fetchLatestTarget(),
+              ),
               BlocProvider(create: (_) => getIt<TargetCubit>()..fetchLatestTarget()),
               // ✅ أضفنا SavedExercisesCubit هون
               BlocProvider.value(value: getIt<SavedExercisesCubit>()),
@@ -251,16 +254,14 @@ class AppRouter {
         );
 
       case AppRoutes.createPlan:
-  final user = settings.arguments as UsersSubscribedModel;
+        final user = settings.arguments as UsersSubscribedModel;
 
-  return MaterialPageRoute(
-    builder: (_) => BlocProvider(
-      create: (_) => getIt<CreatePlanCubit>(),
-      child: CreatePlanScreen(
-        userId: user.id!,
-      ),
-    ),
-  );
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => getIt<CreatePlanCubit>(),
+            child: CreatePlanScreen(userId: user.id!),
+          ),
+        );
 
       case AppRoutes.existingDays:
         return MaterialPageRoute(
@@ -269,7 +270,6 @@ class AppRouter {
             child: ExistingDaysListBottomSheet(),
           ),
         );
-
 
       case AppRoutes.selectMonth:
         final args = settings.arguments as Map<String, dynamic>?;
@@ -289,6 +289,18 @@ class AppRouter {
             selectedMonth: args?['selectedMonth'] as SubscriptionMonthModel,
           ),
         );
+
+      case AppRoutes.settings:
+        return MaterialPageRoute(builder: (_) => SettingsScreen());
+
+      case AppRoutes.deleteAccount:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => getIt<ProfileCubit>(),
+            child: const DeleteAccountScreen(),
+          ),
+        );
+
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

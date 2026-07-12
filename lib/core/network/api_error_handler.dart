@@ -46,9 +46,18 @@ class ApiErrorHandler {
       }
 
       // 2. خط الدفاع الثاني: البحث في حقل 'message' العادي
-      if (extractedMessage == null || extractedMessage.isEmpty) {
-        if (data.containsKey('message') && data['message'] != null) {
-          extractedMessage = data['message'].toString();
+      if (data.containsKey('message') && data['message'] != null) {
+        final serverMessage = data['message'].toString();
+
+        if (serverMessage.contains("user_targets")) {
+          extractedMessage =
+              "Your account cannot be deleted because some data is still linked to it.";
+        } else if (serverMessage.contains("SQLSTATE") ||
+            serverMessage.contains("Integrity constraint violation")) {
+          extractedMessage =
+              "Unable to complete this action. Please try again later.";
+        } else {
+          extractedMessage = serverMessage;
         }
       }
     }

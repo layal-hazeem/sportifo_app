@@ -96,4 +96,20 @@ class ProfileCubit extends Cubit<ProfileState> {
         break;
     }
   }
+
+  Future<void> deleteAccount() async {
+  emit(DeleteAccountLoading());
+
+  final result = await _profileRepository.deleteAccount();
+
+  switch (result) {
+    case Success(data: final message):
+      emit(DeleteAccountSuccess(message));
+      break;
+
+    case Failure(message: final errorMsg):
+      emit(DeleteAccountFailure(errorMsg));
+      break;
+  }
+}
 }

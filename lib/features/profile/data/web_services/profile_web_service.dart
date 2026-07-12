@@ -32,4 +32,8 @@ class ProfileWebService {
   Future<Response> updateProfile(FormData formData) async {
     return await dio.put(ApiConstants.editProfile, data: formData);
   }
+
+  Future<Response> deleteAccount() async {
+  return await dio.delete(ApiConstants.profile);
+}
 }
