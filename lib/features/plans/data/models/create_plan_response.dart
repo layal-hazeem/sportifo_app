@@ -40,19 +40,30 @@ class PlanData {
 class PlanDayModel {
   final int id;
   final String name;
+
+  final int? sets;
+  final String? reps;
+  
   final List<ExerciseModel> exercises;
 
-  PlanDayModel({required this.id, required this.name, required this.exercises});
+  PlanDayModel({required this.id, required this.name, required this.exercises,this.sets,
+    this.reps,});
 
   factory PlanDayModel.fromJson(Map<String, dynamic> json) {
-    return PlanDayModel(
-      id: json['id'] ?? 0,
-      name: json['name'] ?? '',
-      exercises: json['exercises'] != null
-          ? List<ExerciseModel>.from(
-              json['exercises'].map((e) => ExerciseModel.fromJson(e)),
-            )
-          : [],
-    );
-  }
+  return PlanDayModel(
+    id: json['id'] ?? 0,
+    name: json['name'] ?? '',
+
+    sets: json['sets'],
+    reps: json['reps']?.toString(),
+
+    exercises: json['exercises'] != null
+        ? List<ExerciseModel>.from(
+            json['exercises'].map(
+              (e) => ExerciseModel.fromJson(e),
+            ),
+          )
+        : [],
+  );
+}
 }

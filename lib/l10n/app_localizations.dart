@@ -1222,6 +1222,162 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{price} {currency} / month'**
   String subscription_selectMonth_monthlyPriceDetail(Object currency, Object price);
+
+  /// No description provided for @general.
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get general;
+
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// No description provided for @theme.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get theme;
+
+  /// No description provided for @notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notifications;
+
+  /// No description provided for @account.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get account;
+
+  /// No description provided for @changePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Password'**
+  String get changePassword;
+
+  /// No description provided for @privacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacyPolicy;
+
+  /// No description provided for @deleteAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account'**
+  String get deleteAccount;
+
+  /// No description provided for @chooseLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Language'**
+  String get chooseLanguage;
+
+  /// No description provided for @chooseLanguageHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select your preferred app language'**
+  String get chooseLanguageHint;
+
+  /// No description provided for @english.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get english;
+
+  /// No description provided for @empty.
+  ///
+  /// In en, this message translates to:
+  /// **'Empty'**
+  String get empty;
+
+  /// No description provided for @selected.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected'**
+  String get selected;
+
+  /// No description provided for @deletedSucceful.
+  ///
+  /// In en, this message translates to:
+  /// **'Account deleted successfully'**
+  String get deletedSucceful;
+
+  /// No description provided for @deleteHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleting your account will permanently remove everything associated with it'**
+  String get deleteHint;
+
+  /// No description provided for @deleteHint2.
+  ///
+  /// In en, this message translates to:
+  /// **'This action cannot be undone'**
+  String get deleteHint2;
+
+  /// No description provided for @yourProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Profile'**
+  String get yourProfile;
+
+  /// No description provided for @workoutPlans.
+  ///
+  /// In en, this message translates to:
+  /// **'Workout plans'**
+  String get workoutPlans;
+
+  /// No description provided for @continue1.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continue1;
+
+  /// No description provided for @confirmDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Delete'**
+  String get confirmDelete;
+
+  /// No description provided for @deletionConfirmationQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete your account?'**
+  String get deletionConfirmationQuestion;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @certificates.
+  ///
+  /// In en, this message translates to:
+  /// **'Certificates'**
+  String get certificates;
+
+  /// No description provided for @noCoachData.
+  ///
+  /// In en, this message translates to:
+  /// **'No coach data available'**
+  String get noCoachData;
+
+  /// No description provided for @userInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'user information'**
+  String get userInfo;
+
+  /// No description provided for @coachInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'coach information'**
+  String get coachInfo;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

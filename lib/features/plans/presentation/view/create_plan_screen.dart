@@ -374,14 +374,16 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
     }
 
     final request = CreatePlanRequest(
-        userId: widget.userId,
-      days: days.map((day) {
-        return PlanDayRequest(
-          name: day.name,
-          exerciseIds: day.exercises.map((e) => e.id).toList(),
-        );
-      }).toList(),
+  userId: widget.userId,
+  days: days.map((day) {
+    return PlanDayRequest(
+      name: day.name,
+      sets: day.defaultSets,
+      reps: day.defaultReps.toString(),
+      exercises: day.exercises,
     );
+  }).toList(),
+);
     context.read<CreatePlanCubit>().createPlan(request);
   }
 }
