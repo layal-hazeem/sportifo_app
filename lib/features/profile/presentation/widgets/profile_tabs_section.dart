@@ -44,10 +44,13 @@ class _ProfileTabsSectionState extends State<ProfileTabsSection> {
           ),
           child: Row(
             children: isCoach
-                ? [_tabButton("Information", 0), _tabButton("Certificates", 1)]
+                ? [
+                    _tabButton(l10n.information, 0),
+                    _tabButton(l10n.certificates, 1),
+                  ]
                 : [
-                    _tabButton("Information", 0),
-                    _tabButton("Body Measurements", 1),
+                    _tabButton(l10n.information, 0),
+                    _tabButton(l10n.bodyMeasurements, 1),
                   ],
           ),
         ),
@@ -61,10 +64,7 @@ class _ProfileTabsSectionState extends State<ProfileTabsSection> {
           layoutBuilder: (currentChild, previousChildren) {
             return Stack(
               alignment: Alignment.topCenter,
-              children: [
-                ...previousChildren,
-                ?currentChild,
-              ],
+              children: [...previousChildren, ?currentChild],
             );
           },
           transitionBuilder: (child, animation) {
@@ -94,10 +94,11 @@ class _ProfileTabsSectionState extends State<ProfileTabsSection> {
   }
 
   Widget _buildUserInfo() {
+    final l10n = AppLocalizations.of(context)!;
     final p = widget.userProfile;
 
     return Container(
-      key: const ValueKey("user_info"),
+      key:  ValueKey(l10n.userInfo),
       padding: const EdgeInsets.all(16),
       margin: const EdgeInsets.symmetric(horizontal: 20),
       decoration: _cardStyle(),
@@ -110,14 +111,15 @@ class _ProfileTabsSectionState extends State<ProfileTabsSection> {
   }
 
   Widget _buildCoachInfo() {
+    final l10n = AppLocalizations.of(context)!;
     final c = widget.coachProfile;
 
     if (c == null) {
-      return const Center(child: Text("No coach data available"));
+      return  Center(child: Text(l10n.noCoachData));
     }
 
     return Container(
-      key: const ValueKey("coach_info"),
+      key:  ValueKey(l10n.coachInfo),
       padding: const EdgeInsets.all(16),
       margin: const EdgeInsets.symmetric(horizontal: 20),
       decoration: _cardStyle(),

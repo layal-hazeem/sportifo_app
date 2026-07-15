@@ -21,7 +21,7 @@ class ProfileRepository {
       // 🔥 تفعيل الكاش للبروفايل بسياسة ذكية (النت أولاً، والكاش كخطة بديلة)
       final cacheOptions = await DioFactory.getCacheOptions();
       final dioOptions = cacheOptions.copyWith(
-        policy: CachePolicy.forceCache,
+        policy: CachePolicy.refresh,
       ).toOptions();
 
       // مرري الـ dioOptions للـ WebService

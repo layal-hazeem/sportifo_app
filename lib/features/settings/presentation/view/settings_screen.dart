@@ -5,6 +5,7 @@ import 'package:sportifo_app/core/localization/locale_cubit.dart';
 import 'package:sportifo_app/core/routes/app_routes.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/core/widgets/wave_app_bar.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../widgets/settings_section.dart';
 import '../widgets/settings_tile.dart';
 
@@ -13,20 +14,21 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.background,
 
-      appBar: WaveAppBar(title: 'Settings', showBackButton: true),
+      appBar: WaveAppBar(title: l10n.settings, showBackButton: true),
 
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
           SettingsSection(
-            title: "General",
+            title: l10n.general,
             children: [
               SettingsTile(
                 icon: Icons.language,
-                title: "Language",
+                title: l10n.language,
                 onTap: () {
                   _showLanguageDialog(context);
                 },
@@ -34,41 +36,41 @@ class SettingsScreen extends StatelessWidget {
 
               SettingsTile(
                 icon: Icons.dark_mode_outlined,
-                title: "Theme",
+                title: l10n.theme,
                 onTap: () {},
               ),
 
               SettingsTile(
                 icon: Icons.notifications_none,
-                title: "Notifications",
+                title: l10n.notifications,
                 onTap: () {},
               ),
             ],
           ),
 
           SettingsSection(
-            title: "Account",
+            title: l10n.account,
             children: [
               SettingsTile(
                 icon: Icons.lock_outline,
-                title: "Change Password",
+                title: l10n.changePassword,
                 onTap: () {},
               ),
 
               SettingsTile(
                 icon: Icons.privacy_tip_outlined,
-                title: "Privacy Policy",
+                title: l10n.privacyPolicy,
                 onTap: () {},
               ),
             ],
           ),
 
           SettingsSection(
-            title: "Danger Zone",
+            title: "",
             children: [
               SettingsTile(
                 icon: Icons.delete_forever,
-                title: "Delete Account",
+                title: l10n.deleteAccount,
                 isDanger: true,
                 onTap: () {
                   Navigator.pushNamed(context, AppRoutes.deleteAccount);
@@ -82,6 +84,7 @@ class SettingsScreen extends StatelessWidget {
   }
 
   void _showLanguageDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final localeCubit = context.read<LocaleCubit>();
     final currentLocale = Localizations.localeOf(context).languageCode;
 
@@ -129,7 +132,7 @@ class SettingsScreen extends StatelessWidget {
               const SizedBox(height: 16),
 
               Text(
-                "Choose Language",
+                l10n.chooseLanguage,
                 style: Theme.of(
                   context,
                 ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
@@ -138,7 +141,7 @@ class SettingsScreen extends StatelessWidget {
               const SizedBox(height: 8),
 
               Text(
-                "Select your preferred app language",
+                l10n.chooseLanguageHint,
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
               ),
@@ -148,7 +151,7 @@ class SettingsScreen extends StatelessWidget {
               _languageItem(
                 context,
                 title: "English",
-                subtitle: "English",
+                subtitle: l10n.english,
                 languageIcon: "EN",
                 selected: currentLocale == "en",
                 onTap: () {
@@ -185,6 +188,7 @@ class SettingsScreen extends StatelessWidget {
     required bool selected,
     required VoidCallback onTap,
   }) {
+    final l10n = AppLocalizations.of(context)!;
     return InkWell(
       borderRadius: BorderRadius.circular(20),
       onTap: onTap,
@@ -251,7 +255,7 @@ class SettingsScreen extends StatelessWidget {
               duration: const Duration(milliseconds: 200),
               child: selected
                   ? Container(
-                      key: const ValueKey("selected"),
+                      key: ValueKey(l10n.selected),
                       height: 28,
                       width: 28,
                       decoration: BoxDecoration(
@@ -264,8 +268,8 @@ class SettingsScreen extends StatelessWidget {
                         size: 18,
                       ),
                     )
-                  : const SizedBox(
-                      key: ValueKey("empty"),
+                  :  SizedBox(
+                      key: ValueKey(l10n.empty),
                       height: 28,
                       width: 28,
                     ),
