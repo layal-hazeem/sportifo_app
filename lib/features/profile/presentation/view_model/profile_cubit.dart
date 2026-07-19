@@ -10,11 +10,7 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   ProfileCubit(this._profileRepository) : super(ProfileInitial());
 
-  // داخل ProfileCubit.dart - دالة getProfile
-// داخل profile_cubit.dart
-
   Future<void> getProfile() async {
-    // 1. لا تطلعي التحميل إذا كانت الواجهة معروضة سابقاً
     if (state is! ProfileSuccess) {
       emit(ProfileLoading());
     }
@@ -29,8 +25,9 @@ class ProfileCubit extends Cubit<ProfileState> {
         break;
 
       case Failure(message: final errorMsg):
-      // 🔥 الحماية القصوى: إذا الخطأ سببه "لا يوجد إنترنت"
-        if (errorMsg.contains("No Internet") || errorMsg.contains("Connection timeout")) {
+        // 🔥 الحماية القصوى: إذا الخطأ سببه "لا يوجد إنترنت"
+        if (errorMsg.contains("No Internet") ||
+            errorMsg.contains("Connection timeout")) {
           // إذا عندنا داتا سابقة بنبقى عليها
           if (state is ProfileSuccess) return;
 
@@ -40,7 +37,6 @@ class ProfileCubit extends Cubit<ProfileState> {
 
         // إذا الخطأ سيرفر حقيقي، بنطلعه
         emit(ProfileFailure(errorMsg));
-        print("Profile Error: $errorMsg");
         break;
     }
   }
@@ -48,18 +44,14 @@ class ProfileCubit extends Cubit<ProfileState> {
   Future<void> updateProfileImage(File imageFile) async {
     emit(ProfileLoading());
 
-    print("Uploading image: ${imageFile.path}");
-
     final result = await _profileRepository.updateProfileImage(imageFile);
 
     switch (result) {
       case Success(data: final updatedProfile):
-        print("Upload success");
         emit(ProfileSuccess(updatedProfile));
         break;
 
       case Failure(message: final errorMsg):
-        print("Upload failed: $errorMsg");
         emit(ProfileFailure(errorMsg));
         break;
     }
@@ -81,35 +73,19 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
-  Future<void> getCoachProfile() async {
-    emit(ProfileLoading());
+  Future<void> deleteAccount() async {
+    emit(DeleteAccountLoading());
 
-    final result = await _profileRepository.getCoachProfile();
+    final result = await _profileRepository.deleteAccount();
 
     switch (result) {
-      case Success(data: final coachModel):
-          print("🔥COACH STATE EMITTED");
-        emit(CoachProfileSuccess(coachModel));
+      case Success(data: final message):
+        emit(DeleteAccountSuccess(message));
         break;
+
       case Failure(message: final errorMsg):
-        emit(ProfileFailure(errorMsg));
+        emit(DeleteAccountFailure(errorMsg));
         break;
     }
   }
-
-  Future<void> deleteAccount() async {
-  emit(DeleteAccountLoading());
-
-  final result = await _profileRepository.deleteAccount();
-
-  switch (result) {
-    case Success(data: final message):
-      emit(DeleteAccountSuccess(message));
-      break;
-
-    case Failure(message: final errorMsg):
-      emit(DeleteAccountFailure(errorMsg));
-      break;
-  }
-}
 }

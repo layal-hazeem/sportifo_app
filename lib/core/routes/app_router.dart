@@ -5,7 +5,7 @@ import 'package:sportifo_app/features/existing_days/presentation/view/existing_d
 import 'package:sportifo_app/features/existing_days/presentation/view_model/existing_days_cubit.dart';
 import 'package:sportifo_app/features/plans/presentation/view/create_plan_screen.dart';
 import 'package:sportifo_app/features/plans/presentation/view_model/create_plan_cubit.dart';
-import 'package:sportifo_app/features/profile/data/models/user_profile_response.dart';
+import 'package:sportifo_app/features/profile/data/models/get_profile_response.dart';
 import 'package:sportifo_app/features/profile/presentation/view/edit_profile_page.dart';
 import 'package:sportifo_app/features/settings/presentation/view/delete_account_screen.dart';
 import 'package:sportifo_app/features/settings/presentation/view/settings_screen.dart';
@@ -163,7 +163,7 @@ class AppRouter {
         );
 
       case AppRoutes.editProfile:
-        final profile = settings.arguments as ProfileResponsModel;
+        final profile = settings.arguments as ProfileResponseModel;
 
         return MaterialPageRoute(
           builder: (_) => BlocProvider(

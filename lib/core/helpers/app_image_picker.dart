@@ -1,13 +1,13 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:sportifo_app/features/profile/data/models/user_profile_response.dart';
+import 'package:sportifo_app/features/profile/data/models/get_profile_response.dart';
 import '../theme/app_colors.dart';
 
 class AppImagePicker {
   static final ImagePicker _picker = ImagePicker();
 
-  AppImagePicker(ProfileResponsModel profileModel);
+  AppImagePicker(ProfileResponseModel profileModel);
 
   // دالة لاختيار الصورة بناءً على المصدر
   static Future<File?> _pickImage(ImageSource source) async {

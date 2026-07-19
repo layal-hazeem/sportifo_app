@@ -1,6 +1,5 @@
-import 'package:sportifo_app/features/profile/data/models/coach_profile_response.dart';
 
-import '../../data/models/user_profile_response.dart';
+import '../../data/models/get_profile_response.dart';
 
 abstract class ProfileState {}
 
@@ -10,10 +9,9 @@ class ProfileInitial extends ProfileState {}
 class ProfileLoading extends ProfileState {}
 
 class ProfileSuccess extends ProfileState {
-   final ProfileResponsModel profileModel;
-  final CoachProfileModel? coachModel;
+   final ProfileResponseModel profileModel;
 
-  ProfileSuccess(this.profileModel, {this.coachModel});
+  ProfileSuccess(this.profileModel);
 }
 
 // تم تغيير الاسم من ProfileError إلى ProfileFailure ليتوافق مع كود الـ HomePage الخاص بكِ
@@ -26,7 +24,7 @@ class ProfileFailure extends ProfileState {
 class ProfileImageUpdating extends ProfileState {}
 
 class ProfileImageUpdated extends ProfileState {
-  final ProfileResponsModel profile;
+  final ProfileResponseModel profile;
   ProfileImageUpdated(this.profile);
 }
 
@@ -39,18 +37,13 @@ class ProfileImageUpdateFailure extends ProfileState {
 class ProfileUpdating extends ProfileState {}
 
 class ProfileUpdateSuccess extends ProfileState {
-  final ProfileResponsModel profile;
+  final ProfileResponseModel profile;
   ProfileUpdateSuccess(this.profile);
 }
 
 class ProfileUpdateFailure extends ProfileState {
   final String message;
   ProfileUpdateFailure(this.message);
-}
-
-class CoachProfileSuccess extends ProfileState {
-  final CoachProfileModel coachModel;
-  CoachProfileSuccess(this.coachModel);
 }
 
 // ================= حذف الحساب =================

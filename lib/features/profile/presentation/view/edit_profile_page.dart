@@ -7,13 +7,13 @@ import 'package:sportifo_app/core/helpers/snack_bar_utils.dart';
 import 'package:sportifo_app/features/auth/presentation/widgets/custom_button.dart';
 import 'package:sportifo_app/features/auth/presentation/widgets/custom_neumorphic_field.dart';
 import 'package:sportifo_app/features/profile/data/models/edit_profile_request_model.dart';
-import 'package:sportifo_app/features/profile/data/models/user_profile_response.dart';
+import 'package:sportifo_app/features/profile/data/models/get_profile_response.dart';
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_cubit.dart';
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_state.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class EditProfilePage extends StatefulWidget {
-  final ProfileResponsModel profile;
+  final ProfileResponseModel profile;
   const EditProfilePage({super.key, required this.profile});
 
   @override

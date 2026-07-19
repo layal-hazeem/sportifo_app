@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/features/plans/data/models/plan_day_ui_model.dart';
+import 'package:sportifo_app/features/workout/data/models/exercise_model.dart';
 
 class PlanDayCard extends StatefulWidget {
   final PlanDayUiModel day;
@@ -29,6 +30,14 @@ class PlanDayCard extends StatefulWidget {
 
 class _PlanDayCardState extends State<PlanDayCard> {
   bool isExpanded = false;
+
+  int? _getSets(ExerciseModel exercise) {
+    return exercise.sets ?? widget.day.defaultSets;
+  }
+
+  String? _getReps(ExerciseModel exercise) {
+    return exercise.reps ?? widget.day.defaultReps?.toString();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -143,6 +152,19 @@ class _PlanDayCardState extends State<PlanDayCard> {
                           fontSize: 13,
                         ),
                       ),
+                      if (widget.day.defaultSets != null ||
+                          widget.day.defaultReps != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4),
+                          child: Text(
+                            "${widget.day.defaultSets ?? '-'} Sets • ${widget.day.defaultReps ?? '-'} Reps",
+                            style: TextStyle(
+                              color: AppColors.primaryBtn,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
                     ],
                   ),
                 ),
@@ -169,6 +191,8 @@ class _PlanDayCardState extends State<PlanDayCard> {
 
                     final exercise = entry.value;
 
+                    final sets = _getSets(exercise);
+                    final reps = _getReps(exercise);
                     return AnimatedOpacity(
                       duration: Duration(milliseconds: 200 + (index * 80)),
 
@@ -207,7 +231,7 @@ class _PlanDayCardState extends State<PlanDayCard> {
 
                                 children: [
                                   Text(
-                                    exercise.name ?? "",
+                                    exercise.name,
 
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w600,
@@ -223,6 +247,18 @@ class _PlanDayCardState extends State<PlanDayCard> {
                                       color: Colors.grey.shade600,
                                     ),
                                   ),
+                                  if (sets != null || reps != null)
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 4),
+                                      child: Text(
+                                        "${sets ?? '-'} Sets • ${reps ?? '-'} Reps",
+                                        style: const TextStyle(
+                                          color: AppColors.primaryBtn,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
                                 ],
                               ),
                             ),

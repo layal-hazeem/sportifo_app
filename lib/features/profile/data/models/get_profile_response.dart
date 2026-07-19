@@ -1,16 +1,16 @@
 // To parse this JSON data, do
 //
-//     final profileResponsModel = profileResponsModelFromJson(jsonString);
+//     final ProfileResponseModel = ProfileResponseModelFromJson(jsonString);
 
 import 'dart:convert';
 
-ProfileResponsModel profileResponsModelFromJson(String str) =>
-    ProfileResponsModel.fromJson(json.decode(str));
+ProfileResponseModel ProfileResponseModelFromJson(String str) =>
+    ProfileResponseModel.fromJson(json.decode(str));
 
-String profileResponsModelToJson(ProfileResponsModel data) =>
+String ProfileResponseModelToJson(ProfileResponseModel data) =>
     json.encode(data.toJson());
 
-class ProfileResponsModel {
+class ProfileResponseModel {
   final int? id;
   final String firstName;
   final String lastName;
@@ -25,8 +25,9 @@ class ProfileResponsModel {
   final bool? isVerified;
   final String? profilePic;
   final Sizes? sizes;
+  final Coach? coach;
 
-  ProfileResponsModel({
+  ProfileResponseModel({
     this.id,
     required this.firstName,
     required this.lastName,
@@ -41,10 +42,11 @@ class ProfileResponsModel {
     this.isVerified,
     this.profilePic,
     this.sizes,
+    this.coach,
   });
 
- factory ProfileResponsModel.fromJson(Map<String, dynamic> json) =>
-    ProfileResponsModel(
+ factory ProfileResponseModel.fromJson(Map<String, dynamic> json) =>
+    ProfileResponseModel(
       id: json["id"],
       firstName: json["first_name"] ?? "",
       lastName: json["last_name"] ?? "",
@@ -52,7 +54,7 @@ class ProfileResponsModel {
       phone: json["phone"],
       dateOfBirth: json["date_of_birth"] != null 
           ? DateTime.parse(json["date_of_birth"]) 
-          : DateTime.now(),
+          : DateTime.fromMillisecondsSinceEpoch(0),
       gender: json["gender"] == 1, 
       role: json["role"],
       height: (json["height"] ?? 0).toDouble(),
@@ -61,6 +63,7 @@ class ProfileResponsModel {
       isVerified: json["is_verified"],
       profilePic: json["profile_pic"],
       sizes: json["sizes"] == null ? null : Sizes.fromJson(json["sizes"]),
+      coach: json["coach"] == null ? null : Coach.fromJson(json["coach"]),
     );
 
 Map<String, dynamic> toJson() => {
@@ -78,6 +81,7 @@ Map<String, dynamic> toJson() => {
       "is_verified": isVerified,
       "profile_pic": profilePic,
       "sizes": sizes?.toJson(),
+      "coach": coach?.toJson(),
     };
 }
 class Sizes {
@@ -130,4 +134,32 @@ class Sizes {
     "hip_perimeter": hipPerimeter,
     "arm_perimeter": armPerimeter,
   };
+}
+
+class Coach {
+  final int? id;
+  final String? fullName;
+  final String? description;
+  final int? yearsOfExp;
+  final List<String>? pics;
+
+  Coach({this.id, this.fullName, this.description, this.yearsOfExp, this.pics});
+
+  factory Coach.fromJson(Map<String, dynamic> json) => Coach(
+        id: json["id"],
+        fullName: json["full_name"],
+        description: json["description"],
+        yearsOfExp: json["years_of_exp"],
+        pics: (json["pics"] as List?)
+        ?.map((e) => e.toString())
+        .toList() ??
+    const [],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "full_name": fullName,
+        "description": description,
+        "years_of_exp": yearsOfExp,
+        "pics": pics,
+      };
 }

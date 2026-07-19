@@ -6,11 +6,12 @@ import 'package:sportifo_app/core/routes/app_routes.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/logout/logout_cubit.dart';
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_cubit.dart';
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_state.dart';
+import 'package:sportifo_app/features/profile/presentation/widgets/profile_image_view.dart';
 import 'package:sportifo_app/features/profile/presentation/widgets/profile_tabs_section.dart';
 import 'package:sportifo_app/features/profile/presentation/widgets/profile_top_section.dart';
 import '../../../../core/theme/app_colors.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
-import 'package:sportifo_app/features/targets/presentation/view_model/target_cubit/target_cubit.dart'; 
+import 'package:sportifo_app/features/targets/presentation/view_model/target_cubit/target_cubit.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -96,6 +97,21 @@ class _ProfilePageState extends State<ProfilePage> {
                         localImage: selectedImage,
                         firstName: user.firstName,
                         gender: user.gender,
+
+                        onOpenImage: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => ProfileImageView(
+                                imageUrl: user.profilePic,
+                                localImage: selectedImage != null
+                                    ? FileImage(selectedImage!)
+                                    : null,
+                              ),
+                            ),
+                          );
+                        },
+
                         onEditImage: () async {
                           final file =
                               await AppImagePicker.showImageSourceDialog(
@@ -116,7 +132,11 @@ class _ProfilePageState extends State<ProfilePage> {
                       Center(
                         child: Text(
                           "${user.firstName} ${user.lastName}",
-                          style: TextStyle(fontSize: AppSizes.labelFontSize),
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textDark,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -139,7 +159,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
           return SafeArea(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
               child: SizedBox(
                 height: 50,
                 child: ElevatedButton(
@@ -149,6 +169,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       borderRadius: BorderRadius.circular(
                         AppSizes.borderRadius,
                       ),
+                      
                     ),
                   ),
                   onPressed: () async {
