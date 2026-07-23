@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/features/plans/data/models/plan_day_ui_model.dart';
+import 'package:sportifo_app/features/plans/presentation/widgets/exercise_settings_bottom_sheet.dart';
 import 'package:sportifo_app/features/workout/data/models/exercise_model.dart';
 
 class PlanDayCard extends StatefulWidget {
@@ -11,6 +12,7 @@ class PlanDayCard extends StatefulWidget {
   final Function(int) onDeleteExercise;
 
   final VoidCallback onDeleteDay;
+  final VoidCallback onSettings;
 
   const PlanDayCard({
     super.key,
@@ -22,6 +24,8 @@ class PlanDayCard extends StatefulWidget {
     required this.onDeleteExercise,
 
     required this.onDeleteDay,
+
+    required this.onSettings,
   });
 
   @override
@@ -32,11 +36,19 @@ class _PlanDayCardState extends State<PlanDayCard> {
   bool isExpanded = false;
 
   int? _getSets(ExerciseModel exercise) {
-    return exercise.sets ?? widget.day.defaultSets;
+    if (exercise.sets != null) {
+      return exercise.sets;
+    }
+
+    return widget.day.defaultSets;
   }
 
   String? _getReps(ExerciseModel exercise) {
-    return exercise.reps ?? widget.day.defaultReps?.toString();
+    if (exercise.reps != null && exercise.reps!.isNotEmpty) {
+      return exercise.reps;
+    }
+
+    return widget.day.defaultReps?.toString();
   }
 
   @override
@@ -168,6 +180,16 @@ class _PlanDayCardState extends State<PlanDayCard> {
                     ],
                   ),
                 ),
+                IconButton(
+                  onPressed: () {
+                    _showDaySettings(context);
+                  },
+
+                  icon: const Icon(
+                    Icons.settings_outlined,
+                    color: AppColors.primaryBtn,
+                  ),
+                ),
               ],
             ),
 
@@ -265,6 +287,22 @@ class _PlanDayCardState extends State<PlanDayCard> {
 
                             IconButton(
                               onPressed: () {
+                                ExerciseSettingsBottomSheet.show(
+                                  context,
+                                  exercise,
+                                ).then((_) {
+                                  setState(() {});
+                                });
+                              },
+
+                              icon: const Icon(
+                                Icons.settings_outlined,
+                                color: AppColors.primaryBtn,
+                              ),
+                            ),
+
+                            IconButton(
+                              onPressed: () {
                                 widget.onDeleteExercise(
                                   exercises.indexOf(exercise),
                                 );
@@ -351,6 +389,151 @@ class _PlanDayCardState extends State<PlanDayCard> {
           ],
         ),
       ),
+    );
+  }
+
+  void _showDaySettings(BuildContext context) {
+    final setsController = TextEditingController(
+      text: widget.day.defaultSets?.toString() ?? "",
+    );
+
+    final repsController = TextEditingController(
+      text: widget.day.defaultReps?.toString() ?? "",
+    );
+
+    showModalBottomSheet(
+      context: context,
+
+      isScrollControlled: true,
+
+      backgroundColor: Colors.transparent,
+
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+
+          child: Container(
+            padding: const EdgeInsets.all(24),
+
+            decoration: const BoxDecoration(
+              color: Colors.white,
+
+              borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+            ),
+
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+
+              children: [
+                Container(
+                  width: 45,
+
+                  height: 5,
+
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade300,
+
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                const Text(
+                  "Workout Day Settings",
+
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+
+                const SizedBox(height: 8),
+
+                Text(
+                  "These values will apply to all exercises unless customized.",
+
+                  textAlign: TextAlign.center,
+
+                  style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
+                ),
+
+                const SizedBox(height: 25),
+
+                TextField(
+                  controller: setsController,
+
+                  keyboardType: TextInputType.number,
+
+                  decoration: InputDecoration(
+                    labelText: "Default Sets",
+
+                    hintText: "Example: 4",
+
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                TextField(
+                  controller: repsController,
+
+                  keyboardType: TextInputType.number,
+
+                  decoration: InputDecoration(
+                    labelText: "Default Reps",
+
+                    hintText: "Example: 12",
+
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 25),
+
+                SizedBox(
+                  width: double.infinity,
+
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryBtn,
+
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                    ),
+
+                    onPressed: () {
+                      setState(() {
+                        widget.day.defaultSets = int.tryParse(
+                          setsController.text,
+                        );
+
+                        widget.day.defaultReps = int.tryParse(
+                          repsController.text,
+                        );
+                      });
+
+                      Navigator.pop(context);
+                    },
+
+                    child: const Text(
+                      "Save Settings",
+
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

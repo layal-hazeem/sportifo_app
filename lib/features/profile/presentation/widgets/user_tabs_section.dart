@@ -8,10 +8,7 @@ import 'package:sportifo_app/l10n/app_localizations.dart';
 class UserTabsSection extends StatefulWidget {
   final ProfileResponseModel userProfile;
 
-  const UserTabsSection({
-    super.key,
-    required this.userProfile,
-  });
+  const UserTabsSection({super.key, required this.userProfile});
 
   @override
   State<UserTabsSection> createState() => _UserTabsSectionState();
@@ -40,8 +37,21 @@ class _UserTabsSectionState extends State<UserTabsSection> {
 
         const SizedBox(height: 20),
 
-        AnimatedSwitcher(
-          duration: const Duration(milliseconds: 300),
+        TweenAnimationBuilder<double>(
+          key: ValueKey(selectedTab),
+          duration: const Duration(milliseconds: 280),
+          curve: Curves.easeOutCubic,
+          tween: Tween(begin: 0.97, end: 1),
+          builder: (context, value, child) {
+            return Opacity(
+              opacity: value,
+              child: Transform.scale(
+                scale: value,
+                alignment: Alignment.topCenter,
+                child: child,
+              ),
+            );
+          },
           child: selectedTab == 0
               ? _buildInfoTab()
               : _buildBodyMeasurementsTab(),
@@ -74,9 +84,7 @@ class _UserTabsSectionState extends State<UserTabsSection> {
         margin: const EdgeInsets.symmetric(horizontal: 20),
         padding: const EdgeInsets.all(16),
         decoration: _cardDecoration(),
-        child: Center(
-          child: Text(l10n.noBodyMeasurements),
-        ),
+        child: Center(child: Text(l10n.noBodyMeasurements)),
       );
     }
 
@@ -142,9 +150,7 @@ class _UserTabsSectionState extends State<UserTabsSection> {
           duration: const Duration(milliseconds: 250),
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
-            color: isSelected
-                ? AppColors.primaryBtn
-                : Colors.transparent,
+            color: isSelected ? AppColors.primaryBtn : Colors.transparent,
             borderRadius: BorderRadius.circular(25),
           ),
           child: Center(
@@ -161,11 +167,7 @@ class _UserTabsSectionState extends State<UserTabsSection> {
     );
   }
 
-  Widget _measurementRow(
-    String title,
-    String value,
-    String iconPath,
-  ) {
+  Widget _measurementRow(String title, String value, String iconPath) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
@@ -206,10 +208,7 @@ class _UserTabsSectionState extends State<UserTabsSection> {
       color: Colors.white,
       borderRadius: BorderRadius.circular(30),
       boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(.05),
-          blurRadius: 10,
-        ),
+        BoxShadow(color: Colors.black.withOpacity(.05), blurRadius: 10),
       ],
     );
   }

@@ -45,45 +45,47 @@ class ProfileResponseModel {
     this.coach,
   });
 
- factory ProfileResponseModel.fromJson(Map<String, dynamic> json) =>
-    ProfileResponseModel(
-      id: json["id"],
-      firstName: json["first_name"] ?? "",
-      lastName: json["last_name"] ?? "",
-      email: json["email"],
-      phone: json["phone"],
-      dateOfBirth: json["date_of_birth"] != null 
-          ? DateTime.parse(json["date_of_birth"]) 
-          : DateTime.fromMillisecondsSinceEpoch(0),
-      gender: json["gender"] == 1, 
-      role: json["role"],
-      height: (json["height"] ?? 0).toDouble(),
-      weight: (json["weight"] ?? 0).toDouble(),
-      isActive: json["is_active"],
-      isVerified: json["is_verified"],
-      profilePic: json["profile_pic"],
-      sizes: json["sizes"] == null ? null : Sizes.fromJson(json["sizes"]),
-      coach: json["coach"] == null ? null : Coach.fromJson(json["coach"]),
-    );
+  factory ProfileResponseModel.fromJson(Map<String, dynamic> json) =>
+      ProfileResponseModel(
+        id: json["id"],
+        firstName: json["first_name"] ?? "",
+        lastName: json["last_name"] ?? "",
+        email: json["email"],
+        phone: json["phone"],
+        dateOfBirth: json["date_of_birth"] != null
+            ? DateTime.parse(json["date_of_birth"])
+            : DateTime.fromMillisecondsSinceEpoch(0),
+        gender: json["gender"] == 1,
+        role: json["role"],
+        height: (json["height"] ?? 0).toDouble(),
+        weight: (json["weight"] ?? 0).toDouble(),
+        isActive: json["is_active"],
+        isVerified: json["is_verified"],
+        profilePic: json["profile_pic"],
+        sizes: json["sizes"] == null ? null : Sizes.fromJson(json["sizes"]),
+        coach: json["coach"] == null ? null : Coach.fromJson(json["coach"]),
+      );
 
-Map<String, dynamic> toJson() => {
-      "id": id,
-      "first_name": firstName,
-      "last_name": lastName,
-      "email": email,
-      "phone": phone,
-      "date_of_birth": "${dateOfBirth.year.toString().padLeft(4, '0')}-${dateOfBirth.month.toString().padLeft(2, '0')}-${dateOfBirth.day.toString().padLeft(2, '0')}",
-      "gender": gender ? 1 : 0, 
-      "role": role,
-      "height": height,
-      "weight": weight,
-      "is_active": isActive,
-      "is_verified": isVerified,
-      "profile_pic": profilePic,
-      "sizes": sizes?.toJson(),
-      "coach": coach?.toJson(),
-    };
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "first_name": firstName,
+    "last_name": lastName,
+    "email": email,
+    "phone": phone,
+    "date_of_birth":
+        "${dateOfBirth.year.toString().padLeft(4, '0')}-${dateOfBirth.month.toString().padLeft(2, '0')}-${dateOfBirth.day.toString().padLeft(2, '0')}",
+    "gender": gender ? 1 : 0,
+    "role": role,
+    "height": height,
+    "weight": weight,
+    "is_active": isActive,
+    "is_verified": isVerified,
+    "profile_pic": profilePic,
+    "sizes": sizes?.toJson(),
+    "coach": coach?.toJson(),
+  };
 }
+
 class Sizes {
   final int? id;
   final double? height;
@@ -141,25 +143,54 @@ class Coach {
   final String? fullName;
   final String? description;
   final int? yearsOfExp;
-  final List<String>? pics;
+  final List<CoachImage>? pics;
 
   Coach({this.id, this.fullName, this.description, this.yearsOfExp, this.pics});
 
   factory Coach.fromJson(Map<String, dynamic> json) => Coach(
-        id: json["id"],
-        fullName: json["full_name"],
-        description: json["description"],
-        yearsOfExp: json["years_of_exp"],
-        pics: (json["pics"] as List?)
-        ?.map((e) => e.toString())
-        .toList() ??
-    const [],
-      );
+    id: json["id"],
+    fullName: json["full_name"],
+    description: json["description"],
+    yearsOfExp: json["years_of_exp"],
+    pics:
+        (json["pics"] as List?)?.map((e) => CoachImage.fromJson(e)).toList() ??
+        [],
+  );
 
   Map<String, dynamic> toJson() => {
-        "full_name": fullName,
-        "description": description,
-        "years_of_exp": yearsOfExp,
-        "pics": pics,
-      };
+    "full_name": fullName,
+    "description": description,
+    "years_of_exp": yearsOfExp,
+    "pics": pics,
+  };
+}
+
+class CoachImage {
+  final int id;
+  final String type;
+  final String name;
+  final String url;
+
+  CoachImage({
+    required this.id,
+    required this.type,
+    required this.name,
+    required this.url,
+  });
+
+  factory CoachImage.fromJson(Map<String, dynamic> json) {
+    return CoachImage(
+      id: json["id"],
+      type: json["type"] ?? "",
+      name: json["name"] ?? "",
+      url: json["url"] ?? "",
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "type": type,
+    "name": name,
+    "url": url,
+  };
 }

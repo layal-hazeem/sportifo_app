@@ -13,6 +13,7 @@ import 'package:sportifo_app/features/plans/data/models/plan_day_ui_model.dart';
 import 'package:sportifo_app/features/plans/presentation/view_model/create_plan_cubit.dart';
 import 'package:sportifo_app/features/plans/presentation/view_model/create_plan_state.dart';
 import 'package:sportifo_app/features/plans/presentation/widgets/create_day_bottom_sheet.dart';
+import 'package:sportifo_app/features/plans/presentation/widgets/day_settings_bottom_sheet.dart';
 import 'package:sportifo_app/features/plans/presentation/widgets/exercise_multi_picker_bottom_sheet.dart';
 import 'package:sportifo_app/features/plans/presentation/widgets/plan_day_card.dart';
 import 'package:sportifo_app/features/workout/data/models/exercise_model.dart';
@@ -20,7 +21,7 @@ import 'package:sportifo_app/features/workout/data/repository/workout_repository
 
 class CreatePlanScreen extends StatefulWidget {
   final int userId;
-  const CreatePlanScreen({super.key,required this.userId,});
+  const CreatePlanScreen({super.key, required this.userId});
   @override
   State<CreatePlanScreen> createState() => _CreatePlanScreenState();
 }
@@ -108,7 +109,7 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
         }
 
         if (state is CreatePlanSuccess) {
-          Navigator.pop(context,true);
+          Navigator.pop(context, true);
 
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text("Plan created successfully 🎉")),
@@ -134,6 +135,24 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
 
                   return PlanDayCard(
                     day: day,
+                    onSettings: () async {
+                      final applyAll = await DaySettingsBottomSheet.show(
+                        context,
+                        day,
+                      );
+
+                      if (applyAll == true) {
+                        setState(() {
+                          for (final exercise in day.exercises) {
+                            exercise.sets = day.defaultSets;
+
+                            exercise.reps = day.defaultReps?.toString();
+                          }
+                        });
+                      } else {
+                        setState(() {});
+                      }
+                    },
 
                     onAddExercise: () {
                       addExercise(index);
@@ -356,7 +375,14 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
     if (selected == null || selected.isEmpty) return;
 
     setState(() {
-      days[dayIndex].exercises.addAll(selected);
+      days[dayIndex].exercises.addAll(
+        selected.map((exercise) {
+          exercise.sets = null;
+          exercise.reps = null;
+
+          return exercise;
+        }).toList(),
+      );
     });
   }
 
@@ -374,16 +400,16 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
     }
 
     final request = CreatePlanRequest(
-  userId: widget.userId,
-  days: days.map((day) {
-    return PlanDayRequest(
-      name: day.name,
-      sets: day.defaultSets,
-      reps: day.defaultReps.toString(),
-      exercises: day.exercises,
+      userId: widget.userId,
+      days: days.map((day) {
+        return PlanDayRequest(
+          name: day.name,
+          sets: day.defaultSets,
+          reps: day.defaultReps.toString(),
+          exercises: day.exercises,
+        );
+      }).toList(),
     );
-  }).toList(),
-);
     context.read<CreatePlanCubit>().createPlan(request);
   }
 }

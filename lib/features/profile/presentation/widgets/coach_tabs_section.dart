@@ -39,8 +39,21 @@ class _CoachTabsSectionState extends State<CoachTabsSection> {
 
         const SizedBox(height: 20),
 
-        AnimatedSwitcher(
-          duration: const Duration(milliseconds: 300),
+        TweenAnimationBuilder<double>(
+          key: ValueKey(selectedTab),
+          duration: const Duration(milliseconds: 380),
+          curve: Curves.easeOutCubic,
+          tween: Tween(begin: 0.97, end: 1),
+          builder: (context, value, child) {
+            return Opacity(
+              opacity: value,
+              child: Transform.scale(
+                scale: value,
+                alignment: Alignment.topCenter,
+                child: child,
+              ),
+            );
+          },
           child: selectedTab == 0
               ? CoachInfoSection(profile: widget.userProfile)
               : CoachCertificatesSection(certificates: coach?.pics ?? []),

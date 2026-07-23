@@ -6,14 +6,10 @@ import 'package:sportifo_app/features/workout/data/models/exercise_model.dart';
 class ExerciseDetailsScreen extends StatefulWidget {
   final ExerciseModel exercise;
 
-  const ExerciseDetailsScreen({
-    super.key,
-    required this.exercise,
-  });
+  const ExerciseDetailsScreen({super.key, required this.exercise});
 
   @override
-  State<ExerciseDetailsScreen> createState() =>
-      _ExerciseDetailsScreenState();
+  State<ExerciseDetailsScreen> createState() => _ExerciseDetailsScreenState();
 }
 
 class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
@@ -30,9 +26,7 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
       text: widget.exercise.sets?.toString() ?? "",
     );
 
-    repsController = TextEditingController(
-      text: widget.exercise.reps ?? "",
-    );
+    repsController = TextEditingController(text: widget.exercise.reps ?? "");
 
     durationController = TextEditingController(
       text: widget.exercise.duration ?? "",
@@ -49,25 +43,32 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
     repsController.dispose();
     durationController.dispose();
     orderController.dispose();
+
     super.dispose();
   }
 
+  void clearOverride() {
+    setsController.clear();
+    repsController.clear();
+
+    widget.exercise.sets = null;
+    widget.exercise.reps = null;
+
+    setState(() {});
+  }
+
   void save() {
-    widget.exercise.sets =
-        int.tryParse(setsController.text);
+    widget.exercise.sets = int.tryParse(setsController.text.trim());
 
-    widget.exercise.reps =
-        repsController.text.trim().isEmpty
-            ? null
-            : repsController.text.trim();
+    widget.exercise.reps = repsController.text.trim().isEmpty
+        ? null
+        : repsController.text.trim();
 
-    widget.exercise.duration =
-        durationController.text.trim().isEmpty
-            ? null
-            : durationController.text.trim();
+    widget.exercise.duration = durationController.text.trim().isEmpty
+        ? null
+        : durationController.text.trim();
 
-    widget.exercise.order =
-        int.tryParse(orderController.text);
+    widget.exercise.order = int.tryParse(orderController.text.trim());
 
     Navigator.pop(context);
   }
@@ -76,17 +77,22 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
     String label,
     TextEditingController controller,
     TextInputType keyboard,
+    String hint,
   ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
+
       child: TextField(
         controller: controller,
+
         keyboardType: keyboard,
+
         decoration: InputDecoration(
           labelText: label,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
-          ),
+
+          hintText: hint,
+
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
         ),
       ),
     );
@@ -97,21 +103,20 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
     final ex = widget.exercise;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(ex.name),
-      ),
+      appBar: AppBar(title: Text(ex.name)),
+
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),
-          children: [
 
+          children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(18),
+
               child: SizedBox(
                 height: 220,
-                child: CachedStaticGif(
-                  imageUrl: ex.gifUrl ?? "",
-                ),
+
+                child: CachedStaticGif(imageUrl: ex.gifUrl ?? ""),
               ),
             ),
 
@@ -119,60 +124,104 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
 
             Text(
               ex.name,
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
 
             const SizedBox(height: 8),
 
-            Text(
-              ex.description,
-              style: TextStyle(
-                color: Colors.grey.shade700,
+            Text(ex.description, style: TextStyle(color: Colors.grey.shade700)),
+
+            const SizedBox(height: 25),
+
+            Container(
+              padding: const EdgeInsets.all(14),
+
+              decoration: BoxDecoration(
+                color: AppColors.primaryBtn.withOpacity(.1),
+
+                borderRadius: BorderRadius.circular(16),
+              ),
+
+              child: const Row(
+                children: [
+                  Icon(Icons.info_outline, color: AppColors.primaryBtn),
+
+                  SizedBox(width: 10),
+
+                  Expanded(
+                    child: Text(
+                      "Leave Sets and Reps empty to use the workout day defaults.",
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
 
-            const SizedBox(height: 30),
+            const SizedBox(height: 25),
 
             field(
-              "Sets",
+              "Custom Sets",
               setsController,
               TextInputType.number,
+              "Example: 4",
             ),
 
             field(
-              "Reps",
+              "Custom Reps",
               repsController,
               TextInputType.text,
+              "Example: 12",
             ),
+
+            if (ex.sets != null || ex.reps != null)
+              Align(
+                alignment: Alignment.centerRight,
+
+                child: TextButton.icon(
+                  onPressed: clearOverride,
+
+                  icon: const Icon(Icons.restore, size: 18),
+
+                  label: const Text("Use Day Defaults"),
+                ),
+              ),
 
             field(
               "Duration",
               durationController,
               TextInputType.text,
+              "Example: 30 sec",
             ),
 
             field(
               "Order",
               orderController,
               TextInputType.number,
+              "Exercise order",
             ),
 
             const SizedBox(height: 20),
 
             SizedBox(
               height: 55,
+
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primaryBtn,
                 ),
+
                 onPressed: save,
+
                 child: const Text(
                   "Save",
                   style: TextStyle(
                     color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),

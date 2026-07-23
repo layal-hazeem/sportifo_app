@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sportifo_app/core/widgets/loading_shimmer.dart';
 import 'package:sportifo_app/features/profile/presentation/view/certificate_preview_page.dart';
 
 class CertificateCard extends StatelessWidget {
@@ -36,13 +37,14 @@ class CertificateCard extends StatelessWidget {
             loadingBuilder: (context, child, progress) {
               if (progress == null) return child;
 
-              return Container(
-                color: Colors.grey.shade100,
-                child: const Center(child: CircularProgressIndicator()),
+              return const LoadingShimmer(
+                width: double.infinity,
+                height: double.infinity,
+                borderRadius: 16,
               );
             },
 
-            errorBuilder: (_, _, _) {
+            errorBuilder: (_, __, ___) {
               return Container(
                 color: Colors.grey.shade100,
                 child: const Icon(
@@ -97,7 +99,7 @@ class CoachCertificatesSection extends StatelessWidget {
           mainAxisSpacing: 14,
         ),
         itemBuilder: (_, index) {
-          return CertificateCard(imageUrl: certificates[index]);
+          return CertificateCard(imageUrl: certificates[index].url);
         },
       ),
     );
