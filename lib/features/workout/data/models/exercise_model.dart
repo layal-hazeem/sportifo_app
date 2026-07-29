@@ -116,6 +116,14 @@ class ExerciseModel {
         .map((e) => e.url)
         .toList();
   }
+
+  bool get isCardio {
+    return category?.id == 2;
+  }
+
+  bool get isResistance {
+    return category?.id == 1;
+  }
 }
 
 class ExerciseCategory {

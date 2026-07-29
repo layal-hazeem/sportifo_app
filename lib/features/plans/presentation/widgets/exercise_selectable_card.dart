@@ -86,18 +86,20 @@ class ExerciseSelectableCard extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    if (exercise.category?.organ?.part != null)
-                      const SizedBox(height: 2), // 🔥 مسافة صغيرة ومرتبة
-                    Text(
-                      exercise.category!.organ!.part!.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: Colors.grey.shade500, // لون أهدى شوي
-                        fontSize: 10,
-                        fontWeight: FontWeight.w500,
+                    if (exercise.category?.organ?.part != null) ...[
+                      const SizedBox(height: 2),
+
+                      Text(
+                        exercise.category!.organ!.part!.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.grey.shade500,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                    ),
+                    ],
                   ],
                 ),
               ),

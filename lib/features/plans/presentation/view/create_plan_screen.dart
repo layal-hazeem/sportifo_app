@@ -29,6 +29,7 @@ class CreatePlanScreen extends StatefulWidget {
 class _CreatePlanScreenState extends State<CreatePlanScreen> {
   final List<PlanDayUiModel> days = [];
   bool isFabOpen = false;
+  bool isLoadingDialogShown = false;
 
   @override
   void initState() {
@@ -40,75 +41,84 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
     return BlocListener<CreatePlanCubit, CreatePlanState>(
       listener: (context, state) {
         if (state is CreatePlanLoading) {
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (_) {
-              return Dialog(
-                backgroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(24),
-                ),
+          if (!isLoadingDialogShown) {
+            isLoadingDialogShown = true;
 
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 30,
-                    horizontal: 25,
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (_) {
+                return Dialog(
+                  backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24),
                   ),
 
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 30,
+                      horizontal: 25,
+                    ),
 
-                    children: [
-                      Container(
-                        width: 70,
-                        height: 70,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
 
-                        decoration: BoxDecoration(
-                          color: AppColors.primaryBtn.withOpacity(.12),
-                          shape: BoxShape.circle,
-                        ),
+                      children: [
+                        Container(
+                          width: 70,
+                          height: 70,
 
-                        child: Padding(
-                          padding: const EdgeInsets.all(18),
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryBtn.withOpacity(.12),
+                            shape: BoxShape.circle,
+                          ),
 
-                          child: CircularProgressIndicator(
-                            strokeWidth: 4,
-                            color: AppColors.primaryBtn,
+                          child: Padding(
+                            padding: const EdgeInsets.all(18),
+
+                            child: CircularProgressIndicator(
+                              strokeWidth: 4,
+                              color: AppColors.primaryBtn,
+                            ),
                           ),
                         ),
-                      ),
 
-                      const SizedBox(height: 20),
+                        const SizedBox(height: 20),
 
-                      const Text(
-                        "Creating your plan...",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                        const Text(
+                          "Creating your plan...",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
 
-                      const SizedBox(height: 8),
+                        const SizedBox(height: 8),
 
-                      Text(
-                        "Please wait while we save your workout",
-                        textAlign: TextAlign.center,
+                        Text(
+                          "Please wait while we save your workout",
+                          textAlign: TextAlign.center,
 
-                        style: TextStyle(
-                          color: Colors.grey.shade600,
-                          fontSize: 14,
+                          style: TextStyle(
+                            color: Colors.grey.shade600,
+                            fontSize: 14,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              );
-            },
-          );
+                );
+              },
+            );
+          }
         }
 
         if (state is CreatePlanSuccess) {
+          if (isLoadingDialogShown) {
+            isLoadingDialogShown = false;
+            Navigator.pop(context);
+          }
+
           Navigator.pop(context, true);
 
           ScaffoldMessenger.of(context).showSnackBar(
@@ -117,6 +127,11 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
         }
 
         if (state is CreatePlanError) {
+          if (isLoadingDialogShown) {
+            isLoadingDialogShown = false;
+            Navigator.pop(context);
+          }
+
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text(state.message)));
@@ -144,9 +159,14 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
                       if (applyAll == true) {
                         setState(() {
                           for (final exercise in day.exercises) {
-                            exercise.sets = day.defaultSets;
+                            if (exercise.isCardio) {
+                              exercise.sets = null;
+                              exercise.reps = null;
+                            } else {
+                              exercise.sets = day.defaultSets;
 
-                            exercise.reps = day.defaultReps?.toString();
+                              exercise.reps = day.defaultReps?.toString();
+                            }
                           }
                         });
                       } else {
@@ -377,9 +397,15 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
     setState(() {
       days[dayIndex].exercises.addAll(
         selected.map((exercise) {
-          exercise.sets = null;
-          exercise.reps = null;
-
+          if (exercise.isCardio) {
+            exercise.sets = null;
+            exercise.reps = null;
+            exercise.duration = null;
+          } else {
+            exercise.sets = null;
+            exercise.reps = null;
+            exercise.duration = null;
+          }
           return exercise;
         }).toList(),
       );
@@ -405,11 +431,12 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
         return PlanDayRequest(
           name: day.name,
           sets: day.defaultSets,
-          reps: day.defaultReps.toString(),
+          reps: day.defaultReps?.toString(),
           exercises: day.exercises,
         );
       }).toList(),
     );
+    print(request.toMap());
     context.read<CreatePlanCubit>().createPlan(request);
   }
 }

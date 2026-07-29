@@ -36,6 +36,10 @@ class _PlanDayCardState extends State<PlanDayCard> {
   bool isExpanded = false;
 
   int? _getSets(ExerciseModel exercise) {
+    if (exercise.isCardio) {
+      return null;
+    }
+
     if (exercise.sets != null) {
       return exercise.sets;
     }
@@ -44,6 +48,10 @@ class _PlanDayCardState extends State<PlanDayCard> {
   }
 
   String? _getReps(ExerciseModel exercise) {
+    if (exercise.isCardio) {
+      return null;
+    }
+
     if (exercise.reps != null && exercise.reps!.isNotEmpty) {
       return exercise.reps;
     }
@@ -57,7 +65,7 @@ class _PlanDayCardState extends State<PlanDayCard> {
 
     final visibleExercises = isExpanded
         ? exercises
-        : exercises.take(3).toList();
+        : exercises.take(2).toList();
 
     return Dismissible(
       key: ValueKey(widget.day.name),
@@ -269,7 +277,20 @@ class _PlanDayCardState extends State<PlanDayCard> {
                                       color: Colors.grey.shade600,
                                     ),
                                   ),
-                                  if (sets != null || reps != null)
+                                  if (exercise.isCardio &&
+                                      exercise.duration != null)
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 4),
+                                      child: Text(
+                                        exercise.duration!,
+                                        style: const TextStyle(
+                                          color: AppColors.primaryBtn,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    )
+                                  else if (sets != null || reps != null)
                                     Padding(
                                       padding: const EdgeInsets.only(top: 4),
                                       child: Text(
@@ -328,7 +349,7 @@ class _PlanDayCardState extends State<PlanDayCard> {
             /// ACTION BUTTONS
             Row(
               children: [
-                if (exercises.length > 3)
+                if (exercises.length > 2)
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () {
@@ -354,14 +375,14 @@ class _PlanDayCardState extends State<PlanDayCard> {
                       child: Text(
                         isExpanded
                             ? "Show Less"
-                            : "+ ${exercises.length - 3} More",
+                            : "+ ${exercises.length - 2} More",
 
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
 
-                if (exercises.length > 3) const SizedBox(width: 10),
+                if (exercises.length > 2) const SizedBox(width: 10),
 
                 Expanded(
                   child: OutlinedButton.icon(

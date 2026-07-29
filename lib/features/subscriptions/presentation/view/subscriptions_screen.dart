@@ -82,20 +82,9 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
           if (state is SubscriptionSuccess) {
             final allUsers = state.usersWithSubscriptions;
 
-            final pendingSubscriptions = allUsers.where((user) {
-              return user.userSubscriptions?.any(
-                    (sub) =>
-                        sub.status?.toLowerCase() == 'pending' &&
-                        (sub.isActive ?? 0) == 0,
-                  ) ??
-                  false;
-            }).toList();
-
             final activeSubscriptions = allUsers.where((user) {
               return user.userSubscriptions?.any(
-                    (sub) =>
-                        sub.status?.toLowerCase() == 'active' &&
-                        (sub.isActive ?? 0) == 1,
+                    (sub) => sub.status?.toLowerCase() == 'active',
                   ) ??
                   false;
             }).toList();
@@ -138,7 +127,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
           ),
         ),
         const SizedBox(height: 16),
-        
+
         activeList.isEmpty
             ? Padding(
                 padding: EdgeInsets.symmetric(vertical: 20.0),

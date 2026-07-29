@@ -156,7 +156,7 @@ void save() {
             const SizedBox(height: 8),
 
             Text(
-              "These values will be used for exercises without custom settings",
+              "These values will be used for resistance exercises without custom settings",
 
               textAlign: TextAlign.center,
 
@@ -180,16 +180,16 @@ void save() {
     });
   },
 
-  title: const Text(
-    "Apply to all exercises",
-    style: TextStyle(
-      fontWeight: FontWeight.w600,
-    ),
+title: const Text(
+  "Apply to all resistance exercises",
+  style: TextStyle(
+    fontWeight: FontWeight.w600,
   ),
+),
 
-  subtitle: const Text(
-    "Update sets and reps for every exercise in this day",
-  ),
+subtitle: const Text(
+  "Update sets and reps for every resistance exercise in this day",
+),
 
   contentPadding: EdgeInsets.zero,
 ),

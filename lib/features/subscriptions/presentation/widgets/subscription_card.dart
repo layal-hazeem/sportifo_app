@@ -16,16 +16,12 @@ class SubscriptionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final subscriptions = (userModel.userSubscriptions ?? [])
-        .where(
-          (sub) =>
-              sub.status?.toLowerCase() == "active" && (sub.isActive ?? 0) == 1,
-        )
+        .where((sub) => sub.status?.toLowerCase() == "active")
         .toList();
 
     final hasPlan = userModel.hasPlan ?? false;
 
-    final subscription = subscriptions.isNotEmpty ? subscriptions.first : null;
-
+    final subscription = subscriptions.isNotEmpty ? subscriptions.last : null;
     final plan = subscription?.subscription;
 
     final planType = plan?.type?.toLowerCase() ?? "bronze";
@@ -109,7 +105,7 @@ class SubscriptionCard extends StatelessWidget {
                   ),
                 ),
 
-                _statusBadge(hasPlan),
+                _planStatusBadge(hasPlan),
               ],
             ),
 
@@ -232,21 +228,21 @@ class SubscriptionCard extends StatelessWidget {
     );
   }
 
-  Widget _statusBadge(bool active) {
+  Widget _planStatusBadge(bool hasPlan) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
 
       decoration: BoxDecoration(
-        color: active ? Colors.green.shade50 : Colors.orange.shade50,
+        color: hasPlan ? Colors.green.shade50 : Colors.orange.shade50,
 
         borderRadius: BorderRadius.circular(20),
       ),
 
       child: Text(
-        active ? "Plan Active" : "Needs Plan",
+        hasPlan ? "Plan Active" : "Needs Plan",
 
         style: TextStyle(
-          color: active ? Colors.green : Colors.orange,
+          color: hasPlan ? Colors.green : Colors.orange,
 
           fontSize: 11,
 
@@ -275,16 +271,6 @@ class SubscriptionCard extends StatelessWidget {
             Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
           ],
         ),
-      ],
-    );
-  }
-
-  Widget _bodyItem(String title, String value) {
-    return Column(
-      children: [
-        Text(title, style: const TextStyle(color: Colors.grey, fontSize: 12)),
-
-        Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
       ],
     );
   }
