@@ -6,22 +6,25 @@ import '../../data/models/users_subscribed_model.dart';
 class SubscriptionCard extends StatelessWidget {
   final UsersSubscribedModel userModel;
   final VoidCallback onCreatePlan;
+  final bool isHistory;
 
   const SubscriptionCard({
     super.key,
     required this.userModel,
     required this.onCreatePlan,
+    this.isHistory = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    final subscriptions = (userModel.userSubscriptions ?? [])
-        .where((sub) => sub.status?.toLowerCase() == "active")
-        .toList();
+    final subscriptions = userModel.userSubscriptions ?? [];
+
+    final subscription = isHistory
+        ? _getHistorySubscription(subscriptions)
+        : _getActiveSubscription(subscriptions);
 
     final hasPlan = userModel.hasPlan ?? false;
 
-    final subscription = subscriptions.isNotEmpty ? subscriptions.last : null;
     final plan = subscription?.subscription;
 
     final planType = plan?.type?.toLowerCase() ?? "bronze";
@@ -59,10 +62,7 @@ class SubscriptionCard extends StatelessWidget {
             /// HEADER
             Row(
               children: [
-                Hero(
-                  tag: userModel.profilePic ?? userModel.id.toString(),
-
-                  child: CircleAvatar(
+                 CircleAvatar(
                     radius: 30,
 
                     backgroundColor: colors.primary.withOpacity(.15),
@@ -75,7 +75,7 @@ class SubscriptionCard extends StatelessWidget {
                         ? Icon(Icons.person, size: 30, color: colors.primary)
                         : null,
                   ),
-                ),
+                
 
                 const SizedBox(width: 14),
 
@@ -192,7 +192,7 @@ class SubscriptionCard extends StatelessWidget {
 
             const SizedBox(height: 18),
 
-            if (!hasPlan) ...[
+            if (!isHistory && !hasPlan) ...[
               const SizedBox(height: 18),
 
               SizedBox(
@@ -306,6 +306,63 @@ class SubscriptionCard extends StatelessWidget {
           icon: Icons.emoji_events,
         );
     }
+  }
+
+  UserSubscription? _getActiveSubscription(
+    List<UserSubscription> subscriptions,
+  ) {
+    final now = DateTime.now();
+
+    for (final sub in subscriptions) {
+      final endDate = sub.endDate;
+
+      if (sub.status?.toLowerCase() == "active" &&
+          (sub.isActive ?? 0) == 1 &&
+          endDate != null &&
+          !endDate.isBefore(now)) {
+        return sub;
+      }
+    }
+
+    return null;
+  }
+
+  UserSubscription? _getHistorySubscription(
+    List<UserSubscription> subscriptions,
+  ) {
+    final now = DateTime.now();
+
+    final oneMonthAgo = DateTime(
+      now.year,
+      now.month - 1,
+      now.day,
+      now.hour,
+      now.minute,
+      now.second,
+    );
+
+    UserSubscription? latest;
+
+    for (final sub in subscriptions) {
+      final endDate = sub.endDate;
+
+      if (endDate == null) {
+        continue;
+      }
+
+      final isFinished =
+          sub.status?.toLowerCase() != "active" || endDate.isBefore(now);
+
+      final isRecent = endDate.isAfter(oneMonthAgo);
+
+      if (isFinished && isRecent) {
+        if (latest == null || endDate.isAfter(latest.endDate!)) {
+          latest = sub;
+        }
+      }
+    }
+
+    return latest;
   }
 }
 
