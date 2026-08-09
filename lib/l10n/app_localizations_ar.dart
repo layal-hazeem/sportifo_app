@@ -681,4 +681,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get coachInfo => 'معلومات المدرب';
+
+  @override
+  String get chatAI => 'المساعد الذكي';
 }

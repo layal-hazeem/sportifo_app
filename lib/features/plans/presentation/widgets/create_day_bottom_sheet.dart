@@ -11,7 +11,6 @@ class CreateDayBottomSheet extends StatefulWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-
       builder: (_) => CreateDayBottomSheet(onCreate: onCreate),
     );
   }
@@ -22,6 +21,34 @@ class CreateDayBottomSheet extends StatefulWidget {
 
 class _CreateDayBottomSheetState extends State<CreateDayBottomSheet> {
   final controller = TextEditingController();
+  final focusNode = FocusNode();
+  bool hasText = false;
+
+  @override
+  void initState() {
+    super.initState();
+    controller.addListener(() {
+      final value = controller.text.trim().isNotEmpty;
+      if (value != hasText) {
+        setState(() => hasText = value);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    focusNode.dispose();
+    super.dispose();
+  }
+
+  void _submit() {
+    final value = controller.text.trim();
+    if (value.isEmpty) return;
+
+    widget.onCreate(value);
+    Navigator.pop(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,45 +56,39 @@ class _CreateDayBottomSheetState extends State<CreateDayBottomSheet> {
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
-
       child: Container(
-        padding: const EdgeInsets.all(24),
-
+        padding: const EdgeInsets.fromLTRB(24, 14, 24, 24),
         decoration: const BoxDecoration(
           color: Colors.white,
-
-          borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
         ),
-
         child: Column(
           mainAxisSize: MainAxisSize.min,
-
           children: [
             Container(
-              width: 45,
+              width: 42,
               height: 5,
-
               decoration: BoxDecoration(
                 color: Colors.grey.shade300,
                 borderRadius: BorderRadius.circular(20),
               ),
             ),
 
-            const SizedBox(height: 25),
+            const SizedBox(height: 22),
 
             Container(
-              width: 70,
-              height: 70,
-
+              width: 60,
+              height: 60,
               decoration: BoxDecoration(
-                color: AppColors.primaryBtn.withOpacity(.12),
-
-                borderRadius: BorderRadius.circular(22),
+                color: AppColors.primaryBtn.withOpacity(.08),
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(
+                  color: AppColors.primaryBtn.withOpacity(.14),
+                ),
               ),
-
               child: const Icon(
                 Icons.calendar_month_rounded,
-                size: 35,
+                size: 28,
                 color: AppColors.primaryBtn,
               ),
             ),
@@ -76,80 +97,88 @@ class _CreateDayBottomSheetState extends State<CreateDayBottomSheet> {
 
             const Text(
               "Create Workout Day",
-
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 19,
+                fontWeight: FontWeight.w800,
+                letterSpacing: -0.3,
+              ),
             ),
 
-            const SizedBox(height: 8),
+            const SizedBox(height: 6),
 
             Text(
               "Give your training day a name",
-
-              style: TextStyle(color: Colors.grey),
+              style: TextStyle(
+                color: Colors.grey.shade600,
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+              ),
             ),
 
-            const SizedBox(height: 25),
+            const SizedBox(height: 24),
 
             TextField(
               controller: controller,
-
+              focusNode: focusNode,
               autofocus: true,
-
+              style: const TextStyle(
+                fontSize: 14.5,
+                fontWeight: FontWeight.w600,
+              ),
               decoration: InputDecoration(
                 hintText: "Example: Chest Day",
-
-                filled: true,
-
-                fillColor: Colors.grey.shade100,
-
-                prefixIcon: const Icon(
-                  Icons.fitness_center,
-                  color: AppColors.primaryBtn,
+                hintStyle: TextStyle(
+                  color: Colors.grey.shade400,
+                  fontWeight: FontWeight.w500,
                 ),
-
+                filled: true,
+                fillColor: Colors.grey.shade50,
+                prefixIcon: const Icon(
+                  Icons.fitness_center_rounded,
+                  color: AppColors.primaryBtn,
+                  size: 20,
+                ),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(18),
-
-                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide(color: Colors.grey.shade200),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide(color: Colors.grey.shade200),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide(
+                    color: AppColors.primaryBtn,
+                    width: 1.4,
+                  ),
                 ),
               ),
+              onSubmitted: (_) => _submit(),
             ),
 
             const SizedBox(height: 20),
 
             SizedBox(
               width: double.infinity,
-
+              height: 54,
               child: ElevatedButton(
-                onPressed: () {
-                  final value = controller.text.trim();
-
-                  if (value.isEmpty) return;
-
-                  widget.onCreate(value);
-
-                  Navigator.pop(context);
-                },
-
+                onPressed: hasText ? _submit : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primaryBtn,
-
+                  disabledBackgroundColor: Colors.grey.shade300,
+                  elevation: 0,
                   padding: const EdgeInsets.symmetric(vertical: 16),
-
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18),
+                    borderRadius: BorderRadius.circular(16),
                   ),
                 ),
-
                 child: const Text(
                   "Create Day",
-
                   style: TextStyle(
                     color: Colors.white,
-
-                    fontWeight: FontWeight.bold,
-
-                    fontSize: 16,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 15,
                   ),
                 ),
               ),

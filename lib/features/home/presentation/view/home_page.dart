@@ -112,7 +112,8 @@ class _HomePageState extends State<HomePage> {
             }
 
             // 1. حالة التحميل
-            if (profileState is ProfileLoading || profileState is ProfileInitial) {
+            if (profileState is ProfileLoading ||
+                profileState is ProfileInitial) {
               return const Scaffold(
                 body: Center(
                   child: CircularProgressIndicator(color: AppColors.primaryBtn),
@@ -132,10 +133,16 @@ class _HomePageState extends State<HomePage> {
                       Text(profileState.message, textAlign: TextAlign.center),
                       const SizedBox(height: 16),
                       ElevatedButton(
-                        onPressed: () => context.read<ProfileCubit>().getProfile(),
-                        style: ElevatedButton.styleFrom(backgroundColor: AppColors.primaryBtn),
-                        child: const Text("Retry", style: TextStyle(color: Colors.white)),
-                      )
+                        onPressed: () =>
+                            context.read<ProfileCubit>().getProfile(),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primaryBtn,
+                        ),
+                        child: const Text(
+                          "Retry",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -147,7 +154,9 @@ class _HomePageState extends State<HomePage> {
               final profile = profileState.profileModel;
               final isCoach = profile.role == 'coach';
 
-              final screens = isCoach ? _getCoachScreens() : _getTraineeScreens();
+              final screens = isCoach
+                  ? _getCoachScreens()
+                  : _getTraineeScreens();
 
               return ListenableBuilder(
                 listenable: homeViewModel,
@@ -202,7 +211,8 @@ class _HomePageState extends State<HomePage> {
                         ),
                         CustomBottomNavBar.build(
                           icon: Icons.chat,
-                          label: l10n.chat,
+                          svgIcon: 'assets/icons/bot-message-square.svg',
+                          label: l10n.chatAI,
                           isSelected: homeViewModel.currentIndex == 4,
                         ),
                       ],

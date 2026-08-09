@@ -3,8 +3,13 @@ import 'package:sportifo_app/features/workout/data/models/exercise_model.dart';
 class CreatePlanRequest {
   final int userId;
   final List<PlanDayRequest> days;
+  final String goal;
+final int durationMonths;
 
-  CreatePlanRequest({required this.userId, required this.days});
+  CreatePlanRequest({required this.userId,
+    required this.goal,
+    required this.durationMonths,
+    required this.days,});
 }
 
 class PlanDayRequest {
@@ -28,6 +33,8 @@ extension CreatePlanRequestMapper on CreatePlanRequest {
     final Map<String, dynamic> data = {};
 
     data['user_id'] = userId;
+    data['goal'] = goal;
+    data['duration_months'] = durationMonths;
 
     for (int i = 0; i < days.length; i++) {
       data['days[$i][name]'] = days[i].name;

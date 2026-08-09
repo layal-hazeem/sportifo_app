@@ -19,15 +19,25 @@ class SubscriptionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final subscriptions = userModel.userSubscriptions ?? [];
 
+    // Resolve the truly-active subscription once (source of truth),
+    // then decide which one this specific card should render.
+    final activeSubscription = _getActiveSubscription(subscriptions);
+
     final subscription = isHistory
         ? _getHistorySubscription(subscriptions)
-        : _getActiveSubscription(subscriptions);
+        : activeSubscription;
 
-    final hasPlan = userModel.hasPlan ?? false;
+    // Don't blindly trust userModel.hasPlan — derive it from the actual
+    // subscription data so the badge always matches what's on screen.
+    // Fall back to the model flag only if there's simply no subscription
+    // data to check against.
+    final hasPlan = subscriptions.isEmpty
+        ? (userModel.hasPlan ?? false)
+        : activeSubscription != null;
 
     final plan = subscription?.subscription;
 
-    final planType = plan?.type?.toLowerCase() ?? "bronze";
+    final planType = plan?.type?.trim().toLowerCase() ?? "bronze";
 
     final colors = _getPlanColors(planType);
 
@@ -62,20 +72,19 @@ class SubscriptionCard extends StatelessWidget {
             /// HEADER
             Row(
               children: [
-                 CircleAvatar(
-                    radius: 30,
+                CircleAvatar(
+                  radius: 30,
 
-                    backgroundColor: colors.primary.withOpacity(.15),
+                  backgroundColor: colors.primary.withOpacity(.15),
 
-                    backgroundImage: userModel.profilePic != null
-                        ? NetworkImage(userModel.profilePic!)
-                        : null,
+                  backgroundImage: userModel.profilePic != null
+                      ? NetworkImage(userModel.profilePic!)
+                      : null,
 
-                    child: userModel.profilePic == null
-                        ? Icon(Icons.person, size: 30, color: colors.primary)
-                        : null,
-                  ),
-                
+                  child: userModel.profilePic == null
+                      ? Icon(Icons.person, size: 30, color: colors.primary)
+                      : null,
+                ),
 
                 const SizedBox(width: 14),
 
@@ -105,7 +114,9 @@ class SubscriptionCard extends StatelessWidget {
                   ),
                 ),
 
-                _planStatusBadge(hasPlan),
+                // History cards describe a finished period, so they get a
+                // neutral badge instead of the live active/needs-plan status.
+                isHistory ? _historyBadge() : _planStatusBadge(hasPlan),
               ],
             ),
 
@@ -252,6 +263,24 @@ class SubscriptionCard extends StatelessWidget {
     );
   }
 
+  Widget _historyBadge() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade200,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(
+        "History",
+        style: TextStyle(
+          color: Colors.grey.shade700,
+          fontSize: 11,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
   Widget _infoItem(IconData icon, String title, String value) {
     return Row(
       children: [
@@ -308,57 +337,92 @@ class SubscriptionCard extends StatelessWidget {
     }
   }
 
+  /// Single source of truth for "is this subscription's status flag valid",
+  /// used by BOTH active and history resolution so the two never disagree
+  /// on what counts as a genuinely active record.
+  /// Trims + lower-cases defensively against backend inconsistencies like
+  /// "Active " or "ACTIVE".
+  bool _hasValidActiveStatus(UserSubscription sub) {
+    final status = sub.status?.trim().toLowerCase();
+    return status == "active" && (sub.isActive ?? 0) == 1;
+  }
+
+  /// True if [sub] is genuinely active right now: valid status flag,
+  /// already started (or no start date recorded), and not yet ended.
+  /// The end-of-day boundary (`isAtSameMomentAs`) is included here and
+  /// excluded from the "finished" check in history, so a subscription
+  /// can never fall into a gap where it matches neither list.
+  bool _isCurrentlyActive(UserSubscription sub, DateTime now) {
+    final start = sub.startDate;
+    final end = sub.endDate;
+
+    if (end == null) return false;
+    if (!_hasValidActiveStatus(sub)) return false;
+
+    final hasStarted = start == null || !start.isAfter(now);
+    final hasNotEnded = end.isAfter(now) || end.isAtSameMomentAs(now);
+
+    return hasStarted && hasNotEnded;
+  }
+
+  /// Among all currently-active subscriptions (there should only ever be
+  /// one, but we defend against dirty/overlapping backend data), pick the
+  /// one with the latest start date rather than just the first match.
   UserSubscription? _getActiveSubscription(
     List<UserSubscription> subscriptions,
   ) {
     final now = DateTime.now();
 
-    for (final sub in subscriptions) {
-      final endDate = sub.endDate;
+    UserSubscription? best;
 
-      if (sub.status?.toLowerCase() == "active" &&
-          (sub.isActive ?? 0) == 1 &&
-          endDate != null &&
-          !endDate.isBefore(now)) {
-        return sub;
+    for (final sub in subscriptions) {
+      if (!_isCurrentlyActive(sub, now)) continue;
+
+      if (best == null) {
+        best = sub;
+        continue;
+      }
+
+      final bestStart = best.startDate;
+      final subStart = sub.startDate;
+
+      // Prefer the one that started more recently; treat a missing
+      // start date as "always started" so it doesn't win by default.
+      if (subStart != null &&
+          (bestStart == null || subStart.isAfter(bestStart))) {
+        best = sub;
       }
     }
 
-    return null;
+    return best;
   }
 
+  /// Among subscriptions that are NOT currently active (finished, by the
+  /// exact same definition _isCurrentlyActive uses) and ended within the
+  /// last 30 days, return the most recently ended one.
   UserSubscription? _getHistorySubscription(
     List<UserSubscription> subscriptions,
   ) {
     final now = DateTime.now();
 
-    final oneMonthAgo = DateTime(
-      now.year,
-      now.month - 1,
-      now.day,
-      now.hour,
-      now.minute,
-      now.second,
-    );
+    // Fixed 30-day window instead of naive month subtraction, which could
+    // roll over into an invalid day-of-month (e.g. "31 Feb") and silently
+    // produce a wrong cutoff date.
+    final windowStart = now.subtract(const Duration(days: 30));
 
     UserSubscription? latest;
 
     for (final sub in subscriptions) {
       final endDate = sub.endDate;
+      if (endDate == null) continue;
 
-      if (endDate == null) {
-        continue;
-      }
+      final isFinished = !_isCurrentlyActive(sub, now);
+      final isRecent = endDate.isAfter(windowStart);
 
-      final isFinished =
-          sub.status?.toLowerCase() != "active" || endDate.isBefore(now);
+      if (!isFinished || !isRecent) continue;
 
-      final isRecent = endDate.isAfter(oneMonthAgo);
-
-      if (isFinished && isRecent) {
-        if (latest == null || endDate.isAfter(latest.endDate!)) {
-          latest = sub;
-        }
+      if (latest == null || endDate.isAfter(latest.endDate!)) {
+        latest = sub;
       }
     }
 

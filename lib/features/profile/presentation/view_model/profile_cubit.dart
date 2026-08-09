@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sportifo_app/features/profile/data/models/edit_coach_profile_request_model.dart';
 import 'package:sportifo_app/features/profile/data/models/edit_profile_request_model.dart';
 import '../../data/repository/profile_repository.dart';
 import 'profile_state.dart';
@@ -72,6 +73,24 @@ class ProfileCubit extends Cubit<ProfileState> {
         break;
     }
   }
+
+  Future<void> updateCoachProfile(
+  EditCoachProfileRequestModel request,
+) async {
+  emit(ProfileLoading());
+
+  final result = await _profileRepository.updateCoachProfile(request);
+
+  switch (result) {
+    case Success(data: final updatedProfile):
+      emit(ProfileSuccess(updatedProfile));
+      break;
+
+    case Failure(message: final errorMsg):
+      emit(ProfileFailure(errorMsg));
+      break;
+  }
+}
 
   Future<void> deleteAccount() async {
     emit(DeleteAccountLoading());

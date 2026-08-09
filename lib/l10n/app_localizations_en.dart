@@ -681,4 +681,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get coachInfo => 'coach information';
+
+  @override
+  String get chatAI => 'Chat AI';
 }

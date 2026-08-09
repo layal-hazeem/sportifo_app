@@ -1378,6 +1378,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'coach information'**
   String get coachInfo;
+
+  /// No description provided for @chatAI.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat AI'**
+  String get chatAI;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

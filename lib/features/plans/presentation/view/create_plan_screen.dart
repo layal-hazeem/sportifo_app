@@ -16,6 +16,7 @@ import 'package:sportifo_app/features/plans/presentation/widgets/create_day_bott
 import 'package:sportifo_app/features/plans/presentation/widgets/day_settings_bottom_sheet.dart';
 import 'package:sportifo_app/features/plans/presentation/widgets/exercise_multi_picker_bottom_sheet.dart';
 import 'package:sportifo_app/features/plans/presentation/widgets/plan_day_card.dart';
+import 'package:sportifo_app/features/plans/presentation/widgets/plan_details_card.dart';
 import 'package:sportifo_app/features/workout/data/models/exercise_model.dart';
 import 'package:sportifo_app/features/workout/data/repository/workout_repository.dart';
 
@@ -30,6 +31,8 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
   final List<PlanDayUiModel> days = [];
   bool isFabOpen = false;
   bool isLoadingDialogShown = false;
+  String? selectedGoal;
+  int durationMonths = 1;
 
   @override
   void initState() {
@@ -140,59 +143,119 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
 
       child: Scaffold(
         appBar: WaveAppBar(title: "Create Plan", showBackButton: true),
-        body: Column(
-          children: [
-            Expanded(
-              child: ListView.builder(
-                itemCount: days.length,
-                itemBuilder: (context, index) {
-                  final day = days[index];
+        body: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: PlanDetailsCard(
+                selectedGoal: selectedGoal,
+                durationMonths: durationMonths,
 
-                  return PlanDayCard(
-                    day: day,
-                    onSettings: () async {
-                      final applyAll = await DaySettingsBottomSheet.show(
-                        context,
-                        day,
-                      );
+                onGoalChanged: (goal) {
+                  setState(() {
+                    selectedGoal = goal;
+                  });
+                },
 
-                      if (applyAll == true) {
-                        setState(() {
-                          for (final exercise in day.exercises) {
-                            if (exercise.isCardio) {
-                              exercise.sets = null;
-                              exercise.reps = null;
-                            } else {
-                              exercise.sets = day.defaultSets;
-
-                              exercise.reps = day.defaultReps?.toString();
-                            }
-                          }
-                        });
-                      } else {
-                        setState(() {});
-                      }
-                    },
-
-                    onAddExercise: () {
-                      addExercise(index);
-                    },
-
-                    onDeleteExercise: (exerciseIndex) {
-                      setState(() {
-                        day.exercises.removeAt(exerciseIndex);
-                      });
-                    },
-
-                    onDeleteDay: () {
-                      setState(() {
-                        days.removeAt(index);
-                      });
-                    },
-                  );
+                onDurationChanged: (duration) {
+                  setState(() {
+                    durationMonths = duration;
+                  });
                 },
               ),
             ),
+
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 18, 20, 10),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 4,
+                      height: 22,
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryBtn,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+
+                    const SizedBox(width: 10),
+
+                    const Text(
+                      'WORKOUT DAYS',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 1.1,
+                      ),
+                    ),
+
+                    const Spacer(),
+
+                    Text(
+                      '${days.length} ${days.length == 1 ? 'day' : 'days'}',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey.shade600,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            if (days.isEmpty) SliverToBoxAdapter(child: _buildEmptyDaysState()),
+
+            SliverList(
+              delegate: SliverChildBuilderDelegate((context, index) {
+                final day = days[index];
+
+                return PlanDayCard(
+                  day: day,
+
+                  onSettings: () async {
+                    final applyAll = await DaySettingsBottomSheet.show(
+                      context,
+                      day,
+                    );
+
+                    if (applyAll == true) {
+                      setState(() {
+                        for (final exercise in day.exercises) {
+                          if (exercise.isCardio) {
+                            exercise.sets = null;
+                            exercise.reps = null;
+                          } else {
+                            exercise.sets = day.defaultSets;
+                            exercise.reps = day.defaultReps?.toString();
+                          }
+                        }
+                      });
+                    } else {
+                      setState(() {});
+                    }
+                  },
+
+                  onAddExercise: () {
+                    addExercise(index);
+                  },
+
+                  onDeleteExercise: (exerciseIndex) {
+                    setState(() {
+                      day.exercises.removeAt(exerciseIndex);
+                    });
+                  },
+
+                  onDeleteDay: () {
+                    setState(() {
+                      days.removeAt(index);
+                    });
+                  },
+                );
+              }, childCount: days.length),
+            ),
+
+            const SliverToBoxAdapter(child: SizedBox(height: 100)),
           ],
         ),
 
@@ -413,20 +476,28 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
   }
 
   Future<void> savePlan() async {
-    if (days.isEmpty) {
+    if (selectedGoal == null) {
+      _showValidationMessage("Choose a goal for this training plan");
       return;
     }
+
+    if (days.isEmpty) {
+      _showValidationMessage("Add at least one workout day");
+      return;
+    }
+
     if (days.any((day) => day.exercises.isEmpty)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Every day must have at least one exercise"),
-        ),
-      );
+      _showValidationMessage("Every workout day needs at least one exercise");
       return;
     }
 
     final request = CreatePlanRequest(
       userId: widget.userId,
+
+      goal: selectedGoal!,
+
+      durationMonths: durationMonths,
+
       days: days.map((day) {
         return PlanDayRequest(
           name: day.name,
@@ -436,9 +507,86 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
         );
       }).toList(),
     );
+
     print(request.toMap());
+
     context.read<CreatePlanCubit>().createPlan(request);
   }
+
+  void _showValidationMessage(String message) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(message),
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.all(16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+        ),
+      );
+  }
+}
+
+Widget _buildEmptyDaysState() {
+  return Container(
+    margin: const EdgeInsets.fromLTRB(20, 8, 20, 20),
+    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
+    decoration: BoxDecoration(
+      color: Colors.grey.shade50,
+      borderRadius: BorderRadius.circular(24),
+      border: Border.all(color: Colors.grey.shade200),
+    ),
+    child: Column(
+      children: [
+        Container(
+          width: 64,
+          height: 64,
+          decoration: BoxDecoration(
+            color: AppColors.primaryBtn.withOpacity(.10),
+            shape: BoxShape.circle,
+          ),
+          child: Icon(
+            Icons.calendar_today_rounded,
+            color: AppColors.primaryBtn,
+            size: 28,
+          ),
+        ),
+
+        const SizedBox(height: 16),
+
+        const Text(
+          'No workout days yet',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+        ),
+
+        const SizedBox(height: 6),
+
+        Text(
+          'Create a new workout day or reuse one '
+          'from your saved workouts.',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.grey.shade600,
+            fontSize: 13,
+            height: 1.4,
+          ),
+        ),
+
+        const SizedBox(height: 18),
+
+        Text(
+          'Tap + to get started',
+          style: TextStyle(
+            color: AppColors.primaryBtn,
+            fontSize: 12,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ],
+    ),
+  );
 }
 
 Widget _buildActionTile({

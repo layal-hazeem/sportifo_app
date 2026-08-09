@@ -10,11 +10,8 @@ class ExerciseSettingsBottomSheet extends StatefulWidget {
   static Future<void> show(BuildContext context, ExerciseModel exercise) async {
     await showModalBottomSheet(
       context: context,
-
       isScrollControlled: true,
-
       backgroundColor: Colors.transparent,
-
       builder: (_) {
         return ExerciseSettingsBottomSheet(exercise: exercise);
       },
@@ -31,6 +28,7 @@ class _ExerciseSettingsBottomSheetState
   late TextEditingController setsController;
   late TextEditingController repsController;
   int selectedSeconds = 0;
+
   @override
   void initState() {
     super.initState();
@@ -80,24 +78,30 @@ class _ExerciseSettingsBottomSheetState
 
   Widget inputField(String label, TextEditingController controller) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-
+      padding: const EdgeInsets.only(bottom: 14),
       child: TextField(
         controller: controller,
-
         keyboardType: TextInputType.number,
-
+        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
         decoration: InputDecoration(
           labelText: label,
-
+          labelStyle: TextStyle(
+            color: Colors.grey.shade600,
+            fontWeight: FontWeight.w600,
+          ),
           filled: true,
-
-          fillColor: Colors.grey.shade100,
-
+          fillColor: Colors.grey.shade50,
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-
-            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.circular(14),
+            borderSide: BorderSide(color: Colors.grey.shade200),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: BorderSide(color: Colors.grey.shade200),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: BorderSide(color: AppColors.primaryBtn, width: 1.4),
           ),
         ),
       ),
@@ -110,83 +114,95 @@ class _ExerciseSettingsBottomSheetState
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
-
       child: Container(
-        padding: const EdgeInsets.all(24),
-
+        padding: const EdgeInsets.fromLTRB(24, 14, 24, 24),
         decoration: const BoxDecoration(
           color: Colors.white,
-
-          borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
         ),
-
         child: Column(
           mainAxisSize: MainAxisSize.min,
-
           children: [
             Container(
-              width: 45,
-
+              width: 42,
               height: 5,
-
               decoration: BoxDecoration(
                 color: Colors.grey.shade300,
-
                 borderRadius: BorderRadius.circular(20),
               ),
             ),
 
             const SizedBox(height: 20),
 
-            Text(
-              widget.exercise.name,
-
-              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: AppColors.primaryBtn.withOpacity(.08),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Icon(
+                widget.exercise.isCardio
+                    ? Icons.directions_run_rounded
+                    : Icons.fitness_center_rounded,
+                color: AppColors.primaryBtn,
+                size: 22,
+              ),
             ),
 
-            const SizedBox(height: 8),
+            const SizedBox(height: 14),
+
+            Text(
+              widget.exercise.name,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 19,
+                fontWeight: FontWeight.w800,
+                letterSpacing: -0.3,
+              ),
+            ),
+
+            const SizedBox(height: 6),
 
             Text(
               "Customize this exercise settings",
-
-              style: TextStyle(color: Colors.grey.shade600),
+              style: TextStyle(
+                color: Colors.grey.shade600,
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+              ),
             ),
 
-            const SizedBox(height: 25),
+            const SizedBox(height: 26),
 
             if (widget.exercise.isCardio)
               durationPicker()
             else ...[
               inputField("Sets", setsController),
-
               inputField("Reps", repsController),
             ],
-            
-            const SizedBox(height: 20),
-            
+
+            const SizedBox(height: 18),
+
             SizedBox(
               width: double.infinity,
-
+              height: 54,
               child: ElevatedButton(
                 onPressed: save,
-
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primaryBtn,
-
+                  elevation: 0,
                   padding: const EdgeInsets.symmetric(vertical: 16),
-
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18),
+                    borderRadius: BorderRadius.circular(16),
                   ),
                 ),
-
                 child: const Text(
                   "Save Exercise Settings",
-
                   style: TextStyle(
                     color: Colors.white,
-
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 14.5,
                   ),
                 ),
               ),
@@ -203,15 +219,13 @@ class _ExerciseSettingsBottomSheetState
 
     return Container(
       padding: const EdgeInsets.all(16),
-
       decoration: BoxDecoration(
-        color: Colors.grey.shade100,
-        borderRadius: BorderRadius.circular(20),
+        color: Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: Colors.grey.shade200),
       ),
-
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-
         children: [
           _timeBox(
             value: minutes,
@@ -227,10 +241,9 @@ class _ExerciseSettingsBottomSheetState
             padding: EdgeInsets.symmetric(horizontal: 12),
             child: Text(
               ":",
-              style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800),
             ),
           ),
-
           _timeBox(
             value: seconds,
             label: "sec",
@@ -257,32 +270,24 @@ class _ExerciseSettingsBottomSheetState
         Container(
           width: 80,
           height: 70,
-
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(18),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: Colors.grey.shade200),
           ),
-
           child: ListWheelScrollView.useDelegate(
             itemExtent: 45,
-
             perspective: 0.003,
-
             diameterRatio: 1.5,
-
             physics: const FixedExtentScrollPhysics(),
-
             controller: FixedExtentScrollController(
               initialItem: value.clamp(0, max),
             ),
-
             onSelectedItemChanged: (index) {
-              // حماية إضافية من أي قيمة غير صحيحة
               if (index >= 0 && index <= max) {
                 onChanged(index);
               }
             },
-
             childDelegate: ListWheelChildBuilderDelegate(
               builder: (context, index) {
                 if (index < 0 || index > max) {
@@ -292,10 +297,9 @@ class _ExerciseSettingsBottomSheetState
                 return Center(
                   child: Text(
                     index.toString().padLeft(2, '0'),
-
                     style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 21,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 );
@@ -304,9 +308,16 @@ class _ExerciseSettingsBottomSheetState
           ),
         ),
 
-        const SizedBox(height: 6),
+        const SizedBox(height: 7),
 
-        Text(label, style: TextStyle(color: Colors.grey.shade600)),
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.grey.shade600,
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ],
     );
   }

@@ -74,9 +74,7 @@ class _OTPScreenState extends State<OTPScreen> {
       context: context,
       barrierDismissible: false,
       builder: (_) => const Center(
-        child: CircularProgressIndicator(
-          color: AppColors.primaryBtn,
-        ),
+        child: CircularProgressIndicator(color: AppColors.primaryBtn),
       ),
     ).then((_) {
       _isDialogShowing = false;
@@ -118,7 +116,7 @@ class _OTPScreenState extends State<OTPScreen> {
 
       body: BlocListener<LoginCubit, LoginState>(
         listenWhen: (previous, current) =>
-        current is OtpLoading ||
+            current is OtpLoading ||
             current is OtpSuccess ||
             current is OtpError,
 
@@ -127,9 +125,12 @@ class _OTPScreenState extends State<OTPScreen> {
             _showLoading(context);
           } else if (state is OtpError) {
             _hideLoading(context);
-            AppSnackBar.show(context, message: state.message, type: SnackBarType.error);
-          }
-          else if (state is OtpSuccess) {
+            AppSnackBar.show(
+              context,
+              message: state.message,
+              type: SnackBarType.error,
+            );
+          } else if (state is OtpSuccess) {
             _hideLoading(context);
             AppSnackBar.show(
               context,
@@ -141,7 +142,9 @@ class _OTPScreenState extends State<OTPScreen> {
             await Future.delayed(const Duration(milliseconds: 500));
             if (widget.isFromForgotPassword) {
               if (state.response.resetToken != null) {
-                await getIt<LocalStorage>().saveToken(state.response.resetToken!);
+                await getIt<LocalStorage>().saveToken(
+                  state.response.resetToken!,
+                );
               }
               Navigator.pushNamed(
                 context,
@@ -154,12 +157,35 @@ class _OTPScreenState extends State<OTPScreen> {
               );
             } else {
               if (state.response.token != null) {
-                await getIt<LocalStorage>().saveToken(state.response.token!);
-                Navigator.pushNamedAndRemoveUntil(context, AppRoutes.completeProfile, (route) => false);
+                final localStorage = getIt<LocalStorage>();
+
+                // Save token
+                await localStorage.saveToken(state.response.token!);
+
+                // Get and save user role
+                final role = state.response.user?.user.role;
+
+                if (role != null) {
+                  await localStorage.saveRole(role);
+                }
+
+                // Navigate based on role
+                if (role == 'coach') {
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    AppRoutes.home,
+                    (route) => false,
+                  );
+                } else {
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    AppRoutes.completeProfile,
+                    (route) => false,
+                  );
+                }
               }
             }
           }
-
         },
 
         child: SafeArea(
@@ -167,7 +193,6 @@ class _OTPScreenState extends State<OTPScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               children: [
-
                 AuthHeader(
                   title: l10n.otpTitle,
                   subtitle: l10n.otpSubtitle,
@@ -193,53 +218,54 @@ class _OTPScreenState extends State<OTPScreen> {
                   onPressed: _isFinished
                       ? null
                       : () {
-                    final otpValue = pinController.text;
-                    if (otpValue.length < 6) {
-                      AppSnackBar.show(
-                        context,
-                        message: l10n.enterFullCode,
-                        type: SnackBarType.error,
-                      );
-                      return;
+                          final otpValue = pinController.text;
+                          if (otpValue.length < 6) {
+                            AppSnackBar.show(
+                              context,
+                              message: l10n.enterFullCode,
+                              type: SnackBarType.error,
+                            );
+                            return;
+                          }
 
-                    }
-
-                    context.read<LoginCubit>().verifyOtp(
-                      VerifyOtpRequestBody(
-                        login: widget.loginEmail,
-                        otp: otpValue,
-                      ),
-                      contextType: widget.isFromForgotPassword
-                          ? OtpContext.forgotPassword
-                          : OtpContext.login,
-                    );
-                  },
+                          context.read<LoginCubit>().verifyOtp(
+                            VerifyOtpRequestBody(
+                              login: widget.loginEmail,
+                              otp: otpValue,
+                            ),
+                            contextType: widget.isFromForgotPassword
+                                ? OtpContext.forgotPassword
+                                : OtpContext.login,
+                          );
+                        },
                 ),
 
                 const SizedBox(height: 20),
 
                 _isFinished
                     ? TextButton(
-                  onPressed: () {
-                    pinController.clear();
-                    context.read<LoginCubit>().resendOtp(widget.loginEmail);
-                    startTimer();
-                  },
-                  child: Text(
-                    l10n.resendCode,
-                    style: const TextStyle(
-                      color: AppColors.primaryBtn,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                )
+                        onPressed: () {
+                          pinController.clear();
+                          context.read<LoginCubit>().resendOtp(
+                            widget.loginEmail,
+                          );
+                          startTimer();
+                        },
+                        child: Text(
+                          l10n.resendCode,
+                          style: const TextStyle(
+                            color: AppColors.primaryBtn,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      )
                     : Text(
-                  "${l10n.resendCodeIn} 00:${_start.toString().padLeft(2, '0')}",
-                  style: const TextStyle(
-                    color: Colors.grey,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                        "${l10n.resendCodeIn} 00:${_start.toString().padLeft(2, '0')}",
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
               ],
             ),
           ),

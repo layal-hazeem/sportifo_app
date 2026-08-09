@@ -319,5 +319,6 @@
   "certificates":"Certificates",
   "noCoachData":"لا تتوفر بيانات المدرب",
   "userInfo":"معلومات المستخدم",
-  "coachInfo":"معلومات المدرب"
+  "coachInfo":"معلومات المدرب",
+  "chatAI":"المساعد الذكي"
 }

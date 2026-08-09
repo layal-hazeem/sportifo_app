@@ -340,5 +340,6 @@
   "certificates":"Certificates",
   "noCoachData":"No coach data available",
   "userInfo":"user information",
-  "coachInfo":"coach information"
+  "coachInfo":"coach information",
+  "chatAI":"Chat AI"
 }

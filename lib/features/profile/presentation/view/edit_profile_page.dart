@@ -6,6 +6,7 @@ import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/core/helpers/snack_bar_utils.dart';
 import 'package:sportifo_app/features/auth/presentation/widgets/custom_button.dart';
 import 'package:sportifo_app/features/auth/presentation/widgets/custom_neumorphic_field.dart';
+import 'package:sportifo_app/features/profile/data/models/edit_coach_profile_request_model.dart';
 import 'package:sportifo_app/features/profile/data/models/edit_profile_request_model.dart';
 import 'package:sportifo_app/features/profile/data/models/get_profile_response.dart';
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_cubit.dart';
@@ -37,6 +38,7 @@ class _EditProfilePageState extends State<EditProfilePage>
   late TextEditingController _hipPerimeterController;
   late TextEditingController _armPerimeterController;
   int selectedTab = 0;
+  bool get isCoach => widget.profile.role?.toLowerCase() == 'coach';
 
   @override
   void initState() {
@@ -52,10 +54,10 @@ class _EditProfilePageState extends State<EditProfilePage>
     );
 
     _heightController = TextEditingController(
-      text: widget.profile.height.toString() ?? '',
+      text: widget.profile.height.toString(),
     );
     _weightController = TextEditingController(
-      text: widget.profile.weight.toString() ?? '',
+      text: widget.profile.weight.toString(),
     );
 
     final s = widget.profile.sizes;
@@ -214,7 +216,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                       onTap: () async {
                         final pickedDate = await showDatePicker(
                           context: context,
-                          initialDate: DateTime(2000),
+                          initialDate: widget.profile.dateOfBirth,
                           firstDate: DateTime(1950),
                           lastDate: DateTime.now(),
                         );
@@ -247,37 +249,47 @@ class _EditProfilePageState extends State<EditProfilePage>
                   ? null
                   : () {
                       if (_formKey.currentState!.validate()) {
-                        context.read<ProfileCubit>().updateProfile(
-                          EditProfileRequestModel(
-                            first_name: _firstNameController.text,
-                            last_name: _lastNameController.text,
-                            date_of_birth: _dateOfBirthController.text,
-                            height: _heightController.text.isEmpty
-                                ? null
-                                : double.tryParse(_heightController.text),
-                            weight: _weightController.text.isEmpty
-                                ? null
-                                : double.tryParse(_weightController.text),
-                            shoulders_width: double.tryParse(
-                              _shouldersWidthController.text,
+                        if (isCoach) {
+                          context.read<ProfileCubit>().updateCoachProfile(
+                            EditCoachProfileRequestModel(
+                              firstName: _firstNameController.text,
+                              lastName: _lastNameController.text,
+                              dateOfBirth: _dateOfBirthController.text,
                             ),
-                            chest_perimeter: double.tryParse(
-                              _chestPerimeterController.text,
+                          );
+                        } else {
+                          context.read<ProfileCubit>().updateProfile(
+                            EditProfileRequestModel(
+                              first_name: _firstNameController.text,
+                              last_name: _lastNameController.text,
+                              date_of_birth: _dateOfBirthController.text,
+                              height: _heightController.text.isEmpty
+                                  ? null
+                                  : double.tryParse(_heightController.text),
+                              weight: _weightController.text.isEmpty
+                                  ? null
+                                  : double.tryParse(_weightController.text),
+                              shoulders_width: double.tryParse(
+                                _shouldersWidthController.text,
+                              ),
+                              chest_perimeter: double.tryParse(
+                                _chestPerimeterController.text,
+                              ),
+                              waist_perimeter: double.tryParse(
+                                _waistPerimeterController.text,
+                              ),
+                              thigh_perimeter: double.tryParse(
+                                _thighPerimeterController.text,
+                              ),
+                              hip_perimeter: double.tryParse(
+                                _hipPerimeterController.text,
+                              ),
+                              arm_perimeter: double.tryParse(
+                                _armPerimeterController.text,
+                              ),
                             ),
-                            waist_perimeter: double.tryParse(
-                              _waistPerimeterController.text,
-                            ),
-                            thigh_perimeter: double.tryParse(
-                              _thighPerimeterController.text,
-                            ),
-                            hip_perimeter: double.tryParse(
-                              _hipPerimeterController.text,
-                            ),
-                            arm_perimeter: double.tryParse(
-                              _armPerimeterController.text,
-                            ),
-                          ),
-                        );
+                          );
+                        }
                       }
                     },
             ),
@@ -437,28 +449,29 @@ class _EditProfilePageState extends State<EditProfilePage>
     return Column(
       children: [
         // Tabs
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          padding: const EdgeInsets.all(6),
-          decoration: BoxDecoration(
-            color: AppColors.background,
-            borderRadius: BorderRadius.circular(30),
+        if (!isCoach)
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              color: AppColors.background,
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: Row(
+              children: [
+                _tabButton(l10n.information, 0),
+                _tabButton(l10n.bodyMeasurements, 1),
+              ],
+            ),
           ),
-          child: Row(
-            children: [
-              _tabButton(l10n.information, 0),
-              _tabButton(l10n.bodyMeasurements, 1),
-            ],
-          ),
-        ),
 
         // Content
         Expanded(
           child: AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
-            child: selectedTab == 0
-                ? _buildInfoTab(state)
-                : _buildMeasurementsTab(state),
+            child: (!isCoach && selectedTab == 1)
+                ? _buildMeasurementsTab(state)
+                : _buildInfoTab(state),
           ),
         ),
       ],
@@ -493,43 +506,6 @@ class _EditProfilePageState extends State<EditProfilePage>
           validator: validator,
         ),
       ],
-    );
-  }
-
-  Widget _iconRow(String title, String value, String iconPath) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(6),
-            decoration: BoxDecoration(
-              color: AppColors.primaryBtn.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: SvgPicture.asset(
-              iconPath,
-              width: 20,
-              height: 20,
-              colorFilter: const ColorFilter.mode(
-                AppColors.primaryBtn,
-                BlendMode.srcIn,
-              ),
-            ),
-          ),
-
-          const SizedBox(width: 12),
-
-          Expanded(
-            child: Text(
-              title,
-              style: const TextStyle(fontWeight: FontWeight.w500),
-            ),
-          ),
-
-          Text(value, style: const TextStyle(color: AppColors.textDark)),
-        ],
-      ),
     );
   }
 }

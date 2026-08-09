@@ -80,19 +80,32 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
     String hint,
   ) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-
+      padding: const EdgeInsets.only(bottom: 14),
       child: TextField(
         controller: controller,
-
         keyboardType: keyboard,
-
+        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
         decoration: InputDecoration(
           labelText: label,
-
           hintText: hint,
-
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
+          filled: true,
+          fillColor: Colors.grey.shade50,
+          labelStyle: TextStyle(
+            color: Colors.grey.shade600,
+            fontWeight: FontWeight.w600,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: BorderSide(color: Colors.grey.shade200),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: BorderSide(color: Colors.grey.shade200),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: BorderSide(color: AppColors.primaryBtn, width: 1.4),
+          ),
         ),
       ),
     );
@@ -103,58 +116,89 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
     final ex = widget.exercise;
 
     return Scaffold(
-      appBar: AppBar(title: Text(ex.name)),
-
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Text(
+          ex.name,
+          style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 17),
+        ),
+        centerTitle: false,
+        elevation: 0,
+        scrolledUnderElevation: 0.5,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black87,
+      ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),
-
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(18),
-
-              child: SizedBox(
+              child: Container(
                 height: 220,
-
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey.shade200),
+                  borderRadius: BorderRadius.circular(18),
+                ),
                 child: CachedStaticGif(imageUrl: ex.gifUrl ?? ""),
               ),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 22),
 
             Text(
               ex.name,
-
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w800,
+                letterSpacing: -0.3,
+              ),
             ),
 
             const SizedBox(height: 8),
 
-            Text(ex.description, style: TextStyle(color: Colors.grey.shade700)),
+            Text(
+              ex.description,
+              style: TextStyle(
+                color: Colors.grey.shade700,
+                fontSize: 13.5,
+                height: 1.5,
+              ),
+            ),
 
-            const SizedBox(height: 25),
+            const SizedBox(height: 24),
 
             Container(
               padding: const EdgeInsets.all(14),
-
               decoration: BoxDecoration(
-                color: AppColors.primaryBtn.withOpacity(.1),
-
+                color: Colors.grey.shade50,
                 borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.grey.shade200),
               ),
-
-              child: const Row(
+              child: Row(
                 children: [
-                  Icon(Icons.info_outline, color: AppColors.primaryBtn),
-
-                  SizedBox(width: 10),
-
-                  Expanded(
+                  Container(
+                    width: 32,
+                    height: 32,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.grey.shade200),
+                    ),
+                    child: Icon(
+                      Icons.info_outline_rounded,
+                      color: AppColors.primaryBtn,
+                      size: 17,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  const Expanded(
                     child: Text(
                       "Leave Sets and Reps empty to use the workout day defaults.",
                       style: TextStyle(
-                        fontSize: 13,
+                        fontSize: 12.5,
                         fontWeight: FontWeight.w600,
+                        height: 1.4,
                       ),
                     ),
                   ),
@@ -162,7 +206,19 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
               ),
             ),
 
-            const SizedBox(height: 25),
+            const SizedBox(height: 26),
+
+            Text(
+              "CUSTOM VALUES",
+              style: TextStyle(
+                fontSize: 11.5,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 1.2,
+                color: Colors.grey.shade500,
+              ),
+            ),
+
+            const SizedBox(height: 12),
 
             field(
               "Custom Sets",
@@ -181,13 +237,16 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
             if (ex.sets != null || ex.reps != null)
               Align(
                 alignment: Alignment.centerRight,
-
                 child: TextButton.icon(
                   onPressed: clearOverride,
-
-                  icon: const Icon(Icons.restore, size: 18),
-
-                  label: const Text("Use Day Defaults"),
+                  style: TextButton.styleFrom(
+                    foregroundColor: AppColors.primaryBtn,
+                  ),
+                  icon: const Icon(Icons.restore_rounded, size: 17),
+                  label: const Text(
+                    "Use Day Defaults",
+                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
+                  ),
                 ),
               ),
 
@@ -205,23 +264,25 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
               "Exercise order",
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
 
             SizedBox(
-              height: 55,
-
+              height: 54,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primaryBtn,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                 ),
-
                 onPressed: save,
-
                 child: const Text(
                   "Save",
                   style: TextStyle(
                     color: Colors.white,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 15,
                   ),
                 ),
               ),

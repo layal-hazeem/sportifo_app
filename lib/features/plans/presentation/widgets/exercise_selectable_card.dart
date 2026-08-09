@@ -22,21 +22,23 @@ class ExerciseSelectableCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: onTap,
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 180),
         decoration: BoxDecoration(
+          color: isSelected
+              ? AppColors.primaryBtn.withOpacity(.05)
+              : Colors.white,
           border: Border.all(
-            color: isSelected ? Colors.orange : Colors.transparent,
-            width: 2,
+            color: isSelected ? AppColors.primaryBtn : Colors.grey.shade200,
+            width: isSelected ? 1.4 : 1,
           ),
-          borderRadius: BorderRadius.circular(20),
-          color: Colors.white,
+          borderRadius: BorderRadius.circular(18),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Stack(
               children: [
-                // داخل الـ Stack في ExerciseCard:
                 Hero(
                   tag: 'exercise_${exercise.id}',
                   child: ClipRRect(
@@ -52,6 +54,29 @@ class ExerciseSelectableCard extends StatelessWidget {
                     ),
                   ),
                 ),
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: AnimatedScale(
+                    duration: const Duration(milliseconds: 160),
+                    curve: Curves.easeOutBack,
+                    scale: isSelected ? 1 : 0,
+                    child: Container(
+                      width: 22,
+                      height: 22,
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryBtn,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 1.5),
+                      ),
+                      child: const Icon(
+                        Icons.check_rounded,
+                        size: 14,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
 
@@ -59,7 +84,7 @@ class ExerciseSelectableCard extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 10,
-                  vertical: 4,
+                  vertical: 8,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,7 +97,8 @@ class ExerciseSelectableCard extends StatelessWidget {
                       style: const TextStyle(
                         color: AppColors.textDark,
                         fontSize: 13,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: -0.1,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -83,12 +109,11 @@ class ExerciseSelectableCard extends StatelessWidget {
                       style: const TextStyle(
                         color: AppColors.primaryBtn,
                         fontSize: 11,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                     if (exercise.category?.organ?.part != null) ...[
                       const SizedBox(height: 2),
-
                       Text(
                         exercise.category!.organ!.part!.name,
                         maxLines: 1,
