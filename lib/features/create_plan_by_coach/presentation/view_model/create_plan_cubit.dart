@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sportifo_app/features/plans/presentation/view_model/create_plan_state.dart';
+import 'package:sportifo_app/features/create_plan_by_coach/presentation/view_model/create_plan_state.dart';
 import '../../data/models/create_plan_request.dart';
 import '../../data/repository/create_plan_repository.dart';
 

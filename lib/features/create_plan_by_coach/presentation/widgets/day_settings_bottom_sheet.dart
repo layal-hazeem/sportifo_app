@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
-import 'package:sportifo_app/features/plans/data/models/plan_day_ui_model.dart';
+import 'package:sportifo_app/features/create_plan_by_coach/data/models/plan_day_ui_model.dart';
 
 class DaySettingsBottomSheet extends StatefulWidget {
   final PlanDayUiModel day;

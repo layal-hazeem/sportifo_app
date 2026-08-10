@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
-import 'package:sportifo_app/features/plans/data/models/plan_day_ui_model.dart';
-import 'package:sportifo_app/features/plans/presentation/widgets/exercise_settings_bottom_sheet.dart';
+import 'package:sportifo_app/features/create_plan_by_coach/data/models/plan_day_ui_model.dart';
+import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/exercise_settings_bottom_sheet.dart';
 import 'package:sportifo_app/features/workout/data/models/exercise_model.dart';
 
 class PlanDayCard extends StatefulWidget {

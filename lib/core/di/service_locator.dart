@@ -7,9 +7,9 @@ import 'package:sportifo_app/features/auth/presentation/view_model/logout/logout
 import 'package:sportifo_app/features/existing_days/data/repository/existing_days_repository.dart';
 import 'package:sportifo_app/features/existing_days/data/web_services/existing_days_web_services.dart';
 import 'package:sportifo_app/features/existing_days/presentation/view_model/existing_days_cubit.dart';
-import 'package:sportifo_app/features/plans/data/repository/create_plan_repository.dart';
-import 'package:sportifo_app/features/plans/data/web_services/create_plan_service.dart';
-import 'package:sportifo_app/features/plans/presentation/view_model/create_plan_cubit.dart';
+import 'package:sportifo_app/features/create_plan_by_coach/data/repository/create_plan_repository.dart';
+import 'package:sportifo_app/features/create_plan_by_coach/data/web_services/create_plan_service.dart';
+import 'package:sportifo_app/features/create_plan_by_coach/presentation/view_model/create_plan_cubit.dart';
 import 'package:sportifo_app/features/profile/data/repository/profile_repository.dart';
 import 'package:sportifo_app/features/profile/data/web_services/profile_web_service.dart';
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_cubit.dart';
