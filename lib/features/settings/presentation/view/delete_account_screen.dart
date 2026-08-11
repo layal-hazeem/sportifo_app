@@ -6,18 +6,20 @@ import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/core/widgets/wave_app_bar.dart';
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_cubit.dart';
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_state.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class DeleteAccountScreen extends StatelessWidget {
   const DeleteAccountScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocConsumer<ProfileCubit, ProfileState>(
       listener: (context, state) {
         if (state is DeleteAccountSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Account deleted successfully"),
+            SnackBar(
+              content: Text(l10n.deletedSucceful),
               backgroundColor: Colors.green,
             ),
           );
@@ -42,7 +44,7 @@ class DeleteAccountScreen extends StatelessWidget {
         return Scaffold(
           backgroundColor: AppColors.background,
 
-          appBar: WaveAppBar(title: 'Delete Account', showBackButton: true),
+          appBar: WaveAppBar(title: l10n.deleteAccount, showBackButton: true),
           body: SafeArea(
             child: Column(
               children: [
@@ -65,7 +67,7 @@ class DeleteAccountScreen extends StatelessWidget {
                         const SizedBox(height: 16),
 
                         Text(
-                          "Delete Account",
+                          l10n.deleteAccount,
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.headlineSmall
                               ?.copyWith(
@@ -77,7 +79,7 @@ class DeleteAccountScreen extends StatelessWidget {
                         const SizedBox(height: 12),
 
                         Text(
-                          "Deleting your account will permanently remove everything associated with it.",
+                          l10n.deleteHint,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.grey.shade600,
@@ -92,7 +94,7 @@ class DeleteAccountScreen extends StatelessWidget {
                             color: Colors.red.withOpacity(0.08),
                             borderRadius: BorderRadius.circular(16),
                           ),
-                          child: const Row(
+                          child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Icon(
@@ -102,7 +104,7 @@ class DeleteAccountScreen extends StatelessWidget {
                               SizedBox(width: 12),
                               Expanded(
                                 child: Text(
-                                  "This action cannot be undone.",
+                                  l10n.deleteHint2,
                                   style: TextStyle(
                                     color: Colors.red,
                                     fontWeight: FontWeight.w600,
@@ -114,15 +116,15 @@ class DeleteAccountScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 16),
 
-                        _buildInfoTile(Icons.person_outline, "Your profile"),
+                        _buildInfoTile(Icons.person_outline, l10n.yourProfile),
                         const SizedBox(height: 12),
 
-                        _buildInfoTile(Icons.fitness_center, "Workout plans"),
+                        _buildInfoTile(Icons.fitness_center, l10n.workoutPlans),
                         const SizedBox(height: 12),
 
                         _buildInfoTile(
                           Icons.bookmark_outline,
-                          "Saved exercises",
+                          l10n.saved_exercises,
                         ),
                         const SizedBox(height: 20),
                       ],
@@ -148,8 +150,8 @@ class DeleteAccountScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(18),
                       ),
                     ),
-                    child: const Text(
-                      "Continue",
+                    child: Text(
+                      l10n.continue1,
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -169,6 +171,7 @@ class DeleteAccountScreen extends StatelessWidget {
     BuildContext context,
     ProfileCubit profileCubit,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) {
@@ -176,16 +179,16 @@ class DeleteAccountScreen extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
-          title: const Row(
+          title: Row(
             children: [
               Icon(Icons.warning_amber_rounded, color: Colors.red),
               SizedBox(width: 10),
-              Text("Confirm Delete"),
+              Text(l10n.confirmDelete),
             ],
           ),
-          content: const Text(
-            "Are you sure you want to delete your account?\n\n"
-            "This action cannot be undone.",
+          content: Text(
+            "${l10n.deletionConfirmationQuestion}\n\n"
+            "${l10n.deleteHint2}",
             style: TextStyle(fontSize: 15),
           ),
           actionsPadding: const EdgeInsets.only(right: 16, bottom: 12),
@@ -194,8 +197,8 @@ class DeleteAccountScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: const Text(
-                "Cancel",
+              child: Text(
+                l10n.cancel,
                 style: TextStyle(
                   color: Colors.grey,
                   fontWeight: FontWeight.w600,
@@ -214,8 +217,8 @@ class DeleteAccountScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              child: const Text(
-                "Delete",
+              child: Text(
+                l10n.delete,
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -253,33 +256,6 @@ class DeleteAccountScreen extends StatelessWidget {
             ),
           ),
           const Icon(Icons.cancel, color: Colors.red),
-        ],
-      ),
-    );
-  }
-}
-
-class _DangerItem extends StatelessWidget {
-  final IconData icon;
-  final String text;
-
-  const _DangerItem({required this.icon, required this.text});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 18),
-      child: Row(
-        children: [
-          const Icon(Icons.check_circle, color: Colors.red, size: 20),
-
-          const SizedBox(width: 14),
-
-          Icon(icon, color: Colors.grey.shade700),
-
-          const SizedBox(width: 12),
-
-          Text(text, style: const TextStyle(fontSize: 16)),
         ],
       ),
     );

@@ -14,11 +14,15 @@ import 'package:sportifo_app/features/profile/presentation/view_model/profile_cu
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_state.dart';
 import 'package:sportifo_app/features/subscriptions/presentation/view/subscriptions_screen.dart';
 import 'package:sportifo_app/features/subscriptions/presentation/view_model/subscription_cubit.dart';
+import 'package:sportifo_app/features/trainees/presentation/view/trainees_screen.dart';
+import 'package:sportifo_app/features/trainees/presentation/view_model/trainees_cubit.dart';
 import 'package:sportifo_app/features/workout/presentation/view_model/categories_cubit/categories_cubit.dart';
 import 'package:sportifo_app/features/workout/presentation/view_model/saved_exercises/saved_exercises_cubit.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../progress/presentation/view/progress_screen.dart';
+import '../../../my_plans(user)/presentation/view/my_plans_screen.dart';
+import '../../../my_plans(user)/presentation/view_model/my_plans_cubit.dart';
 import '../../../workout/presentation/view/workout_type_screen.dart';
 import 'package:sportifo_app/core/enum/drawer_enum.dart';
 
@@ -45,6 +49,11 @@ class _HomePageState extends State<HomePage> {
       const ProgressScreen(),
       Center(child: Text(l10n.myPlans)),
       const TraineeScreen(),
+      Center(child: Text(l10n.progress)),
+      BlocProvider(
+        create: (context) => getIt<MyPlansCubit>(), // لا تنسي تكوني مسجلتيه بالـ getIt
+        child: const MyPlansScreen(),
+      ),      const TraineeScreen(),
       BlocProvider(
         create: (context) => getIt<CategoriesCubit>(),
         child: const WorkoutTypeScreen(),
@@ -55,17 +64,25 @@ class _HomePageState extends State<HomePage> {
 
   List<Widget> _getCoachScreens() {
     final l10n = AppLocalizations.of(context)!;
+
     return [
       BlocProvider(
         create: (context) => getIt<SubscriptionCubit>()..getSubscriptions(),
         child: SubscriptionsScreen(),
       ),
-      Center(child: Text(l10n.myPlans)),
+
+      BlocProvider(
+        create: (context) => getIt<TraineesCubit>()..getCoachTrainees(),
+        child: const TraineesScreen(),
+      ),
+
       const CoachScreen(),
+
       BlocProvider(
         create: (context) => getIt<CategoriesCubit>(),
         child: const WorkoutTypeScreen(),
       ),
+
       Center(child: Text(l10n.chat)),
     ];
   }
@@ -108,7 +125,8 @@ class _HomePageState extends State<HomePage> {
             }
 
             // 1. حالة التحميل
-            if (profileState is ProfileLoading || profileState is ProfileInitial) {
+            if (profileState is ProfileLoading ||
+                profileState is ProfileInitial) {
               return const Scaffold(
                 body: Center(
                   child: CircularProgressIndicator(color: AppColors.primaryBtn),
@@ -128,10 +146,16 @@ class _HomePageState extends State<HomePage> {
                       Text(profileState.message, textAlign: TextAlign.center),
                       const SizedBox(height: 16),
                       ElevatedButton(
-                        onPressed: () => context.read<ProfileCubit>().getProfile(),
-                        style: ElevatedButton.styleFrom(backgroundColor: AppColors.primaryBtn),
-                        child: const Text("Retry", style: TextStyle(color: Colors.white)),
-                      )
+                        onPressed: () =>
+                            context.read<ProfileCubit>().getProfile(),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primaryBtn,
+                        ),
+                        child: const Text(
+                          "Retry",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -143,7 +167,9 @@ class _HomePageState extends State<HomePage> {
               final profile = profileState.profileModel;
               final isCoach = profile.role == 'coach';
 
-              final screens = isCoach ? _getCoachScreens() : _getTraineeScreens();
+              final screens = isCoach
+                  ? _getCoachScreens()
+                  : _getTraineeScreens();
 
               return ListenableBuilder(
                 listenable: homeViewModel,
@@ -176,14 +202,16 @@ class _HomePageState extends State<HomePage> {
                       items: [
                         CustomBottomNavBar.build(
                           icon: isCoach
-                              ? Icons.people_outline
+                              ? Icons.workspace_premium_rounded
                               : Icons.show_chart,
-                          label: isCoach ? "Sub's" : l10n.progress,
+                          label: isCoach ? l10n.sub : l10n.progress,
                           isSelected: homeViewModel.currentIndex == 0,
                         ),
                         CustomBottomNavBar.build(
-                          icon: Icons.calendar_today,
-                          label: l10n.myPlans,
+                          icon: isCoach
+                              ? Icons.groups_rounded
+                              : Icons.calendar_today,
+                          label: isCoach ? l10n.trainees : l10n.myPlans,
                           isSelected: homeViewModel.currentIndex == 1,
                         ),
                         CustomBottomNavBar.build(
@@ -198,7 +226,8 @@ class _HomePageState extends State<HomePage> {
                         ),
                         CustomBottomNavBar.build(
                           icon: Icons.chat,
-                          label: l10n.chat,
+                          svgIcon: 'assets/icons/bot-message-square.svg',
+                          label: l10n.chatAI,
                           isSelected: homeViewModel.currentIndex == 4,
                         ),
                       ],

@@ -6,7 +6,7 @@ class ExerciseResponseModel {
   ExerciseResponseModel({
     required this.success,
     required this.message,
-    required this.data
+    required this.data,
   });
 
   factory ExerciseResponseModel.fromJson(Map<String, dynamic> json) {
@@ -15,7 +15,8 @@ class ExerciseResponseModel {
       message: json['message'] ?? '',
       data: json['data'] != null
           ? List<ExerciseModel>.from(
-          json['data'].map((x) => ExerciseModel.fromJson(x)))
+              json['data'].map((x) => ExerciseModel.fromJson(x)),
+            )
           : [],
     );
   }
@@ -28,6 +29,10 @@ class ExerciseModel {
   final ExerciseCategory? category;
   final List<ExerciseMedia> images;
   bool isSaved;
+  int? sets;
+  String? reps;
+  String? duration;
+  int? order;
 
   ExerciseModel({
     required this.id,
@@ -36,6 +41,11 @@ class ExerciseModel {
     this.category,
     required this.images,
     this.isSaved = false,
+
+    this.sets,
+    this.reps,
+    this.duration,
+    this.order,
   });
 
   factory ExerciseModel.fromJson(Map<String, dynamic> json) {
@@ -48,10 +58,15 @@ class ExerciseModel {
           : null,
       images: json['images'] != null
           ? List<ExerciseMedia>.from(
-          json['images'].map((x) => ExerciseMedia.fromJson(x)))
+              json['images'].map((x) => ExerciseMedia.fromJson(x)),
+            )
           : [],
       // يدعم السيرفر الحقيقي سواء رجع 0/1 أو true/false
       isSaved: json['is_saved'] == 1 || json['is_saved'] == true,
+      sets: json['sets'],
+      reps: json['reps']?.toString(),
+      duration: json['duration'],
+      order: json['order'],
     );
   }
 
@@ -61,18 +76,24 @@ class ExerciseModel {
       'id': id,
       'name': name,
       'description': description,
-      'category': category != null ? {
-        'id': category!.id,
-        'name': category!.name,
-        'organ': category!.organ != null ? {
-          'id': category!.organ!.id,
-          'name': category!.organ!.name,
-          'part': category!.organ!.part != null ? {
-            'id': category!.organ!.part!.id,
-            'name': category!.organ!.part!.name,
-          } : null,
-        } : null,
-      } : null,
+      'category': category != null
+          ? {
+              'id': category!.id,
+              'name': category!.name,
+              'organ': category!.organ != null
+                  ? {
+                      'id': category!.organ!.id,
+                      'name': category!.organ!.name,
+                      'part': category!.organ!.part != null
+                          ? {
+                              'id': category!.organ!.part!.id,
+                              'name': category!.organ!.part!.name,
+                            }
+                          : null,
+                    }
+                  : null,
+            }
+          : null,
       'images': images.map((x) => {'url': x.url, 'type': x.type}).toList(),
       'is_saved': isSaved ? 1 : 0,
     };
@@ -95,6 +116,14 @@ class ExerciseModel {
         .map((e) => e.url)
         .toList();
   }
+
+  bool get isCardio {
+    return category?.id == 2;
+  }
+
+  bool get isResistance {
+    return category?.id == 1;
+  }
 }
 
 class ExerciseCategory {
@@ -108,7 +137,9 @@ class ExerciseCategory {
     return ExerciseCategory(
       id: json['id'] ?? 0,
       name: json['name'] ?? '',
-      organ: json['organ'] != null ? ExerciseOrgan.fromJson(json['organ']) : null,
+      organ: json['organ'] != null
+          ? ExerciseOrgan.fromJson(json['organ'])
+          : null,
     );
   }
 }
@@ -136,10 +167,7 @@ class ExercisePart {
   ExercisePart({required this.id, required this.name});
 
   factory ExercisePart.fromJson(Map<String, dynamic> json) {
-    return ExercisePart(
-      id: json['id'] ?? 0,
-      name: json['name'] ?? '',
-    );
+    return ExercisePart(id: json['id'] ?? 0, name: json['name'] ?? '');
   }
 }
 
@@ -152,9 +180,6 @@ class ExerciseMedia {
   factory ExerciseMedia.fromJson(Map<String, dynamic> json) {
     // على السيرفر الحقيقي الروابط عم ترجع كاملة https
     // لهيك ما عاد في داعي لعمليات الـ replace للـ localhost
-    return ExerciseMedia(
-      url: json['url'] ?? '',
-      type: json['type'] ?? '',
-    );
+    return ExerciseMedia(url: json['url'] ?? '', type: json['type'] ?? '');
   }
 }

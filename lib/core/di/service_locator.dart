@@ -13,12 +13,21 @@ import 'package:sportifo_app/features/nutrition/presentation/view_model/nutritio
 import 'package:sportifo_app/features/plans/data/repository/create_plan_repository.dart';
 import 'package:sportifo_app/features/plans/data/web_services/create_plan_service.dart';
 import 'package:sportifo_app/features/plans/presentation/view_model/create_plan_cubit.dart';
+import 'package:sportifo_app/features/create_plan_by_coach/data/repository/create_plan_repository.dart';
+import 'package:sportifo_app/features/create_plan_by_coach/data/web_services/create_plan_service.dart';
+import 'package:sportifo_app/features/create_plan_by_coach/presentation/view_model/create_plan_cubit.dart';
+import 'package:sportifo_app/features/plan_details/data/repository/plan_details_repository.dart';
+import 'package:sportifo_app/features/plan_details/data/web_services/plan_details_web_service.dart';
+import 'package:sportifo_app/features/plan_details/presentation/view_model/plan_details_cubit.dart';
 import 'package:sportifo_app/features/profile/data/repository/profile_repository.dart';
 import 'package:sportifo_app/features/profile/data/web_services/profile_web_service.dart';
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_cubit.dart';
 import 'package:sportifo_app/features/subscriptions/data/repository/subscription_repository.dart';
 import 'package:sportifo_app/features/subscriptions/data/web_services/subscriptions_web_service.dart';
 import 'package:sportifo_app/features/subscriptions/presentation/view_model/subscription_cubit.dart';
+import 'package:sportifo_app/features/trainees/data/repository/trainees_repository.dart';
+import 'package:sportifo_app/features/trainees/data/web_services/trainees_web_service.dart';
+import 'package:sportifo_app/features/trainees/presentation/view_model/trainees_cubit.dart';
 import '../../features/ ads/data/repository/ads_repository.dart';
 import '../../features/ ads/data/web_services/ads_web_service.dart';
 import '../../features/auth/data/repository/auth_repository.dart';
@@ -31,6 +40,14 @@ import '../../features/coaches/data/web_services/coach_web_service.dart';
 import '../../features/coaches/presentation/view_model/all_coaches_cubit.dart';
 import '../../features/coaches/presentation/view_model/coach_details_cubit.dart';
 import '../../features/coaches/presentation/view_model/coaches_cubit.dart';
+import '../../features/my_plans(user)/data/repository/my_plans_repository.dart';
+import '../../features/my_plans(user)/data/web_services/my_plans_service.dart';
+import '../../features/my_plans(user)/presentation/view_model/active_workout_cubit.dart';
+import '../../features/my_plans(user)/presentation/view_model/my_plans_cubit.dart';
+import '../../features/my_plans(user)/presentation/view_model/plan_days_cubit.dart';
+import '../../features/platform_plans/data/repository/platform_plans_repository.dart';
+import '../../features/platform_plans/data/service/platform_plans_service.dart';
+import '../../features/platform_plans/presentation/view_model/platform_plans_cubit.dart';
 import '../../features/targets/data/repository/target_repository.dart';
 import '../../features/targets/data/web_services/target_web_service.dart';
 import '../../features/targets/presentation/view_model/target_cubit/target_cubit.dart';
@@ -245,5 +262,64 @@ getIt.registerSingleton<NutritionRepository>(
 getIt.registerSingleton<NutritionCubit>(
   NutritionCubit(getIt<NutritionRepository>()),
 );
+
+  // 🔥 تسجيل My Plans Feature
+  getIt.registerLazySingleton<MyPlansService>(
+        () => MyPlansService(getIt<Dio>()),
+  );
+
+  getIt.registerLazySingleton<MyPlansRepository>(
+        () => MyPlansRepository(getIt<MyPlansService>()),
+  );
+
+  getIt.registerLazySingleton<MyPlansCubit>(
+        () => MyPlansCubit(getIt<MyPlansRepository>()),
+  );
+  getIt.registerFactory<PlanDaysCubit>(
+        () => PlanDaysCubit(getIt<MyPlansRepository>()),
+  );
+  getIt.registerFactory<ActiveWorkoutCubit>(
+        () => ActiveWorkoutCubit(getIt<MyPlansRepository>()),
+  );
+
+  getIt.registerLazySingleton<PlatformPlansWebService>(
+        () => PlatformPlansWebService(getIt<Dio>()),
+  );
+
+  getIt.registerLazySingleton<PlatformPlansRepository>(
+        () => PlatformPlansRepository(getIt<PlatformPlansWebService>()),
+  );
+
+  getIt.registerLazySingleton<PlatformPlansCubit>(
+        () => PlatformPlansCubit(getIt<PlatformPlansRepository>()),
+  );
+  // Trainees feature
+
+  getIt.registerLazySingleton<TraineesWebService>(
+  () => TraineesWebService(getIt<Dio>()),
+);
+
+getIt.registerLazySingleton<TraineesRepository>(
+  () => TraineesRepository(getIt<TraineesWebService>()),
+);
+
+getIt.registerFactory<TraineesCubit>(
+  () => TraineesCubit(getIt<TraineesRepository>()),
+);
+
+// Plan Details
+
+getIt.registerLazySingleton<PlanDetailsWebService>(
+() => PlanDetailsWebService(getIt<Dio>()),
+);
+
+getIt.registerLazySingleton<PlanDetailsRepository>(
+() => PlanDetailsRepository(getIt<PlanDetailsWebService>()),
+);
+
+getIt.registerFactory<PlanDetailsCubit>(
+() => PlanDetailsCubit(getIt<PlanDetailsRepository>()),
+);
+
 
 }

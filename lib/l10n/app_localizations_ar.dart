@@ -603,4 +603,103 @@ class AppLocalizationsAr extends AppLocalizations {
   String subscription_selectMonth_monthlyPriceDetail(Object currency, Object price) {
     return 'بـ $price $currency / شهرياً';
   }
+
+  @override
+  String get general => 'عام';
+
+  @override
+  String get language => 'اللغة';
+
+  @override
+  String get theme => 'لون التطبيق';
+
+  @override
+  String get notifications => 'الاشعارات';
+
+  @override
+  String get account => 'الحساب';
+
+  @override
+  String get changePassword => 'تغيير كلمة المرور';
+
+  @override
+  String get privacyPolicy => 'سياسة الخصوصية';
+
+  @override
+  String get deleteAccount => 'حذف الحساب';
+
+  @override
+  String get chooseLanguage => 'اختر اللغة';
+
+  @override
+  String get chooseLanguageHint => 'اختر لغة التطبيق التي تفضلها';
+
+  @override
+  String get english => 'الانكليزية';
+
+  @override
+  String get empty => 'فارغ';
+
+  @override
+  String get selected => 'تم اختياره';
+
+  @override
+  String get deletedSucceful => 'تم حذف الحساب بنجاح';
+
+  @override
+  String get deleteHint => 'سيؤدي حذف حسابك إلى إزالة كل شيء مرتبط به بشكل دائم';
+
+  @override
+  String get deleteHint2 => 'لا يمكن التراجع عن هذا الإجراء';
+
+  @override
+  String get yourProfile => 'حسابك';
+
+  @override
+  String get workoutPlans => 'خطط التمارين';
+
+  @override
+  String get continue1 => 'متابعة';
+
+  @override
+  String get confirmDelete => 'تأكيد الحذف';
+
+  @override
+  String get deletionConfirmationQuestion => 'هل أنت متأكد من رغبتك في حذف حسابك؟';
+
+  @override
+  String get delete => 'حذف';
+
+  @override
+  String get certificates => 'Certificates';
+
+  @override
+  String get noCoachData => 'لا تتوفر بيانات المدرب';
+
+  @override
+  String get userInfo => 'معلومات المستخدم';
+
+  @override
+  String get coachInfo => 'معلومات المدرب';
+
+  @override
+  String get chatAI => 'المساعد الذكي';
+
+  @override
+  String get sub => 'الاشتراكات';
+
+  @override
+  String get trainees => 'المتدربين';
+
+  @override
+  String get noInternet => 'لا يوجد اتصال بالانترنت';
+
+  @override
+  String get checkYourNetwork => 'يرجى التحقق من إعدادات الشبكة الخاصة بك والمحاولة مرة أخرى';
+
+  @override
+  String get recentlyEnded => 'المنتهية مؤخراً';
+
+  @override
+  String get endedLastMonth => 'الاشتراكات التي انتهت خلال الشهر الماضي';
 }

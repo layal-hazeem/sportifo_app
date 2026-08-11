@@ -31,7 +31,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         title = isCoach ? "Subscriptions" : l10n.progress;
         break;
       case 1:
-        title = l10n.myPlans;
+        title = isCoach ? "Trainees" : l10n.myPlans;
         break;
       case 2:
         title = l10n.welcomeBack;

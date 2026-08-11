@@ -603,4 +603,103 @@ class AppLocalizationsEn extends AppLocalizations {
   String subscription_selectMonth_monthlyPriceDetail(Object currency, Object price) {
     return '$price $currency / month';
   }
+
+  @override
+  String get general => 'General';
+
+  @override
+  String get language => 'Language';
+
+  @override
+  String get theme => 'Theme';
+
+  @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get account => 'Account';
+
+  @override
+  String get changePassword => 'Change Password';
+
+  @override
+  String get privacyPolicy => 'Privacy Policy';
+
+  @override
+  String get deleteAccount => 'Delete Account';
+
+  @override
+  String get chooseLanguage => 'Choose Language';
+
+  @override
+  String get chooseLanguageHint => 'Select your preferred app language';
+
+  @override
+  String get english => 'English';
+
+  @override
+  String get empty => 'Empty';
+
+  @override
+  String get selected => 'Selected';
+
+  @override
+  String get deletedSucceful => 'Account deleted successfully';
+
+  @override
+  String get deleteHint => 'Deleting your account will permanently remove everything associated with it';
+
+  @override
+  String get deleteHint2 => 'This action cannot be undone';
+
+  @override
+  String get yourProfile => 'Your Profile';
+
+  @override
+  String get workoutPlans => 'Workout plans';
+
+  @override
+  String get continue1 => 'Continue';
+
+  @override
+  String get confirmDelete => 'Confirm Delete';
+
+  @override
+  String get deletionConfirmationQuestion => 'Are you sure you want to delete your account?';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get certificates => 'Certificates';
+
+  @override
+  String get noCoachData => 'No coach data available';
+
+  @override
+  String get userInfo => 'user information';
+
+  @override
+  String get coachInfo => 'coach information';
+
+  @override
+  String get chatAI => 'Chat AI';
+
+  @override
+  String get sub => 'Sub\'s';
+
+  @override
+  String get trainees => 'Trainees';
+
+  @override
+  String get noInternet => 'No Internet Connection';
+
+  @override
+  String get checkYourNetwork => 'Please check your network settings and try again';
+
+  @override
+  String get recentlyEnded => 'Recently ended';
+
+  @override
+  String get endedLastMonth => 'Subscriptions that ended during the last month';
 }

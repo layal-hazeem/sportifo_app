@@ -24,11 +24,26 @@ class ApiConstants {
   static const String coaches = "coaches";
   static const String usersSubscribed = "users-subscribed";
   static const String createPlan = "plans";
+  static const String getUserPlans = "plans/user";
+
+  // 🔥 الباك إند فصل الـ endpoint الواحد لتلاتة منفصلين (كل تاب بريكويست لحاله)
+  static const String plansSubscribedCoach = "plans/subscribed-coach";
+  static const String plansSelf = "plans/self";
+  static const String plansPlatformSaved = "plans/platform/saved";
+
+  static String planProgress(int planId) => "plans/$planId/progress";
+  static String planProgressMarkDone(int planId) => "plans/$planId/progress/mark-done";
+  static String toggleSavePlatformPlan(int planId) => "plans/platform/$planId";
 
   static const String existingDays = 'coaches-days';
-
-
+  static const String exerciseLogs = "exercise-logs";
+  static const String exerciseLogsActivity = "exercise-logs/activity";
   static const String subscribe = "subscriptions/subscribe";
+  static const String plans = "plans";
+
+  static const String platformPlans = "plans/platform";
+
+  static const String savedPlatformPlans = "plans/platform/saved";
 
   static const String exerciseActivity = "exercise-logs/activity";
   static const String weightProgress = "targets/weight-progress";
@@ -39,4 +54,6 @@ static const String todayFoodLogs = 'food-logs/today';
 static const String addMealFromAi = 'food-logs/from-ai'; 
 static const String deleteMeal = 'food-logs';
 static const String addManualMeal = 'food-logs/manual'; 
+  static const String trainees = "plans/coach";
+  static const String planDetails = "/plans";
 }

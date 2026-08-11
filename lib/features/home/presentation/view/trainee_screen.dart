@@ -10,6 +10,9 @@ import '../../../coaches/presentation/view_model/coaches_state.dart';
 import '../../../coaches/presentation/views/all_coaches_screen.dart';
 import '../../../coaches/presentation/views/coach_details_screen.dart';
 import '../../../coaches/presentation/widgets/coach_card.dart';
+
+// 🔥 الاستيرادات الجديدة الخاصة بالأهداف الذكية
+import '../../../platform_plans/presentation/widgets/platform_plans_section.dart';
 import '../../../targets/presentation/view_model/target_cubit/target_cubit.dart';
 import '../../../targets/presentation/view_model/target_cubit/target_state.dart';
 import '../../../targets/presentation/widgets/daily_nutrition_card.dart';
@@ -108,6 +111,7 @@ class _TraineeScreenState extends State<TraineeScreen> with WidgetsBindingObserv
                 }
               },
             ),
+            const PlatformPlansSection(),
 
             const SizedBox(height: 15),
 
