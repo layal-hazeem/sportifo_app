@@ -28,34 +28,30 @@ class WorkoutWebService {
     int? organId,
     List<int>? smallestCategoryId,
     String? searchQuery,
-    Options? options, //  السحر هنا: أضفنا المعامل الاختياري لاستقبال خيارات الكاش
+    Options? options,
   }) async {
     return await dio.get(
-      ApiConstants.exercise, // المسار الخاص بكِ من الـ ApiConstants
+      ApiConstants.exercise,
       queryParameters: {
         'category_id': ?categoryId,
         'organ_id': ?organId,
         if (smallestCategoryId != null && smallestCategoryId.isNotEmpty) 'smallest_category_id[]': smallestCategoryId,
         'search': ?searchQuery,
       },
-      options: options, // 🔥 هنا يتم دمج خيارات التخزين الذكي مع الريكويست الحالي
+      options: options, 
     );
   }
 
-  // داخل WorkoutWebService
   Future<Response> toggleSaveExercise(int exerciseId) async {
     return await dio.post(
-      ApiConstants.saveExercise, // "savedExercise"
+      ApiConstants.saveExercise, 
       data: {'exercise_id': exerciseId},
     );
   }
-  // دالة لجلب التمارين التي حفظها المستخدم فقط
-  Future<Response> getSavedExercises() async {
+  Future<Response> getSavedExercises({Options? options}) async {
     return await dio.get(
       ApiConstants.getSavedExercises,
-      options: Options(
-        extra: <String, dynamic>{'dio_cache_interceptor': 'noCache'},
-      ),
+      options: options, 
     );
   }
 }

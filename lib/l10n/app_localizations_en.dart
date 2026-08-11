@@ -255,7 +255,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profile => 'Profile';
 
   @override
-  String get chat => 'Chat';
+  String get chat => 'AI Chat';
 
   @override
   String get requiredField => 'This field is required';

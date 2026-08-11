@@ -30,4 +30,13 @@ class ApiConstants {
 
   static const String subscribe = "subscriptions/subscribe";
 
+  static const String exerciseActivity = "exercise-logs/activity";
+  static const String weightProgress = "targets/weight-progress";
+
+static const String aiChatMessages = 'ai-chat/messages';
+
+static const String todayFoodLogs = 'food-logs/today';
+static const String addMealFromAi = 'food-logs/from-ai'; 
+static const String deleteMeal = 'food-logs';
+static const String addManualMeal = 'food-logs/manual'; 
 }

@@ -12,14 +12,14 @@ class AppRoutes {
   static const String muscleGroups = "/muscleGroups";
   static const String exercisesList = "/exercisesList";
   static const String exerciseDetails = "/exerciseDetails";
-  static const String getProfile= "/profile";
+  static const String getProfile = "/profile";
   static const String coach = "/coaches";
   static const String editProfile = "profile/edit";
   static const String logout = "logout";
 
   static const String searchScreen = "/searchScreen";
   static const String savedExercises = "/savedExercises";
-    static const String usersSubscribed = "/coaches/users/subscribed";
+  static const String usersSubscribed = "/coaches/users/subscribed";
 
   static const String completeProfile = "/completeProfile";
   static const String createPlan = "/plans";
@@ -30,5 +30,7 @@ class AppRoutes {
   static const String payment = "/payment";
 
   static const settings = "/settings";
-static const deleteAccount = "/deleteAccount";
+  static const deleteAccount = "/deleteAccount";
+
+  static const String foodLogs = '/food-logs';
 }

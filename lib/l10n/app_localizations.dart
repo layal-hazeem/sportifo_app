@@ -590,7 +590,7 @@ abstract class AppLocalizations {
   /// No description provided for @chat.
   ///
   /// In en, this message translates to:
-  /// **'Chat'**
+  /// **'AI Chat'**
   String get chat;
 
   /// No description provided for @requiredField.

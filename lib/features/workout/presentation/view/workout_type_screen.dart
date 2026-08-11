@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/routes/app_routes.dart';
+import '../../../../core/widgets/loading_shimmer.dart'; 
 import '../../../../l10n/app_localizations.dart';
 import '../view_model/categories_cubit/categories_cubit.dart';
 import '../view_model/categories_cubit/categories_state.dart';
@@ -29,19 +30,17 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
       duration: const Duration(milliseconds: 1200),
     );
 
-    // أنيميشن مخصص للعنوان (Header)
-    _headerSlideAnimation = Tween<Offset>(
-      begin: const Offset(0, -0.5),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: const Interval(0.0, 0.5, curve: Curves.easeOutCubic),
-    ));
+    _headerSlideAnimation =
+        Tween<Offset>(begin: const Offset(0, -0.5), end: Offset.zero).animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: const Interval(0.0, 0.5, curve: Curves.easeOutCubic),
+          ),
+        );
 
     _headerOpacityAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _controller, curve: const Interval(0.0, 0.5)),
     );
-
 
     context.read<CategoriesCubit>().fetchCategories(1);
   }
@@ -60,14 +59,13 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
     2: {
       'subtitle': 'Burn Fat & Improve Endurance',
       'image': 'assets/images/cardio.jpg',
-    }
+    },
   };
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final screenWidth = MediaQuery.of(context).size.width;
-
     final cardWidth = screenWidth * 0.75;
 
     return Scaffold(
@@ -81,12 +79,35 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
           },
           builder: (context, state) {
             if (state is CategoriesLoading) {
-              return const Center(
-                  child: CircularProgressIndicator(color: AppColors.primaryBtn));
+              return ListView.builder(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: 2,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 20),
+                    child: SizedBox(
+                      width: cardWidth,
+                      child: const AspectRatio(
+                        aspectRatio: 0.31,
+                        child: LoadingShimmer(
+                          width: double.infinity,
+                          height: double.infinity,
+                          borderRadius: 20,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              );
             } else if (state is CategoriesFailure) {
               return Center(
-                  child: Text(state.errorMessage,
-                      style: const TextStyle(color: Colors.red)));
+                child: Text(
+                  state.errorMessage,
+                  style: const TextStyle(color: Colors.red),
+                ),
+              );
             } else if (state is CategoriesSuccess) {
               final categories = state.categories;
 
@@ -98,8 +119,6 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 40),
-
-
                   SlideTransition(
                     position: _headerSlideAnimation,
                     child: FadeTransition(
@@ -109,18 +128,9 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Text(
-                            //   "Ready to Sweat?", // يمكنك وضعها في ملف الترجمة
-                            //   style: TextStyle(
-                            //     fontSize: 16,
-                            //     color: AppColors.primaryBtn.withOpacity(0.8),
-                            //     fontWeight: FontWeight.bold,
-                            //     letterSpacing: 1.2,
-                            //   ),
-                            // ),
                             const SizedBox(height: 5),
                             const Text(
-                              "Choose Your\nWorkout Type", // يمكنك وضعها في ملف الترجمة
+                              "Choose Your\nWorkout Type",
                               style: TextStyle(
                                 fontSize: 32,
                                 fontWeight: FontWeight.bold,
@@ -133,9 +143,7 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
                       ),
                     ),
                   ),
-
                   const SizedBox(height: 40),
-
                   Expanded(
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
@@ -144,27 +152,40 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
                       itemCount: categories.length,
                       itemBuilder: (context, index) {
                         final category = categories[index];
-
-                        final uiInfo = _categoryUIInfo[category.id] ?? {
-                          'subtitle': 'Start Training',
-                          'image': 'assets/images/default_workout.png',
-                        };
+                        final uiInfo =
+                            _categoryUIInfo[category.id] ??
+                            {
+                              'subtitle': 'Start Training',
+                              'image': 'assets/images/default_workout.png',
+                            };
 
                         final delay = 0.2 + (index * 0.2);
-                        final slideAnim = Tween<Offset>(
-                          begin: const Offset(0.5, 0.0),
-                          end: Offset.zero,
-                        ).animate(CurvedAnimation(
-                          parent: _controller,
-                          curve: Interval(delay, 1.0, curve: Curves.easeOutQuart),
-                        ));
+                        final slideAnim =
+                            Tween<Offset>(
+                              begin: const Offset(0.5, 0.0),
+                              end: Offset.zero,
+                            ).animate(
+                              CurvedAnimation(
+                                parent: _controller,
+                                curve: Interval(
+                                  delay,
+                                  1.0,
+                                  curve: Curves.easeOutQuart,
+                                ),
+                              ),
+                            );
 
-                        final fadeAnim = Tween<double>(begin: 0.0, end: 1.0).animate(
-                          CurvedAnimation(
-                            parent: _controller,
-                            curve: Interval(delay, 1.0, curve: Curves.easeIn),
-                          ),
-                        );
+                        final fadeAnim = Tween<double>(begin: 0.0, end: 1.0)
+                            .animate(
+                              CurvedAnimation(
+                                parent: _controller,
+                                curve: Interval(
+                                  delay,
+                                  1.0,
+                                  curve: Curves.easeIn,
+                                ),
+                              ),
+                            );
 
                         return SlideTransition(
                           position: slideAnim,
@@ -180,7 +201,10 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
                                   imagePath: uiInfo['image']!,
                                   onTap: () {
                                     if (category.id == 1) {
-                                      Navigator.pushNamed(context, AppRoutes.muscleGroups);
+                                      Navigator.pushNamed(
+                                        context,
+                                        AppRoutes.muscleGroups,
+                                      );
                                     } else {
                                       Navigator.pushNamed(
                                         context,

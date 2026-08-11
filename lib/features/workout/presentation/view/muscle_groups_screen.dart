@@ -158,26 +158,18 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                         onSelected: (bool selected) {
                           setState(() {
                             if (selected) {
-                              // إذا كبس عليها بنضيف الـ id للمصفوفة لدمج التمارين
+
                               selectedSmallestCategoryId.add(part.id);
                             } else {
-                              // إذا ألغى تحديدها بنشيل الـ id
                               selectedSmallestCategoryId.remove(part.id);
                             }
-
-                            // ⚡ الفلو الذكي اللّي طلبتيه:
-                            // إذا اختار الكوتش/المشترك كل الأجزاء الصغيرة المتاحة (مثلا اختار الـ 3 سوا)
-                            // بنصفر المصفوفة فوراً ليرجع للديفولت ويجيب كل تمارين العضلة الكبيرة
                             if (selectedSmallestCategoryId.length == state.Parts.length) {
                               selectedSmallestCategoryId.clear();
                             }
                           });
-
-                          // استدعاء الـ Cubit وتمرير البراميتارات مدموجة
                           context.read<ExercisesCubit>().fetchExercises(
                             categoryId: 1,
                             organId: selectedMuscleId,
-                            // إذا المصفوفة فاضية بنبعت null عشان يجيب كل تمارين العضلة الكبيرة
                             smallestCategoryId: selectedSmallestCategoryId.isEmpty
                                 ? null
                                 : selectedSmallestCategoryId,
@@ -196,13 +188,10 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
             padding: EdgeInsets.symmetric(vertical: 10),
             child: Divider(color: Colors.black12, thickness: 1),
           ),
-
-          // 2️⃣ شيمر قائمة التمارين الشبكية السفلية
           Expanded(
             child: BlocBuilder<ExercisesCubit, ExercisesState>(
               builder: (context, state) {
                 if (state is ExercisesLoading) {
-                  // 🔥 بناء شبكة شيمر (Grid Skeleton) تطابق مظهر التمارين بالزبط
                   return GridView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     physics: const NeverScrollableScrollPhysics(),

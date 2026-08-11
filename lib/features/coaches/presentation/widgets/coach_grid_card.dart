@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../data/models/coach_model.dart';
+import '../../../../core/widgets/loading_shimmer.dart'; 
 
 class CoachGridCard extends StatelessWidget {
   final CoachModel coach;
@@ -23,7 +25,7 @@ class CoachGridCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.03),
+              color: Colors.black.withValues(alpha:0.03),
               blurRadius: 12,
               offset: const Offset(0, 6),
             ),
@@ -39,19 +41,21 @@ class CoachGridCard extends StatelessWidget {
                   topLeft: Radius.circular(16),
                   topRight: Radius.circular(16),
                 ),
-                child: Image.network(
-                  coach.profilePic,
+                child: CachedNetworkImage(
+                  imageUrl: coach.profilePic,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      color: Colors.grey[100],
-                      child: const Icon(Icons.person, color: Colors.grey, size: 40),
-                    );
-                  },
+                  placeholder: (context, url) => const LoadingShimmer(
+                    width: double.infinity,
+                    height: double.infinity,
+                    borderRadius: 0,
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    color: Colors.grey[100],
+                    child: const Icon(Icons.person, color: Colors.grey, size: 40),
+                  ),
                 ),
               ),
             ),
-
             Expanded(
               flex: 2,
               child: Padding(
@@ -86,11 +90,10 @@ class CoachGridCard extends StatelessWidget {
                         ),
                       ],
                     ),
-
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFFF6B35).withOpacity(0.1),
+                        color: const Color(0xFFFF6B35).withValues(alpha:0.1),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
