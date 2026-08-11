@@ -13,6 +13,8 @@ import 'package:sportifo_app/features/profile/presentation/view_model/profile_cu
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_state.dart';
 import 'package:sportifo_app/features/subscriptions/presentation/view/subscriptions_screen.dart';
 import 'package:sportifo_app/features/subscriptions/presentation/view_model/subscription_cubit.dart';
+import 'package:sportifo_app/features/trainees/presentation/view/trainees_screen.dart';
+import 'package:sportifo_app/features/trainees/presentation/view_model/trainees_cubit.dart';
 import 'package:sportifo_app/features/workout/presentation/view_model/categories_cubit/categories_cubit.dart';
 import 'package:sportifo_app/features/workout/presentation/view_model/saved_exercises/saved_exercises_cubit.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
@@ -59,17 +61,25 @@ class _HomePageState extends State<HomePage> {
 
   List<Widget> _getCoachScreens() {
     final l10n = AppLocalizations.of(context)!;
+
     return [
       BlocProvider(
         create: (context) => getIt<SubscriptionCubit>()..getSubscriptions(),
         child: SubscriptionsScreen(),
       ),
-      Center(child: Text(l10n.myPlans)),
+
+      BlocProvider(
+        create: (context) => getIt<TraineesCubit>()..getCoachTrainees(),
+        child: const TraineesScreen(),
+      ),
+
       const CoachScreen(),
+
       BlocProvider(
         create: (context) => getIt<CategoriesCubit>(),
         child: const WorkoutTypeScreen(),
       ),
+
       Center(child: Text(l10n.chat)),
     ];
   }
@@ -189,14 +199,16 @@ class _HomePageState extends State<HomePage> {
                       items: [
                         CustomBottomNavBar.build(
                           icon: isCoach
-                              ? Icons.people_outline
+                              ? Icons.workspace_premium_rounded
                               : Icons.show_chart,
-                          label: isCoach ? "Sub's" : l10n.progress,
+                          label: isCoach ? l10n.sub : l10n.progress,
                           isSelected: homeViewModel.currentIndex == 0,
                         ),
                         CustomBottomNavBar.build(
-                          icon: Icons.calendar_today,
-                          label: l10n.myPlans,
+                          icon: isCoach
+                              ? Icons.groups_rounded
+                              : Icons.calendar_today,
+                          label: isCoach ? l10n.trainees : l10n.myPlans,
                           isSelected: homeViewModel.currentIndex == 1,
                         ),
                         CustomBottomNavBar.build(

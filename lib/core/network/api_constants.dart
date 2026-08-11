@@ -29,5 +29,6 @@ class ApiConstants {
 
 
   static const String subscribe = "subscriptions/subscribe";
-
+static const String trainees = "plans/coach";
+static const String planDetails = "/plans";
 }

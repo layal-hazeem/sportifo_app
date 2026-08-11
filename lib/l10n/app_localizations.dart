@@ -1384,6 +1384,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Chat AI'**
   String get chatAI;
+
+  /// No description provided for @sub.
+  ///
+  /// In en, this message translates to:
+  /// **'Sub\'s'**
+  String get sub;
+
+  /// No description provided for @trainees.
+  ///
+  /// In en, this message translates to:
+  /// **'Trainees'**
+  String get trainees;
+
+  /// No description provided for @noInternet.
+  ///
+  /// In en, this message translates to:
+  /// **'No Internet Connection'**
+  String get noInternet;
+
+  /// No description provided for @checkYourNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your network settings and try again'**
+  String get checkYourNetwork;
+
+  /// No description provided for @recentlyEnded.
+  ///
+  /// In en, this message translates to:
+  /// **'Recently ended'**
+  String get recentlyEnded;
+
+  /// No description provided for @endedLastMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscriptions that ended during the last month'**
+  String get endedLastMonth;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
