@@ -8,6 +8,7 @@ class ProfileTopSection extends StatelessWidget {
   final String? firstName;
   final VoidCallback onEditImage;
   final bool? gender;
+  final VoidCallback onOpenImage;
 
   const ProfileTopSection({
     super.key,
@@ -16,6 +17,7 @@ class ProfileTopSection extends StatelessWidget {
     required this.firstName,
     required this.onEditImage,
     required this.gender,
+    required this.onOpenImage,
   });
 
   @override
@@ -56,14 +58,16 @@ class ProfileTopSection extends StatelessWidget {
               child: Stack(
                 clipBehavior: Clip.none,
                 children: [
-                  CircleAvatar(
-                    radius: 65,
-                    backgroundColor: Colors.white,
-                    backgroundImage: imageProvider,
-                    child: (imageProvider == null)
-                        ? const Icon(Icons.person, size: 40, color: Colors.grey)
-                        : null,
-                  ),
+                  Hero(
+  tag: "profile-image",
+  child: GestureDetector(
+    onTap: onOpenImage,
+    child: CircleAvatar(
+      radius: 60,
+      backgroundImage: imageProvider,
+    ),
+  ),
+),
 
                   Positioned(
                     bottom: 0,

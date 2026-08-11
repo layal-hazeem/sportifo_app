@@ -32,7 +32,7 @@ class WaveAppBar extends StatelessWidget implements PreferredSizeWidget {
       case 0:
         return (!userIsCoach) ? "Subscriptions" : "Progress";
       case 1:
-        return "My Plans";
+        return (!userIsCoach) ? "Trainees" :"My Plans";
       case 2:
         return "Home";
       case 3:

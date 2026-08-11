@@ -1,7 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:sportifo_app/core/routes/app_routes.dart';
-// استبدل هذا المسار بالمسار الصحيح لملف الـ api_constants لديك في الـ core
-// import '../../../core/api_constants.dart'; 
 
 class SubscriptionWebService {
   final Dio _dio;

@@ -6,275 +6,254 @@ import '../../data/models/users_subscribed_model.dart';
 class SubscriptionCard extends StatelessWidget {
   final UsersSubscribedModel userModel;
   final VoidCallback onCreatePlan;
+  final bool isHistory;
 
   const SubscriptionCard({
     super.key,
     required this.userModel,
     required this.onCreatePlan,
+    this.isHistory = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    final subscriptionsList = (userModel.userSubscriptions ?? [])
-        .where((sub) => sub.status?.toLowerCase() == 'active')
-        .toList();
-        final hasSubscriptions = subscriptionsList.isNotEmpty;
-    final bool hasActivePlan = userModel.hasPlan ?? false;
-    final bool showCreatePlanButton = hasSubscriptions && !hasActivePlan;
+    final subscriptions = userModel.userSubscriptions ?? [];
+    final activeSubscription = _getActiveSubscription(subscriptions);
+    final subscription = isHistory
+        ? _getHistorySubscription(subscriptions)
+        : activeSubscription;
 
-    Color mainAccentColor = hasActivePlan ? Colors.green : AppColors.primaryBtn;
+    final hasPlan = userModel.hasPlan;
+
+    final plan = subscription?.subscription;
+    final planType = plan?.type?.trim().toLowerCase() ?? "bronze";
+    final colors = _getPlanColors(planType);
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: !isHistory && !hasPlan!
+              ? Colors.amber.shade600.withOpacity(0.5)
+              : Colors.grey.shade200,
+          width: 1.5,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 12,
+            offset: const Offset(0, 6),
           ),
         ],
-        border: Border(left: BorderSide(color: mainAccentColor, width: 6)),
       ),
-      child: Theme(
-        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-        child: ExpansionTile(
-          tilePadding: const EdgeInsets.all(14.0),
-          childrenPadding: const EdgeInsets.only(
-            left: 14.0,
-            right: 14.0,
-            bottom: 14.0,
-          ),
-
-          title: Row(
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CircleAvatar(
-                radius: 26,
-                backgroundColor: mainAccentColor.withOpacity(0.2),
-                backgroundImage: userModel.profilePic != null
-                    ? NetworkImage(userModel.profilePic!)
-                    : null,
-                child: userModel.profilePic == null
-                    ? Icon(Icons.person, color: mainAccentColor, size: 26)
-                    : null,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${userModel.firstName ?? ""} ${userModel.lastName ?? ""}'
-                          .trim(),
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF2D3142),
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      "Total Subs: ${subscriptionsList.length}",
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                        fontWeight: FontWeight.w500,
+              Row(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: colors.primary.withOpacity(0.5),
+                        width: 2,
                       ),
                     ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 8),
-
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: hasActivePlan
-                      ? Colors.green.shade50
-                      : Colors.deepOrange.shade50,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: hasActivePlan
-                        ? Colors.green.shade200
-                        : Colors.deepOrange.shade200,
-                    width: 0.5,
+                    child: CircleAvatar(
+                      radius: 26,
+                      backgroundColor: colors.primary.withOpacity(0.1),
+                      backgroundImage: userModel.profilePic != null
+                          ? NetworkImage(userModel.profilePic!)
+                          : null,
+                      child: userModel.profilePic == null
+                          ? Icon(Icons.person, size: 24, color: colors.primary)
+                          : null,
+                    ),
                   ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "${userModel.firstName ?? ""} ${userModel.lastName ?? ""}",
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF1E293B),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  isHistory ? _historyBadge() : _planStatusBadge(hasPlan!),
+                ],
+              ),
+
+              const SizedBox(height: 14),
+              Divider(color: Colors.grey.shade100, height: 1),
+              const SizedBox(height: 14),
+
+              /// PLAN INFO MINI BANNER
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: colors.primary.withOpacity(0.08),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: colors.primary.withOpacity(0.2)),
                 ),
                 child: Row(
-                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
-                      hasActivePlan
-                          ? Icons.check_circle_rounded
-                          : Icons.error_outline_rounded,
-                      size: 13,
-                      color: hasActivePlan
-                          ? Colors.green
-                          : AppColors.primaryBtn,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      hasActivePlan ? "Plan Active" : "Needs Plan",
-                      style: TextStyle(
-                        color: hasActivePlan
-                            ? Colors.green.shade700
-                            : AppColors.primaryBtn,
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
+                    Icon(colors.icon, color: colors.primary, size: 22),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            plan?.title ?? "Default Plan",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                              color: colors.primary,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            planType.toUpperCase(),
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: colors.primary.withOpacity(0.8),
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
               ),
-            ],
-          ),
 
-          children: [
-            const Divider(color: Colors.grey, height: 1, thickness: 0.5),
-            const SizedBox(height: 10),
-            if (!hasSubscriptions)
-              const Text("No subscriptions found for this user.")
-            else
-              ...subscriptionsList.map((sub) {
-                final plan = sub.subscription;
-                final String planType = plan?.type?.toLowerCase() ?? 'bronze';
+              const SizedBox(height: 14),
 
-                Color subAccentColor;
-                IconData subBadgeIcon;
-                switch (planType) {
-                  case 'gold':
-                    subAccentColor = const Color(0xFFFFB300);
-                    subBadgeIcon = Icons.stars_rounded;
-                    break;
-                  case 'silver':
-                    subAccentColor = const Color(0xFF78909C);
-                    subBadgeIcon = Icons.workspace_premium_rounded;
-                    break;
-                  case 'bronze':
-                  default:
-                    subAccentColor = const Color(0xffa87c43);
-                    subBadgeIcon = Icons.emoji_events_rounded;
-                    break;
-                }
-
-                String formattedStartDate = sub.startDate != null
-                    ? DateFormat('yyyy-MM-dd').format(sub.startDate!)
-                    : 'N/A';
-                String formattedEndDate = sub.endDate != null
-                    ? DateFormat('yyyy-MM-dd').format(sub.endDate!)
-                    : 'N/A';
-
-                return Container(
-                  margin: const EdgeInsets.symmetric(vertical: 6),
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: subAccentColor.withOpacity(0.05),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: subAccentColor.withOpacity(0.2)),
+              /// DATES (Start & End Date)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _infoItem(
+                    Icons.calendar_today_rounded,
+                    "Start Date",
+                    _formatDate(subscription?.startDate),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(
-                                subBadgeIcon,
-                                color: subAccentColor,
-                                size: 18,
-                              ),
-                              const SizedBox(width: 6),
-                              Text(
-                                plan?.title ?? "No Plan",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: subAccentColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
+                  _infoItem(
+                    Icons.event_available_rounded,
+                    "End Date",
+                    _formatDate(subscription?.endDate),
+                  ),
+                ],
+              ),
+
+              /// CREATE PLAN BUTTON
+              if (!isHistory && !hasPlan!) ...[
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: onCreatePlan,
+                    icon: const Icon(Icons.auto_awesome_rounded, size: 18),
+                    label: const Text(
+                      "✨ Create Training Plan Now",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
                       ),
-                      const SizedBox(height: 8),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          _buildSubDetailsItem(
-                            Icons.calendar_month_outlined,
-                            "Starts",
-                            formattedStartDate,
-                          ),
-                          _buildSubDetailsItem(
-                            Icons.event_busy_outlined,
-                            "Ends",
-                            formattedEndDate,
-                          ),
-                        ],
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryBtn,
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                    ],
-                  ),
-                );
-              }),
-            if (showCreatePlanButton) ...[
-              const SizedBox(height: 10),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: onCreatePlan,
-                  icon: const Icon(Icons.add_task_rounded, size: 18),
-                  label: const Text(
-                    "Create Training Plan Now",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryBtn,
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
                     ),
                   ),
                 ),
-              ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildSubDetailsItem(IconData icon, String label, String value) {
+  Widget _planStatusBadge(bool hasPlan) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: hasPlan
+            ? Colors.green.withOpacity(0.1)
+            : Colors.amber.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: hasPlan
+              ? Colors.green.withOpacity(0.3)
+              : Colors.amber.withOpacity(0.4),
+        ),
+      ),
+      child: Text(
+        hasPlan ? "Active Plan" : "⚠️ Needs Plan",
+        style: TextStyle(
+          color: hasPlan ? Colors.green.shade700 : Colors.amber.shade800,
+          fontSize: 11,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
+  Widget _historyBadge() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: Colors.grey.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: const Text(
+        "Expired",
+        style: TextStyle(
+          color: Colors.grey,
+          fontSize: 11,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
+  Widget _infoItem(IconData icon, String title, String value) {
     return Row(
       children: [
-        Icon(icon, size: 14, color: Colors.grey[600]),
-        const SizedBox(width: 4),
+        Icon(icon, size: 16, color: Colors.grey.shade500),
+        const SizedBox(width: 6),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              label,
-              style: TextStyle(
-                fontSize: 9,
-                color: Colors.grey[500],
-                fontWeight: FontWeight.w500,
-              ),
+              title,
+              style: TextStyle(fontSize: 10, color: Colors.grey.shade500),
             ),
             Text(
               value,
               style: const TextStyle(
-                fontSize: 11,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF4F5D75),
+                fontSize: 12,
+                color: Color(0xFF1E293B),
               ),
             ),
           ],
@@ -282,4 +261,91 @@ class SubscriptionCard extends StatelessWidget {
       ],
     );
   }
+
+  String _formatDate(DateTime? date) {
+    if (date == null) return "-";
+    return DateFormat("dd MMM yyyy").format(date);
+  }
+
+  _PlanColors _getPlanColors(String type) {
+    switch (type) {
+      case "gold":
+        return _PlanColors(
+          primary: const Color(0xFFFFA500),
+          icon: Icons.workspace_premium_rounded,
+        );
+      case "silver":
+        return _PlanColors(
+          primary: const Color(0xFF94A3B8),
+          icon: Icons.star_rounded,
+        );
+      default:
+        return _PlanColors(
+          primary: const Color(0xFFCD7F32),
+          icon: Icons.emoji_events_rounded,
+        );
+    }
+  }
+
+  bool _hasValidActiveStatus(UserSubscription sub) {
+    final status = sub.status?.trim().toLowerCase();
+    return status == "active" && (sub.isActive ?? 0) == 1;
+  }
+
+  bool _isCurrentlyActive(UserSubscription sub, DateTime now) {
+    final start = sub.startDate;
+    final end = sub.endDate;
+    if (end == null) return false;
+    if (!_hasValidActiveStatus(sub)) return false;
+    final hasStarted = start == null || !start.isAfter(now);
+    final hasNotEnded = end.isAfter(now) || end.isAtSameMomentAs(now);
+    return hasStarted && hasNotEnded;
+  }
+
+  UserSubscription? _getActiveSubscription(
+    List<UserSubscription> subscriptions,
+  ) {
+    final now = DateTime.now();
+    UserSubscription? best;
+    for (final sub in subscriptions) {
+      if (!_isCurrentlyActive(sub, now)) continue;
+      if (best == null) {
+        best = sub;
+        continue;
+      }
+      final bestStart = best.startDate;
+      final subStart = sub.startDate;
+      if (subStart != null &&
+          (bestStart == null || subStart.isAfter(bestStart))) {
+        best = sub;
+      }
+    }
+    return best;
+  }
+
+  UserSubscription? _getHistorySubscription(
+    List<UserSubscription> subscriptions,
+  ) {
+    final now = DateTime.now();
+    final windowStart = now.subtract(const Duration(days: 30));
+    UserSubscription? latest;
+    for (final sub in subscriptions) {
+      final endDate = sub.endDate;
+      if (endDate == null) continue;
+      final isFinished = !_isCurrentlyActive(sub, now);
+      final isRecent = endDate.isAfter(windowStart);
+      if (!isFinished || !isRecent) continue;
+      if (latest == null || endDate.isAfter(latest.endDate!)) {
+        latest = sub;
+      }
+    }
+    return latest;
+  }
+}
+
+class _PlanColors {
+  final Color primary;
+  final IconData icon;
+
+  _PlanColors({required this.primary, required this.icon});
 }
