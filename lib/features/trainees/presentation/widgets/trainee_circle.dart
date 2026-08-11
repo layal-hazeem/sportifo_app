@@ -37,14 +37,11 @@ class _TraineeCircleState extends State<TraineeCircle>
       curve: Curves.easeOutBack,
     );
 
-    Future.delayed(
-      Duration(milliseconds: 80 * widget.index),
-      () {
-        if (mounted) {
-          _controller.forward();
-        }
-      },
-    );
+    Future.delayed(Duration(milliseconds: 80 * widget.index), () {
+      if (mounted) {
+        _controller.forward();
+      }
+    });
   }
 
   @override
@@ -82,27 +79,14 @@ class _TraineeCircleState extends State<TraineeCircle>
   IconData get goalIcon {
     final goal = widget.plan.goal?.toLowerCase() ?? '';
 
-    if (goal.contains('strength')) {
+    if (goal.contains('muscle') || goal.contains('bulk')) {
       return Icons.fitness_center_rounded;
     }
 
-    if (goal.contains('muscle') || goal.contains('bulk')) {
-      return Icons.bolt_rounded;
-    }
-
     if (goal.contains('weight') || goal.contains('loss')) {
-      return Icons.monitor_weight_outlined;
+      return Icons.local_fire_department;
     }
-
-    if (goal.contains('fitness')) {
-      return Icons.directions_run_rounded;
-    }
-
-    if (goal.contains('endurance')) {
-      return Icons.speed_rounded;
-    }
-
-    return Icons.flag_rounded;
+    return Icons.monitor_weight_outlined;
   }
 
   @override
@@ -163,14 +147,10 @@ class _TraineeCircleState extends State<TraineeCircle>
                               profilePic,
                               fit: BoxFit.cover,
                               errorBuilder: (_, __, ___) {
-                                return _InitialsAvatar(
-                                  initials: initials,
-                                );
+                                return _InitialsAvatar(initials: initials);
                               },
                             )
-                          : _InitialsAvatar(
-                              initials: initials,
-                            ),
+                          : _InitialsAvatar(initials: initials),
                     ),
                   ),
                 ),
@@ -214,10 +194,7 @@ class _TraineeCircleState extends State<TraineeCircle>
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: const Color(0xFFFFFBF5),
-                      border: Border.all(
-                        color: Colors.white,
-                        width: 2,
-                      ),
+                      border: Border.all(color: Colors.white, width: 2),
                     ),
                     child: Icon(
                       Icons.arrow_forward_rounded,
@@ -277,9 +254,7 @@ class _TraineeCircleState extends State<TraineeCircle>
 class _InitialsAvatar extends StatelessWidget {
   final String initials;
 
-  const _InitialsAvatar({
-    required this.initials,
-  });
+  const _InitialsAvatar({required this.initials});
 
   @override
   Widget build(BuildContext context) {
