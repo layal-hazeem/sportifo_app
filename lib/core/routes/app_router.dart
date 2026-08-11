@@ -3,15 +3,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/logout/logout_cubit.dart';
 import 'package:sportifo_app/features/existing_days/presentation/view/existing_days_screen.dart';
 import 'package:sportifo_app/features/existing_days/presentation/view_model/existing_days_cubit.dart';
-import 'package:sportifo_app/features/plans/presentation/view/create_plan_screen.dart';
-import 'package:sportifo_app/features/plans/presentation/view_model/create_plan_cubit.dart';
-import 'package:sportifo_app/features/profile/data/models/user_profile_response.dart';
+import 'package:sportifo_app/features/create_plan_by_coach/presentation/view/create_plan_screen.dart';
+import 'package:sportifo_app/features/create_plan_by_coach/presentation/view_model/create_plan_cubit.dart';
+import 'package:sportifo_app/features/plan_details/presentation/view/plan_details_screen.dart';
+import 'package:sportifo_app/features/plan_details/presentation/view_model/plan_details_cubit.dart';
+import 'package:sportifo_app/features/profile/data/models/get_profile_response.dart';
 import 'package:sportifo_app/features/profile/presentation/view/edit_profile_page.dart';
 import 'package:sportifo_app/features/settings/presentation/view/delete_account_screen.dart';
 import 'package:sportifo_app/features/settings/presentation/view/settings_screen.dart';
 import 'package:sportifo_app/features/subscriptions/data/models/users_subscribed_model.dart';
 import 'package:sportifo_app/features/subscriptions/presentation/view/subscriptions_screen.dart';
 import 'package:sportifo_app/features/subscriptions/presentation/view_model/subscription_cubit.dart';
+import 'package:sportifo_app/features/trainees/presentation/view/trainees_screen.dart';
+import 'package:sportifo_app/features/trainees/presentation/view_model/trainees_cubit.dart';
 import '../../features/auth/presentation/view/complete_profile_info.dart';
 import '../../features/auth/presentation/view/register_screen.dart';
 import '../../features/auth/presentation/view_model/complete_profile/complete_profile_cubit.dart';
@@ -184,7 +188,7 @@ class AppRouter {
         );
 
       case AppRoutes.editProfile:
-        final profile = settings.arguments as ProfileResponsModel;
+        final profile = settings.arguments as ProfileResponseModel;
 
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
@@ -192,6 +196,27 @@ class AppRouter {
             child: EditProfilePage(profile: profile),
           ),
         );
+
+        case AppRoutes.trainees:
+  return MaterialPageRoute(
+    builder: (_) => BlocProvider(
+      create: (_) => getIt<TraineesCubit>()..getCoachTrainees(),
+      child: const TraineesScreen(),
+    ),
+  );
+
+  case AppRoutes.planDetails:
+    final planId = settings.arguments as int;
+
+    return MaterialPageRoute(
+      builder: (_) => BlocProvider(
+        create: (_) => getIt<PlanDetailsCubit>()
+          ..getPlanDetails(planId),
+        child: PlanDetailsScreen(planId: planId),
+      ),
+    );
+
+
 
       case AppRoutes.otpScreen:
         final args = settings.arguments;

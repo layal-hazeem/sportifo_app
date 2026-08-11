@@ -681,4 +681,25 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get coachInfo => 'معلومات المدرب';
+
+  @override
+  String get chatAI => 'المساعد الذكي';
+
+  @override
+  String get sub => 'الاشتراكات';
+
+  @override
+  String get trainees => 'المتدربين';
+
+  @override
+  String get noInternet => 'لا يوجد اتصال بالانترنت';
+
+  @override
+  String get checkYourNetwork => 'يرجى التحقق من إعدادات الشبكة الخاصة بك والمحاولة مرة أخرى';
+
+  @override
+  String get recentlyEnded => 'المنتهية مؤخراً';
+
+  @override
+  String get endedLastMonth => 'الاشتراكات التي انتهت خلال الشهر الماضي';
 }

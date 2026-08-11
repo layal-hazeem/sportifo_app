@@ -46,3 +46,6 @@ class ApiConstants {
   static const String savedPlatformPlans = "plans/platform/saved";
 
 }
+static const String trainees = "plans/coach";
+static const String planDetails = "/plans";
+}
