@@ -10,7 +10,8 @@ import '../../../coaches/presentation/views/all_coaches_screen.dart';
 import '../../../coaches/presentation/views/coach_details_screen.dart';
 import '../../../coaches/presentation/widgets/coach_card.dart';
 
-// 🔥 الاستيرادات الجديدة الخاصة بالأهداف الذكية
+// 🔥 الاستيرادات الخاصة بالخطط المجانية والأهداف
+import '../../../platform_plans/presentation/view_model/platform_plans_cubit.dart';
 import '../../../platform_plans/presentation/widgets/platform_plans_section.dart';
 import '../../../targets/presentation/view_model/target_cubit/target_cubit.dart';
 import '../../../targets/presentation/view_model/target_cubit/target_state.dart';
@@ -30,6 +31,9 @@ class TraineeScreen extends StatelessWidget {
         BlocProvider(create: (context) => getIt<AdsCubit>()),
         // 🔥 حقن كوبيت الأهداف وتشغيله فورا عند فتح الهوم لجلب البيانات
         BlocProvider(create: (context) => getIt<TargetCubit>()..fetchLatestTarget()),
+
+        // 🚀 حقن الكيوبيت الخاص بالخطط المجانية وتمرير القيمة من GetIt
+        BlocProvider.value(value: getIt<PlatformPlansCubit>()..fetchPlatformPlans()),
       ],
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -47,21 +51,21 @@ class TraineeScreen extends StatelessWidget {
             BlocBuilder<TargetCubit, TargetState>(
               builder: (context, state) {
                 if (state is TargetLoading) {
-                  // تأثير الشيمر اللطيف أثناء التحميل
                   return const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                     child: LoadingShimmer(width: double.infinity, height: 160, borderRadius: 24),
                   );
                 } else if (state is TargetSuccess) {
-                  // عيشي الفخامة! إذا في داتا مسجلة، بيظهر كرت الحلقات والماكروز فوراً
                   return DailyNutritionCard(target: state.targetData);
                 } else {
-                  // الـ World-Class UX: لو اليوزر جديد وماله حاطط هدف (TargetInitial)
-                  // بيختفي كرت السعرات الفاضي وبيظهر كرت التفعيل المثير للاهتمام!
                   return const TargetActivationCard();
                 }
               },
             ),
+
+            const SizedBox(height: 15),
+
+            // 🔥 2️⃣.5️⃣ قسم الخطط المجانية الجديد بالهوم
             const PlatformPlansSection(),
 
             const SizedBox(height: 15),

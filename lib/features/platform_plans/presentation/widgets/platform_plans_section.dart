@@ -36,7 +36,7 @@ class PlatformPlansSection extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      'Free Plans',
+                      'Sportifo Plans',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,

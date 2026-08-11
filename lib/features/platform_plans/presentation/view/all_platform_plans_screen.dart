@@ -19,7 +19,7 @@ class AllPlatformPlansScreen extends StatelessWidget {
         backgroundColor: AppColors.background,
         // 🔥 التعديل هنا: استدعاء الـ WaveAppBar بكل بساطة
         appBar: const WaveAppBar(
-          title: 'Explore Platform Plans',
+          title: 'Sportifo Plans',
         ),
         body: BlocBuilder<PlatformPlansCubit, PlatformPlansState>(
           builder: (context, state) {
