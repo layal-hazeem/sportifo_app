@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sportifo_app/core/routes/app_routes.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/logout/logout_cubit.dart';
 import 'package:sportifo_app/features/existing_days/presentation/view/existing_days_screen.dart';
 import 'package:sportifo_app/features/existing_days/presentation/view_model/existing_days_cubit.dart';
 import 'package:sportifo_app/features/nutrition/presentation/view/food_logs_screen.dart';
-import 'package:sportifo_app/features/plans/presentation/view/create_plan_screen.dart';
-import 'package:sportifo_app/features/plans/presentation/view_model/create_plan_cubit.dart';
-import 'package:sportifo_app/features/profile/data/models/user_profile_response.dart';
 import 'package:sportifo_app/features/create_plan_by_coach/presentation/view/create_plan_screen.dart';
 import 'package:sportifo_app/features/create_plan_by_coach/presentation/view_model/create_plan_cubit.dart';
 import 'package:sportifo_app/features/plan_details/presentation/view/plan_details_screen.dart';

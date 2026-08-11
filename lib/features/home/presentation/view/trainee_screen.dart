@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sportifo_app/features/platform_plans/presentation/view_model/platform_plans_cubit.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../../../ ads/presentation/view_model/ads_cubit.dart';
 import '../../../ ads/presentation/widgets/ads_carousel_widget.dart';
@@ -60,6 +61,7 @@ class _TraineeScreenState extends State<TraineeScreen> with WidgetsBindingObserv
         BlocProvider(create: (context) => getIt<AdsCubit>()),
         BlocProvider(create: (context) => getIt<TargetCubit>()..fetchLatestTarget()),
         BlocProvider(create: (context) => _nutritionCubit..initialize()),
+        BlocProvider(create: (context) => getIt<PlatformPlansCubit>()..fetchPlatformPlans()),
       ],
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),

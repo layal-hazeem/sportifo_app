@@ -10,9 +10,6 @@ import 'package:sportifo_app/features/existing_days/presentation/view_model/exis
 import 'package:sportifo_app/features/nutrition/data/repository/nutrition_repository.dart';
 import 'package:sportifo_app/features/nutrition/data/web_services/nutrition_web_service.dart';
 import 'package:sportifo_app/features/nutrition/presentation/view_model/nutrition_cubit.dart';
-import 'package:sportifo_app/features/plans/data/repository/create_plan_repository.dart';
-import 'package:sportifo_app/features/plans/data/web_services/create_plan_service.dart';
-import 'package:sportifo_app/features/plans/presentation/view_model/create_plan_cubit.dart';
 import 'package:sportifo_app/features/create_plan_by_coach/data/repository/create_plan_repository.dart';
 import 'package:sportifo_app/features/create_plan_by_coach/data/web_services/create_plan_service.dart';
 import 'package:sportifo_app/features/create_plan_by_coach/presentation/view_model/create_plan_cubit.dart';

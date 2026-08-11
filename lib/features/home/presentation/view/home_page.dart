@@ -44,16 +44,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   List<Widget> _getTraineeScreens() {
-    final l10n = AppLocalizations.of(context)!;
     return [
       const ProgressScreen(),
-      Center(child: Text(l10n.myPlans)),
-      const TraineeScreen(),
-      Center(child: Text(l10n.progress)),
       BlocProvider(
-        create: (context) => getIt<MyPlansCubit>(), // لا تنسي تكوني مسجلتيه بالـ getIt
+        create: (context) => getIt<MyPlansCubit>(),
         child: const MyPlansScreen(),
-      ),      const TraineeScreen(),
+      ),
+      const TraineeScreen(),
       BlocProvider(
         create: (context) => getIt<CategoriesCubit>(),
         child: const WorkoutTypeScreen(),
@@ -63,27 +60,21 @@ class _HomePageState extends State<HomePage> {
   }
 
   List<Widget> _getCoachScreens() {
-    final l10n = AppLocalizations.of(context)!;
-
     return [
       BlocProvider(
         create: (context) => getIt<SubscriptionCubit>()..getSubscriptions(),
         child: SubscriptionsScreen(),
       ),
-
       BlocProvider(
         create: (context) => getIt<TraineesCubit>()..getCoachTrainees(),
         child: const TraineesScreen(),
       ),
-
       const CoachScreen(),
-
       BlocProvider(
         create: (context) => getIt<CategoriesCubit>(),
         child: const WorkoutTypeScreen(),
       ),
-
-      Center(child: Text(l10n.chat)),
+      const Center(child: Text("Chat")),
     ];
   }
 
@@ -95,7 +86,6 @@ class _HomePageState extends State<HomePage> {
       providers: [
         BlocProvider(create: (_) => getIt<LogoutCubit>()),
         BlocProvider(create: (_) => getIt<ProfileCubit>()..getProfile()),
-        // 🔥 توفير الـ SavedExercisesCubit للاستخدام في كل مكان
         BlocProvider.value(value: getIt<SavedExercisesCubit>()),
       ],
       child: BlocListener<LogoutCubit, LogoutState>(
@@ -124,7 +114,6 @@ class _HomePageState extends State<HomePage> {
               );
             }
 
-            // 1. حالة التحميل
             if (profileState is ProfileLoading ||
                 profileState is ProfileInitial) {
               return const Scaffold(
@@ -134,7 +123,6 @@ class _HomePageState extends State<HomePage> {
               );
             }
 
-            // 2. حالة الفشل (لا يوجد كاش ولا يوجد إنترنت) - هنا تصميم السينيور
             if (profileState is ProfileFailure) {
               return Scaffold(
                 body: Center(
@@ -162,7 +150,6 @@ class _HomePageState extends State<HomePage> {
               );
             }
 
-            // 3. حالة النجاح (الإنترنت شغال أو الداتا مكيشة)
             if (profileState is ProfileSuccess) {
               final profile = profileState.profileModel;
               final isCoach = profile.role == 'coach';
@@ -237,8 +224,7 @@ class _HomePageState extends State<HomePage> {
               );
             }
 
-            // return Scaffold(body: Center(child: Text(l10n.error)));
-            return const SizedBox.shrink(); // حالة افتراضية آمنة
+            return const SizedBox.shrink();
           },
         ),
       ),
