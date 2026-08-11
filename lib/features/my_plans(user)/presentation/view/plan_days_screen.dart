@@ -135,7 +135,13 @@ class PlanDaysScreen extends StatelessWidget {
 
   Widget _buildWeekProgressBar(PlanDaysSuccess state) {
     int totalWeeks = state.totalWeeks > 0 ? state.totalWeeks : 1;
-    int currentWeek = state.currentWeek.clamp(1, totalWeeks);
+
+    // 🔥 الباك إند ما بيوقف المستخدم من الاستمرار باللعب حتى بعد ما يخلص
+    // كل أسابيع الخطة (current_week ممكن يصير أكبر من totalWeeks) - وهاد
+    // مقصود ومطلوب. فمنعرض الرقم الحقيقي زي ما هو ("Week 9 of 8") بدون أي
+    // تعديل أو استبدال نصي - بس شريط التقدم البصري بيوقف عند 100% لأنو
+    // فيزيائياً ما ممكن يتعدى حدود الشريط.
+    int currentWeek = state.currentWeek;
 
     // 🔥 السحر هون: حساب دقيق لنسبة التقدم يبدأ من 0%
     int totalDaysInWeek = state.planDetails.days.length;
@@ -146,7 +152,7 @@ class PlanDaysScreen extends StatelessWidget {
 
     // نحسب التقدم الكلي: (الأسابيع السابقة اللي خلصت + تقدم الأسبوع الحالي) تقسيم كل الأسابيع
     double progress = ((currentWeek - 1) + weekProgress) / totalWeeks;
-    progress = progress.clamp(0.0, 1.0); // عشان ما تتجاوز 100%
+    progress = progress.clamp(0.0, 1.0); // عشان الشريط البصري بس ما يتعدى 100%
 
     return Container(
       margin: const EdgeInsets.fromLTRB(20, 20, 20, 10),

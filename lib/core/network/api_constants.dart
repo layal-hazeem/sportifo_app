@@ -40,4 +40,9 @@ class ApiConstants {
   static const String exerciseLogsActivity = "exercise-logs/activity"; // 👈 GET: سجل الأنشطة بالتواريخ الحقيقية
   static const String subscribe = "subscriptions/subscribe";
   static const String plans = "plans"; // 👈 ضيفي هاد السطر
+// 🔥 Platform Plans Endpoints
+  static const String platformPlans = "plans/platform";
+  static String toggleSavePlatformPlan(int planId) => "plans/platform/$planId";
+  static const String savedPlatformPlans = "plans/platform/saved";
+
 }

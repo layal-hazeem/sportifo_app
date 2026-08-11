@@ -12,7 +12,8 @@ class WorkoutPlanCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const String defaultCoverImage = 'https://img.freepik.com/free-photo/dumbbells-floor-gym-ai-generative_123827-23744.jpg';
+    const String defaultCoverImage =
+        'https://img.freepik.com/free-photo/dumbbells-floor-gym-ai-generative_123827-23744.jpg';
 
     // 🔥 حسابات شريط التقدم والأسابيع
     int durationMonths = plan.durationMonths ?? 1;
@@ -60,8 +61,11 @@ class WorkoutPlanCard extends StatelessWidget {
             ),
             child: Stack(
               children: [
+                // 🔥 التعديل هنا: نستخدم صورة الخطة إذا موجودة، وإلا الصورة الافتراضية
                 CustomCachedImage(
-                  imageUrl: defaultCoverImage,
+                  imageUrl: (plan.image != null && plan.image!.isNotEmpty)
+                      ? plan.image!
+                      : defaultCoverImage,
                   height: 140,
                   width: double.infinity,
                   fit: BoxFit.cover,
@@ -80,6 +84,27 @@ class WorkoutPlanCard extends StatelessWidget {
                     ),
                   ),
                 ),
+                // 🔥 التعديل هنا: شارة تعرض الـ Type إذا كان موجود (للخطط المحفوظة)
+                if (plan.type != null && plan.type!.isNotEmpty)
+                  Positioned(
+                    top: 16,
+                    left: 20,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryBtn, // لون برتقالي مميز
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        plan.type!.toUpperCase(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                  ),
                 // التاريخ فوق الصورة
                 Positioned(
                   top: 16,

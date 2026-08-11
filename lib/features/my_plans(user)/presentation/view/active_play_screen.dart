@@ -516,6 +516,7 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
                         durationController: _repsController,
                         isPaused: _isPaused,
                         isLoading: _isLoading,
+                        autoStart: true, // 🔥 كان الـ parameter موجود بس مش مفعّل من هون - هيك بالضبط كان السبب إنو ما كان يبلش لحاله
                         onLogSet: () => _onLogTimedSet(state),
                         onSkipSet: () => _onSkipSet(state),
                       )

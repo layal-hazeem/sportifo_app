@@ -68,6 +68,14 @@ class _TimedSetInputCardState extends State<TimedSetInputCard> {
     if (widget.isPaused && !oldWidget.isPaused && _isRunning) {
       _stopTimer();
     }
+
+    // 🔥 ضفنا هاد الاتجاه الناقص: لما يرفع المتدرب الـ Pause (يعني isPaused
+    // رجعت false)، لازم العداد يكمل لحاله فوراً - بدون هاد السطر، ما كان
+    // في أي طريقة يرجع يشتغل غير زر التشغيل اليدوي (يلي هلق شلناه بالكامل
+    // بناءً على طلبك: البوز العام هو المتحكم الوحيد).
+    if (!widget.isPaused && oldWidget.isPaused && !_isRunning) {
+      _startTimer();
+    }
   }
 
   void _initTime() {
@@ -88,16 +96,6 @@ class _TimedSetInputCardState extends State<TimedSetInputCard> {
     int m = seconds ~/ 60;
     int s = seconds % 60;
     return "${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}";
-  }
-
-  void _toggleTimer() {
-    if (widget.isPaused) return;
-
-    if (_isRunning) {
-      _stopTimer();
-    } else {
-      _startTimer();
-    }
   }
 
   void _startTimer() {
@@ -234,28 +232,11 @@ class _TimedSetInputCardState extends State<TimedSetInputCard> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _buildAdjustButton("- 15s", _subtract15Seconds),
-              const SizedBox(width: 16),
-              GestureDetector(
-                onTap: widget.isPaused ? null : _toggleTimer,
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 250),
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: _isRunning ? Colors.orange.shade100 : AppColors.primaryBtn,
-                    shape: BoxShape.circle,
-                    boxShadow: _isRunning
-                        ? []
-                        : [BoxShadow(color: AppColors.primaryBtn.withOpacity(0.35), blurRadius: 10, offset: const Offset(0, 4))],
-                  ),
-                  child: Icon(
-                    _isRunning ? Icons.pause_rounded : Icons.play_arrow_rounded,
-                    color: _isRunning ? AppColors.primaryBtn : Colors.white,
-                    size: 28,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 16),
+              const SizedBox(width: 24),
+              // 🔥 شلنا زر التشغيل/الإيقاف اليدوي (كان دائرة بالنص) بناءً على
+              // طلبك - البوز العام (Pause) تبع الشاشة هو المتحكم الوحيد
+              // بالعداد هلق، بمقاومة ولا كارديو، بدون زر إضافي هون يلخبط.
+              const SizedBox(width: 24),
               _buildAdjustButton("+ 15s", _add15Seconds),
             ],
           ),

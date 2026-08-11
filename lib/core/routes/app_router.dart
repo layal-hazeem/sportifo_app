@@ -21,6 +21,8 @@ import '../../features/my_plans(user)/presentation/view/plan_days_screen.dart';
 import '../../features/my_plans(user)/presentation/view/workout_summary_screen.dart';
 import '../../features/my_plans(user)/presentation/view_model/my_plans_cubit.dart';
 import '../../features/my_plans(user)/presentation/view_model/plan_days_cubit.dart';
+import '../../features/platform_plans/presentation/view/all_platform_plans_screen.dart';
+import '../../features/platform_plans/presentation/view_model/platform_plans_cubit.dart';
 import '../../features/trainee_subscriptions/data/models/subscription_month_model.dart';
 import '../../features/trainee_subscriptions/presentation/views/payment_screen.dart';
 import '../../features/trainee_subscriptions/presentation/views/select_month_screen.dart';
@@ -87,8 +89,6 @@ class AppRouter {
             child: const LoginScreen(),
           ),
         );
-
- 
       case AppRoutes.home:
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
@@ -97,14 +97,19 @@ class AppRouter {
               BlocProvider(
                 create: (_) => getIt<TargetCubit>()..fetchLatestTarget(),
               ),
-              BlocProvider(create: (_) => getIt<TargetCubit>()..fetchLatestTarget()),
-              // ✅ أضفنا SavedExercisesCubit هون
               BlocProvider.value(value: getIt<SavedExercisesCubit>()),
+              // 🔥 إضافة الكيوبيت الجديد وتشغيله فورا لجلب الخطط
+              BlocProvider(
+                create: (_) => getIt<PlatformPlansCubit>()..fetchPlatformPlans(),
+              ),
             ],
             child: const HomePage(),
           ),
         );
-
+      case AppRoutes.allPlatformPlans:
+        return MaterialPageRoute(
+          builder: (_) => const AllPlatformPlansScreen(),
+        );
       case AppRoutes.usersSubscribed:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(

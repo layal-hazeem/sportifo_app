@@ -1,4 +1,3 @@
-// 1. موديل الخطة الأساسي (PlanModel)
 import '../../../workout/data/models/exercise_model.dart';
 
 class PlanModel {
@@ -6,14 +5,16 @@ class PlanModel {
   final String status;
   final bool isSelfMade;
   final CoachInfo? coach;
-
-  // 🔥 الحقول الجديدة اللي إجت من الباك إند
+  final String? type;
+  final String? image;
   final String? goal;
   final int? durationMonths;
   final int? daysCount;
-  final String? createdAt; // 👈 التعديل هنا: إضافة تاريخ الإنشاء
+  final String? createdAt;
 
-  // مصفوفة الأيام (رح تكون فاضية بصفحة اللائحة، ومليانة بصفحة التفاصيل)
+  // 🔥 1. إضافة متغير السيف (بدون final ليكون قابل للتعديل من الكيوبيت)
+  bool isSaved;
+
   final List<PlanDayModel> days;
 
   PlanModel({
@@ -24,8 +25,11 @@ class PlanModel {
     this.goal,
     this.durationMonths,
     this.daysCount,
-    this.createdAt, // 👈 إضافته للكونستراكتور
+    this.createdAt,
     required this.days,
+    this.type,
+    this.image,
+    this.isSaved = false, // 👈 2. قيمة افتراضية بالكونستراكتور
   });
 
   factory PlanModel.fromJson(Map<String, dynamic> json) {
@@ -34,14 +38,16 @@ class PlanModel {
       status: json['status'] ?? 'unknown',
       isSelfMade: json['is_self_made'] == 1 || json['is_self_made'] == true,
       coach: json['coach'] != null ? CoachInfo.fromJson(json['coach']) : null,
-
-      // 🔥 قراءة الحقول الجديدة
       goal: json['goal'],
       durationMonths: json['duration_months'],
       daysCount: json['days_count'],
-      createdAt: json['created_at'], // 👈 قراءته من الـ JSON
+      createdAt: json['created_at'],
+      type: json['type'],
+      image: json['image'],
 
-      // 🔥 فحص ذكي: إذا الـ days مو موجودة بالـ JSON، حط مصفوفة فاضية بدون ما تعمل كراش
+      // 👈 3. قراءة حالة الحفظ من الباك إند (إذا كانت موجودة)
+      isSaved: json['is_saved'] == 1 || json['is_saved'] == true,
+
       days: json['days'] != null
           ? List<PlanDayModel>.from(
         json['days'].map((x) => PlanDayModel.fromJson(x)),
@@ -75,8 +81,8 @@ class CoachInfo {
 // 3. موديل يوم التدريب (يحتوي على اسم اليوم وقائمة التمارين)
 class PlanDayModel {
   final int id;
-  final String name; // مثال: "Chest", "Back"
-  final List<ExerciseModel> exercises; // 🔥 هنا نستخدم الـ ExerciseModel تبعك!
+  final String name;
+  final List<ExerciseModel> exercises;
 
   PlanDayModel({
     required this.id,
@@ -86,7 +92,6 @@ class PlanDayModel {
 
   factory PlanDayModel.fromJson(Map<String, dynamic> json) {
     return PlanDayModel(
-      // 👈 fallback خفيف نخليه بلا ضرر: لو يوماً تغيّر اسم المفتاح بالـ backend
       id: json['id'] ?? json['day_id'] ?? 0,
       name: json['name'] ?? '',
       exercises: json['exercises'] != null

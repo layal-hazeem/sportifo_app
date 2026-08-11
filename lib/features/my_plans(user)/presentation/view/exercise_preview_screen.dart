@@ -217,13 +217,13 @@ class ExercisePreviewScreen extends StatelessWidget {
               child: SizedBox(
                 width: double.infinity, height: 56,
                 child: ElevatedButton(
-                  onPressed: () async { // 🔥 1. ضفنا كلمة async السحرية هنا
+                  onPressed: () async {
                     if (isFinishedEarly) {
                       Navigator.of(context).popUntil((route) => route.isFirst);
                     }
                     else if (isFullyCompleted) {
                       if (isLastExercise) {
-                        // 🛑 السحر المعماري هنا لمنع مشكلة الكاش والتأخير 🛑
+                        // 🛑 السحر المعماري هنا لمنع مشكلة الكاش والتأخير واختفاء الداتا 🛑
 
                         // 1. إظهار دائرة تحميل شفافة لتمنع الانتقال قبل رد السيرفر
                         showDialog(
@@ -232,8 +232,14 @@ class ExercisePreviewScreen extends StatelessWidget {
                           builder: (ctx) => const Center(child: CircularProgressIndicator(color: AppColors.primaryBtn)),
                         );
 
-                        // 2. إجبار التطبيق ينتظر (await) حتى يختم السيرفر اليوم كلياً
-                        await context.read<ActiveWorkoutCubit>().completeWorkout(
+                        final workoutCubit = context.read<ActiveWorkoutCubit>();
+
+                        // 🔥 أخذ نسخة احتياطية من البيانات "قبل" ما تتمسح من الذاكرة 🔥
+                        final Map<int, List<LoggedSetModel>> savedSetsCopy = Map.from(workoutCubit.allLoggedSets);
+                        final List<ExerciseModel> exercisesCopy = List.from(workoutCubit.exercises);
+
+                        // 2. إجبار التطبيق ينتظر (await) حتى يختم السيرفر اليوم كلياً ويمسح الكاش
+                        await workoutCubit.completeWorkout(
                           planId: planId,
                           planDayId: dayId,
                         );
@@ -241,7 +247,7 @@ class ExercisePreviewScreen extends StatelessWidget {
                         // 3. إخفاء دائرة التحميل بعد تأكيد السيرفر
                         if (context.mounted) Navigator.pop(context);
 
-                        // 4. الآن ننتقل لشاشة الملخص والسيرفر جاهز 100%
+                        // 4. الآن ننتقل لشاشة الملخص ونمرر لها "النسخ المحفوظة" بدلاً من الكيوبيت الممسوح!
                         if (context.mounted) {
                           Navigator.pushReplacementNamed(
                             context,
@@ -249,14 +255,14 @@ class ExercisePreviewScreen extends StatelessWidget {
                             arguments: {
                               'dayName': dayName,
                               'totalTime': workoutTimeStr ?? "00:00",
-                              'totalExercises': context.read<ActiveWorkoutCubit>().exercises.length,
-                              'exercises': context.read<ActiveWorkoutCubit>().exercises,
-                              'allLoggedSets': context.read<ActiveWorkoutCubit>().allLoggedSets,
+                              'totalExercises': exercisesCopy.length,
+                              'exercises': exercisesCopy,
+                              'allLoggedSets': savedSetsCopy,
                             },
                           );
                         }
                       } else {
-                        // 🧠 اللوجيك الذكي للتمرين التالي (نفسه اللي اتفقنا عليه)
+                        // 🧠 اللوجيك الذكي للتمرين التالي
                         final workoutCubit = context.read<ActiveWorkoutCubit>();
 
                         int currentIndex = 0;
@@ -329,8 +335,8 @@ class ExercisePreviewScreen extends StatelessWidget {
                       isFinishedEarly
                           ? "End Workout"
                           : isFullyCompleted
-                          ? (isLastExercise ? "Finish Workout" : "Next Exercise") // 👈 عدلت النص ليكون أوضح
-                          : (isCompleted ? "Resume Exercise" : "Start"), // 👈 Resume بتعطي شعور بالاستكمال
+                          ? (isLastExercise ? "Finish Workout" : "Next Exercise")
+                          : (isCompleted ? "Resume Exercise" : "Start"),
                       style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w900)
                   ),
                 ),
