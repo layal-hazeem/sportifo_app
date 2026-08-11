@@ -24,10 +24,20 @@ class ApiConstants {
   static const String coaches = "coaches";
   static const String usersSubscribed = "users-subscribed";
   static const String createPlan = "plans";
+  static const String getUserPlans = "plans/user";
+  // 🔥 الباك إند فصل الـ endpoint الواحد لتلاتة منفصلين (كل تاب بريكويست لحاله)
+  static const String plansSubscribedCoach = "plans/subscribed-coach";
+  static const String plansSelf = "plans/self";
+  static const String plansPlatformSaved = "plans/platform/saved";
+
+  // 🔥 endpoints تتبّع تقدّم الأسبوع من الباك إند مباشرة (source of truth
+  // الوحيد هلق - شالت كل حساباتنا اليدوية القديمة)
+  static String planProgress(int planId) => "plans/$planId/progress";
+  static String planProgressMarkDone(int planId) => "plans/$planId/progress/mark-done";
 
   static const String existingDays = 'coaches-days';
-
-
+  static const String exerciseLogs = "exercise-logs"; // 👈 شلنا /activity لتطابق الباك إند
+  static const String exerciseLogsActivity = "exercise-logs/activity"; // 👈 GET: سجل الأنشطة بالتواريخ الحقيقية
   static const String subscribe = "subscriptions/subscribe";
-
+  static const String plans = "plans"; // 👈 ضيفي هاد السطر
 }

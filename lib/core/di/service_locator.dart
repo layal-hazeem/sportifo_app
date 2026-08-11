@@ -28,6 +28,11 @@ import '../../features/coaches/data/web_services/coach_web_service.dart';
 import '../../features/coaches/presentation/view_model/all_coaches_cubit.dart';
 import '../../features/coaches/presentation/view_model/coach_details_cubit.dart';
 import '../../features/coaches/presentation/view_model/coaches_cubit.dart';
+import '../../features/my_plans(user)/data/repository/my_plans_repository.dart';
+import '../../features/my_plans(user)/data/web_services/my_plans_service.dart';
+import '../../features/my_plans(user)/presentation/view_model/active_workout_cubit.dart';
+import '../../features/my_plans(user)/presentation/view_model/my_plans_cubit.dart';
+import '../../features/my_plans(user)/presentation/view_model/plan_days_cubit.dart';
 import '../../features/targets/data/repository/target_repository.dart';
 import '../../features/targets/data/web_services/target_web_service.dart';
 import '../../features/targets/presentation/view_model/target_cubit/target_cubit.dart';
@@ -193,5 +198,25 @@ Future<void> setupServiceLocator() async {
 
   getIt.registerFactory<CreatePlanCubit>(
     () => CreatePlanCubit(getIt<CreatePlanRepository>()),
+  );
+
+  // 🔥 تسجيل My Plans Feature
+  getIt.registerLazySingleton<MyPlansService>(
+        () => MyPlansService(getIt<Dio>()),
+  );
+
+  getIt.registerLazySingleton<MyPlansRepository>(
+        () => MyPlansRepository(getIt<MyPlansService>()),
+  );
+
+  getIt.registerFactory<MyPlansCubit>(
+        () => MyPlansCubit(getIt<MyPlansRepository>()),
+  );
+  getIt.registerFactory<PlanDaysCubit>(
+        () => PlanDaysCubit(getIt<MyPlansRepository>()),
+  );
+  // 🔥 تسجيل ActiveWorkoutCubit الجديد
+  getIt.registerFactory<ActiveWorkoutCubit>(
+        () => ActiveWorkoutCubit(getIt<MyPlansRepository>()),
   );
 }
