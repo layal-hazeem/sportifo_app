@@ -49,13 +49,6 @@ class CustomDrawer extends StatelessWidget {
                           email: user.email ?? "",
                           imageUrl: user.profilePic,
                         );
-                      } else if (state is CoachProfileSuccess) {
-                        final coach = state.coachModel;
-                        return _buildUserInfo(
-                          name: coach.fullName,
-                          email: "",
-                          imageUrl: coach.profilePic,
-                        );
                       }
 
                       return const Center(child: CircularProgressIndicator());
@@ -266,13 +259,7 @@ class CustomDrawer extends StatelessWidget {
   void _navigateToPage(BuildContext context, DrawerItem item) {
     switch (item) {
       case DrawerItem.profile:
-        final profileCubit = context.read<ProfileCubit>();
-
-        if (profileCubit.state is CoachProfileSuccess) {
-          Navigator.pushNamed(context, AppRoutes.coach);
-        } else {
-          Navigator.pushNamed(context, AppRoutes.getProfile);
-        }
+        Navigator.pushNamed(context, AppRoutes.getProfile);
         break;
 
       case DrawerItem.saved:
@@ -280,7 +267,7 @@ class CustomDrawer extends StatelessWidget {
         break;
 
       case DrawerItem.settings:
-      Navigator.pushNamed(context, AppRoutes.settings);
+        Navigator.pushNamed(context, AppRoutes.settings);
         break;
 
       case DrawerItem.about:

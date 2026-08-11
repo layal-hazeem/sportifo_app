@@ -681,4 +681,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get coachInfo => 'coach information';
+
+  @override
+  String get chatAI => 'Chat AI';
+
+  @override
+  String get sub => 'Sub\'s';
+
+  @override
+  String get trainees => 'Trainees';
+
+  @override
+  String get noInternet => 'No Internet Connection';
+
+  @override
+  String get checkYourNetwork => 'Please check your network settings and try again';
+
+  @override
+  String get recentlyEnded => 'Recently ended';
+
+  @override
+  String get endedLastMonth => 'Subscriptions that ended during the last month';
 }

@@ -9,8 +9,6 @@ import '../../../coaches/presentation/view_model/coaches_state.dart';
 import '../../../coaches/presentation/views/all_coaches_screen.dart';
 import '../../../coaches/presentation/views/coach_details_screen.dart';
 import '../../../coaches/presentation/widgets/coach_card.dart';
-
-// 🔥 الاستيرادات الجديدة الخاصة بالأهداف الذكية
 import '../../../targets/presentation/view_model/target_cubit/target_cubit.dart';
 import '../../../targets/presentation/view_model/target_cubit/target_state.dart';
 import '../../../targets/presentation/widgets/daily_nutrition_card.dart';

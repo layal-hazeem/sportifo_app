@@ -30,5 +30,8 @@ class AppRoutes {
   static const String payment = "/payment";
 
   static const settings = "/settings";
-static const deleteAccount = "/deleteAccount";
+  static const deleteAccount = "/deleteAccount";
+static const String trainees = "/plans/coach";
+static const String planDetails = "/planDetails";
+
 }

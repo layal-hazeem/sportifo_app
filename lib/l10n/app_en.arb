@@ -340,5 +340,12 @@
   "certificates":"Certificates",
   "noCoachData":"No coach data available",
   "userInfo":"user information",
-  "coachInfo":"coach information"
+  "coachInfo":"coach information",
+  "chatAI":"Chat AI",
+  "sub":"Sub's",
+  "trainees":"Trainees",
+  "noInternet":"No Internet Connection",
+  "checkYourNetwork":"Please check your network settings and try again",
+    "recentlyEnded":"Recently ended",
+    "endedLastMonth":"Subscriptions that ended during the last month"
 }
