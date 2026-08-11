@@ -52,6 +52,22 @@ class DioFactory {
       ),
     );
 
+    // 3.5 🔥 مهم جداً: الـ backend عندنا عم يرجع دايماً
+    // "Cache-Control: no-cache, private" على كل ريسبونس (شكلها إعدادات
+    // افتراضية من Laravel/Nginx، مش قرار مقصود). لو تركناها متل ما هي،
+    // مكتبة الكاش (dio_cache_interceptor) رح تحترم توجيه السيرفر وترفض
+    // تخزن نسخة قابلة للاستخدام أوفلاين — وهاد بالضبط سبب إنو التطبيق
+    // بطل يفتح بدون نت. هون بنعدّل الهيدر قبل ما توصل لإنترسبتور الكاش،
+    // حتى نتحكم نحنا بالكاش من جهة الكلايند، مش نعتمد عالسيرفر.
+    _dio.interceptors.add(
+      InterceptorsWrapper(
+        onResponse: (response, handler) {
+          response.headers.set('cache-control', 'public, max-age=604800'); // أسبوع
+          return handler.next(response);
+        },
+      ),
+    );
+
     // 4. إضافة Interceptor الكاش (يجب أن يكون قبل الطباعة ليصطاد الريكويست المكيش)
     _dio.interceptors.add(_cacheInterceptor!);
 
@@ -76,9 +92,11 @@ class DioFactory {
 
       _cacheOptions = CacheOptions(
         store: HiveCacheStore(cachePath),
-        policy: CachePolicy.refresh, 
-        // نترك السياسة الافتراضية هنا Request، ونتحكم بها من الـ Repository
-        //policy:CachePolicy.forceCache,
+        // 🔥 رجعناها لـ request بدل refresh: request بيرجع الكاش مباشرة لو
+        // موجود وسليم (وهاد يلي بيخلي فتح التطبيق أوفلاين سريع وموثوق)،
+        // ويتحقق من السيرفر بس لما يلزم. الشاشات يلي بدها بيانات "طازة"
+        // مضمونة (متل my_plans) عندها أصلاً override خاص فيها (refreshForceCache).
+        policy: CachePolicy.request,
         hitCacheOnNetworkFailure: true,
         maxStale: const Duration(days: 7),
         priority: CachePriority.high,

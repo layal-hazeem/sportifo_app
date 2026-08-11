@@ -19,6 +19,14 @@ import 'package:sportifo_app/features/trainees/presentation/view_model/trainees_
 import '../../features/auth/presentation/view/complete_profile_info.dart';
 import '../../features/auth/presentation/view/register_screen.dart';
 import '../../features/auth/presentation/view_model/complete_profile/complete_profile_cubit.dart';
+import '../../features/my_plans(user)/data/models/my_plan_model.dart';
+import '../../features/my_plans(user)/presentation/view/my_plans_screen.dart';
+import '../../features/my_plans(user)/presentation/view/plan_days_screen.dart';
+import '../../features/my_plans(user)/presentation/view/workout_summary_screen.dart';
+import '../../features/my_plans(user)/presentation/view_model/my_plans_cubit.dart';
+import '../../features/my_plans(user)/presentation/view_model/plan_days_cubit.dart';
+import '../../features/platform_plans/presentation/view/all_platform_plans_screen.dart';
+import '../../features/platform_plans/presentation/view_model/platform_plans_cubit.dart';
 import '../../features/trainee_subscriptions/data/models/subscription_month_model.dart';
 import '../../features/trainee_subscriptions/presentation/views/payment_screen.dart';
 import '../../features/trainee_subscriptions/presentation/views/select_month_screen.dart';
@@ -59,7 +67,17 @@ class AppRouter {
 
       case AppRoutes.onboarding:
         return MaterialPageRoute(builder: (_) => const OnboardingScreen());
-
+      case AppRoutes.workoutSummary: // أو أضف الـ Route الخاص بها
+        final args = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(
+          builder: (_) => WorkoutSummaryScreen(
+            dayName: args['dayName'],
+            totalTime: args['totalTime'],
+            totalExercises: args['totalExercises'],
+            exercises: args['exercises'],
+            allLoggedSets: args['allLoggedSets'],
+          ),
+        );
       case AppRoutes.register:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
@@ -75,8 +93,6 @@ class AppRouter {
             child: const LoginScreen(),
           ),
         );
-
- 
       case AppRoutes.home:
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
@@ -85,14 +101,19 @@ class AppRouter {
               BlocProvider(
                 create: (_) => getIt<TargetCubit>()..fetchLatestTarget(),
               ),
-              BlocProvider(create: (_) => getIt<TargetCubit>()..fetchLatestTarget()),
-              // ✅ أضفنا SavedExercisesCubit هون
               BlocProvider.value(value: getIt<SavedExercisesCubit>()),
+              // 🔥 إضافة الكيوبيت الجديد وتشغيله فورا لجلب الخطط
+              BlocProvider(
+                create: (_) => getIt<PlatformPlansCubit>()..fetchPlatformPlans(),
+              ),
             ],
             child: const HomePage(),
           ),
         );
-
+      case AppRoutes.allPlatformPlans:
+        return MaterialPageRoute(
+          builder: (_) => const AllPlatformPlansScreen(),
+        );
       case AppRoutes.usersSubscribed:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
@@ -218,7 +239,13 @@ class AppRouter {
             ),
           ),
         );
-
+      case AppRoutes.myPlans:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => getIt<MyPlansCubit>(),
+            child: const MyPlansScreen(),
+          ),
+        );
       // 1. شاشة قائمة التمارين
       case AppRoutes.exercisesList:
         final args = settings.arguments as Map<String, dynamic>;
@@ -242,7 +269,6 @@ class AppRouter {
             ),
           ),
         );
-
 
       case AppRoutes.exerciseDetails:
         final exercise = settings.arguments as ExerciseModel;
@@ -326,6 +352,15 @@ class AppRouter {
           ),
         );
 
+      case AppRoutes.planDays:
+        final plan = settings.arguments as PlanModel;
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            // 🔥 تشغيل الكيوبيت الجديد أول ما تفتح الشاشة
+            create: (_) => getIt<PlanDaysCubit>()..fetchPlanDays(plan.id),
+            child: PlanDaysScreen(plan: plan),
+          ),
+        );
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
@@ -333,6 +368,7 @@ class AppRouter {
             body: Center(child: Text('No route defined for ${settings.name}')),
           ),
         );
+
     }
   }
 }

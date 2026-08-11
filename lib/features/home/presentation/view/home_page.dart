@@ -19,6 +19,8 @@ import 'package:sportifo_app/features/workout/presentation/view_model/categories
 import 'package:sportifo_app/features/workout/presentation/view_model/saved_exercises/saved_exercises_cubit.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../../../../core/di/service_locator.dart';
+import '../../../my_plans(user)/presentation/view/my_plans_screen.dart';
+import '../../../my_plans(user)/presentation/view_model/my_plans_cubit.dart';
 import '../../../workout/presentation/view/workout_type_screen.dart';
 import 'package:sportifo_app/core/enum/drawer_enum.dart';
 
@@ -49,8 +51,10 @@ class _HomePageState extends State<HomePage> {
     final l10n = AppLocalizations.of(context)!;
     return [
       Center(child: Text(l10n.progress)),
-      Center(child: Text(l10n.myPlans)),
-      const TraineeScreen(),
+      BlocProvider(
+        create: (context) => getIt<MyPlansCubit>(), // لا تنسي تكوني مسجلتيه بالـ getIt
+        child: const MyPlansScreen(),
+      ),      const TraineeScreen(),
       BlocProvider(
         create: (context) => getIt<CategoriesCubit>(),
         child: const WorkoutTypeScreen(),
