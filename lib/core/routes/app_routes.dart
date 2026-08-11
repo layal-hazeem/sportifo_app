@@ -35,7 +35,6 @@ static const deleteAccount = "/deleteAccount";
   static const String planDays = "/planDays";
 // ضيفه مع باقي الثوابت
   static const String allPlatformPlans = "/allPlatformPlans";
-  static const deleteAccount = "/deleteAccount";
 static const String trainees = "/plans/coach";
 static const String planDetails = "/planDetails";
 
