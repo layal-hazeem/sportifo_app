@@ -255,7 +255,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get profile => 'الملف الشخصي';
 
   @override
-  String get chat => 'المحادثات';
+  String get chat => 'محادثات AI';
 
   @override
   String get requiredField => 'هذا الحقل مطلوب';

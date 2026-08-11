@@ -2,12 +2,10 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/loading_shimmer.dart'; 
 import '../view_model/search_cubit/search_cubit.dart';
 import '../view_model/search_cubit/search_state.dart';
-
-// 🔥 التعديل 1: استدعينا الجريد فيو بدل الكرت المباشر
 import '../widgets/exercises_grid_view.dart';
 
 class SearchExercisesScreen extends StatefulWidget {
@@ -97,21 +95,30 @@ class _SearchExercisesScreenState extends State<SearchExercisesScreen> {
       body: BlocBuilder<SearchCubit, SearchState>(
         builder: (context, state) {
           if (state is SearchLoading) {
-            return const Center(
-              child: CircularProgressIndicator(color: AppColors.primaryBtn),
+            return GridView.builder(
+              padding: const EdgeInsets.all(20),
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 15,
+                mainAxisSpacing: 15,
+                childAspectRatio: 0.8,
+              ),
+              itemCount: 6,
+              itemBuilder: (context, index) => const LoadingShimmer(
+                width: double.infinity,
+                height: double.infinity,
+                borderRadius: 20,
+              ),
             );
           } else if (state is SearchSuccess) {
             if (state.exercises.isEmpty) {
               return _buildNoResults();
             }
-
-            // 🔥 التعديل 2: استخدمنا ويدجت الجريد فيو الجاهز تبعك، وداعاً لمشاكل الأبعاد!
             return ExercisesGridView(exercises: state.exercises);
-
           } else if (state is SearchFailure) {
             return _buildNoResults();
           }
-
           return _buildSuggestions();
         },
       ),
@@ -120,11 +127,10 @@ class _SearchExercisesScreenState extends State<SearchExercisesScreen> {
 
   Widget _buildSuggestions() {
     final bool isCardio = widget.categoryId == 2;
-
     final List<String> resistanceSearches = ['Chest', 'Abs', 'Legs', 'Back', 'Biceps', 'Shoulders'];
     final List<String> cardioSearches = ['Running', 'Jump Rope', 'Burpees', 'Cycling', 'High Knees'];
-
     final List<String> popularSearches = isCardio ? cardioSearches : resistanceSearches;
+
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(

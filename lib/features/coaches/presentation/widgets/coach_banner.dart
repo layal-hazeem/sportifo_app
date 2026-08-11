@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../core/widgets/loading_shimmer.dart';
 
 class CoachBanner extends StatelessWidget {
   final String profilePic;
@@ -31,7 +33,7 @@ class CoachBanner extends StatelessWidget {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.08),
+                    color: Colors.black.withValues(alpha: 0.08),
                     blurRadius: 15,
                     offset: const Offset(0, 8),
                   ),
@@ -42,12 +44,21 @@ class CoachBanner extends StatelessWidget {
                   bottomLeft: Radius.circular(32),
                   bottomRight: Radius.circular(32),
                 ),
-                child: Image.network(
-                  profilePic,
+                child: CachedNetworkImage(
+                  imageUrl: profilePic,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, _, _) => Container(
+                  placeholder: (context, url) => const LoadingShimmer(
+                    width: double.infinity,
+                    height: 320,
+                    borderRadius: 0,
+                  ),
+                  errorWidget: (context, url, error) => Container(
                     color: Colors.grey[200],
-                    child: const Icon(Icons.person, size: 80, color: Colors.grey),
+                    child: const Icon(
+                      Icons.person,
+                      size: 80,
+                      color: Colors.grey,
+                    ),
                   ),
                 ),
               ),
@@ -62,7 +73,10 @@ class CoachBanner extends StatelessWidget {
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [Colors.black.withOpacity(0.25), Colors.transparent],
+                    colors: [
+                      Colors.black.withValues(alpha: 0.25),
+                      Colors.transparent,
+                    ],
                   ),
                 ),
               ),
@@ -75,11 +89,11 @@ class CoachBanner extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.85),
+                    color: Colors.white.withValues(alpha: 0.85),
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
+                        color: Colors.black.withValues(alpha: 0.1),
                         blurRadius: 6,
                         offset: const Offset(0, 2),
                       ),
@@ -110,7 +124,11 @@ class CoachBanner extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              const Icon(Icons.verified_rounded, color: Color(0xFFFF6B35), size: 24),
+              const Icon(
+                Icons.verified_rounded,
+                color: Color(0xFFFF6B35),
+                size: 24,
+              ),
             ],
           ),
         ),

@@ -58,6 +58,9 @@ dependencies:
   gif: ^2.3.0
   flutter_svg: ^2.0.10
   file_picker: ^11.0.2
+  fl_chart: ^1.2.0
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

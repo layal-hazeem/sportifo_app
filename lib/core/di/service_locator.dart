@@ -7,6 +7,12 @@ import 'package:sportifo_app/features/auth/presentation/view_model/logout/logout
 import 'package:sportifo_app/features/existing_days/data/repository/existing_days_repository.dart';
 import 'package:sportifo_app/features/existing_days/data/web_services/existing_days_web_services.dart';
 import 'package:sportifo_app/features/existing_days/presentation/view_model/existing_days_cubit.dart';
+import 'package:sportifo_app/features/nutrition/data/repository/nutrition_repository.dart';
+import 'package:sportifo_app/features/nutrition/data/web_services/nutrition_web_service.dart';
+import 'package:sportifo_app/features/nutrition/presentation/view_model/nutrition_cubit.dart';
+import 'package:sportifo_app/features/plans/data/repository/create_plan_repository.dart';
+import 'package:sportifo_app/features/plans/data/web_services/create_plan_service.dart';
+import 'package:sportifo_app/features/plans/presentation/view_model/create_plan_cubit.dart';
 import 'package:sportifo_app/features/create_plan_by_coach/data/repository/create_plan_repository.dart';
 import 'package:sportifo_app/features/create_plan_by_coach/data/web_services/create_plan_service.dart';
 import 'package:sportifo_app/features/create_plan_by_coach/presentation/view_model/create_plan_cubit.dart';
@@ -54,6 +60,15 @@ import '../../features/workout/presentation/view_model/exercises_cubit/exercises
 import '../../features/workout/presentation/view_model/saved_exercises/saved_exercises_cubit.dart';
 import '../../features/workout/presentation/view_model/parts_cubit/parts_cubit.dart';
 import '../../features/workout/presentation/view_model/search_cubit/search_cubit.dart';
+import '../../features/progress/data/repository/exercise_activity_repository.dart';
+import '../../features/progress/data/web_services/exercise_activity_web_service.dart';
+import '../../features/progress/presentation/view_model/exercise_activity_cubit.dart';
+import '../../features/progress/data/repository/weight_progress_repository.dart';
+import '../../features/progress/data/web_services/weight_progress_web_service.dart';
+import '../../features/progress/presentation/view_model/weight_progress_cubit.dart';
+import '../../features/ai_chat/data/web_services/ai_chat_web_service.dart';
+import '../../features/ai_chat/data/repository/ai_chat_repository.dart';
+import '../../features/ai_chat/presentation/view_model/ai_chat_cubit.dart';
 
 import '../localization/locale_cubit.dart';
 import '../network/dio_factory.dart';
@@ -100,6 +115,26 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<WorkoutRepository>(
     () => WorkoutRepository(getIt<WorkoutWebService>()),
   );
+  getIt.registerLazySingleton<WeightProgressWebService>(
+        () => WeightProgressWebService(getIt<Dio>()),
+  );
+  getIt.registerLazySingleton<WeightProgressRepository>(
+        () => WeightProgressRepository(getIt<WeightProgressWebService>()),
+  );
+  getIt.registerFactory<WeightProgressCubit>(
+        () => WeightProgressCubit(getIt<WeightProgressRepository>()),
+  );
+
+  getIt.registerLazySingleton<ExerciseActivityWebService>(
+        () => ExerciseActivityWebService(getIt<Dio>()),
+  );
+  getIt.registerLazySingleton<ExerciseActivityRepository>(
+        () => ExerciseActivityRepository(getIt<ExerciseActivityWebService>()),
+  );
+  getIt.registerFactory<ExerciseActivityCubit>(
+        () => ExerciseActivityCubit(getIt<ExerciseActivityRepository>()),
+  );
+
   getIt.registerLazySingleton<ExercisesCubit>(
         () => ExercisesCubit(getIt<WorkoutRepository>()),
   );
@@ -208,6 +243,25 @@ Future<void> setupServiceLocator() async {
   getIt.registerFactory<CreatePlanCubit>(
     () => CreatePlanCubit(getIt<CreatePlanRepository>()),
   );
+
+
+  getIt.registerLazySingleton<AiChatWebService>(() => AiChatWebService(getIt<Dio>()));
+getIt.registerLazySingleton<AiChatRepository>(() => AiChatRepository(getIt<AiChatWebService>()));
+getIt.registerFactory<AiChatCubit>(() => AiChatCubit(getIt<AiChatRepository>()));
+
+
+// Nutrition
+getIt.registerSingleton<NutritionWebService>(
+  NutritionWebService(getIt<Dio>()),
+);
+
+getIt.registerSingleton<NutritionRepository>(
+  NutritionRepository(getIt<NutritionWebService>()),
+);
+
+getIt.registerSingleton<NutritionCubit>(
+  NutritionCubit(getIt<NutritionRepository>()),
+);
 
   // 🔥 تسجيل My Plans Feature
   getIt.registerLazySingleton<MyPlansService>(

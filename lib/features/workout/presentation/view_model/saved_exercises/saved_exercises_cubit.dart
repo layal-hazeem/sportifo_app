@@ -7,26 +7,19 @@ import 'saved_exercises_state.dart';
 class SavedExercisesCubit extends Cubit<SavedExercisesState> {
   final WorkoutRepository _repository;
 
-  /// القائمة المحلية للتمارين المحفوظة
   List<ExerciseModel> savedList = [];
-  /// مجموعة IDs للتمارين المحفوظة — للبحث السريع O(1)
   final Set<int> _savedIds = {};
-  /// هل تم تهيئة البيانات من السيرفر؟
   bool _isInitialized = false;
 
   SavedExercisesCubit(this._repository) : super(SavedExercisesInitial());
-
-  /// 🔥 يجب استدعاؤها مرة واحدة عند بدء التطبيق (في main.dart)
   Future<void> initialize() async {
     if (_isInitialized) return;
-    await fetchSavedExercises();
+    await fetchSavedExercises(forceRefresh: false);
     _isInitialized = true;
   }
 
-  /// ✅ يشيك إذا تمرين محفوظ بناءً على ID — O(1)
   bool isSaved(int exerciseId) => _savedIds.contains(exerciseId);
 
-  /// يحدّث حالة `isSaved` لقائمة تمارين جاية من السيرفر
   void syncExerciseSaveStatus(List<ExerciseModel> exercises) {
     if (!_isInitialized) return;
     for (final exercise in exercises) {
@@ -41,10 +34,18 @@ class SavedExercisesCubit extends Cubit<SavedExercisesState> {
     }
   }
 
-  /// 1. جلب المحفوظات من السيرفر (أو من الكاش لو offline)
-  Future<void> fetchSavedExercises() async {
+  Future<void> fetchSavedExercises({bool forceRefresh = false}) async {
+    if (savedList.isNotEmpty && !forceRefresh && !isClosed) {
+      emit(SavedExercisesSuccess(List.from(savedList)));
+    }
+
     emit(SavedExercisesLoading());
-    final result = await _repository.getSavedExercises();
+
+    final result = await _repository.getSavedExercises(
+      forceRefresh: forceRefresh,
+    );
+
+    if (isClosed) return;
 
     if (result is Success<List<ExerciseModel>>) {
       savedList = result.data;
@@ -54,16 +55,19 @@ class SavedExercisesCubit extends Cubit<SavedExercisesState> {
       _updateSavedIds();
       emit(SavedExercisesSuccess(List.from(savedList)));
     } else if (result is Failure) {
-      emit(SavedExercisesError((result as Failure).message));
+      if (savedList.isNotEmpty) {
+        emit(SavedExercisesSuccess(List.from(savedList)));
+      } else {
+        emit(SavedExercisesError((result as Failure).message));
+      }
     }
   }
 
-  /// 2. التبديل بين الحفظ والإزالة (Optimistic Update)
   Future<void> toggleSave(ExerciseModel exercise) async {
     final bool wasSaved = _savedIds.contains(exercise.id);
     final bool newSavedState = !wasSaved;
 
-    // 1. تحديث الحالة فوراً في الذاكرة (Optimistic)
+    // 1. Optimistic Update
     exercise.isSaved = newSavedState;
 
     if (newSavedState) {
@@ -76,15 +80,12 @@ class SavedExercisesCubit extends Cubit<SavedExercisesState> {
       _savedIds.remove(exercise.id);
     }
 
-    // 2. تحديث الواجهة (كل الـ ExerciseCards رح تعيد البناء)
     emit(SavedExercisesSuccess(List.from(savedList)));
     emit(SavedExercisesToggleSuccess(exercise.id, newSavedState));
 
-    // 3. الطلب للسيرفر
     final result = await _repository.toggleSaveExercise(exercise.id);
 
     if (result is Failure) {
-      // ❌ Rollback لو فشل
       exercise.isSaved = wasSaved;
       if (wasSaved) {
         if (!savedList.any((e) => e.id == exercise.id)) {
@@ -97,7 +98,8 @@ class SavedExercisesCubit extends Cubit<SavedExercisesState> {
       }
       emit(SavedExercisesSuccess(List.from(savedList)));
       emit(SavedExercisesError((result as Failure).message));
+    } else {
+      await fetchSavedExercises(forceRefresh: true);
     }
-    // ✅ لو نجح: ما بنعمل شي — الـ optimistic update صحيح
   }
 }

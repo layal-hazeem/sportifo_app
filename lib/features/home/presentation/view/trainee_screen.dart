@@ -4,6 +4,7 @@ import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../../../ ads/presentation/view_model/ads_cubit.dart';
 import '../../../ ads/presentation/widgets/ads_carousel_widget.dart';
 import '../../../../core/di/service_locator.dart';
+import '../../../../core/widgets/loading_shimmer.dart';
 import '../../../coaches/presentation/view_model/coaches_cubit.dart';
 import '../../../coaches/presentation/view_model/coaches_state.dart';
 import '../../../coaches/presentation/views/all_coaches_screen.dart';
@@ -16,10 +17,39 @@ import '../../../targets/presentation/view_model/target_cubit/target_cubit.dart'
 import '../../../targets/presentation/view_model/target_cubit/target_state.dart';
 import '../../../targets/presentation/widgets/daily_nutrition_card.dart';
 import '../../../targets/presentation/widgets/target_activation_card.dart';
-import '../../../../core/widgets/loading_shimmer.dart';
+import '../../../nutrition/presentation/view_model/nutrition_cubit.dart';
+import '../../../nutrition/presentation/view_model/nutrition_state.dart';
+import '../../../nutrition/data/models/food_log_model.dart';
 
-class TraineeScreen extends StatelessWidget {
+class TraineeScreen extends StatefulWidget {
   const TraineeScreen({super.key});
+
+  @override
+  State<TraineeScreen> createState() => _TraineeScreenState();
+}
+
+class _TraineeScreenState extends State<TraineeScreen> with WidgetsBindingObserver {
+  late final NutritionCubit _nutritionCubit;
+
+  @override
+  void initState() {
+    super.initState();
+    _nutritionCubit = getIt<NutritionCubit>();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _nutritionCubit.fetchTodayFoodLogs(forceRefresh: true);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +58,8 @@ class TraineeScreen extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => getIt<AdsCubit>()),
-        // 🔥 حقن كوبيت الأهداف وتشغيله فورا عند فتح الهوم لجلب البيانات
         BlocProvider(create: (context) => getIt<TargetCubit>()..fetchLatestTarget()),
+        BlocProvider(create: (context) => _nutritionCubit..initialize()),
       ],
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -37,27 +67,46 @@ class TraineeScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 10),
-
-            // 1️⃣ الإعلانات (مقرها الأساسي)
             const AdsCarouselWidget(),
-
             const SizedBox(height: 10),
-
-            // 2️⃣ ⚡ القسم العالمي الجديد: إدارة وتتبع الأهداف الغذائية والسعرات الحرارية
             BlocBuilder<TargetCubit, TargetState>(
-              builder: (context, state) {
-                if (state is TargetLoading) {
-                  // تأثير الشيمر اللطيف أثناء التحميل
+              builder: (context, targetState) {
+                if (targetState is TargetLoading) {
                   return const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                     child: LoadingShimmer(width: double.infinity, height: 160, borderRadius: 24),
                   );
-                } else if (state is TargetSuccess) {
-                  // عيشي الفخامة! إذا في داتا مسجلة، بيظهر كرت الحلقات والماكروز فوراً
-                  return DailyNutritionCard(target: state.targetData);
+                } else if (targetState is TargetSuccess) {
+                  return BlocBuilder<NutritionCubit, NutritionState>(
+                    builder: (context, nutritionState) {
+                      if (nutritionState is NutritionLoading ||
+                          nutritionState is NutritionInitial) {
+                        return const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                          child: LoadingShimmer(
+                            width: double.infinity,
+                            height: 160,
+                            borderRadius: 24,
+                          ),
+                        );
+                      }
+
+                      TotalMacros? consumed;
+                      if (nutritionState is NutritionSuccess) {
+                        consumed = nutritionState.foodLogs.total;
+                      } else if (nutritionState is AddMealSuccess) {
+                        consumed = nutritionState.mealResponse.total;
+                      } else if (nutritionState is DeleteMealSuccess) {
+                        consumed = nutritionState.mealResponse.total;
+                      }
+
+                      return DailyNutritionCard(
+                        target: targetState.targetData,
+                        consumedToday: consumed,
+                      );
+                    },
+                  );
                 } else {
-                  // الـ World-Class UX: لو اليوزر جديد وماله حاطط هدف (TargetInitial)
-                  // بيختفي كرت السعرات الفاضي وبيظهر كرت التفعيل المثير للاهتمام!
                   return const TargetActivationCard();
                 }
               },
@@ -66,7 +115,6 @@ class TraineeScreen extends StatelessWidget {
 
             const SizedBox(height: 15),
 
-            // 3️⃣ قسم المدربين والمشتركين (كودك الأصلي النظيف)
             BlocProvider(
               create: (context) => getIt<CoachesCubit>()..fetchCoaches(),
               child: BlocBuilder<CoachesCubit, CoachesState>(

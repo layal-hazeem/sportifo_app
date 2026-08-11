@@ -22,7 +22,7 @@ class FakeWorkoutRepository extends WorkoutRepository {
   }
 
   @override
-  Future<ApiResult<List<ExerciseModel>>> getSavedExercises() async {
+  Future<ApiResult<List<ExerciseModel>>> getSavedExercises({bool forceRefresh = false}) async {
     return Success(savedExercisesToReturn);
   }
 }
