@@ -4,6 +4,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sportifo_app/features/%20ads/presentation/view_model/ads_cubit.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/complete_profile/complete_profile_cubit.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/logout/logout_cubit.dart';
+import 'package:sportifo_app/features/edit_coach_plan/data/repository/edit_coach_plan_repository.dart';
+import 'package:sportifo_app/features/edit_coach_plan/data/web_services/edit_coach_plan_service.dart';
+import 'package:sportifo_app/features/edit_coach_plan/presentation/view_model/edit_coach_plan_cubit.dart';
 import 'package:sportifo_app/features/existing_days/data/repository/existing_days_repository.dart';
 import 'package:sportifo_app/features/existing_days/data/web_services/existing_days_web_services.dart';
 import 'package:sportifo_app/features/existing_days/presentation/view_model/existing_days_cubit.dart';
@@ -318,5 +321,20 @@ getIt.registerFactory<PlanDetailsCubit>(
 () => PlanDetailsCubit(getIt<PlanDetailsRepository>()),
 );
 
+getIt.registerLazySingleton<EditCoachPlanService>(
+  () => EditCoachPlanService(getIt<Dio>()),
+);
+
+getIt.registerLazySingleton<EditCoachPlanRepository>(
+  () => EditCoachPlanRepository(
+    getIt<EditCoachPlanService>(),
+  ),
+);
+
+getIt.registerFactory<EditCoachPlanCubit>(
+  () => EditCoachPlanCubit(
+    getIt<EditCoachPlanRepository>(),
+  ),
+);
 
 }
