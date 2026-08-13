@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sportifo_app/core/routes/app_routes.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/features/plan_details/data/models/plan_details_model.dart';
 import 'package:sportifo_app/features/plan_details/presentation/view_model/plan_details_cubit.dart';
@@ -68,8 +69,19 @@ class _PlanDetailsScreenState extends State<PlanDetailsScreen> {
                     SliverToBoxAdapter(
                       child: _TopBar(
                         planId: plan.id,
-                        // TODO: wire up when edit flow is implemented
-                        onEditTap: () {},
+                        onEditTap: () async {
+                          final result = await Navigator.pushNamed(
+                            context,
+                            AppRoutes.editCoachPlan,
+                            arguments: plan,
+                          );
+
+                          if (result == true && mounted) {
+                            await context
+                                .read<PlanDetailsCubit>()
+                                .getPlanDetails(widget.planId);
+                          }
+                        },
                       ),
                     ),
                     const SliverToBoxAdapter(child: SizedBox(height: 8)),
@@ -173,8 +185,6 @@ class _TopBar extends StatelessWidget {
   }
 }
 
-/// Coach-facing entry point into the plan editing flow.
-/// UI only for now — [onTap] is a no-op until the edit flow ships.
 class _EditPlanButton extends StatelessWidget {
   final VoidCallback? onTap;
 
@@ -186,26 +196,25 @@ class _EditPlanButton extends StatelessWidget {
       borderRadius: BorderRadius.circular(12),
       onTap: onTap,
       child: Container(
-        height: 42,
-        padding: const EdgeInsets.symmetric(horizontal: 14),
+        height: 40,
+        padding: const EdgeInsets.symmetric(horizontal: 15),
         decoration: BoxDecoration(
-          color: AppColors.primaryBtn.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.primaryBtn.withOpacity(0.2)),
+          color: AppColors.primaryBtn,
+          borderRadius: BorderRadius.circular(20),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             const Icon(
               Icons.edit_rounded,
-              color: AppColors.primaryBtn,
+              color: AppColors.background,
               size: 16,
             ),
             const SizedBox(width: 6),
             Text(
               'Edit',
               style: const TextStyle(
-                color: AppColors.primaryBtn,
+                color: AppColors.background,
                 fontSize: 13,
                 fontWeight: FontWeight.w800,
               ),

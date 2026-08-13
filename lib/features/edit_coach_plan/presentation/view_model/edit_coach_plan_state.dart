@@ -1,25 +1,15 @@
-import 'package:sportifo_app/features/plan_details/data/models/plan_details_model.dart';
+abstract class EditCoachPlanState {}
 
-abstract class EditCoachPlanState {
-  const EditCoachPlanState();
-}
+class EditCoachPlanInitial extends EditCoachPlanState {}
 
-class EditCoachPlanInitial extends EditCoachPlanState {
-  const EditCoachPlanInitial();
-}
-
-class EditCoachPlanLoading extends EditCoachPlanState {
-  const EditCoachPlanLoading();
-}
+class EditCoachPlanLoading extends EditCoachPlanState {}
 
 class EditCoachPlanSuccess extends EditCoachPlanState {
-  final PlanDetailsResponseModel response;
-
-  const EditCoachPlanSuccess(this.response);
+  final String message;
+  EditCoachPlanSuccess(this.message);
 }
 
-class EditCoachPlanFailure extends EditCoachPlanState {
-  final String message;
-
-  const EditCoachPlanFailure(this.message);
+class EditCoachPlanError extends EditCoachPlanState {
+  final String error;
+  EditCoachPlanError(this.error);
 }

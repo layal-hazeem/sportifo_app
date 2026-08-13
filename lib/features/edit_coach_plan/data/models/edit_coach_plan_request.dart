@@ -1,21 +1,21 @@
-import 'edit_coach_plan_day_request.dart';
+import 'package:sportifo_app/features/edit_coach_plan/data/models/edit_coach_plan_model.dart';
 
 class EditCoachPlanRequest {
-  final String? goal;
-  final int? durationMonths;
-  final List<EditCoachPlanDayRequest> days;
+  final String goal;
+  final int durationMonths;
+  final List<PlanDay> days;
 
-  const EditCoachPlanRequest({
-    this.goal,
-    this.durationMonths,
+  EditCoachPlanRequest({
+    required this.goal,
+    required this.durationMonths,
     required this.days,
   });
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
-      if (goal != null) 'goal': goal,
-      if (durationMonths != null) 'duration_months': durationMonths,
-      'days': days.map((day) => day.toMap()).toList(),
+      'goal': goal,
+      'duration_months': durationMonths,
+      'days': days.map((day) => day.toJson()).toList(),
     };
   }
 }
