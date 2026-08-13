@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/features/trainees/data/models/coach_plan_model.dart';
 
-class TraineeCircle extends StatefulWidget {
+class TraineeCardHorizontal extends StatefulWidget {
   final CoachPlanModel plan;
   final VoidCallback onTap;
   final int index;
 
-  const TraineeCircle({
+  const TraineeCardHorizontal({
     super.key,
     required this.plan,
     required this.onTap,
@@ -15,10 +15,10 @@ class TraineeCircle extends StatefulWidget {
   });
 
   @override
-  State<TraineeCircle> createState() => _TraineeCircleState();
+  State<TraineeCardHorizontal> createState() => _TraineeCardHorizontalState();
 }
 
-class _TraineeCircleState extends State<TraineeCircle>
+class _TraineeCardHorizontalState extends State<TraineeCardHorizontal>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _scaleAnimation;
@@ -35,7 +35,7 @@ class _TraineeCircleState extends State<TraineeCircle>
       curve: Curves.easeOutBack,
     );
 
-    Future.delayed(Duration(milliseconds: 60 * widget.index), () {
+    Future.delayed(Duration(milliseconds: 50 * widget.index), () {
       if (mounted) _controller.forward();
     });
   }
@@ -49,6 +49,7 @@ class _TraineeCircleState extends State<TraineeCircle>
   String get fullName {
     final first = widget.plan.user?.firstName.trim() ?? '';
     final last = widget.plan.user?.lastName.trim() ?? '';
+    if (first.isEmpty && last.isEmpty) return 'Trainee';
     return '$first $last'.trim();
   }
 
@@ -60,9 +61,15 @@ class _TraineeCircleState extends State<TraineeCircle>
         .toUpperCase();
   }
 
-  String get firstName {
-    final first = widget.plan.user?.firstName.trim() ?? '';
-    return first.isEmpty ? 'Trainee' : first;
+  // الصيغة التي طلبتها لعدد الأشهر
+  String get _durationText {
+    final duration = widget.plan.durationMonths;
+
+    if (duration == null) {
+      return 'Plan active';
+    }
+
+    return duration == 1 ? '1 month plan' : '$duration months plan';
   }
 
   IconData get goalIcon {
@@ -79,10 +86,6 @@ class _TraineeCircleState extends State<TraineeCircle>
   @override
   Widget build(BuildContext context) {
     final profilePic = widget.plan.user?.profilePic;
-    final duration = widget.plan.durationMonths;
-    final durationText = duration == null
-        ? 'Active Plan'
-        : '${duration}M Program';
 
     return ScaleTransition(
       scale: _scaleAnimation,
@@ -90,48 +93,39 @@ class _TraineeCircleState extends State<TraineeCircle>
         color: Colors.transparent,
         child: InkWell(
           onTap: widget.onTap,
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(20),
           child: Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(24),
+              borderRadius: BorderRadius.circular(20),
               border: Border.all(color: Colors.grey.shade100, width: 1.5),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.03),
-                  blurRadius: 12,
+                  color: Colors.black.withOpacity(0.04),
+                  blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
               ],
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+            child: Row(
               children: [
-                // صورة المتدرب مع حلقة التدرج الذهبي وإيماءة الهدف
                 Stack(
-                  alignment: Alignment.center,
                   children: [
                     Container(
-                      width: 80,
-                      height: 80,
-                      padding: const EdgeInsets.all(3),
+                      width: 52,
+                      height: 52,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
                           colors: [
                             AppColors.primaryBtn,
                             AppColors.primaryBtn.withOpacity(0.3),
                           ],
                         ),
                       ),
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white,
-                        ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(2),
                         child: ClipOval(
                           child: profilePic != null && profilePic.isNotEmpty
                               ? Image.network(
@@ -144,65 +138,65 @@ class _TraineeCircleState extends State<TraineeCircle>
                         ),
                       ),
                     ),
-                    // أيقونة الهدف العائمة
                     Positioned(
-                      top: 0,
+                      bottom: 0,
                       right: 0,
                       child: Container(
-                        padding: const EdgeInsets.all(6),
+                        padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: Colors.white,
                           border: Border.all(
-                            color: AppColors.primaryBtn.withOpacity(0.3),
+                            color: AppColors.primaryBtn.withOpacity(0.4),
                           ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.08),
-                              blurRadius: 6,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
                         ),
                         child: Icon(
                           goalIcon,
-                          size: 12,
+                          size: 9,
                           color: AppColors.primaryBtn,
                         ),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 12),
-                // اسم المتدرب
-                Text(
-                  firstName,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF1E293B),
-                  ),
-                ),
-                const SizedBox(height: 4),
-                // مدة الخطة أو حالتها بشارة مصغرة
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 3,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.primaryBtn.withOpacity(0.08),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    durationText,
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.primaryBtn,
-                    ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        fullName,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF1E293B),
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 7,
+                          vertical: 3,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryBtn.withOpacity(0.08),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          _durationText,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 9.5,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.primaryBtn,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -222,12 +216,12 @@ class _InitialsAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(color: AppColors.primaryBtn.withOpacity(0.1)),
+      color: AppColors.primaryBtn.withOpacity(0.1),
       alignment: Alignment.center,
       child: Text(
         initials,
         style: TextStyle(
-          fontSize: 22,
+          fontSize: 14,
           fontWeight: FontWeight.bold,
           color: AppColors.primaryBtn,
         ),

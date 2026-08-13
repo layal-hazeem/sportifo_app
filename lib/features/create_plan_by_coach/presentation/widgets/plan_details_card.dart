@@ -40,7 +40,7 @@ class PlanDetailsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.fromLTRB(16, 18, 16, 10),
+      margin: const EdgeInsets.all(6),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
@@ -72,10 +72,8 @@ class PlanDetailsCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildHeader(),
-              const SizedBox(height: 16),
               _buildGoalSection(),
-              const SizedBox(height: 20),
+              const SizedBox(height: 15),
               _buildDivider(),
               const SizedBox(height: 20),
               _buildDurationSection(),
@@ -83,65 +81,6 @@ class PlanDetailsCard extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildHeader() {
-    return Row(
-      children: [
-        Container(
-          width: 48,
-          height: 48,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                AppColors.primaryBtn,
-                AppColors.primaryBtn.withOpacity(.75),
-              ],
-            ),
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.primaryBtn.withOpacity(.35),
-                blurRadius: 14,
-                offset: const Offset(0, 6),
-              ),
-            ],
-          ),
-          child: const Icon(
-            Icons.auto_awesome_rounded,
-            color: Colors.white,
-            size: 24,
-          ),
-        ),
-        const SizedBox(width: 14),
-        const Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'BUILD YOUR PLAN',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: 1.6,
-                ),
-              ),
-              SizedBox(height: 5),
-              Text(
-                'Create a personalized workout journey',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Colors.black54,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
     );
   }
 
@@ -154,24 +93,20 @@ class PlanDetailsCard extends StatelessWidget {
           title: "What's the main goal?",
         ),
         const SizedBox(height: 16),
-        LayoutBuilder(
-          builder: (context, constraints) {
-            final itemWidth = (constraints.maxWidth - 12) / 2;
-            return Wrap(
-              spacing: 12,
-              runSpacing: 12,
-              children: _goals.map((goal) {
-                return SizedBox(
-                  width: itemWidth,
-                  child: _GoalCard(
-                    option: goal,
-                    selected: selectedGoal == goal.value,
-                    onTap: () => onGoalChanged(goal.value),
-                  ),
-                );
-              }).toList(),
+        Column(
+          children: _goals.map((goal) {
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: SizedBox(
+                width: double.infinity,
+                child: _GoalCard(
+                  option: goal,
+                  selected: selectedGoal == goal.value,
+                  onTap: () => onGoalChanged(goal.value),
+                ),
+              ),
             );
-          },
+          }).toList(),
         ),
       ],
     );
@@ -365,9 +300,9 @@ class _GoalCard extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(16),
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 100),
           curve: Curves.easeOutCubic,
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
           decoration: BoxDecoration(
             gradient: selected
                 ? LinearGradient(
@@ -380,7 +315,7 @@ class _GoalCard extends StatelessWidget {
                   )
                 : null,
             color: selected ? null : Colors.grey.shade50,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(30),
             border: Border.all(
               color: selected
                   ? AppColors.primaryBtn.withOpacity(.55)
@@ -401,8 +336,8 @@ class _GoalCard extends StatelessWidget {
             children: [
               AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
-                width: 32,
-                height: 32,
+                width: 38,
+                height: 38,
                 decoration: BoxDecoration(
                   gradient: selected
                       ? LinearGradient(
@@ -415,18 +350,18 @@ class _GoalCard extends StatelessWidget {
                         )
                       : null,
                   color: selected ? null : Colors.white,
-                  borderRadius: BorderRadius.circular(11),
+                  borderRadius: BorderRadius.circular(12),
                   border: selected
                       ? null
                       : Border.all(color: Colors.grey.shade200),
                 ),
                 child: Icon(
                   option.icon,
-                  size: 16,
+                  size: 18,
                   color: selected ? Colors.white : Colors.grey.shade600,
                 ),
               ),
-              const SizedBox(width: 9),
+              const SizedBox(width: 14),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -435,16 +370,17 @@ class _GoalCard extends StatelessWidget {
                     Text(
                       option.title,
                       style: TextStyle(
-                        fontSize: 13,
+                        fontSize: 14,
                         fontWeight: FontWeight.w800,
                         letterSpacing: -0.1,
                         color: selected ? AppColors.primaryBtn : Colors.black87,
                       ),
                     ),
+                    const SizedBox(height: 2),
                     Text(
                       option.subtitle,
                       style: TextStyle(
-                        fontSize: 10.5,
+                        fontSize: 11.5,
                         color: Colors.grey.shade500,
                         fontWeight: FontWeight.w500,
                       ),
@@ -457,15 +393,15 @@ class _GoalCard extends StatelessWidget {
                 curve: Curves.easeOutBack,
                 scale: selected ? 1 : 0,
                 child: Container(
-                  width: 16,
-                  height: 16,
+                  width: 18,
+                  height: 18,
                   decoration: BoxDecoration(
                     color: AppColors.primaryBtn,
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
                     Icons.check_rounded,
-                    size: 11,
+                    size: 12,
                     color: Colors.white,
                   ),
                 ),

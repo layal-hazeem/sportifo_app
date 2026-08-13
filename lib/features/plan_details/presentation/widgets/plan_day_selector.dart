@@ -17,30 +17,30 @@ class PlanDaySelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 98,
+      height: 64,
       child: ListView.separated(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         scrollDirection: Axis.horizontal,
         itemCount: days.length,
-        separatorBuilder: (_, index) {
+        separatorBuilder: (_, __) {
           return SizedBox(
-            width: 25,
+            width: 22,
             child: Center(
               child: Container(
-                height: 1,
-                width: 25,
-                color: AppColors.textDark.withOpacity(.10),
+                height: 1.4,
+                color: AppColors.textDark.withOpacity(.15),
               ),
             ),
           );
         },
         itemBuilder: (context, index) {
-          final day = days[index];
           final isSelected = index == selectedIndex;
 
           return GestureDetector(
             onTap: () => onDaySelected(index),
-            child: _DayNode(day: day, index: index, isSelected: isSelected),
+            child: Center(
+              child: _DayNode(index: index, isSelected: isSelected),
+            ),
           );
         },
       ),
@@ -49,83 +49,69 @@ class PlanDaySelector extends StatelessWidget {
 }
 
 class _DayNode extends StatelessWidget {
-  final PlanDayModel day;
   final int index;
   final bool isSelected;
 
-  const _DayNode({
-    required this.day,
-    required this.index,
-    required this.isSelected,
-  });
+  const _DayNode({required this.index, required this.isSelected});
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 95,
-      child: Column(
-        children: [
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 260),
-            curve: Curves.easeOutCubic,
-            width: isSelected ? 52 : 48,
-            height: isSelected ? 52 : 48,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: isSelected ? AppColors.primaryBtn : Colors.white,
-              border: Border.all(
-                color: isSelected
-                    ? AppColors.primaryBtn
-                    : AppColors.textDark.withOpacity(.10),
-                width: isSelected ? 2 : 1,
-              ),
-              boxShadow: isSelected
-                  ? [
-                      BoxShadow(
-                        color: AppColors.primaryBtn.withOpacity(.28),
-                        blurRadius: 18,
-                        spreadRadius: 2,
-                      ),
-                    ]
-                  : [
-                      BoxShadow(
-                        color: AppColors.textDark.withOpacity(.06),
-                        blurRadius: 8,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-            ),
-            child: Center(
-              child: Text(
-                '${(index + 1).toString().padLeft(2, '0')}',
-                style: TextStyle(
-                  color: isSelected
-                      ? Colors.white
-                      : AppColors.textDark.withOpacity(.55),
-                  fontSize: 11,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: .5,
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 220),
+      curve: Curves.easeOutCubic,
+      width: 56,
+      height: 56,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: isSelected ? AppColors.primaryBtn : Colors.white,
+        border: Border.all(
+          color: isSelected
+              ? AppColors.primaryBtn
+              : AppColors.textDark.withOpacity(.10),
+          width: isSelected ? 2 : 1,
+        ),
+        boxShadow: isSelected
+            ? [
+                BoxShadow(
+                  color: AppColors.primaryBtn.withOpacity(.28),
+                  blurRadius: 18,
+                  spreadRadius: 2,
                 ),
+              ]
+            : [
+                BoxShadow(
+                  color: AppColors.textDark.withOpacity(.06),
+                  blurRadius: 8,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+      ),
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'DAY',
+              style: TextStyle(
+                color: isSelected
+                    ? Colors.white.withOpacity(.85)
+                    : AppColors.hintText,
+                fontSize: 8,
+                fontWeight: FontWeight.w800,
+                letterSpacing: .6,
               ),
             ),
-          ),
-
-          const SizedBox(height: 7),
-
-          Text(
-            day.name.toUpperCase(),
-            maxLines: 2,
-            textAlign: TextAlign.center,
-            overflow: TextOverflow.visible,
-            style: TextStyle(
-              color: isSelected ? AppColors.textDark : AppColors.hintText,
-              fontSize: 8,
-              fontWeight: FontWeight.w800,
-              letterSpacing: .7,
+            const SizedBox(height: 1),
+            Text(
+              '${index + 1}',
+              style: TextStyle(
+                color: isSelected ? Colors.white : AppColors.textDark,
+                fontSize: 15,
+                fontWeight: FontWeight.w900,
+              ),
             ),
-          ),
-          const SizedBox(height: 10),
-        ],
+          ],
+        ),
       ),
     );
   }

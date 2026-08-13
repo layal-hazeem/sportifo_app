@@ -70,29 +70,46 @@ class _TraineesContent extends StatelessWidget {
 
   const _TraineesContent({required this.plans});
 
-  int get uniqueTraineesCount {
-    final ids = <int>{};
+  // تصفية القائمة لعرض أحدث خطة لكل متدرب فقط
+  List<CoachPlanModel> get _latestPlansPerTrainee {
+    final Map<int, CoachPlanModel> latestMap = {};
 
     for (final plan in plans) {
-      final id = plan.user?.id;
+      final userId = plan.user?.id;
+      if (userId == null) continue;
 
-      if (id != null) {
-        ids.add(id);
+      // إذا لم يكن المتدرب موجوداً من قبل، أو إذا كانت الخطة الحالية أحدث
+      // (يمكنك الاعتماد على الـ id الأكبر أو تاريخ الإنشاء إذا وجد في الموديل)
+      if (!latestMap.containsKey(userId)) {
+        latestMap[userId] = plan;
+      } else {
+        // نفترض هنا أن الـ ID الأكبر أو الترتيب الأحدث يعبر عن الخطة الأحدث
+        final existingPlanId = latestMap[userId]?.id ?? 0;
+        final currentPlanId = plan.id ?? 0;
+
+        if (currentPlanId > existingPlanId) {
+          latestMap[userId] = plan;
+        }
       }
     }
 
-    return ids.length;
+    return latestMap.values.toList();
+  }
+
+  int get uniqueTraineesCount {
+    return _latestPlansPerTrainee.length;
   }
 
   @override
   Widget build(BuildContext context) {
+    final filteredPlans = _latestPlansPerTrainee;
+
     return Column(
       children: [
         TraineesHeader(count: uniqueTraineesCount),
-
         Expanded(
           child: TraineesGrid(
-            plans: plans,
+            plans: filteredPlans,
             onTraineeTap: (plan) => _openPlan(context, plan),
           ),
         ),
@@ -102,11 +119,9 @@ class _TraineesContent extends StatelessWidget {
 
   void _openPlan(BuildContext context, CoachPlanModel plan) {
     final planId = plan.id;
-
     if (planId == null) {
       return;
     }
-
     Navigator.pushNamed(context, AppRoutes.planDetails, arguments: planId);
   }
 }
