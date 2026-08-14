@@ -32,8 +32,6 @@ class MyPlansRepository {
 
   MyPlansRepository(this._service);
 
-  // 🔥 دالة واحدة عامة تخدم التلاتة تابات - منمرر نوع التاب وهي بتعرف
-  // الـ endpoint الصحيح وتحوّل نفس شكل الـ pagination response لكل واحد فيهن.
   Future<ApiResult<List<PlanModel>>> fetchPlansForTab(PlanTabType type) async {
     try {
       final cacheOptions = await DioFactory.getCacheOptions();
@@ -43,7 +41,6 @@ class MyPlansRepository {
 
       final response = await _service.getPlansByEndpoint(type.endpoint, options: dioOptions);
 
-      // 🔥 شكل الـ response الجديد: {"data": {"data": [...], "links": {...}, "meta": {...}}}
       final List data = response.data['data']?['data'] ?? [];
       final List<PlanModel> plans = data.map((json) => PlanModel.fromJson(json)).toList();
 
@@ -52,7 +49,6 @@ class MyPlansRepository {
       return Failure(ApiErrorHandler.handle(e));
     }
   }
-
   Future<ApiResult<List<PlanModel>>> fetchMyPlans() async {
     try {
       // 1. جلب إعدادات الكاش

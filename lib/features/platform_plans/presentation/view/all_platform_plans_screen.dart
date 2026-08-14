@@ -3,21 +3,34 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
- import '../../../../core/widgets/wave_app_bar.dart';
+import '../../../../core/widgets/wave_app_bar.dart';
 import '../view_model/platform_plans_cubit.dart';
 import '../view_model/platform_plans_state.dart';
 import '../widgets/platform_plan_card.dart';
 
-class AllPlatformPlansScreen extends StatelessWidget {
+class AllPlatformPlansScreen extends StatefulWidget {
   const AllPlatformPlansScreen({super.key});
 
   @override
+  State<AllPlatformPlansScreen> createState() => _AllPlatformPlansScreenState();
+}
+
+class _AllPlatformPlansScreenState extends State<AllPlatformPlansScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+    // نجلب الداتا مرة تانية لتتحدث القائمة (اختياري بس مفضل عشان يجيب أحدث الخطط)
+    getIt<PlatformPlansCubit>().fetchPlatformPlans();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => getIt<PlatformPlansCubit>()..fetchPlatformPlans(),
+    // 🔥 التعديل هنا: استخدمنا BlocProvider.value عشان ما يتدمر الكيوبيت بس نطلع من الشاشة
+    return BlocProvider.value(
+      value: getIt<PlatformPlansCubit>(),
       child: Scaffold(
         backgroundColor: AppColors.background,
-        // 🔥 التعديل هنا: استدعاء الـ WaveAppBar بكل بساطة
         appBar: const WaveAppBar(
           title: 'Explore Platform Plans',
         ),

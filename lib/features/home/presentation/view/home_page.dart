@@ -46,8 +46,9 @@ class _HomePageState extends State<HomePage> {
   List<Widget> _getTraineeScreens() {
     return [
       const ProgressScreen(),
-      BlocProvider(
-        create: (context) => getIt<MyPlansCubit>(),
+      // 🔥 التعديل هنا: استخدام .value لحماية الكيوبيت من الموت!
+      BlocProvider.value(
+        value: getIt<MyPlansCubit>(),
         child: const MyPlansScreen(),
       ),
       const TraineeScreen(),

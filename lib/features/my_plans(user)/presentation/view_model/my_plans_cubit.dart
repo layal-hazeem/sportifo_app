@@ -1,6 +1,6 @@
-// ---- Cubit (my_plans_cubit.dart) ----
-import 'package:flutter_bloc/flutter_bloc.dart';
+// مسار الملف: lib/features/my_plans(user)/presentation/view_model/my_plans_cubit.dart
 
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/network/api_result.dart';
 import '../../data/models/my_plan_model.dart';
 import '../../data/repository/my_plans_repository.dart';
@@ -11,18 +11,22 @@ class MyPlansCubit extends Cubit<MyPlansState> {
 
   MyPlansCubit(this._repository) : super(const MyPlansState());
 
-  /// 🔥 كل تاب بيتحمّل لحاله وبريكويست مستقل - مش زي قبل (طلب واحد بيرجع
-  /// كل شي ومنقسمه محلياً). هيك كمان بنقدر نحمّل كل تاب "بشكل كسول" (lazy) -
-  /// بس أول ما المستخدم يفتحه فعلياً، مش الكل مرة وحدة.
   Future<void> fetchTab(PlanTabType type, {bool isRefresh = false}) async {
+    if (isClosed) return;
+
+    // 🔥 التعديل الأول: تاب المحفوظات بالذات لازم دايماً يعمل ريفريش ليجيب أحدث شي!
+    if (type == PlanTabType.saved) {
+      isRefresh = true;
+    }
+
     final currentStatus = state.statusFor(type);
 
-    // 🛑 عندنا داتا ناجحة أصلاً ومش refresh إجباري؟ ما تعيد الطلب، وفري ريكويست
-    if (!isRefresh && currentStatus is TabSuccess) return;
-
-    if (currentStatus is! TabSuccess) {
-      emit(state.copyWithTab(type, TabLoading()));
+    if (!isRefresh && currentStatus is TabSuccess) {
+      return;
     }
+
+    // 🔥 التعديل الثاني السحري: إجبار الواجهة على رمي "تحميل" لحظي لضمان تحديث الشاشة 100%
+    emit(state.copyWithTab(type, TabLoading()));
 
     final result = await _repository.fetchPlansForTab(type);
     if (isClosed) return;
@@ -32,7 +36,6 @@ class MyPlansCubit extends Cubit<MyPlansState> {
         emit(state.copyWithTab(type, TabSuccess(result.data)));
         break;
       case Failure<List<PlanModel>>():
-      // لو عنا داتا ناجحة قبل وفشل الـ refresh، منخلي القديمة (ما نمسحها بغلط)
         if (currentStatus is TabSuccess) return;
         emit(state.copyWithTab(type, TabFailure(result.message ?? 'حدث خطأ غير متوقع')));
         break;

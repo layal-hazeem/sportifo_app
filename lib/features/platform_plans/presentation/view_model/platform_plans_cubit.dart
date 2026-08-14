@@ -5,14 +5,13 @@ import '../../../my_plans(user)/presentation/view_model/my_plans_cubit.dart';
 import 'platform_plans_state.dart';
 import '../../data/repository/platform_plans_repository.dart';
 import '../../../../core/network/api_result.dart';
-import '../../../../core/di/service_locator.dart'; // 👈 استدعاء الـ getIt
+import '../../../../core/di/service_locator.dart';
 
 class PlatformPlansCubit extends Cubit<PlatformPlansState> {
   final PlatformPlansRepository _repository;
 
   PlatformPlansCubit(this._repository) : super(PlatformPlansInitial());
 
-  // دالة جلب الخطط (تبقى كما هي)
   Future<void> fetchPlatformPlans() async {
     emit(PlatformPlansLoading());
     final result = await _repository.getPlatformPlans();
@@ -23,11 +22,10 @@ class PlatformPlansCubit extends Cubit<PlatformPlansState> {
     }
   }
 
-  // 🔥 دالة الحفظ الذكية (المزامنة الشاملة)
-  Future<void> toggleSave(int planId) async {
-    bool? previousState; // للاحتفاظ بالحالة القديمة في حال فشل السيرفر
+  Future<String?> toggleSave(int planId) async {
+    bool? previousState;
+    print('🚀 [PlatformPlansCubit] User clicked save for plan: $planId');
 
-    // 1️⃣ تحديث واجهة الهوم فوراً (Optimistic Update)
     if (state is PlatformPlansSuccess) {
       final currentState = state as PlatformPlansSuccess;
       final currentPlans = List<PlanModel>.from(currentState.plans);
@@ -36,24 +34,25 @@ class PlatformPlansCubit extends Cubit<PlatformPlansState> {
       if (planIndex != -1) {
         previousState = currentPlans[planIndex].isSaved;
         currentPlans[planIndex].isSaved = !currentPlans[planIndex].isSaved;
-        emit(PlatformPlansSuccess(currentPlans)); // الواجهة بتتحدث فوراً
+        emit(PlatformPlansSuccess(currentPlans));
       }
     }
 
-    // 2️⃣ إرسال الطلب للسيرفر بالخلفية
     final result = await _repository.toggleSavePlan(planId);
 
-    // 3️⃣ التعامل مع النتيجة (نجاح أو فشل)
-    if (result is Success) {
-      // ✅ السحر هنا: نأمر تاب الـ Saved بتحديث بياناته بصمت بالخلفية لضمان ظهور/اختفاء الخطة
+    if (result is Success<String>) {
+      print('✅ [PlatformPlansCubit] Backend success: ${result.data}');
       try {
-        // ملاحظة: تأكد إنك عامل import لـ PlanTabType أو مرر القيمة الصحيحة للـ enum عندك
-        getIt<MyPlansCubit>().fetchTab(PlanTabType.saved, isRefresh: true);
+        print('🔄 [PlatformPlansCubit] Asking MyPlansCubit to refresh Saved tab...');
+        // أمر التحديث
+        await getIt<MyPlansCubit>().fetchTab(PlanTabType.saved, isRefresh: true);
+        print('✅ [PlatformPlansCubit] MyPlansCubit refresh done!');
       } catch (e) {
-        // في حال لم يتم فتح صفحة MyPlans مسبقاً والكيوبيت غير مهيأ، نتجاهل الخطأ
+        print('❌ [PlatformPlansCubit] Error talking to MyPlansCubit: $e');
       }
+      return result.data;
     } else if (result is Failure && previousState != null) {
-      // ❌ في حال فشل النت، نرجع الزر لونه القديم (Rollback)
+      print('❌ [PlatformPlansCubit] Backend failed: ${(result as Failure).message}');
       if (state is PlatformPlansSuccess) {
         final fallbackPlans = List<PlanModel>.from((state as PlatformPlansSuccess).plans);
         final fallbackIndex = fallbackPlans.indexWhere((p) => p.id == planId);
@@ -62,6 +61,8 @@ class PlatformPlansCubit extends Cubit<PlatformPlansState> {
           emit(PlatformPlansSuccess(fallbackPlans));
         }
       }
+      return null;
     }
+    return null;
   }
 }

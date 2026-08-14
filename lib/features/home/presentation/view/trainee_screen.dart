@@ -61,8 +61,8 @@ class _TraineeScreenState extends State<TraineeScreen> with WidgetsBindingObserv
         BlocProvider(create: (context) => getIt<AdsCubit>()),
         BlocProvider(create: (context) => getIt<TargetCubit>()..fetchLatestTarget()),
         BlocProvider(create: (context) => _nutritionCubit..initialize()),
-        BlocProvider(create: (context) => getIt<PlatformPlansCubit>()..fetchPlatformPlans()),
-      ],
+// 🔥 استبدلي السطر القديم بهذا السطر:
+        BlocProvider.value(value: getIt<PlatformPlansCubit>()..fetchPlatformPlans()),      ],
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(
