@@ -1,8 +1,18 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+
+import 'firebase_options.dart';
+import 'core/services/notification_service.dart';
+
+// ⚠️ [جديد] استدعاء الـ Background Handler هون بالـ main
+import 'core/services/notification_service.dart'
+    show firebaseMessagingBackgroundHandler;
+
 import 'core/di/service_locator.dart';
 import 'core/localization/locale_cubit.dart';
 import 'core/routes/app_routes.dart';
@@ -11,8 +21,22 @@ import 'l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // 🔥 1. تهيئة Firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  // 🔥 2. تسجيل Background Handler قبل أي شي
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+
+  // 🔥 3. تشغيل خدمة الإشعارات
+  await NotificationService().init();
+
+  // باقي الخدمات
   await Hive.initFlutter();
   await setupServiceLocator();
+
   runApp(const MyApp());
 }
 
@@ -28,11 +52,8 @@ class MyApp extends StatelessWidget {
           return NeumorphicApp(
             debugShowCheckedModeBanner: false,
             title: 'Sportifo',
-
             initialRoute: AppRoutes.splash,
-
             onGenerateRoute: AppRouter.generateRoute,
-
             localizationsDelegates: const [
               AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,
@@ -56,6 +77,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-//وقت نضيف اي كلمة بملفات الترجمة مننفذ هاد الامر بالتيرمينال مشان يتعرف عالنصوص الجديدة اللي ترجمناها
-//flutter gen-l10n

@@ -35,7 +35,7 @@ class AppRoutes {
   static const String foodLogs = '/food-logs';
   static const String myPlans = "/myPlans";
   static const String planDays = "/planDays";
-// ضيفه مع باقي الثوابت
+
   static const String allPlatformPlans = "/allPlatformPlans";
 static const String trainees = "/plans/coach";
 static const String planDetails = "/planDetails";
