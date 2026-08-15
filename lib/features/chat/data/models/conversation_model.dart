@@ -1,0 +1,65 @@
+// lib/features/chat/data/models/conversation_model.dart
+
+import 'participant_model.dart';
+import 'message_model.dart';
+
+class ConversationModel {
+  final int id;
+  final ParticipantModel otherParticipant;
+  final MessageModel? lastMessage;
+  final DateTime lastMessageAt;
+
+  ConversationModel({
+    required this.id,
+    required this.otherParticipant,
+    required this.lastMessage,
+    required this.lastMessageAt,
+  });
+
+  factory ConversationModel.fromJson(Map<String, dynamic> json) {
+    MessageModel? lastMsg;
+    if (json['last_message'] != null) {
+      lastMsg = MessageModel.fromJson(json['last_message']);
+    }
+
+    DateTime parseTime = DateTime.now();
+    if (json['last_message_at'] != null) {
+      try {
+        parseTime = DateTime.parse(json['last_message_at']);
+      } catch (e) {
+        parseTime = DateTime.now();
+      }
+    }
+
+    return ConversationModel(
+      id: json['id'] ?? 0,
+      otherParticipant:
+          ParticipantModel.fromJson(json['other_participant'] ?? {}),
+      lastMessage: lastMsg,
+      lastMessageAt: parseTime,
+    );
+  }
+
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'other_participant': otherParticipant.toJson(),
+      'last_message': lastMessage?.toJson(),
+      'last_message_at': lastMessageAt.toIso8601String(),
+    };
+  }
+
+  int compareByLatest(ConversationModel other) {
+    return other.lastMessageAt.compareTo(lastMessageAt);
+  }
+
+  String getLastMessagePreview() {
+    if (lastMessage == null) return 'No messages yet';
+    if (lastMessage!.body.isEmpty) return 'Image';
+    if (lastMessage!.body.length > 50) {
+      return '${lastMessage!.body.substring(0, 50)}...';
+    }
+    return lastMessage!.body;
+  }
+}

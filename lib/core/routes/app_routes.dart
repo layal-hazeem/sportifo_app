@@ -40,4 +40,7 @@ class AppRoutes {
 static const String trainees = "/plans/coach";
 static const String planDetails = "/planDetails";
 
+
+static const String conversationsList = '/conversations_list';
+static const String chatDetail = '/chat_detail';
 }
