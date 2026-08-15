@@ -28,7 +28,7 @@ class MyPlansCubit extends Cubit<MyPlansState> {
     // 🔥 التعديل الثاني السحري: إجبار الواجهة على رمي "تحميل" لحظي لضمان تحديث الشاشة 100%
     emit(state.copyWithTab(type, TabLoading()));
 
-    final result = await _repository.fetchPlansForTab(type);
+    final result = await _repository.fetchPlansForTab(type, isRefresh: isRefresh);
     if (isClosed) return;
 
     switch (result) {

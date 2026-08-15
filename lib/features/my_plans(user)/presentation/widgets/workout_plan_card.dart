@@ -12,8 +12,13 @@ class WorkoutPlanCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const String defaultCoverImage =
+
+    const String coachDefaultCoverImage =
         'https://img.freepik.com/free-photo/dumbbells-floor-gym-ai-generative_123827-23744.jpg';
+
+    const String selfMadeDefaultCoverImage =
+        'https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=1471&q=80';
+    final String defaultCoverImage = plan.isSelfMade ? selfMadeDefaultCoverImage : coachDefaultCoverImage;
 
     // 🔥 حسابات شريط التقدم والأسابيع
     int durationMonths = plan.durationMonths ?? 1;

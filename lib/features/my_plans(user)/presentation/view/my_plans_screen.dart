@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/loading_shimmer.dart';
 import '../../../platform_plans/presentation/widgets/platform_plan_card.dart';
 import '../../data/models/my_plan_model.dart';
 import '../../data/repository/my_plans_repository.dart';
@@ -80,10 +81,15 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
   void _onExternalTabChange() {
     final newIndex = MyPlansScreen.activeTabNotifier.value;
     if (mounted) {
-      // 🔥 شلنا الشرط القديم عشان نجبر الشاشة تتحدث غصب عنها
       setState(() => _activeTabIndex = newIndex);
-      // 🔥 طلبنا الداتا الطازجة فوراً
-      context.read<MyPlansCubit>().fetchTab(_kTabConfigs[newIndex].type, isRefresh: true);
+      // ⚠️ ما منجبر isRefresh: true هون بعد اليوم. هاد بالضبط كان سبب
+      // إلغاء الكاش بالكامل: _onTabTap (تبويب عادي جوا الشاشة) كان يكتب
+      // عالـ notifier نفسو (activeTabNotifier.value = index)، وهاد كان
+      // يشغّل هاد الـ listener تلقائياً حتى لتبويب عادي - يعني كل ضغطة
+      // تاب كانت عم تسوي refresh إجباري بدل ما تعتمد عالكاش. هلق منترك
+      // القرار لمنطق fetchTab نفسو (يلي أصلاً بيفرض isRefresh دايماً
+      // لتاب Saved تحديداً، وبيتفادى إعادة الطلب لباقي التابات لو محمّلة).
+      context.read<MyPlansCubit>().fetchTab(_kTabConfigs[newIndex].type);
     }
   }
 
@@ -128,7 +134,7 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
                 builder: (context, state) {
                   final status = state.statusFor(activeConfig.type);
                   return switch (status) {
-                    TabLoading() || TabInitial() => const Center(child: CircularProgressIndicator(color: AppColors.primaryBtn)),
+                    TabLoading() || TabInitial() => _buildShimmerLoading(),
                     TabFailure() => Center(child: Text(status.message, style: const TextStyle(color: AppColors.hintText))),
                     TabSuccess() => _buildPlansList(activeConfig, status.plans),
                   };
@@ -236,6 +242,36 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
           // أما إذا كنا بتاب الكوتش أو الخطط المخصصة بنرسم الكارد العادي
           return WorkoutPlanCard(plan: plans[index]);
         },
+      ),
+    );
+  }
+
+  // 🔥 هيكل شيمير قريب من شكل WorkoutPlanCard (صورة فوق + سطرين نص)
+  Widget _buildShimmerLoading() {
+    return ListView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+      itemCount: 3,
+      itemBuilder: (context, index) => Container(
+        margin: const EdgeInsets.only(bottom: 20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(25),
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 12, offset: const Offset(0, 4))],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const LoadingShimmer(width: double.infinity, height: 140, borderRadius: 18),
+              const SizedBox(height: 14),
+              LoadingShimmer(width: MediaQuery.of(context).size.width * 0.5, height: 16, borderRadius: 6),
+              const SizedBox(height: 10),
+              LoadingShimmer(width: MediaQuery.of(context).size.width * 0.35, height: 12, borderRadius: 6),
+            ],
+          ),
+        ),
       ),
     );
   }

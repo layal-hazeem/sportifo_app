@@ -32,7 +32,7 @@ class _AllPlatformPlansScreenState extends State<AllPlatformPlansScreen> {
       child: Scaffold(
         backgroundColor: AppColors.background,
         appBar: const WaveAppBar(
-          title: 'Explore Platform Plans',
+          title: 'Sportifo Plans',
         ),
         body: BlocBuilder<PlatformPlansCubit, PlatformPlansState>(
           builder: (context, state) {
