@@ -24,9 +24,17 @@ class _AdsCarouselWidgetState extends State<AdsCarouselWidget> {
   @override
   void initState() {
     super.initState();
+    // ❌ تم إزالة الاستدعاء من هنا لحل مشكلة اللغة
+  }
+
+  // ✅ تم النقل إلى هنا لكي يعمل تحديث الإعلانات فور تغيير اللغة
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     context.read<AdsCubit>().fetchAds();
   }
-// 🔥 دالة سحرية تقوم بتحميل كل صور الإعلانات المتبقية مسبقاً في كاش الموبايل
+
+  // 🔥 دالة سحرية تقوم بتحميل كل صور الإعلانات المتبقية مسبقاً في كاش الموبايل
   void _precacheAllAdImages(List<AdModel> ads) {
     for (var ad in ads) {
       if (ad.images.length > 1) {
@@ -40,6 +48,7 @@ class _AdsCarouselWidgetState extends State<AdsCarouselWidget> {
       }
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AdsCubit, AdsState>(
