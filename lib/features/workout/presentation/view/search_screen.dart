@@ -3,7 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/widgets/loading_shimmer.dart'; 
+import '../../../../core/widgets/loading_shimmer.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../view_model/search_cubit/search_cubit.dart';
 import '../view_model/search_cubit/search_state.dart';
 import '../widgets/exercises_grid_view.dart';
@@ -54,6 +55,8 @@ class _SearchExercisesScreenState extends State<SearchExercisesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -76,7 +79,7 @@ class _SearchExercisesScreenState extends State<SearchExercisesScreen> {
             autofocus: true,
             style: const TextStyle(fontSize: 16, color: AppColors.textDark),
             decoration: InputDecoration(
-              hintText: "Search for exercises...",
+              hintText: l10n.searchForExercises, // 🔥 ترجمة
               hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 14),
               border: InputBorder.none,
               prefixIcon: Icon(CupertinoIcons.search, color: Colors.grey.shade500, size: 20),
@@ -113,22 +116,38 @@ class _SearchExercisesScreenState extends State<SearchExercisesScreen> {
             );
           } else if (state is SearchSuccess) {
             if (state.exercises.isEmpty) {
-              return _buildNoResults();
+              return _buildNoResults(l10n);
             }
             return ExercisesGridView(exercises: state.exercises);
           } else if (state is SearchFailure) {
-            return _buildNoResults();
+            return _buildNoResults(l10n);
           }
-          return _buildSuggestions();
+          return _buildSuggestions(l10n);
         },
       ),
     );
   }
 
-  Widget _buildSuggestions() {
+  Widget _buildSuggestions(AppLocalizations l10n) {
     final bool isCardio = widget.categoryId == 2;
-    final List<String> resistanceSearches = ['Chest', 'Abs', 'Legs', 'Back', 'Biceps', 'Shoulders'];
-    final List<String> cardioSearches = ['Running', 'Jump Rope', 'Burpees', 'Cycling', 'High Knees'];
+
+    // 🔥 تم ربطها بملف الترجمة لتتغير حسب لغة التطبيق
+    final List<String> resistanceSearches = [
+      l10n.search_chest,
+      l10n.search_abs,
+      l10n.search_legs,
+      l10n.search_back,
+      l10n.search_biceps,
+      l10n.search_shoulders,
+    ];
+
+    final List<String> cardioSearches = [
+      l10n.search_running,
+      l10n.search_jump_rope,
+      l10n.search_burpees,
+      l10n.search_cycling,
+    ];
+
     final List<String> popularSearches = isCardio ? cardioSearches : resistanceSearches;
 
     return Padding(
@@ -136,9 +155,9 @@ class _SearchExercisesScreenState extends State<SearchExercisesScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Popular Searches",
-            style: TextStyle(
+          Text(
+            l10n.popularSearches,
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
               color: AppColors.textDark,
@@ -157,6 +176,7 @@ class _SearchExercisesScreenState extends State<SearchExercisesScreen> {
                   borderRadius: BorderRadius.circular(10),
                   side: BorderSide(color: Colors.grey.shade300),
                 ),
+                // 🔥 عندما يضغط عليها، سيتم البحث بالكلمة المترجمة (عربي أو إنجليزي)
                 onPressed: () => _triggerQuickSearch(keyword),
               );
             }).toList(),
@@ -166,7 +186,7 @@ class _SearchExercisesScreenState extends State<SearchExercisesScreen> {
     );
   }
 
-  Widget _buildNoResults() {
+  Widget _buildNoResults(AppLocalizations l10n) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -174,12 +194,12 @@ class _SearchExercisesScreenState extends State<SearchExercisesScreen> {
           Icon(CupertinoIcons.search_circle_fill, size: 100, color: Colors.grey.shade300),
           const SizedBox(height: 20),
           Text(
-            "No exercises found!",
+            l10n.no_exercises_found,
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey.shade700),
           ),
           const SizedBox(height: 10),
           Text(
-            "Try searching for something else,\nlike 'Shoulders' or 'Yoga'.",
+            l10n.trySearchingForSomethingElse, // 🔥 ترجمة
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 14, color: Colors.grey.shade500),
           ),

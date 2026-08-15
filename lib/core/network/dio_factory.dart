@@ -34,6 +34,11 @@ class DioFactory {
     _dio.interceptors.clear();
 
     // 3. إضافة Interceptor التوكن (يجب أن يكون أولاً لتوثيق أي ريكويست طالع)
+    // 🔥 وهون كمان منضيف Accept-Language ديناميكياً بكل ريكويست، مقروءة من
+    // اللغة المحفوظة (نفسها يلي LocaleCubit عم يستخدمها للواجهة) - بدل
+    // 'en' الثابتة يلي كانت بالـ BaseOptions. هيك محتوى السيرفر (أسماء/أوصاف
+    // تمارين مثلاً) بيتبع لغة التطبيق تلقائياً بمجرد ما المستخدم يبدّلها،
+    // بدون ما نحتاج نعيد فتح التطبيق.
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
@@ -41,6 +46,7 @@ class DioFactory {
           if (token != null) {
             options.headers['Authorization'] = 'Bearer $token';
           }
+          options.headers['Accept-Language'] = _localStorage.getLanguage();
           return handler.next(options);
         },
         onError: (DioException e, handler) async {
@@ -101,6 +107,11 @@ class DioFactory {
         maxStale: const Duration(days: 7),
         priority: CachePriority.high,
         allowPostMethod: false,
+
+        keyBuilder: ({required Uri url, Map<String, String>? headers, Object? body}) {
+          final lang = headers?['Accept-Language'] ?? headers?['accept-language'] ?? 'en';
+          return '$lang::${url.toString()}';
+        },
       );
     }
     return _cacheOptions!;

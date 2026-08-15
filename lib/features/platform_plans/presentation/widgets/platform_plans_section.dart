@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/loading_shimmer.dart';
 import '../view_model/platform_plans_cubit.dart';
 import '../view_model/platform_plans_state.dart';
 import 'platform_plan_card.dart';
@@ -14,10 +15,32 @@ class PlatformPlansSection extends StatelessWidget {
     return BlocBuilder<PlatformPlansCubit, PlatformPlansState>(
       builder: (context, state) {
         if (state is PlatformPlansLoading) {
-          return const SizedBox(
-            height: 200,
-            child: Center(
-              child: CircularProgressIndicator(color: AppColors.primaryBtn),
+          // 🔥 هيكل شيمير أفقي قريب من شكل PlatformPlanCard (270×135 صورة + نصين)
+          return SizedBox(
+            height: 240,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              physics: const NeverScrollableScrollPhysics(),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              itemCount: 3,
+              itemBuilder: (context, index) => Container(
+                width: 270,
+                margin: const EdgeInsets.only(right: 14),
+                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const LoadingShimmer(width: 250, height: 135, borderRadius: 16),
+                      const SizedBox(height: 12),
+                      const LoadingShimmer(width: 180, height: 14, borderRadius: 6),
+                      const SizedBox(height: 8),
+                      const LoadingShimmer(width: 120, height: 12, borderRadius: 6),
+                    ],
+                  ),
+                ),
+              ),
             ),
           );
         }
@@ -36,7 +59,7 @@ class PlatformPlansSection extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      'Free Plans',
+                      'Sportifo Plans',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,

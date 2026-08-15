@@ -26,14 +26,16 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
   int? selectedMuscleId;
   List<int> selectedSmallestCategoryId = [];
 
-  final Map<String, String> _muscleAssets = {
-    'Chest': 'assets/images/muscles/chest.jpg',
-    'Back': 'assets/images/muscles/back.jpg',
-    'Legs': 'assets/images/muscles/legs.jpg',
-    'Shoulders': 'assets/images/muscles/shoulders.jpg',
-    'Biceps': 'assets/images/muscles/biceps.jpg',
-    'Triceps': 'assets/images/muscles/triceps.jpg',
-    'ABS': 'assets/images/muscles/ABS.jpg'
+  // 🔥 تم التعديل هنا: استخدام int (الـ ID) كـ Key بدلاً من String (الاسم)
+  // ⚠️ يرجى التأكد من مطابقة هذه الأرقام مع الـ IDs الحقيقية في الباك إند
+  final Map<int, String> _muscleAssets = {
+    1: 'assets/images/muscles/chest.jpg',      // id الصدر
+    2: 'assets/images/muscles/back.jpg',       // id الظهر
+    3: 'assets/images/muscles/shoulders.jpg',       // id الأرجل
+    4: 'assets/images/muscles/legs.jpg',  // id الأكتاف
+    5: 'assets/images/muscles/biceps.jpg',     // id البايسبس
+    6: 'assets/images/muscles/triceps.jpg',    // id الترايسبس
+    7: 'assets/images/muscles/ABS.jpg'         // id المعدة
   };
 
   @override
@@ -105,11 +107,13 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                     itemBuilder: (context, index) {
                       final muscle = state.categories[index];
                       final isSelected = selectedMuscleId == muscle.id;
-                      final imagePath = _muscleAssets[muscle.name] ?? 'assets/images/muscles/default.jpg';
+
+                      // 🔥 جلب الصورة بناءً على الـ ID الخاص بالعضلة بدلاً من اسمها المتغير
+                      final imagePath = _muscleAssets[muscle.id] ?? 'assets/images/muscles/default.jpg';
 
                       return HorizontalMuscleCard(
-                        name: muscle.name,
-                        imagePath: imagePath,
+                        name: muscle.name, // الاسم يظهر باللغة الصحيحة (عربي/إنجليزي)
+                        imagePath: imagePath, // الصورة تظهر بشكل دائم بغض النظر عن اللغة
                         isSelected: isSelected,
                         anyMuscleSelected: selectedMuscleId != null,
                         onTap: () {
@@ -158,7 +162,6 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                         onSelected: (bool selected) {
                           setState(() {
                             if (selected) {
-
                               selectedSmallestCategoryId.add(part.id);
                             } else {
                               selectedSmallestCategoryId.remove(part.id);

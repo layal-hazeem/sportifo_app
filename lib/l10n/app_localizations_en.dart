@@ -144,7 +144,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get skip => 'Skip';
 
   @override
-  String get kg => 'kg';
+  String get kg => 'Kg';
+
+  @override
+  String get g => 'g';
 
   @override
   String get cm => 'cm';
@@ -702,4 +705,157 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get endedLastMonth => 'Subscriptions that ended during the last month';
+
+  @override
+  String get addedToSaved => 'Added to saved';
+
+  @override
+  String get removedFromSaved => 'Removed from saved';
+
+  @override
+  String get tapToHideInstructions => 'Tap to hide instructions';
+
+  @override
+  String get tapToViewInstructions => 'Tap to view instructions';
+
+  @override
+  String get photos => 'Photos';
+
+  @override
+  String get bodyPart => 'Body Part';
+
+  @override
+  String get searchForExercises => 'Search for exercises...';
+
+  @override
+  String get noSavedExercisesYet => 'No saved exercises yet';
+
+  @override
+  String get savedExercisesHint => 'Exercises you save will appear here for quick access';
+
+  @override
+  String get pullDownToRefresh => 'Pull down to refresh';
+
+  @override
+  String get popularSearches => 'Popular Searches';
+
+  @override
+  String get trySearchingForSomethingElse => 'Try searching for something else, like \'Shoulders\' or \'Yoga\'.';
+
+  @override
+  String get chooseYourWorkoutType => 'Choose Your\nWorkout Type';
+
+  @override
+  String get search_chest => 'Chest';
+
+  @override
+  String get search_abs => 'Abs';
+
+  @override
+  String get search_legs => 'Legs';
+
+  @override
+  String get search_back => 'Back';
+
+  @override
+  String get search_biceps => 'Biceps';
+
+  @override
+  String get search_shoulders => 'Shoulders';
+
+  @override
+  String get search_running => 'Running';
+
+  @override
+  String get search_jump_rope => 'Jump Rope';
+
+  @override
+  String get search_burpees => 'Burpees';
+
+  @override
+  String get search_cycling => 'Cycling';
+
+  @override
+  String get details => 'Details';
+
+  @override
+  String get shopNow => 'Shop Now';
+
+  @override
+  String get learnMore => 'Learn More';
+
+  @override
+  String get dailyNutritionTargets => 'Daily Nutrition Targets';
+
+  @override
+  String get kcal => 'Kcal';
+
+  @override
+  String get protein => 'Protein';
+
+  @override
+  String get carbs => 'Carbs';
+
+  @override
+  String get fat => 'Fat';
+
+  @override
+  String get currentWeight => 'Current Weight:';
+
+  @override
+  String get notSet => 'Not Set';
+
+  @override
+  String get change => 'Change';
+
+  @override
+  String get selectFitnessGoal => 'Select Your Fitness Goal ⚡';
+
+  @override
+  String get goalSubtitle => 'The system will automatically compute your tailored daily metrics';
+
+  @override
+  String get bulkTitle => 'Bulk / Gain Muscle';
+
+  @override
+  String get bulkSubtitle => 'Increase calorie targets systematically to optimize lean muscle growth';
+
+  @override
+  String get cutTitle => 'Cut / Lose Fat';
+
+  @override
+  String get cutSubtitle => 'Decrease calorie targets to accelerate smart fat burn and increase definition';
+
+  @override
+  String get maintainTitle => 'Maintain / Stay Fit';
+
+  @override
+  String get maintainSubtitle => 'Stabilize current weight while steadily optimizing athletic stamina and recovery';
+
+  @override
+  String get confirmAndComputePlan => 'Confirm & Compute Plan';
+
+  @override
+  String get pleaseEnterWeightSnackBar => 'Please enter your current weight in your profile so the system can compute your calories.';
+
+  @override
+  String get updateWeight => 'Update Weight';
+
+  @override
+  String get activateSmartPlan => 'Activate Your Smart Plan ⚡';
+
+  @override
+  String get activateSmartPlanDesc => 'Set your main physical target now to dynamically evaluate your necessary daily calories and macronutrients.';
+
+  @override
+  String get setMyGoalNow => 'Set My Goal Now';
+
+  @override
+  String get bulkGoal => 'Bulk';
+
+  @override
+  String get cutGoal => 'Cut';
+
+  @override
+  String get maintainGoal => 'Maintain';
 }

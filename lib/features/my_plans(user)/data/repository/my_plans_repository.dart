@@ -32,18 +32,25 @@ class MyPlansRepository {
 
   MyPlansRepository(this._service);
 
-  // 🔥 دالة واحدة عامة تخدم التلاتة تابات - منمرر نوع التاب وهي بتعرف
-  // الـ endpoint الصحيح وتحوّل نفس شكل الـ pagination response لكل واحد فيهن.
-  Future<ApiResult<List<PlanModel>>> fetchPlansForTab(PlanTabType type) async {
+  Future<ApiResult<List<PlanModel>>> fetchPlansForTab(PlanTabType type, {bool isRefresh = false}) async {
     try {
+      // 🔥 تفريق سياسة الكاش حسب نوع التاب وحسب إذا كان طلب Refresh يدوي:
+      // - Saved، أو أي Pull-to-refresh يدوي (isRefresh): دايماً طازة من
+      //   السيرفر (CachePolicy.refresh) - بيانات بتتغيّر بفعل المستخدم
+      //   بمكان تاني (زر الحفظ) أو طلب صريح منّو يشوف الأحدث.
+      // - Coach / Custom (بدون refresh يدوي): كاش-أول (Request) - ما
+      //   بترسل ريكويست جديد إلا لو مافي كاش صالح - هيك أسرع وأقل
+      //   استهلاك للسيرفر بالتنقل العادي بين التابات.
+      final needsFreshData = isRefresh || type == PlanTabType.saved;
+
       final cacheOptions = await DioFactory.getCacheOptions();
       final dioOptions = cacheOptions.copyWith(
-        policy: CachePolicy.refreshForceCache,
+        policy: needsFreshData ? CachePolicy.refresh : CachePolicy.request,
+        hitCacheOnNetworkFailure: true,
       ).toOptions();
 
       final response = await _service.getPlansByEndpoint(type.endpoint, options: dioOptions);
 
-      // 🔥 شكل الـ response الجديد: {"data": {"data": [...], "links": {...}, "meta": {...}}}
       final List data = response.data['data']?['data'] ?? [];
       final List<PlanModel> plans = data.map((json) => PlanModel.fromJson(json)).toList();
 
@@ -52,7 +59,6 @@ class MyPlansRepository {
       return Failure(ApiErrorHandler.handle(e));
     }
   }
-
   Future<ApiResult<List<PlanModel>>> fetchMyPlans() async {
     try {
       // 1. جلب إعدادات الكاش
