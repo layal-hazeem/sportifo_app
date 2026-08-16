@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/routes/app_routes.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/logout/logout_cubit.dart';
+import 'package:sportifo_app/features/create_self_plan/presentation/view/create_self_plan_screen.dart';
+import 'package:sportifo_app/features/create_self_plan/presentation/view_model/create_self_plan_cubit.dart';
 import 'package:sportifo_app/features/edit_coach_plan/data/models/edit_coach_plan_model.dart';
 import 'package:sportifo_app/features/edit_coach_plan/presentation/view/edit_coach_plan_screen.dart';
 import 'package:sportifo_app/features/edit_coach_plan/presentation/view_model/edit_coach_plan_cubit.dart';
@@ -221,15 +223,15 @@ class AppRouter {
           ),
         );
 
-     case AppRoutes.editCoachPlan:
-  final plan = settings.arguments as PlanDetailsModel;
+      case AppRoutes.editCoachPlan:
+        final plan = settings.arguments as PlanDetailsModel;
 
-  return MaterialPageRoute(
-    builder: (_) => BlocProvider(
-      create: (_) => getIt<EditCoachPlanCubit>(),
-      child: EditCoachPlanScreen(plan: plan),
-    ),
-  );
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => getIt<EditCoachPlanCubit>(),
+            child: EditCoachPlanScreen(plan: plan),
+          ),
+        );
 
       case AppRoutes.otpScreen:
         final args = settings.arguments;
@@ -327,6 +329,14 @@ class AppRouter {
           builder: (_) => BlocProvider(
             create: (_) => getIt<CreatePlanCubit>(),
             child: CreatePlanScreen(userId: user.id!),
+          ),
+        );
+
+      case AppRoutes.createSelfPlan:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => getIt<CreateSelfPlanCubit>(),
+            child: const CreateSelfPlanScreen(),
           ),
         );
 

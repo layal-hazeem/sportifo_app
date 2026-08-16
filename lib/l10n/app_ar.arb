@@ -373,5 +373,7 @@
       "setMyGoalNow": "حدد هدفي الآن",
       "bulkGoal": "تضخيم",
         "cutGoal": "تنشيف",
-        "maintainGoal": "ثبات"
+        "maintainGoal": "ثبات",
+        "createYourOwnPlan":"أنشئ خطتك الخاصة",
+        "buildWorkoutPlanThatFitsYou":"قم ببناء خطة تمارين تناسبك"
 }

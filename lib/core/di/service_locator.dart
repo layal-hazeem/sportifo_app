@@ -4,12 +4,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sportifo_app/features/%20ads/presentation/view_model/ads_cubit.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/complete_profile/complete_profile_cubit.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/logout/logout_cubit.dart';
+import 'package:sportifo_app/features/create_self_plan/data/repository/create_self_plan_repository.dart';
+import 'package:sportifo_app/features/create_self_plan/data/web_services/create_self_plan_service.dart';
+import 'package:sportifo_app/features/create_self_plan/presentation/view_model/create_self_plan_cubit.dart';
 import 'package:sportifo_app/features/edit_coach_plan/data/repository/edit_coach_plan_repository.dart';
 import 'package:sportifo_app/features/edit_coach_plan/data/web_services/edit_coach_plan_service.dart';
 import 'package:sportifo_app/features/edit_coach_plan/presentation/view_model/edit_coach_plan_cubit.dart';
 import 'package:sportifo_app/features/existing_days/data/repository/existing_days_repository.dart';
 import 'package:sportifo_app/features/existing_days/data/web_services/existing_days_web_services.dart';
 import 'package:sportifo_app/features/existing_days/presentation/view_model/existing_days_cubit.dart';
+import 'package:sportifo_app/features/home/data/repository/coach_home_repository.dart';
+import 'package:sportifo_app/features/home/presentation/view_model/coach_home_cubit.dart';
 import 'package:sportifo_app/features/nutrition/data/repository/nutrition_repository.dart';
 import 'package:sportifo_app/features/nutrition/data/web_services/nutrition_web_service.dart';
 import 'package:sportifo_app/features/nutrition/presentation/view_model/nutrition_cubit.dart';
@@ -116,36 +121,36 @@ Future<void> setupServiceLocator() async {
     () => WorkoutRepository(getIt<WorkoutWebService>()),
   );
   getIt.registerLazySingleton<WeightProgressWebService>(
-        () => WeightProgressWebService(getIt<Dio>()),
+    () => WeightProgressWebService(getIt<Dio>()),
   );
   getIt.registerLazySingleton<WeightProgressRepository>(
-        () => WeightProgressRepository(getIt<WeightProgressWebService>()),
+    () => WeightProgressRepository(getIt<WeightProgressWebService>()),
   );
   getIt.registerFactory<WeightProgressCubit>(
-        () => WeightProgressCubit(getIt<WeightProgressRepository>()),
+    () => WeightProgressCubit(getIt<WeightProgressRepository>()),
   );
 
   getIt.registerLazySingleton<ExerciseActivityWebService>(
-        () => ExerciseActivityWebService(getIt<Dio>()),
+    () => ExerciseActivityWebService(getIt<Dio>()),
   );
   getIt.registerLazySingleton<ExerciseActivityRepository>(
-        () => ExerciseActivityRepository(getIt<ExerciseActivityWebService>()),
+    () => ExerciseActivityRepository(getIt<ExerciseActivityWebService>()),
   );
   getIt.registerFactory<ExerciseActivityCubit>(
-        () => ExerciseActivityCubit(getIt<ExerciseActivityRepository>()),
+    () => ExerciseActivityCubit(getIt<ExerciseActivityRepository>()),
   );
 
   getIt.registerLazySingleton<ExercisesCubit>(
-        () => ExercisesCubit(getIt<WorkoutRepository>()),
+    () => ExercisesCubit(getIt<WorkoutRepository>()),
   );
   getIt.registerFactory<CategoriesCubit>(
     () => CategoriesCubit(getIt<WorkoutRepository>()),
   );
 
   getIt.registerLazySingleton<PartsCubit>(
-        () => PartsCubit(getIt<WorkoutRepository>()),
+    () => PartsCubit(getIt<WorkoutRepository>()),
   );
- final savedExercisesCubit = SavedExercisesCubit(getIt<WorkoutRepository>());
+  final savedExercisesCubit = SavedExercisesCubit(getIt<WorkoutRepository>());
   getIt.registerSingleton<SavedExercisesCubit>(savedExercisesCubit);
   await savedExercisesCubit.initialize();
 
@@ -188,15 +193,15 @@ Future<void> setupServiceLocator() async {
   );
 
   getIt.registerLazySingleton<SubscriptionWebService>(
-        () => SubscriptionWebService(getIt<Dio>()),
+    () => SubscriptionWebService(getIt<Dio>()),
   );
 
   getIt.registerLazySingleton<SubscriptionRepository>(
-        () => SubscriptionRepository(getIt<SubscriptionWebService>()),
+    () => SubscriptionRepository(getIt<SubscriptionWebService>()),
   );
 
   getIt.registerFactory<SubscriptionCubit>(
-        () => SubscriptionCubit(getIt<SubscriptionRepository>()),
+    () => SubscriptionCubit(getIt<SubscriptionRepository>()),
   );
 
   // 🔥 🎯 تسجيل ميزة الأهداف والاحتياجات الغذائية الجديدة هنا
@@ -211,10 +216,10 @@ Future<void> setupServiceLocator() async {
   );
 
   getIt.registerLazySingleton<TraineeSubscriptionWebService>(
-        () => TraineeSubscriptionWebService(getIt<Dio>()),
+    () => TraineeSubscriptionWebService(getIt<Dio>()),
   );
   getIt.registerLazySingleton<TraineeSubscriptionRepository>(
-        () => TraineeSubscriptionRepository(getIt<TraineeSubscriptionWebService>()),
+    () => TraineeSubscriptionRepository(getIt<TraineeSubscriptionWebService>()),
   );
 
   // تسجيل WebService و Repository الخاص بالخطط (بما فيها الأيام)
@@ -244,97 +249,125 @@ Future<void> setupServiceLocator() async {
     () => CreatePlanCubit(getIt<CreatePlanRepository>()),
   );
 
+  // Create Self Plan feature
 
-  getIt.registerLazySingleton<AiChatWebService>(() => AiChatWebService(getIt<Dio>()));
-getIt.registerLazySingleton<AiChatRepository>(() => AiChatRepository(getIt<AiChatWebService>()));
-getIt.registerFactory<AiChatCubit>(() => AiChatCubit(getIt<AiChatRepository>()));
+  getIt.registerLazySingleton<CreateSelfPlanService>(
+    () => CreateSelfPlanService(getIt<Dio>()),
+  );
 
+  getIt.registerLazySingleton<CreateSelfPlanRepository>(
+    () => CreateSelfPlanRepository(getIt<CreateSelfPlanService>()),
+  );
 
-// Nutrition
-getIt.registerSingleton<NutritionWebService>(
-  NutritionWebService(getIt<Dio>()),
-);
+  getIt.registerFactory<CreateSelfPlanCubit>(
+    () => CreateSelfPlanCubit(getIt<CreateSelfPlanRepository>()),
+  );
 
-getIt.registerSingleton<NutritionRepository>(
-  NutritionRepository(getIt<NutritionWebService>()),
-);
+  getIt.registerLazySingleton<AiChatWebService>(
+    () => AiChatWebService(getIt<Dio>()),
+  );
+  getIt.registerLazySingleton<AiChatRepository>(
+    () => AiChatRepository(getIt<AiChatWebService>()),
+  );
+  getIt.registerFactory<AiChatCubit>(
+    () => AiChatCubit(getIt<AiChatRepository>()),
+  );
 
-getIt.registerSingleton<NutritionCubit>(
-  NutritionCubit(getIt<NutritionRepository>()),
-);
+  // Nutrition
+  getIt.registerSingleton<NutritionWebService>(
+    NutritionWebService(getIt<Dio>()),
+  );
+
+  getIt.registerSingleton<NutritionRepository>(
+    NutritionRepository(getIt<NutritionWebService>()),
+  );
+
+  getIt.registerSingleton<NutritionCubit>(
+    NutritionCubit(getIt<NutritionRepository>()),
+  );
 
   // 🔥 تسجيل My Plans Feature
   getIt.registerLazySingleton<MyPlansService>(
-        () => MyPlansService(getIt<Dio>()),
+    () => MyPlansService(getIt<Dio>()),
   );
 
   getIt.registerLazySingleton<MyPlansRepository>(
-        () => MyPlansRepository(getIt<MyPlansService>()),
+    () => MyPlansRepository(getIt<MyPlansService>()),
   );
 
   getIt.registerLazySingleton<MyPlansCubit>(
-        () => MyPlansCubit(getIt<MyPlansRepository>()),
+    () => MyPlansCubit(getIt<MyPlansRepository>()),
   );
   getIt.registerFactory<PlanDaysCubit>(
-        () => PlanDaysCubit(getIt<MyPlansRepository>()),
+    () => PlanDaysCubit(getIt<MyPlansRepository>()),
   );
   getIt.registerFactory<ActiveWorkoutCubit>(
-        () => ActiveWorkoutCubit(getIt<MyPlansRepository>()),
+    () => ActiveWorkoutCubit(getIt<MyPlansRepository>()),
   );
 
   getIt.registerLazySingleton<PlatformPlansWebService>(
-        () => PlatformPlansWebService(getIt<Dio>()),
+    () => PlatformPlansWebService(getIt<Dio>()),
   );
 
   getIt.registerLazySingleton<PlatformPlansRepository>(
-        () => PlatformPlansRepository(getIt<PlatformPlansWebService>()),
+    () => PlatformPlansRepository(getIt<PlatformPlansWebService>()),
   );
 
   getIt.registerLazySingleton<PlatformPlansCubit>(
-        () => PlatformPlansCubit(getIt<PlatformPlansRepository>()),
+    () => PlatformPlansCubit(getIt<PlatformPlansRepository>()),
   );
   // Trainees feature
 
   getIt.registerLazySingleton<TraineesWebService>(
-  () => TraineesWebService(getIt<Dio>()),
-);
+    () => TraineesWebService(getIt<Dio>()),
+  );
 
-getIt.registerLazySingleton<TraineesRepository>(
-  () => TraineesRepository(getIt<TraineesWebService>()),
-);
+  getIt.registerLazySingleton<TraineesRepository>(
+    () => TraineesRepository(getIt<TraineesWebService>()),
+  );
 
-getIt.registerFactory<TraineesCubit>(
-  () => TraineesCubit(getIt<TraineesRepository>()),
-);
+  getIt.registerFactory<TraineesCubit>(
+    () => TraineesCubit(getIt<TraineesRepository>()),
+  );
 
-// Plan Details
+  // Plan Details
 
-getIt.registerLazySingleton<PlanDetailsWebService>(
-() => PlanDetailsWebService(getIt<Dio>()),
-);
+  getIt.registerLazySingleton<PlanDetailsWebService>(
+    () => PlanDetailsWebService(getIt<Dio>()),
+  );
 
-getIt.registerLazySingleton<PlanDetailsRepository>(
-() => PlanDetailsRepository(getIt<PlanDetailsWebService>()),
-);
+  getIt.registerLazySingleton<PlanDetailsRepository>(
+    () => PlanDetailsRepository(getIt<PlanDetailsWebService>()),
+  );
 
-getIt.registerFactory<PlanDetailsCubit>(
-() => PlanDetailsCubit(getIt<PlanDetailsRepository>()),
-);
+  getIt.registerFactory<PlanDetailsCubit>(
+    () => PlanDetailsCubit(getIt<PlanDetailsRepository>()),
+  );
 
-getIt.registerLazySingleton<EditCoachPlanService>(
-  () => EditCoachPlanService(getIt<Dio>()),
-);
+  getIt.registerLazySingleton<EditCoachPlanService>(
+    () => EditCoachPlanService(getIt<Dio>()),
+  );
 
-getIt.registerLazySingleton<EditCoachPlanRepository>(
-  () => EditCoachPlanRepository(
-    getIt<EditCoachPlanService>(),
+  getIt.registerLazySingleton<EditCoachPlanRepository>(
+    () => EditCoachPlanRepository(getIt<EditCoachPlanService>()),
+  );
+
+  getIt.registerFactory<EditCoachPlanCubit>(
+    () => EditCoachPlanCubit(getIt<EditCoachPlanRepository>()),
+  );
+
+  // Coach Home
+
+getIt.registerLazySingleton<CoachHomeRepository>(
+  () => CoachHomeRepositoryImpl(
+    getIt<ProfileRepository>(),
+    getIt<SubscriptionRepository>(),
   ),
 );
 
-getIt.registerFactory<EditCoachPlanCubit>(
-  () => EditCoachPlanCubit(
-    getIt<EditCoachPlanRepository>(),
+getIt.registerFactory<CoachHomeCubit>(
+  () => CoachHomeCubit(
+    getIt<CoachHomeRepository>(),
   ),
 );
-
 }

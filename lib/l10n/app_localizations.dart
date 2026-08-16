@@ -1534,6 +1534,7 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Create Plan'**
   String get createPlan;
+
   /// No description provided for @addedToSaved.
   ///
   /// In en, this message translates to:
@@ -1839,6 +1840,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Maintain'**
   String get maintainGoal;
+
+  /// No description provided for @createYourOwnPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Your Own Plan'**
+  String get createYourOwnPlan;
+
+  /// No description provided for @buildWorkoutPlanThatFitsYou.
+  ///
+  /// In en, this message translates to:
+  /// **'Build Workout Plan That Fits You'**
+  String get buildWorkoutPlanThatFitsYou;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

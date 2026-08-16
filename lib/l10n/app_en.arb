@@ -399,5 +399,7 @@
       "setMyGoalNow": "Set My Goal Now",
       "bulkGoal": "Bulk",
         "cutGoal": "Cut",
-        "maintainGoal": "Maintain"
+        "maintainGoal": "Maintain",
+        "createYourOwnPlan":"Create Your Own Plan",
+        "buildWorkoutPlanThatFitsYou":"Build Workout Plan That Fits You"
 }

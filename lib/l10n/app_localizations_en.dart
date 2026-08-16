@@ -759,6 +759,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get createPlan => 'Create Plan';
+
+  @override
   String get addedToSaved => 'Added to saved';
 
   @override
@@ -910,4 +912,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get maintainGoal => 'Maintain';
+
+  @override
+  String get createYourOwnPlan => 'Create Your Own Plan';
+
+  @override
+  String get buildWorkoutPlanThatFitsYou => 'Build Workout Plan That Fits You';
 }

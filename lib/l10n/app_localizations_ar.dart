@@ -759,6 +759,8 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get createPlan => 'أنشاء خطة';
+
+  @override
   String get addedToSaved => 'تمت الإضافة إلى المحفوظات';
 
   @override
@@ -910,4 +912,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get maintainGoal => 'ثبات';
+
+  @override
+  String get createYourOwnPlan => 'أنشئ خطتك الخاصة';
+
+  @override
+  String get buildWorkoutPlanThatFitsYou => 'قم ببناء خطة تمارين تناسبك';
 }

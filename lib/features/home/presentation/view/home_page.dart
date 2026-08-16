@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/routes/app_routes.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/features/%20ads/presentation/view_model/ads_cubit.dart';
 import 'package:sportifo_app/features/ai_chat/presentation/view/ai_chat_screen.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/logout/logout_cubit.dart';
 import 'package:sportifo_app/features/home/presentation/view/trainee_screen.dart';
 import 'package:sportifo_app/features/home/presentation/view/coach_screen.dart';
+import 'package:sportifo_app/features/home/presentation/view_model/coach_home_cubit.dart';
 import 'package:sportifo_app/features/home/presentation/view_model/home_view_model.dart';
 import 'package:sportifo_app/features/home/presentation/widgets/custom_app_bar.dart';
 import 'package:sportifo_app/features/home/presentation/widgets/custom_bottom_nav_bar.dart';
@@ -64,18 +66,33 @@ class _HomePageState extends State<HomePage> {
     return [
       BlocProvider(
         create: (context) => getIt<SubscriptionCubit>()..getSubscriptions(),
-        child: SubscriptionsScreen(),
+        child: const SubscriptionsScreen(),
       ),
+
       BlocProvider(
         create: (context) => getIt<TraineesCubit>()..getCoachTrainees(),
         child: const TraineesScreen(),
       ),
-      const CoachScreen(),
+
+      MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (context) => getIt<AdsCubit>()..fetchAds()),
+          BlocProvider(
+            create: (context) => getIt<CoachHomeCubit>()..loadHomeData(),
+          ),
+        ],
+        child: CoachHomeScreen(
+          onNavigate: (index) {
+            homeViewModel.changeTab(index);
+          },
+        ),
+      ),
+
       BlocProvider(
         create: (context) => getIt<CategoriesCubit>(),
         child: const WorkoutTypeScreen(),
       ),
-      const Center(child: Text("Chat")),
+      const AiChatScreen(),
     ];
   }
 
