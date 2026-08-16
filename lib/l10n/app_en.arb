@@ -347,5 +347,24 @@
   "noInternet":"No Internet Connection",
   "checkYourNetwork":"Please check your network settings and try again",
     "recentlyEnded":"Recently ended",
-    "endedLastMonth":"Subscriptions that ended during the last month"
+    "endedLastMonth":"Subscriptions that ended during the last month",
+    "editPlan":"Edit Plan",
+    "createNewDay":"Create New Day",
+    "creatDaySubtitle":"Build a custom workout day",
+    "addExistingDay":"Add Existing Day",
+    "addExistingDaySubtitle":"Reuse a saved day",
+    "workoutDays":"WORKOUT DAYS",
+    "day":"DAY",
+    "days":"DAYS",
+    "waitUpdatePlan":"Please wait while the plan is updated",
+    "noWorkoutDaysYet":"No workout days yet",
+    "hintForCreateDay":"Create a new workout day or reuse one from your saved workouts",
+"tapPlus":"Tap + to get started",
+"stepOne":"Step 1: Goal & Duration",
+"stepTwo":"Step 2: Days & Exercises",
+"chooseGoalForTrainingPlan":"Choose a goal for this training plan",
+"addAtLeastOneWorkoutDay":"Add at least one workout day",
+"everyWorkoutDayNeedsExercise":"Every workout day needs at least one exercise",
+"createPlan":"Create Plan"
+
 }

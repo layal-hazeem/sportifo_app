@@ -15,7 +15,7 @@ import 'package:sportifo_app/features/existing_days/presentation/view_model/exis
 import 'package:sportifo_app/features/create_plan_by_coach/data/models/plan_day_ui_model.dart';
 import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/create_day_bottom_sheet.dart';
 import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/day_settings_bottom_sheet.dart';
-import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/exercise_multi_picker_bottom_sheet.dart';
+import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/exercises_picker.dart';
 import 'package:sportifo_app/features/plan_details/data/models/plan_details_model.dart';
 import 'package:sportifo_app/features/workout/data/models/exercise_model.dart';
 import 'package:sportifo_app/features/workout/data/repository/workout_repository.dart';
@@ -23,16 +23,9 @@ import 'package:sportifo_app/features/edit_coach_plan/data/models/edit_coach_pla
 import 'package:sportifo_app/features/edit_coach_plan/data/models/edit_coach_plan_request.dart';
 import 'package:sportifo_app/features/edit_coach_plan/presentation/view_model/edit_coach_plan_cubit.dart';
 import 'package:sportifo_app/features/edit_coach_plan/presentation/view_model/edit_coach_plan_state.dart';
+import '../../../../l10n/app_localizations.dart' show AppLocalizations;
 import '../widgets/edit_plan_bottom_bar.dart';
 
-/// Edit flow for a coach-created plan.
-///
-/// Deliberately mirrors `CreatePlanScreen` 1:1 (same steps, same widgets:
-/// [PlanDetailsCard], [PlanDayCard], [ExerciseMultiPickerBottomSheet],
-/// [CreateDayBottomSheet], [DaySettingsBottomSheet], the existing-days
-/// picker, [WaveAppBar], [CustomGlassBottomSheet]) — the only real
-/// differences are: data starts pre-filled from [plan], and saving
-/// builds a diff-based PUT body instead of a plain create POST.
 class EditCoachPlanScreen extends StatefulWidget {
   final PlanDetailsModel plan;
 
@@ -48,10 +41,6 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
 
   late final List<PlanDayUiModel> days;
 
-  // Bookkeeping needed to build the PUT diff. Keyed by object identity —
-  // PlanDayUiModel / ExerciseModel don't override == , which is the same
-  // assumption ExerciseMultiPickerBottomSheet's `Set<ExerciseModel>`
-  // already relies on, so this is safe.
   final Map<PlanDayUiModel, int> _dayIds = {};
   final Map<PlanDayUiModel, Set<int>> _originalExerciseIds = {};
   final List<int> _deletedDayIds = [];
@@ -88,7 +77,7 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
   void _goToNextStep() {
     if (_currentStep == 0) {
       if (selectedGoal == null) {
-        _showValidationMessage("Choose a goal for this training plan");
+        _showValidationMessage( AppLocalizations.of(context)!.chooseGoalForTrainingPlan);
         return;
       }
       _pageController
@@ -117,7 +106,6 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
     CreateDayBottomSheet.show(context, (value) {
       setState(() {
         days.add(PlanDayUiModel(name: value, exercises: []));
-        // No entry in _dayIds / _originalExerciseIds — treated as new.
       });
     });
   }
@@ -167,7 +155,6 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
                   .toList() ??
               [],
         );
-        // Brand-new to this plan — nothing to track for the diff.
         days.add(uiDay);
       }
     });
@@ -255,9 +242,6 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
       );
   }
 
-  /// Builds the PUT body per the API's diff contract: existing days/
-  /// exercises are matched by id, brand-new ones omit `id`, and anything
-  /// removed from the UI is reported explicitly with `_delete: true`.
   EditCoachPlanRequest _buildRequest() {
     final dayPayloads = <PlanDay>[];
 
@@ -303,23 +287,21 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
 
   void saveChanges() {
     if (days.isEmpty) {
-      _showValidationMessage("Add at least one workout day");
+      _showValidationMessage( AppLocalizations.of(context)!.addAtLeastOneWorkoutDay);
       return;
     }
 
     if (days.any((day) => day.exercises.isEmpty)) {
-      _showValidationMessage("Every workout day needs at least one exercise");
+      _showValidationMessage( AppLocalizations.of(context)!.everyWorkoutDayNeedsExercise);
       return;
     }
 
-    // 1. إظهار ديالوج التحميل فوراً عند الضغط
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (_) => const EditPlanLoadingDialog(),
     );
 
-    // 2. إرسال الطلب للـ Cubit
     context.read<EditCoachPlanCubit>().updatePlan(
       planId: widget.plan.id,
       requestBody: _buildRequest(),
@@ -328,16 +310,14 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // لا تقم بعمل BlocProvider هنا إذا كان الـ Cubit متاحاً من قبل
-    // إذا كنت مضطراً، تأكد أنه في الأعلى خارج الـ build
-    return BlocConsumer<EditCoachPlanCubit, EditCoachPlanState>(
+    final l10n = AppLocalizations.of(context)!;
+      return BlocConsumer<EditCoachPlanCubit, EditCoachPlanState>(
       listener: (context, state) {
         if (state is EditCoachPlanSuccess) {
-          // إغلاق الـ Dialog (استخدم Navigator.of(context) لأن الـ Dialog يتم فوق الـ Scaffold)
           Navigator.of(context).pop();
           Navigator.of(context).pop(true);
         } else if (state is EditCoachPlanError) {
-          Navigator.of(context).pop(); // إغلاق الـ Dialog
+          Navigator.of(context).pop(); 
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text(state.error)));
@@ -345,7 +325,7 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
       },
       builder: (context, state) {
         return Scaffold(
-          appBar: WaveAppBar(title: "Edit Plan", showBackButton: true),
+          appBar: WaveAppBar(title: l10n.editPlan , showBackButton: true),
           body: Column(
             children: [
               EditPlanStepHeader(currentStep: _currentStep),

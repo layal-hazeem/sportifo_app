@@ -14,11 +14,12 @@ import 'package:sportifo_app/features/create_plan_by_coach/presentation/view_mod
 import 'package:sportifo_app/features/create_plan_by_coach/presentation/view_model/create_plan_state.dart';
 import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/create_day_bottom_sheet.dart';
 import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/day_settings_bottom_sheet.dart';
-import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/exercise_multi_picker_bottom_sheet.dart';
-import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/plan_day_card.dart';
+import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/exercises_picker.dart';
+import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/day_card.dart';
 import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/plan_details_card.dart';
 import 'package:sportifo_app/features/workout/data/models/exercise_model.dart';
 import 'package:sportifo_app/features/workout/data/repository/workout_repository.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class CreatePlanScreen extends StatefulWidget {
   final int userId;
@@ -47,7 +48,7 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
   void _goToNextStep() {
     if (_currentStep == 0) {
       if (selectedGoal == null) {
-        _showValidationMessage("Choose a goal for this training plan");
+        _showValidationMessage( AppLocalizations.of(context)!.chooseGoalForTrainingPlan);
         return;
       }
       _pageController
@@ -84,6 +85,7 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
   Widget build(BuildContext context) {
     return BlocListener<CreatePlanCubit, CreatePlanState>(
       listener: (context, state) {
+        final l10n = AppLocalizations.of(context)!;
         if (state is CreatePlanLoading) {
           if (!isLoadingDialogShown) {
             isLoadingDialogShown = true;
@@ -120,14 +122,14 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
                           ),
                         ),
                         const SizedBox(height: 20),
-                        const Text(
+                         Text(
                           "Creating your plan...",
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(height: 8),
+                         SizedBox(height: 8),
                         Text(
                           "Please wait while we save your workout",
                           textAlign: TextAlign.center,
@@ -152,7 +154,7 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
           }
           Navigator.pop(context, true);
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Plan created successfully 🎉")),
+            const SnackBar(content: Text("Plan created successfully")),
           );
         }
 
@@ -167,7 +169,7 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
         }
       },
       child: Scaffold(
-        appBar: WaveAppBar(title: "Create Plan", showBackButton: true),
+        appBar: WaveAppBar(title:  AppLocalizations.of(context)!.createPlan, showBackButton: true),
         body: Column(
           children: [
             // Header with Steps Indicator Line
@@ -178,7 +180,7 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
               child: PageView(
                 controller: _pageController,
                 physics:
-                    const NeverScrollableScrollPhysics(), // منع السحب اليدوي لضمان التحكم عبر الأزرار
+                    const NeverScrollableScrollPhysics(), 
                 children: [
                   _buildGoalAndDurationStep(),
                   _buildDaysAndExercisesStep(),

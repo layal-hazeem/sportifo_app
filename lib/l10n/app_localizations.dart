@@ -1420,6 +1420,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Subscriptions that ended during the last month'**
   String get endedLastMonth;
+
+  /// No description provided for @editPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Plan'**
+  String get editPlan;
+
+  /// No description provided for @createNewDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Create New Day'**
+  String get createNewDay;
+
+  /// No description provided for @creatDaySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Build a custom workout day'**
+  String get creatDaySubtitle;
+
+  /// No description provided for @addExistingDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Existing Day'**
+  String get addExistingDay;
+
+  /// No description provided for @addExistingDaySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reuse a saved day'**
+  String get addExistingDaySubtitle;
+
+  /// No description provided for @workoutDays.
+  ///
+  /// In en, this message translates to:
+  /// **'WORKOUT DAYS'**
+  String get workoutDays;
+
+  /// No description provided for @day.
+  ///
+  /// In en, this message translates to:
+  /// **'DAY'**
+  String get day;
+
+  /// No description provided for @days.
+  ///
+  /// In en, this message translates to:
+  /// **'DAYS'**
+  String get days;
+
+  /// No description provided for @waitUpdatePlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Please wait while the plan is updated'**
+  String get waitUpdatePlan;
+
+  /// No description provided for @noWorkoutDaysYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No workout days yet'**
+  String get noWorkoutDaysYet;
+
+  /// No description provided for @hintForCreateDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a new workout day or reuse one from your saved workouts'**
+  String get hintForCreateDay;
+
+  /// No description provided for @tapPlus.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap + to get started'**
+  String get tapPlus;
+
+  /// No description provided for @stepOne.
+  ///
+  /// In en, this message translates to:
+  /// **'Step 1: Goal & Duration'**
+  String get stepOne;
+
+  /// No description provided for @stepTwo.
+  ///
+  /// In en, this message translates to:
+  /// **'Step 2: Days & Exercises'**
+  String get stepTwo;
+
+  /// No description provided for @chooseGoalForTrainingPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a goal for this training plan'**
+  String get chooseGoalForTrainingPlan;
+
+  /// No description provided for @addAtLeastOneWorkoutDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Add at least one workout day'**
+  String get addAtLeastOneWorkoutDay;
+
+  /// No description provided for @everyWorkoutDayNeedsExercise.
+  ///
+  /// In en, this message translates to:
+  /// **'Every workout day needs at least one exercise'**
+  String get everyWorkoutDayNeedsExercise;
+
+  /// No description provided for @createPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Plan'**
+  String get createPlan;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

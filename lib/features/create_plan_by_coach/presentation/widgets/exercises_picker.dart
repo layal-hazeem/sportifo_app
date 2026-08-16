@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/features/auth/presentation/widgets/custom_button.dart';
-import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/exercise_selectable_card.dart';
+import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/select_exercise.dart';
 import 'package:sportifo_app/features/workout/data/models/exercise_model.dart';
 import 'package:sportifo_app/features/workout/presentation/widgets/part_filter_chip.dart';
 

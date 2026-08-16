@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class EditPlanBottomBar extends StatelessWidget {
   final int currentStep;
@@ -15,6 +16,7 @@ class EditPlanBottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(16),
       child: Row(
@@ -30,8 +32,8 @@ class EditPlanBottomBar extends StatelessWidget {
                     borderRadius: BorderRadius.circular(18),
                   ),
                 ),
-                child: const Text(
-                  "Back",
+                child:  Text(
+                  l10n.back,
                   style: TextStyle(
                     color: AppColors.primaryBtn,
                     fontSize: 16,
@@ -54,7 +56,7 @@ class EditPlanBottomBar extends StatelessWidget {
                 ),
               ),
               child: Text(
-                currentStep == 0 ? "Next" : "Save Changes",
+                currentStep == 0 ? l10n.next : l10n.saveChanges,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 16,

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/features/create_plan_by_coach/data/models/plan_day_ui_model.dart';
-import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/plan_day_card.dart';
+import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/day_card.dart';
 import 'package:sportifo_app/features/edit_coach_plan/presentation/widgets/empty_days_state.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class EditPlanDaysStep extends StatelessWidget {
   final List<PlanDayUiModel> days;
@@ -22,6 +23,7 @@ class EditPlanDaysStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return CustomScrollView(
       slivers: [
         SliverToBoxAdapter(
@@ -38,8 +40,8 @@ class EditPlanDaysStep extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 10),
-                const Text(
-                  'WORKOUT DAYS',
+                 Text(
+                  l10n.workoutDays,
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w800,
@@ -48,7 +50,7 @@ class EditPlanDaysStep extends StatelessWidget {
                 ),
                 const Spacer(),
                 Text(
-                  '${days.length} ${days.length == 1 ? 'day' : 'days'}',
+                  '${days.length} ${days.length == 1 ? '${l10n.day}' : '${l10n.days}'}',
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey.shade600,

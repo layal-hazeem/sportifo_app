@@ -7,19 +7,16 @@ class DaySettingsBottomSheet extends StatefulWidget {
 
   const DaySettingsBottomSheet({super.key, required this.day});
 
- static Future<bool?> show(
-  BuildContext context,
-  PlanDayUiModel day,
-) async {
-  return await showModalBottomSheet<bool>(
-    context: context,
-    isScrollControlled: true,
-    backgroundColor: Colors.transparent,
-    builder: (_) {
-      return DaySettingsBottomSheet(day: day);
-    },
-  );
-}
+  static Future<bool?> show(BuildContext context, PlanDayUiModel day) async {
+    return await showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) {
+        return DaySettingsBottomSheet(day: day);
+      },
+    );
+  }
 
   @override
   State<DaySettingsBottomSheet> createState() => _DaySettingsBottomSheetState();
@@ -41,7 +38,7 @@ class _DaySettingsBottomSheetState extends State<DaySettingsBottomSheet> {
     repsController = TextEditingController(
       text: widget.day.defaultReps?.toString() ?? "",
     );
-     applyToAll = false;
+    applyToAll = false;
   }
 
   @override
@@ -52,20 +49,13 @@ class _DaySettingsBottomSheetState extends State<DaySettingsBottomSheet> {
     super.dispose();
   }
 
-void save() {
+  void save() {
+    widget.day.defaultSets = int.tryParse(setsController.text.trim());
 
-  widget.day.defaultSets =
-      int.tryParse(setsController.text.trim());
+    widget.day.defaultReps = int.tryParse(repsController.text.trim());
 
-  widget.day.defaultReps =
-      int.tryParse(repsController.text.trim());
-
-
-  Navigator.pop(
-    context,
-    applyToAll,
-  );
-}
+    Navigator.pop(context, applyToAll);
+  }
 
   Widget inputField(String label, TextEditingController controller) {
     return Padding(
@@ -170,29 +160,27 @@ void save() {
             inputField("Default Reps", repsController),
 
             CheckboxListTile(
-  value: applyToAll,
+              value: applyToAll,
 
-  activeColor: AppColors.primaryBtn,
+              activeColor: AppColors.primaryBtn,
 
-  onChanged: (value){
-    setState(() {
-      applyToAll = value ?? false;
-    });
-  },
+              onChanged: (value) {
+                setState(() {
+                  applyToAll = value ?? false;
+                });
+              },
 
-title: const Text(
-  "Apply to all resistance exercises",
-  style: TextStyle(
-    fontWeight: FontWeight.w600,
-  ),
-),
+              title: const Text(
+                "Apply to all resistance exercises",
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
 
-subtitle: const Text(
-  "Update sets and reps for every resistance exercise in this day",
-),
+              subtitle: const Text(
+                "Update sets and reps for every resistance exercise in this day",
+              ),
 
-  contentPadding: EdgeInsets.zero,
-),
+              contentPadding: EdgeInsets.zero,
+            ),
 
             const SizedBox(height: 10),
 
