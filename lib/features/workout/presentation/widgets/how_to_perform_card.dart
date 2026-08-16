@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../l10n/app_localizations.dart'; // 🔥 استدعاء ملف الترجمة
 
 class HowToPerformCard extends StatefulWidget {
   final String description;
@@ -52,6 +53,8 @@ class _HowToPerformCardState extends State<HowToPerformCard>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!; // 🔥 تعريف متغير الترجمة
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -88,13 +91,13 @@ class _HowToPerformCardState extends State<HowToPerformCard>
                   decoration: BoxDecoration(
                     gradient: _isExpanded
                         ? LinearGradient(
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
-                            colors: [
-                              AppColors.primaryBtn.withValues(alpha:0.08),
-                              AppColors.primaryBtn.withValues(alpha:0.02),
-                            ],
-                          )
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      colors: [
+                        AppColors.primaryBtn.withValues(alpha:0.08),
+                        AppColors.primaryBtn.withValues(alpha:0.02),
+                      ],
+                    )
                         : null,
                     color: _isExpanded ? null : Colors.white,
                   ),
@@ -128,8 +131,8 @@ class _HowToPerformCardState extends State<HowToPerformCard>
                             const SizedBox(height: 2),
                             Text(
                               _isExpanded
-                                  ? "Tap to hide instructions"
-                                  : "Tap to view instructions",
+                                  ? l10n.tapToHideInstructions // 🔥 التعديل هنا
+                                  : l10n.tapToViewInstructions, // 🔥 التعديل هنا
                               style: TextStyle(
                                 fontSize: 12,
                                 color: Colors.grey.shade500,

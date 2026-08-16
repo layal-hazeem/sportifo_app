@@ -368,8 +368,14 @@ abstract class AppLocalizations {
   /// No description provided for @kg.
   ///
   /// In en, this message translates to:
-  /// **'kg'**
+  /// **'Kg'**
   String get kg;
+
+  /// No description provided for @g.
+  ///
+  /// In en, this message translates to:
+  /// **'g'**
+  String get g;
 
   /// No description provided for @cm.
   ///
@@ -1528,6 +1534,311 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Create Plan'**
   String get createPlan;
+  /// No description provided for @addedToSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to saved'**
+  String get addedToSaved;
+
+  /// No description provided for @removedFromSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed from saved'**
+  String get removedFromSaved;
+
+  /// No description provided for @tapToHideInstructions.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to hide instructions'**
+  String get tapToHideInstructions;
+
+  /// No description provided for @tapToViewInstructions.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to view instructions'**
+  String get tapToViewInstructions;
+
+  /// No description provided for @photos.
+  ///
+  /// In en, this message translates to:
+  /// **'Photos'**
+  String get photos;
+
+  /// No description provided for @bodyPart.
+  ///
+  /// In en, this message translates to:
+  /// **'Body Part'**
+  String get bodyPart;
+
+  /// No description provided for @searchForExercises.
+  ///
+  /// In en, this message translates to:
+  /// **'Search for exercises...'**
+  String get searchForExercises;
+
+  /// No description provided for @noSavedExercisesYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No saved exercises yet'**
+  String get noSavedExercisesYet;
+
+  /// No description provided for @savedExercisesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercises you save will appear here for quick access'**
+  String get savedExercisesHint;
+
+  /// No description provided for @pullDownToRefresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Pull down to refresh'**
+  String get pullDownToRefresh;
+
+  /// No description provided for @popularSearches.
+  ///
+  /// In en, this message translates to:
+  /// **'Popular Searches'**
+  String get popularSearches;
+
+  /// No description provided for @trySearchingForSomethingElse.
+  ///
+  /// In en, this message translates to:
+  /// **'Try searching for something else, like \'Shoulders\' or \'Yoga\'.'**
+  String get trySearchingForSomethingElse;
+
+  /// No description provided for @chooseYourWorkoutType.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Your\nWorkout Type'**
+  String get chooseYourWorkoutType;
+
+  /// No description provided for @search_chest.
+  ///
+  /// In en, this message translates to:
+  /// **'Chest'**
+  String get search_chest;
+
+  /// No description provided for @search_abs.
+  ///
+  /// In en, this message translates to:
+  /// **'Abs'**
+  String get search_abs;
+
+  /// No description provided for @search_legs.
+  ///
+  /// In en, this message translates to:
+  /// **'Legs'**
+  String get search_legs;
+
+  /// No description provided for @search_back.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get search_back;
+
+  /// No description provided for @search_biceps.
+  ///
+  /// In en, this message translates to:
+  /// **'Biceps'**
+  String get search_biceps;
+
+  /// No description provided for @search_shoulders.
+  ///
+  /// In en, this message translates to:
+  /// **'Shoulders'**
+  String get search_shoulders;
+
+  /// No description provided for @search_running.
+  ///
+  /// In en, this message translates to:
+  /// **'Running'**
+  String get search_running;
+
+  /// No description provided for @search_jump_rope.
+  ///
+  /// In en, this message translates to:
+  /// **'Jump Rope'**
+  String get search_jump_rope;
+
+  /// No description provided for @search_burpees.
+  ///
+  /// In en, this message translates to:
+  /// **'Burpees'**
+  String get search_burpees;
+
+  /// No description provided for @search_cycling.
+  ///
+  /// In en, this message translates to:
+  /// **'Cycling'**
+  String get search_cycling;
+
+  /// No description provided for @details.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get details;
+
+  /// No description provided for @shopNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop Now'**
+  String get shopNow;
+
+  /// No description provided for @learnMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Learn More'**
+  String get learnMore;
+
+  /// No description provided for @dailyNutritionTargets.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Nutrition Targets'**
+  String get dailyNutritionTargets;
+
+  /// No description provided for @kcal.
+  ///
+  /// In en, this message translates to:
+  /// **'Kcal'**
+  String get kcal;
+
+  /// No description provided for @protein.
+  ///
+  /// In en, this message translates to:
+  /// **'Protein'**
+  String get protein;
+
+  /// No description provided for @carbs.
+  ///
+  /// In en, this message translates to:
+  /// **'Carbs'**
+  String get carbs;
+
+  /// No description provided for @fat.
+  ///
+  /// In en, this message translates to:
+  /// **'Fat'**
+  String get fat;
+
+  /// No description provided for @currentWeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Weight:'**
+  String get currentWeight;
+
+  /// No description provided for @notSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Set'**
+  String get notSet;
+
+  /// No description provided for @change.
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get change;
+
+  /// No description provided for @selectFitnessGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Your Fitness Goal ⚡'**
+  String get selectFitnessGoal;
+
+  /// No description provided for @goalSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'The system will automatically compute your tailored daily metrics'**
+  String get goalSubtitle;
+
+  /// No description provided for @bulkTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Bulk / Gain Muscle'**
+  String get bulkTitle;
+
+  /// No description provided for @bulkSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Increase calorie targets systematically to optimize lean muscle growth'**
+  String get bulkSubtitle;
+
+  /// No description provided for @cutTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cut / Lose Fat'**
+  String get cutTitle;
+
+  /// No description provided for @cutSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Decrease calorie targets to accelerate smart fat burn and increase definition'**
+  String get cutSubtitle;
+
+  /// No description provided for @maintainTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Maintain / Stay Fit'**
+  String get maintainTitle;
+
+  /// No description provided for @maintainSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Stabilize current weight while steadily optimizing athletic stamina and recovery'**
+  String get maintainSubtitle;
+
+  /// No description provided for @confirmAndComputePlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm & Compute Plan'**
+  String get confirmAndComputePlan;
+
+  /// No description provided for @pleaseEnterWeightSnackBar.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your current weight in your profile so the system can compute your calories.'**
+  String get pleaseEnterWeightSnackBar;
+
+  /// No description provided for @updateWeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Weight'**
+  String get updateWeight;
+
+  /// No description provided for @activateSmartPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Activate Your Smart Plan ⚡'**
+  String get activateSmartPlan;
+
+  /// No description provided for @activateSmartPlanDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Set your main physical target now to dynamically evaluate your necessary daily calories and macronutrients.'**
+  String get activateSmartPlanDesc;
+
+  /// No description provided for @setMyGoalNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Set My Goal Now'**
+  String get setMyGoalNow;
+
+  /// No description provided for @bulkGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'Bulk'**
+  String get bulkGoal;
+
+  /// No description provided for @cutGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'Cut'**
+  String get cutGoal;
+
+  /// No description provided for @maintainGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'Maintain'**
+  String get maintainGoal;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

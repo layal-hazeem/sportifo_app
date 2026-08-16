@@ -147,6 +147,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get kg => 'كغ';
 
   @override
+  String get g => 'غ';
+
+  @override
   String get cm => 'سم';
 
   @override
@@ -671,7 +674,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get delete => 'حذف';
 
   @override
-  String get certificates => 'Certificates';
+  String get certificates => 'الشهادات';
 
   @override
   String get noCoachData => 'لا تتوفر بيانات المدرب';
@@ -756,4 +759,155 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get createPlan => 'أنشاء خطة';
+  String get addedToSaved => 'تمت الإضافة إلى المحفوظات';
+
+  @override
+  String get removedFromSaved => 'تمت الإزالة من المحفوظات';
+
+  @override
+  String get tapToHideInstructions => 'اضغط لإخفاء التعليمات';
+
+  @override
+  String get tapToViewInstructions => 'اضغط لعرض التعليمات';
+
+  @override
+  String get photos => 'صور';
+
+  @override
+  String get bodyPart => 'جزء الجسم';
+
+  @override
+  String get searchForExercises => 'ابحث عن تمارين...';
+
+  @override
+  String get noSavedExercisesYet => 'لا توجد تمارين محفوظة بعد';
+
+  @override
+  String get savedExercisesHint => 'التمارين التي تحفظها ستظهر هنا للوصول السريع';
+
+  @override
+  String get pullDownToRefresh => 'اسحب للأسفل للتحديث';
+
+  @override
+  String get popularSearches => 'عمليات البحث الشائعة';
+
+  @override
+  String get trySearchingForSomethingElse => 'جرب البحث عن شيء آخر، مثل \'صدر\' أو \'يوغا\'.';
+
+  @override
+  String get chooseYourWorkoutType => 'اختر نوع\nتمرينك';
+
+  @override
+  String get search_chest => 'صدر';
+
+  @override
+  String get search_abs => 'معدة';
+
+  @override
+  String get search_legs => 'أرجل';
+
+  @override
+  String get search_back => 'ظهر';
+
+  @override
+  String get search_biceps => 'بايسبس';
+
+  @override
+  String get search_shoulders => 'أكتاف';
+
+  @override
+  String get search_running => 'جري';
+
+  @override
+  String get search_jump_rope => 'قفز بالحبل';
+
+  @override
+  String get search_burpees => 'بيربي';
+
+  @override
+  String get search_cycling => 'دراجة';
+
+  @override
+  String get details => 'التفاصيل';
+
+  @override
+  String get shopNow => 'تسوق الآن';
+
+  @override
+  String get learnMore => 'اعرف المزيد';
+
+  @override
+  String get dailyNutritionTargets => 'أهداف التغذية اليومية';
+
+  @override
+  String get kcal => 'سعر حراري';
+
+  @override
+  String get protein => 'بروتين';
+
+  @override
+  String get carbs => 'كاربوهيدرات';
+
+  @override
+  String get fat => 'دهون';
+
+  @override
+  String get currentWeight => 'الوزن الحالي:';
+
+  @override
+  String get notSet => 'غير محدد';
+
+  @override
+  String get change => 'تغيير';
+
+  @override
+  String get selectFitnessGoal => 'اختر هدفك الرياضي ⚡';
+
+  @override
+  String get goalSubtitle => 'سيقوم النظام تلقائياً بحساب احتياجاتك اليومية بدقة';
+
+  @override
+  String get bulkTitle => 'تضخيم / زيادة عضلات';
+
+  @override
+  String get bulkSubtitle => 'زيادة السعرات الحرارية بشكل مدروس لبناء العضلات الصافية';
+
+  @override
+  String get cutTitle => 'تنشيف / خسارة دهون';
+
+  @override
+  String get cutSubtitle => 'تقليل السعرات الحرارية لتسريع حرق الدهون مع الحفاظ على العضلات';
+
+  @override
+  String get maintainTitle => 'محافظة / ثبات الوزن';
+
+  @override
+  String get maintainSubtitle => 'تثبيت الوزن الحالي مع تحسين اللياقة البدنية والاستشفاء';
+
+  @override
+  String get confirmAndComputePlan => 'تأكيد وحساب الخطة';
+
+  @override
+  String get pleaseEnterWeightSnackBar => 'يرجى إدخال وزنك الحالي في الملف الشخصي ليتمكن النظام من حساب سعراتك.';
+
+  @override
+  String get updateWeight => 'تحديث الوزن';
+
+  @override
+  String get activateSmartPlan => 'فعّل خطتك الذكية ⚡';
+
+  @override
+  String get activateSmartPlanDesc => 'حدد هدفك البدني الآن ليتم حساب السعرات الحرارية والمغذيات اليومية المناسبة لك.';
+
+  @override
+  String get setMyGoalNow => 'حدد هدفي الآن';
+
+  @override
+  String get bulkGoal => 'تضخيم';
+
+  @override
+  String get cutGoal => 'تنشيف';
+
+  @override
+  String get maintainGoal => 'ثبات';
 }
