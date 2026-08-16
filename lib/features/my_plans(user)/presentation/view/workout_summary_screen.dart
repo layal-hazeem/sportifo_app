@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../workout/data/models/exercise_model.dart';
 import '../view_model/active_workout_state.dart';
 
@@ -31,15 +32,16 @@ class _WorkoutSummaryScreenState extends State<WorkoutSummaryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FC),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
-        title: const Text(
-          "WORKOUT SUMMARY",
-          style: TextStyle(color: AppColors.textDark, fontSize: 16, fontWeight: FontWeight.w900, letterSpacing: 1.5),
+        title: Text(
+          l10n.workoutSummary,
+          style: const TextStyle(color: AppColors.textDark, fontSize: 16, fontWeight: FontWeight.w900, letterSpacing: 1.5),
         ),
       ),
       body: SafeArea(
@@ -71,9 +73,9 @@ class _WorkoutSummaryScreenState extends State<WorkoutSummaryScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text("Workout Completed", style: TextStyle(color: AppColors.textDark, fontSize: 18, fontWeight: FontWeight.w900)),
+                          Text(l10n.workoutCompleted, style: const TextStyle(color: AppColors.textDark, fontSize: 18, fontWeight: FontWeight.w900)),
                           const SizedBox(height: 4),
-                          Text("Session summary for ${widget.dayName}.", style: const TextStyle(color: Colors.grey, fontSize: 13, fontWeight: FontWeight.w600)),
+                          Text("${l10n.sessionSummaryFor} ${widget.dayName}.", style: const TextStyle(color: Colors.grey, fontSize: 13, fontWeight: FontWeight.w600)),
                         ],
                       ),
                     ),
@@ -85,18 +87,18 @@ class _WorkoutSummaryScreenState extends State<WorkoutSummaryScreen> {
               // 📊 إحصائيات الوقت والتمارين
               Row(
                 children: [
-                  Expanded(child: _buildStatCard(Icons.timer_outlined, "DURATION", widget.totalTime)),
+                  Expanded(child: _buildStatCard(Icons.timer_outlined, l10n.duration, widget.totalTime)),
                   const SizedBox(width: 12),
-                  Expanded(child: _buildStatCard(Icons.fitness_center_rounded, "EXERCISES", "${widget.totalExercises}")),
+                  Expanded(child: _buildStatCard(Icons.fitness_center_rounded, l10n.exercises, "${widget.totalExercises}")),
                 ],
               ),
               const SizedBox(height: 16),
 
-              const Align(
+              Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  "PERFORMANCE SUMMARY",
-                  style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1),
+                  l10n.performanceSummary,
+                  style: const TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1),
                 ),
               ),
               const SizedBox(height: 8),
@@ -136,15 +138,15 @@ class _WorkoutSummaryScreenState extends State<WorkoutSummaryScreen> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text("Set ${setIdx + 1}", style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 12)),
+                                    Text("${l10n.set} ${setIdx + 1}", style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 12)),
                                     set.isSkipped
                                         ? Container(
                                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                       decoration: BoxDecoration(color: Colors.grey.shade100, borderRadius: BorderRadius.circular(6)),
-                                      child: const Text("Skipped", style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 11)),
+                                      child: Text(l10n.skipped, style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 11)),
                                     )
                                         : Text(
-                                      isCardio ? "${set.reps} Min" : "${set.weight} kg  ×  ${set.reps} Reps",
+                                      isCardio ? "${set.reps} Min" : "${set.weight} ${l10n.kg}  ×  ${set.reps} ${l10n.reps}",
                                       style: const TextStyle(color: AppColors.primaryBtn, fontWeight: FontWeight.w900, fontSize: 12),
                                     ),
                                   ],
@@ -152,7 +154,7 @@ class _WorkoutSummaryScreenState extends State<WorkoutSummaryScreen> {
                               );
                             })
                           else
-                            Text("No sets logged", style: TextStyle(color: Colors.grey.shade400, fontSize: 12)),
+                            Text(l10n.noSetsLogged, style: TextStyle(color: Colors.grey.shade400, fontSize: 12)),
                         ],
                       ),
                     );
@@ -194,7 +196,7 @@ class _WorkoutSummaryScreenState extends State<WorkoutSummaryScreen> {
                     height: 24,
                     child: CircularProgressIndicator(color: Colors.white, strokeWidth: 3),
                   )
-                      : const Text("Done", style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w900)),
+                      : Text(l10n.done, style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w900)),
                 ),
               ),
             ],

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/loading_shimmer.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../platform_plans/presentation/widgets/platform_plan_card.dart';
 import '../../data/models/my_plan_model.dart';
 import '../../data/repository/my_plans_repository.dart';
@@ -28,32 +30,6 @@ class _PlanTabConfig {
   });
 }
 
-final List<_PlanTabConfig> _kTabConfigs = [
-  _PlanTabConfig(
-    type: PlanTabType.coach,
-    label: 'Coach Plan',
-    emptyTitle: 'No Coach Plan Found',
-    emptySubtitle: 'Get a personalized workout routine from our expert coaches.',
-    emptyButtonText: 'Explore Coaches',
-    onEmptyButtonTap: (context) => Navigator.pushNamed(context, AppRoutes.coach),
-  ),
-  _PlanTabConfig(
-    type: PlanTabType.custom,
-    label: 'My Plans',
-    emptyTitle: 'No Custom Plans Yet',
-    emptySubtitle: 'Build your own custom plan and train on your schedule.',
-    emptyButtonText: 'Create Custom Plan',
-    onEmptyButtonTap: null,
-  ),
-  _PlanTabConfig(
-    type: PlanTabType.saved,
-    label: 'Saved',
-    emptyTitle: 'No Saved Plans Yet',
-    emptySubtitle: 'Plans you save from the platform library will show up here.',
-    emptyButtonText: null,
-  ),
-];
-
 class MyPlansScreen extends StatefulWidget {
   const MyPlansScreen({super.key});
 
@@ -67,12 +43,52 @@ class MyPlansScreen extends StatefulWidget {
 class _MyPlansScreenState extends State<MyPlansScreen> {
   late int _activeTabIndex;
 
+  // 🔥 مصفوفة الأنواع ثابتة هنا لنستخدمها في الـ initState بدون الحاجة للـ Context
+  final List<PlanTabType> _tabTypes = [
+    PlanTabType.coach,
+    PlanTabType.custom,
+    PlanTabType.saved,
+  ];
+
+  // 🔥 قمنا بتحويل مصفوفة الإعدادات لدالة تأخذ Context لكي نتمكن من قراءة ملفات الترجمة
+  List<_PlanTabConfig> _getTabConfigs(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return [
+      _PlanTabConfig(
+        type: PlanTabType.coach,
+        label: l10n.coachPlan,
+        emptyTitle: l10n.noCoachPlanFound,
+        emptySubtitle: l10n.noCoachPlanSub,
+        emptyButtonText: l10n.exploreCoaches,
+        onEmptyButtonTap: (context) => Navigator.pushNamed(context, AppRoutes.coach),
+      ),
+      _PlanTabConfig(
+        type: PlanTabType.custom,
+        label: l10n.myPlans,
+        emptyTitle: l10n.noCustomPlans,
+        emptySubtitle: l10n.noCustomPlansSub,
+        emptyButtonText: l10n.createCustomPlan,
+        onEmptyButtonTap: null, // إضافة زر الإنشاء مستقبلاً إن أردت
+      ),
+      _PlanTabConfig(
+        type: PlanTabType.saved,
+        label: l10n.saved,
+        emptyTitle: l10n.noSavedPlans,
+        emptySubtitle: l10n.noSavedPlansSub,
+        emptyButtonText: l10n.exploreFreePlans, // تم تفعيل الكلمة اللي ترجمتها بالـ JSON
+        onEmptyButtonTap: (context) {
+          // Navigator.pushNamed(context, AppRoutes.platformPlans); // يمكنك تفعيل المسار
+        },
+      ),
+    ];
+  }
+
   @override
   void initState() {
     super.initState();
     // أخذ القيمة الابتدائية من النوتيفاير
     _activeTabIndex = MyPlansScreen.activeTabNotifier.value;
-    context.read<MyPlansCubit>().fetchTab(_kTabConfigs[_activeTabIndex].type);
+    context.read<MyPlansCubit>().fetchTab(_tabTypes[_activeTabIndex]);
 
     // الاستماع لأي تغيير يأتي من خارج الشاشة
     MyPlansScreen.activeTabNotifier.addListener(_onExternalTabChange);
@@ -82,14 +98,7 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
     final newIndex = MyPlansScreen.activeTabNotifier.value;
     if (mounted) {
       setState(() => _activeTabIndex = newIndex);
-      // ⚠️ ما منجبر isRefresh: true هون بعد اليوم. هاد بالضبط كان سبب
-      // إلغاء الكاش بالكامل: _onTabTap (تبويب عادي جوا الشاشة) كان يكتب
-      // عالـ notifier نفسو (activeTabNotifier.value = index)، وهاد كان
-      // يشغّل هاد الـ listener تلقائياً حتى لتبويب عادي - يعني كل ضغطة
-      // تاب كانت عم تسوي refresh إجباري بدل ما تعتمد عالكاش. هلق منترك
-      // القرار لمنطق fetchTab نفسو (يلي أصلاً بيفرض isRefresh دايماً
-      // لتاب Saved تحديداً، وبيتفادى إعادة الطلب لباقي التابات لو محمّلة).
-      context.read<MyPlansCubit>().fetchTab(_kTabConfigs[newIndex].type);
+      context.read<MyPlansCubit>().fetchTab(_tabTypes[newIndex]);
     }
   }
 
@@ -102,12 +111,14 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
   void _onTabTap(int index) {
     setState(() => _activeTabIndex = index);
     MyPlansScreen.activeTabNotifier.value = index; // تحديث النوتيفاير
-    context.read<MyPlansCubit>().fetchTab(_kTabConfigs[index].type);
+    context.read<MyPlansCubit>().fetchTab(_tabTypes[index]);
   }
 
   @override
   Widget build(BuildContext context) {
-    final activeConfig = _kTabConfigs[_activeTabIndex];
+    // 🚀 جلبنا الإعدادات بعد الترجمة هنا داخل الـ Build
+    final tabConfigs = _getTabConfigs(context);
+    final activeConfig = tabConfigs[_activeTabIndex];
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -125,7 +136,8 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
               padding: const EdgeInsets.all(6),
               child: Row(
                 children: [
-                  for (int i = 0; i < _kTabConfigs.length; i++) _buildToggleButton(_kTabConfigs[i].label, i),
+                  for (int i = 0; i < tabConfigs.length; i++)
+                    _buildToggleButton(tabConfigs[i].label, i),
                 ],
               ),
             ),
@@ -218,7 +230,6 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
         itemCount: plans.length,
         itemBuilder: (context, index) {
-
           // 🔥 التعديل الجوهري هنا: إذا كنا بتاب الـ Saved بنرسم كارد المنصة اللي زر السيف فيه شغال!
           if (config.type == PlanTabType.saved) {
             return Padding(

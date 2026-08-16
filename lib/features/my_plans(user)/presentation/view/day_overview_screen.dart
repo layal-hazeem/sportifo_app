@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../data/models/my_plan_model.dart';
 import '../view_model/active_workout_cubit.dart';
 import '../widgets/workout_confirm_dialog.dart';
@@ -22,8 +23,9 @@ class DayOverviewScreen extends StatelessWidget {
 
   // 🔥 دالة سحرية للتعامل مع بدء التمرين من أي مكان
   void _startWorkoutFlow(BuildContext context, int targetIndex) async {
+    final l10n = AppLocalizations.of(context)!;
     if (day.exercises.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No exercises available!'), backgroundColor: AppColors.primaryBtn));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.no_exercises_found), backgroundColor: AppColors.primaryBtn));
       return;
     }
 
@@ -83,6 +85,7 @@ class DayOverviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
       body: CustomScrollView(
@@ -96,9 +99,9 @@ class DayOverviewScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Exercises List',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: AppColors.textDark),
+                  Text(
+                    l10n.exercisesList,
+                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: AppColors.textDark),
                   ),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -107,7 +110,7 @@ class DayOverviewScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      '${day.exercises.length} Total',
+                      '${day.exercises.length} ${l10n.total}',
                       style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: AppColors.primaryBtn),
                     ),
                   ),
@@ -136,20 +139,20 @@ class DayOverviewScreen extends StatelessWidget {
                   bool isCardio = (exercise.category != null && exercise.category!.name.toLowerCase() == 'cardio') ||
                       (exercise.duration != null && exercise.duration.toString().isNotEmpty && exercise.duration.toString() != "0");
 
-                  String displaySets = '${exercise.sets ?? 0} Sets';
+                  String displaySets = '${exercise.sets ?? 0} ${l10n.set}s';
                   String displayDetailInfo = '';
                   IconData detailIcon = Icons.repeat_rounded;
 
                   if (isCardio) {
                     // إذا كارديو: اعرض أيقونة ساعة والوقت المطلوب
-                    displayDetailInfo = 'Duration ${exercise.duration ?? "N/A"}';
+                    displayDetailInfo = '${l10n.duration} ${exercise.duration ?? "N/A"}';
                     detailIcon = Icons.timer_outlined;
                   } else {
                     // إذا حديد: اعرض أيقونة إعادة والعدّات
                     final String repsStr = exercise.reps ?? '';
                     displayDetailInfo = repsStr.contains(':')
                         ? repsStr
-                        : (repsStr.isNotEmpty ? '$repsStr Reps' : 'N/A');
+                        : (repsStr.isNotEmpty ? '$repsStr ${l10n.reps}' : 'N/A');
                     detailIcon = Icons.repeat_rounded;
                   }
 
