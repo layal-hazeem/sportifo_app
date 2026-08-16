@@ -5,6 +5,7 @@ import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/loading_shimmer.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../coaches/presentation/views/all_coaches_screen.dart';
 import '../../../platform_plans/presentation/widgets/platform_plan_card.dart';
 import '../../data/models/my_plan_model.dart';
 import '../../data/repository/my_plans_repository.dart';
@@ -60,7 +61,12 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
         emptyTitle: l10n.noCoachPlanFound,
         emptySubtitle: l10n.noCoachPlanSub,
         emptyButtonText: l10n.exploreCoaches,
-        onEmptyButtonTap: (context) => Navigator.pushNamed(context, AppRoutes.coach),
+        onEmptyButtonTap: (context) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const AllCoachesScreen()),
+          );
+        },
       ),
       _PlanTabConfig(
         type: PlanTabType.custom,
@@ -77,7 +83,7 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
         emptySubtitle: l10n.noSavedPlansSub,
         emptyButtonText: l10n.exploreFreePlans, // تم تفعيل الكلمة اللي ترجمتها بالـ JSON
         onEmptyButtonTap: (context) {
-          // Navigator.pushNamed(context, AppRoutes.platformPlans); // يمكنك تفعيل المسار
+          Navigator.pushNamed(context, AppRoutes.allPlatformPlans);
         },
       ),
     ];
