@@ -1100,7 +1100,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get createDayButton => 'Create Day';
 
   @override
-  String get exercises => 'exercises';
+  String get exercises => 'Exercises';
 
   @override
   String get noExercisesAddedYet => 'No exercises added yet';
@@ -1211,4 +1211,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get maintainGoalSubtitle => 'Stay balanced';
+
+  @override
+  String get noExistingDaysFound => 'No existing days found.';
+
+  @override
+  String get addExistingDays => 'Add Existing Days';
+
+  @override
+  String get availableDays => 'Available Days';
+
+  @override
+  String get addSelectedDays => 'Add Selected Days';
 }

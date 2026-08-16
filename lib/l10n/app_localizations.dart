@@ -2204,7 +2204,7 @@ abstract class AppLocalizations {
   /// No description provided for @exercises.
   ///
   /// In en, this message translates to:
-  /// **'exercises'**
+  /// **'Exercises'**
   String get exercises;
 
   /// No description provided for @noExercisesAddedYet.
@@ -2422,6 +2422,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Stay balanced'**
   String get maintainGoalSubtitle;
+
+  /// No description provided for @noExistingDaysFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No existing days found.'**
+  String get noExistingDaysFound;
+
+  /// No description provided for @addExistingDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Existing Days'**
+  String get addExistingDays;
+
+  /// No description provided for @availableDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Available Days'**
+  String get availableDays;
+
+  /// No description provided for @addSelectedDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Selected Days'**
+  String get addSelectedDays;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

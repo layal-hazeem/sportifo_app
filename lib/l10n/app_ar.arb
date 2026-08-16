@@ -513,5 +513,10 @@
 "mainGoalQuestion": "ما هو الهدف الرئيسي؟",
 "cutGoalSubtitle": "خسارة الدهون",
 "bulkGoalSubtitle": "بناء العضلات",
-"maintainGoalSubtitle": "الحفاظ على التوازن"
+"maintainGoalSubtitle": "الحفاظ على التوازن",
+ "noExistingDaysFound": "لا توجد أيام موجودة مسبقًا.",
+  "addExistingDays": "إضافة أيام موجودة مسبقًا",
+  "availableDays": "أيام متاحة",
+  "exercises": "تمارين",
+  "addSelectedDays": "إضافة الأيام المحددة"
 }

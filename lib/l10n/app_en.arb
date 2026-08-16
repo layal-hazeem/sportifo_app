@@ -540,5 +540,10 @@
 "mainGoalQuestion": "What's the main goal?",
 "cutGoalSubtitle": "Lose fat",
 "bulkGoalSubtitle": "Build muscle",
-"maintainGoalSubtitle": "Stay balanced"
+"maintainGoalSubtitle": "Stay balanced",
+"noExistingDaysFound": "No existing days found.",
+  "addExistingDays": "Add Existing Days",
+  "availableDays": "Available Days",
+  "exercises": "Exercises",
+  "addSelectedDays": "Add Selected Days"
 }

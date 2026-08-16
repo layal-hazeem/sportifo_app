@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/features/existing_days/data/model/existing_days_model.dart';
 import 'package:sportifo_app/features/existing_days/presentation/view_model/existing_days_cubit.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class ExistingDaysListBottomSheet extends StatefulWidget {
   const ExistingDaysListBottomSheet({super.key});
@@ -20,6 +21,8 @@ class _ExistingDaysListBottomSheetState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Padding(
       padding: const EdgeInsets.all(3),
 
@@ -35,7 +38,7 @@ class _ExistingDaysListBottomSheetState
 
           if (state is ExistingDaysSuccess) {
             if (state.days.isEmpty) {
-              return const Center(child: Text("No existing days found."));
+              return Center(child: Text(l10n.noExistingDaysFound));
             }
 
             return Column(
@@ -51,9 +54,9 @@ class _ExistingDaysListBottomSheetState
 
                 const SizedBox(height: 10),
 
-                const Text(
-                  "Add Existing Days",
-                  style: TextStyle(
+                Text(
+                  l10n.addExistingDays,
+                  style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                     color: AppColors.primaryBtn,
@@ -63,7 +66,7 @@ class _ExistingDaysListBottomSheetState
                 const SizedBox(height: 6),
 
                 Text(
-                  "${state.days.length} Available Days",
+                  '${state.days.length} ${l10n.availableDays}',
                   style: TextStyle(color: AppColors.hintText),
                 ),
 
@@ -72,6 +75,7 @@ class _ExistingDaysListBottomSheetState
                 Expanded(
                   child: ListView.separated(
                     separatorBuilder: (_, _) => const SizedBox(height: 12),
+
                     itemCount: state.days.length,
 
                     itemBuilder: (context, index) {
@@ -80,9 +84,9 @@ class _ExistingDaysListBottomSheetState
                       final isExpanded = expandedDays.contains(index);
 
                       final isSelected = selectedDays.contains(day);
+
                       return Container(
                         margin: const EdgeInsets.only(bottom: 1),
-
                         padding: const EdgeInsets.all(14),
 
                         decoration: BoxDecoration(
@@ -116,10 +120,10 @@ class _ExistingDaysListBottomSheetState
                                     isExpanded
                                         ? Icons.keyboard_arrow_down
                                         : Icons.keyboard_arrow_right,
-
                                     color: AppColors.primaryBtn,
                                   ),
                                 ),
+
                                 const SizedBox(width: 12),
 
                                 Container(
@@ -140,18 +144,15 @@ class _ExistingDaysListBottomSheetState
 
                                     children: [
                                       Text(
-                                        day.name ?? "",
-
+                                        day.name ?? '',
                                         style: const TextStyle(
                                           fontWeight: FontWeight.w700,
-
                                           fontSize: 16,
                                         ),
                                       ),
 
                                       Text(
-                                        "${day.exercises?.length ?? 0} Exercises",
-
+                                        '${day.exercises?.length ?? 0} ${l10n.exercises}',
                                         style: TextStyle(
                                           color: Colors.grey.shade600,
                                         ),
@@ -159,6 +160,7 @@ class _ExistingDaysListBottomSheetState
                                     ],
                                   ),
                                 ),
+
                                 GestureDetector(
                                   onTap: () {
                                     setState(() {
@@ -169,15 +171,20 @@ class _ExistingDaysListBottomSheetState
                                       }
                                     });
                                   },
+
                                   child: AnimatedContainer(
                                     duration: const Duration(milliseconds: 200),
+
                                     width: 24,
                                     height: 24,
+
                                     decoration: BoxDecoration(
                                       color: isSelected
                                           ? AppColors.primaryBtn
                                           : Colors.transparent,
+
                                       borderRadius: BorderRadius.circular(6),
+
                                       border: Border.all(
                                         color: isSelected
                                             ? AppColors.primaryBtn
@@ -185,6 +192,7 @@ class _ExistingDaysListBottomSheetState
                                         width: 2,
                                       ),
                                     ),
+
                                     child: isSelected
                                         ? const Icon(
                                             Icons.check,
@@ -217,7 +225,6 @@ class _ExistingDaysListBottomSheetState
                                                 Container(
                                                   width: 7,
                                                   height: 7,
-
                                                   decoration: BoxDecoration(
                                                     color: AppColors.primaryBtn,
                                                     shape: BoxShape.circle,
@@ -228,7 +235,7 @@ class _ExistingDaysListBottomSheetState
 
                                                 Expanded(
                                                   child: Text(
-                                                    exercise.name ?? "",
+                                                    exercise.name ?? '',
                                                     style: const TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:
@@ -259,6 +266,7 @@ class _ExistingDaysListBottomSheetState
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primaryBtn,
                       elevation: 0,
+
                       padding: const EdgeInsets.symmetric(vertical: 16),
 
                       shape: RoundedRectangleBorder(
@@ -276,11 +284,10 @@ class _ExistingDaysListBottomSheetState
                           },
 
                     child: Text(
-                      "Add Selected Days ${selectedDays.length}",
+                      '${l10n.addSelectedDays} ${selectedDays.length}',
 
                       style: const TextStyle(
                         color: Colors.white,
-
                         fontWeight: FontWeight.bold,
                       ),
                     ),

@@ -1211,4 +1211,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get maintainGoalSubtitle => 'الحفاظ على التوازن';
+
+  @override
+  String get noExistingDaysFound => 'لا توجد أيام موجودة مسبقًا.';
+
+  @override
+  String get addExistingDays => 'إضافة أيام موجودة مسبقًا';
+
+  @override
+  String get availableDays => 'أيام متاحة';
+
+  @override
+  String get addSelectedDays => 'إضافة الأيام المحددة';
 }

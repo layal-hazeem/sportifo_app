@@ -95,13 +95,13 @@ class PlanExerciseCard extends StatelessWidget {
                   Row(
                     children: [
                       _MetricChip(
-                        icon: Icons.repeat_rounded,
+                        icon: Icons.fitness_center_rounded,
                         label: l10n.sets,
                         value: '${exercise.sets ?? '-'}',
                       ),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: 3),
                       _MetricChip(
-                        icon: Icons.fitness_center_rounded,
+                        icon: Icons.repeat_rounded,
                         label: l10n.reps,
                         value: exercise.reps ?? exercise.duration ?? '-',
                       ),
@@ -352,7 +352,7 @@ class _EmptyExercises extends StatelessWidget {
               size: 36,
             ),
             const SizedBox(height: 10),
-             Text(
+            Text(
               l10n.noExercisesAssigned,
               style: TextStyle(color: AppColors.hintText, fontSize: 14),
             ),
