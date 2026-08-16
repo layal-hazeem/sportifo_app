@@ -707,6 +707,58 @@ class AppLocalizationsEn extends AppLocalizations {
   String get endedLastMonth => 'Subscriptions that ended during the last month';
 
   @override
+  String get editPlan => 'Edit Plan';
+
+  @override
+  String get createNewDay => 'Create New Day';
+
+  @override
+  String get creatDaySubtitle => 'Build a custom workout day';
+
+  @override
+  String get addExistingDay => 'Add Existing Day';
+
+  @override
+  String get addExistingDaySubtitle => 'Reuse a saved day';
+
+  @override
+  String get workoutDays => 'WORKOUT DAYS';
+
+  @override
+  String get day => 'DAY';
+
+  @override
+  String get days => 'DAYS';
+
+  @override
+  String get waitUpdatePlan => 'Please wait while the plan is updated';
+
+  @override
+  String get noWorkoutDaysYet => 'No workout days yet';
+
+  @override
+  String get hintForCreateDay => 'Create a new workout day or reuse one from your saved workouts';
+
+  @override
+  String get tapPlus => 'Tap + to get started';
+
+  @override
+  String get stepOne => 'Step 1: Goal & Duration';
+
+  @override
+  String get stepTwo => 'Step 2: Days & Exercises';
+
+  @override
+  String get chooseGoalForTrainingPlan => 'Choose a goal for this training plan';
+
+  @override
+  String get addAtLeastOneWorkoutDay => 'Add at least one workout day';
+
+  @override
+  String get everyWorkoutDayNeedsExercise => 'Every workout day needs at least one exercise';
+
+  @override
+  String get createPlan => 'Create Plan';
   String get addedToSaved => 'Added to saved';
 
   @override

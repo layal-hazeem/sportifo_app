@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class EditPlanStepHeader extends StatelessWidget {
   final int currentStep;
@@ -8,6 +9,7 @@ class EditPlanStepHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       child: Row(
@@ -18,8 +20,8 @@ class EditPlanStepHeader extends StatelessWidget {
               children: [
                 Text(
                   currentStep == 0
-                      ? "Step 1: Goal & Duration"
-                      : "Step 2: Days & Exercises",
+                      ? l10n.stepOne
+                      : l10n.stepTwo,
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,

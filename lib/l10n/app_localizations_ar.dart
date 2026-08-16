@@ -707,6 +707,58 @@ class AppLocalizationsAr extends AppLocalizations {
   String get endedLastMonth => 'الاشتراكات التي انتهت خلال الشهر الماضي';
 
   @override
+  String get editPlan => 'تعديل الخطة';
+
+  @override
+  String get createNewDay => 'إنشاء يوم جديد';
+
+  @override
+  String get creatDaySubtitle => 'صمم برنامج تمارين رياضية مخصص';
+
+  @override
+  String get addExistingDay => 'أضافة يوم موجود مسبقاً';
+
+  @override
+  String get addExistingDaySubtitle => 'استخدم يوم محفوظ مسبقاً';
+
+  @override
+  String get workoutDays => 'ايام التمرين';
+
+  @override
+  String get day => 'يوم';
+
+  @override
+  String get days => 'ايام';
+
+  @override
+  String get waitUpdatePlan => 'يرجى الانتظار بينما يتم تحديث الخطة';
+
+  @override
+  String get noWorkoutDaysYet => 'لم يتم تحديد أيام للتمرين بعد';
+
+  @override
+  String get hintForCreateDay => 'أنشئ يوم تمرين جديد أو أعد استخدام يوم من أيام التمرين المحفوظة لديك';
+
+  @override
+  String get tapPlus => 'انقر على علامة + للبدء';
+
+  @override
+  String get stepOne => 'الخطوة الأولى: الهدف والمدة';
+
+  @override
+  String get stepTwo => 'الخطوة الثانية: الأيام والتمارين';
+
+  @override
+  String get chooseGoalForTrainingPlan => 'اختر هدفًا لخطة التدريب هذه';
+
+  @override
+  String get addAtLeastOneWorkoutDay => 'أضف يومًا واحدًا على الأقل للتمرين';
+
+  @override
+  String get everyWorkoutDayNeedsExercise => 'يحتاج كل يوم تمرين إلى تمرين واحد على الأقل';
+
+  @override
+  String get createPlan => 'أنشاء خطة';
   String get addedToSaved => 'تمت الإضافة إلى المحفوظات';
 
   @override

@@ -57,4 +57,5 @@ static const String addManualMeal = 'food-logs/manual';
   static const String trainees = "plans/coach";
   static const String planDetails = "/plans";
   static const String editCoachPlan = "/plans";
+  static const String createSelfPlan = "/plans/create/self";
 }
