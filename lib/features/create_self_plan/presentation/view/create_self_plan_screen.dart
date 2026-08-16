@@ -3,40 +3,41 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/di/service_locator.dart';
 import 'package:sportifo_app/core/network/api_result.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
-import 'package:sportifo_app/core/widgets/custom_glass_bottom_sheet.dart';
 import 'package:sportifo_app/core/widgets/wave_app_bar.dart';
-import 'package:sportifo_app/features/existing_days/data/model/existing_days_model.dart';
-import 'package:sportifo_app/features/existing_days/presentation/view/existing_days_screen.dart';
-import 'package:sportifo_app/features/existing_days/presentation/view_model/existing_days_cubit.dart';
-import 'package:sportifo_app/features/create_plan_by_coach/data/models/create_plan_request.dart';
+
+import 'package:sportifo_app/features/create_self_plan/data/models/create_self_plan_request.dart';
+import 'package:sportifo_app/features/create_self_plan/presentation/view_model/create_self_plan_cubit.dart';
+import 'package:sportifo_app/features/create_self_plan/presentation/view_model/create_self_plan_state.dart';
+
 import 'package:sportifo_app/features/create_plan_by_coach/data/models/plan_day_ui_model.dart';
-import 'package:sportifo_app/features/create_plan_by_coach/presentation/view_model/create_plan_cubit.dart';
-import 'package:sportifo_app/features/create_plan_by_coach/presentation/view_model/create_plan_state.dart';
 import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/create_day_bottom_sheet.dart';
 import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/day_settings_bottom_sheet.dart';
 import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/exercises_picker.dart';
 import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/day_card.dart';
 import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/plan_details_card.dart';
+
 import 'package:sportifo_app/features/workout/data/models/exercise_model.dart';
 import 'package:sportifo_app/features/workout/data/repository/workout_repository.dart';
+
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
-class CreatePlanScreen extends StatefulWidget {
-  final int userId;
-
-  const CreatePlanScreen({super.key, required this.userId});
+class CreateSelfPlanScreen extends StatefulWidget {
+  const CreateSelfPlanScreen({super.key});
 
   @override
-  State<CreatePlanScreen> createState() => _CreatePlanScreenState();
+  State<CreateSelfPlanScreen> createState() => _CreateSelfPlanScreenState();
 }
 
-class _CreatePlanScreenState extends State<CreatePlanScreen> {
+class _CreateSelfPlanScreenState extends State<CreateSelfPlanScreen> {
   final PageController _pageController = PageController();
+
   int _currentStep = 0;
 
   final List<PlanDayUiModel> days = [];
+
   bool isFabOpen = false;
   bool isLoadingDialogShown = false;
+
   String? selectedGoal;
   int durationMonths = 1;
 
@@ -62,6 +63,8 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
             curve: Curves.easeInOut,
           )
           .then((_) {
+            if (!mounted) return;
+
             setState(() {
               _currentStep = 1;
             });
@@ -78,6 +81,8 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
             curve: Curves.easeInOut,
           )
           .then((_) {
+            if (!mounted) return;
+
             setState(() {
               _currentStep = 0;
             });
@@ -89,71 +94,13 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return BlocListener<CreatePlanCubit, CreatePlanState>(
+    return BlocListener<CreateSelfPlanCubit, CreateSelfPlanState>(
       listener: (context, state) {
-        if (state is CreatePlanLoading) {
-          if (!isLoadingDialogShown) {
-            isLoadingDialogShown = true;
-
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (_) {
-                return Dialog(
-                  backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 30,
-                      horizontal: 25,
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: 70,
-                          height: 70,
-                          decoration: BoxDecoration(
-                            color: AppColors.primaryBtn.withOpacity(.12),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(18),
-                            child: CircularProgressIndicator(
-                              strokeWidth: 4,
-                              color: AppColors.primaryBtn,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        Text(
-                          l10n.creatingYourPlan,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          l10n.pleaseWaitWhileSavingWorkout,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.grey.shade600,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            );
-          }
+        if (state is CreateSelfPlanLoading) {
+          _showLoadingDialog();
         }
 
-        if (state is CreatePlanSuccess) {
+        if (state is CreateSelfPlanSuccess) {
           if (isLoadingDialogShown) {
             isLoadingDialogShown = false;
             Navigator.pop(context);
@@ -166,7 +113,7 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
           ).showSnackBar(SnackBar(content: Text(l10n.planCreatedSuccessfully)));
         }
 
-        if (state is CreatePlanError) {
+        if (state is CreateSelfPlanError) {
           if (isLoadingDialogShown) {
             isLoadingDialogShown = false;
             Navigator.pop(context);
@@ -178,7 +125,8 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
         }
       },
       child: Scaffold(
-        appBar: WaveAppBar(title: l10n.createPlan, showBackButton: true),
+        appBar: WaveAppBar(title: l10n.createSelfPlan, showBackButton: true),
+
         body: Column(
           children: [
             _buildStepHeader(),
@@ -195,141 +143,80 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
             ),
           ],
         ),
+
         bottomNavigationBar: _buildBottomNavigationBar(),
+
         floatingActionButton: _currentStep == 1
-            ? AnimatedRotation(
-                turns: isFabOpen ? 0.125 : 0,
-                duration: const Duration(milliseconds: 200),
-                child: FloatingActionButton(
-                  backgroundColor: AppColors.primaryBtn,
-                  elevation: 6,
-                  onPressed: () async {
-                    setState(() {
-                      isFabOpen = !isFabOpen;
-                    });
-
-                    await Future.delayed(const Duration(milliseconds: 200));
-
-                    CustomGlassBottomSheet.show(
-                      context: context,
-                      height: 0.30,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: 45,
-                            height: 5,
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade400,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-
-                          _buildActionTile(
-                            icon: Icons.add_circle_outline,
-                            color: AppColors.primaryBtn,
-                            title: l10n.createNewDay,
-                            subtitle: l10n.creatDaySubtitle,
-                            onTap: () {
-                              Navigator.pop(context);
-                              addDay();
-                            },
-                          ),
-
-                          const SizedBox(height: 12),
-
-                          _buildActionTile(
-                            icon: Icons.copy_outlined,
-                            color: Colors.blue,
-                            title: l10n.addExistingDay,
-                            subtitle: l10n.addExistingDaySubtitle,
-                            onTap: () async {
-                              Navigator.pop(context);
-
-                              final selectedDays =
-                                  await CustomGlassBottomSheet.show<
-                                    List<ExistingDaysModel>
-                                  >(
-                                    context: context,
-                                    height: 0.85,
-                                    child: BlocProvider(
-                                      create: (_) =>
-                                          getIt<ExistingDaysCubit>()
-                                            ..getExistingDays(),
-                                      child:
-                                          const ExistingDaysListBottomSheet(),
-                                    ),
-                                  );
-
-                              if (selectedDays == null) return;
-
-                              setState(() {
-                                for (final day in selectedDays) {
-                                  days.add(
-                                    PlanDayUiModel(
-                                      name: day.name ?? "",
-                                      exercises:
-                                          day.exercises
-                                              ?.map(
-                                                (e) => ExerciseModel(
-                                                  id: e.id ?? 0,
-                                                  name: e.name ?? "",
-                                                  description:
-                                                      e.description ?? "",
-                                                  images:
-                                                      e.images
-                                                          ?.map(
-                                                            (
-                                                              img,
-                                                            ) => ExerciseMedia(
-                                                              url:
-                                                                  img.url ?? "",
-                                                              type:
-                                                                  img.type ??
-                                                                  "",
-                                                            ),
-                                                          )
-                                                          .toList() ??
-                                                      [],
-                                                  category: e.category != null
-                                                      ? ExerciseCategory(
-                                                          id:
-                                                              e.category!.id ??
-                                                              0,
-                                                          name:
-                                                              e
-                                                                  .category!
-                                                                  .name ??
-                                                              "",
-                                                        )
-                                                      : null,
-                                                ),
-                                              )
-                                              .toList() ??
-                                          [],
-                                    ),
-                                  );
-                                }
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 100),
-                    child: Icon(
-                      isFabOpen ? Icons.close : Icons.add,
-                      key: ValueKey(isFabOpen),
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
+            ? FloatingActionButton(
+                backgroundColor: AppColors.primaryBtn,
+                elevation: 6,
+                onPressed: addDay,
+                child: const Icon(Icons.add, color: Colors.white),
               )
             : null,
       ),
+    );
+  }
+
+  void _showLoadingDialog() {
+    if (isLoadingDialogShown) return;
+
+    isLoadingDialogShown = true;
+
+    final l10n = AppLocalizations.of(context)!;
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) {
+        return Dialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 25),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 70,
+                  height: 70,
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryBtn.withOpacity(.12),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(18),
+                    child: CircularProgressIndicator(
+                      strokeWidth: 4,
+                      color: AppColors.primaryBtn,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                Text(
+                  l10n.creatingYourPlan,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+
+                const SizedBox(height: 8),
+
+                Text(
+                  l10n.pleaseWaitWhileSavingWorkout,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -345,14 +232,18 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  _currentStep == 0 ? l10n.stepOne : l10n.stepTwo,
+                  _currentStep == 0
+                      ? l10n.stepOne
+                      : l10n.stepTwo,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
                     color: AppColors.primaryBtn,
                   ),
                 ),
+
                 const SizedBox(height: 8),
+
                 Row(
                   children: [
                     Expanded(
@@ -364,7 +255,9 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
                         ),
                       ),
                     ),
+
                     const SizedBox(width: 8),
+
                     Expanded(
                       child: Container(
                         height: 4,
@@ -424,6 +317,7 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
+
                 const SizedBox(width: 10),
 
                 Text(
@@ -438,8 +332,9 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
                 const Spacer(),
 
                 Text(
-                  '${days.length} '
-                  '${days.length == 1 ? l10n.day : l10n.days}',
+                  days.length == 1
+                      ? '1 ${l10n.day}'
+                      : '${days.length} ${l10n.days}',
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey.shade600,
@@ -459,6 +354,7 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
 
             return PlanDayCard(
               day: day,
+
               onSettings: () async {
                 final applyAll = await DaySettingsBottomSheet.show(
                   context,
@@ -481,14 +377,17 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
                   setState(() {});
                 }
               },
+
               onAddExercise: () {
                 addExercise(index);
               },
+
               onDeleteExercise: (exerciseIndex) {
                 setState(() {
                   day.exercises.removeAt(exerciseIndex);
                 });
               },
+
               onDeleteDay: () {
                 setState(() {
                   days.removeAt(index);
@@ -531,6 +430,7 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
                 ),
               ),
             ),
+
             const SizedBox(width: 12),
           ],
 
@@ -592,7 +492,9 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
       },
     );
 
-    if (selected == null || selected.isEmpty) return;
+    if (selected == null || selected.isEmpty) {
+      return;
+    }
 
     setState(() {
       days[dayIndex].exercises.addAll(
@@ -602,7 +504,7 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
           exercise.duration = null;
 
           return exercise;
-        }).toList(),
+        }),
       );
     });
   }
@@ -620,12 +522,16 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
       return;
     }
 
-    final request = CreatePlanRequest(
-      userId: widget.userId,
+    if (selectedGoal == null) {
+      _showValidationMessage(l10n.chooseGoalForTrainingPlan);
+      return;
+    }
+
+    final request = CreateSelfPlanRequest(
       goal: selectedGoal!,
       durationMonths: durationMonths,
       days: days.map((day) {
-        return PlanDayRequest(
+        return CreateSelfPlanDayRequest(
           name: day.name,
           sets: day.defaultSets,
           reps: day.defaultReps?.toString(),
@@ -634,9 +540,9 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
       }).toList(),
     );
 
-    print(request.toMap());
+    debugPrint(request.toMap().toString());
 
-    context.read<CreatePlanCubit>().createPlan(request);
+    context.read<CreateSelfPlanCubit>().createSelfPlan(request);
   }
 
   void _showValidationMessage(String message) {
@@ -691,7 +597,7 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
           const SizedBox(height: 6),
 
           Text(
-            l10n.hintForCreateDay,
+            l10n.createFirstWorkoutDay,
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.grey.shade600,
@@ -703,7 +609,7 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
           const SizedBox(height: 18),
 
           Text(
-            l10n.tapPlus,
+            l10n.tapPlusToGetStarted,
             style: TextStyle(
               color: AppColors.primaryBtn,
               fontSize: 12,
@@ -711,61 +617,6 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildActionTile({
-    required IconData icon,
-    required Color color,
-    required String title,
-    required String subtitle,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(18),
-      child: Container(
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: Colors.grey.shade50,
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: Colors.grey.shade200),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 52,
-              height: 52,
-              decoration: BoxDecoration(
-                color: color.withOpacity(.12),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Icon(icon, color: color),
-            ),
-
-            const SizedBox(width: 16),
-
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(subtitle, style: TextStyle(color: Colors.grey.shade600)),
-                ],
-              ),
-            ),
-
-            const Icon(Icons.arrow_forward_ios, size: 16),
-          ],
-        ),
       ),
     );
   }

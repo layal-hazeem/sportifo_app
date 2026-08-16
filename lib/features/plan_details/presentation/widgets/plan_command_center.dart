@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/features/plan_details/data/models/plan_details_model.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class PlanCommandCenter extends StatelessWidget {
   final PlanDetailsModel plan;
@@ -9,6 +10,7 @@ class PlanCommandCenter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final user = plan.user;
     final months = plan.durationMonths ?? 0;
 
@@ -47,24 +49,25 @@ class PlanCommandCenter extends StatelessWidget {
                 Expanded(
                   child: _StatTile(
                     icon: Icons.calendar_month_rounded,
-                    label: 'Duration',
-                    value: '$months ${months == 1 ? 'month' : 'months'}',
+                    label: l10n.duration,
+                    value:
+                        '$months ${months == 1 ? '${l10n.month}' : '${l10n.months}'}',
                   ),
                 ),
                 _Divider(),
                 Expanded(
                   child: _StatTile(
                     icon: Icons.height_rounded,
-                    label: 'Height',
-                    value: '${user?.height ?? '-'} cm',
+                    label: l10n.height,
+                    value: '${user?.height ?? '-'} ${l10n.cm}',
                   ),
                 ),
                 _Divider(),
                 Expanded(
                   child: _StatTile(
                     icon: Icons.monitor_weight_outlined,
-                    label: 'Weight',
-                    value: '${user?.weight ?? '-'} kg',
+                    label: l10n.weight,
+                    value: '${user?.weight ?? '-'} ${l10n.kg}',
                   ),
                 ),
               ],
@@ -94,15 +97,16 @@ class _AthleteBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final name = user == null
-        ? 'Unknown Athlete'
+        ? l10n.unknownAthlete
         : '${user!.firstName} ${user!.lastName}'.trim();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'ATHLETE',
+          l10n.athlete,
           style: TextStyle(
             color: AppColors.hintText,
             fontSize: 11,
@@ -147,6 +151,7 @@ class _GoalBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
@@ -160,7 +165,7 @@ class _GoalBadge extends StatelessWidget {
           Icon(_goalIcon(), color: AppColors.primaryBtn, size: 16),
           const SizedBox(width: 6),
           Text(
-            goal ?? 'General',
+            goal ?? l10n.general,
             style: const TextStyle(
               color: AppColors.primaryBtn,
               fontSize: 12,

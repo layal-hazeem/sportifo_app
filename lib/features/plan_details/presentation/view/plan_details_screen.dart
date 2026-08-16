@@ -8,6 +8,7 @@ import 'package:sportifo_app/features/plan_details/presentation/view_model/plan_
 import 'package:sportifo_app/features/plan_details/presentation/widgets/plan_command_center.dart';
 import 'package:sportifo_app/features/plan_details/presentation/widgets/plan_day_selector.dart';
 import 'package:sportifo_app/features/plan_details/presentation/widgets/plan_exercise_widgets.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class PlanDetailsScreen extends StatefulWidget {
   final int planId;
@@ -131,6 +132,7 @@ class _TopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 4),
       child: Row(
@@ -157,18 +159,20 @@ class _TopBar extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(
-                'BLUEPRINT',
-                style: TextStyle(
-                  color: AppColors.hintText,
-                  fontSize: 10,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 1.2,
+              Center(
+                child: Text(
+                  l10n.blueprint,
+                  style: TextStyle(
+                    color: AppColors.hintText,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 1.2,
+                  ),
                 ),
               ),
               const SizedBox(height: 2),
               Text(
-                'PLAN #$planId',
+                '${l10n.plan} #$planId',
                 style: const TextStyle(
                   color: AppColors.textDark,
                   fontSize: 14,
@@ -192,6 +196,7 @@ class _EditPlanButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return InkWell(
       borderRadius: BorderRadius.circular(12),
       onTap: onTap,
@@ -212,7 +217,7 @@ class _EditPlanButton extends StatelessWidget {
             ),
             const SizedBox(width: 6),
             Text(
-              'Edit',
+              l10n.editPlan,
               style: const TextStyle(
                 color: AppColors.background,
                 fontSize: 13,

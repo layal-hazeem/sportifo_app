@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sportifo_app/features/home/presentation/widgets/create_self_plan_card.dart';
 import 'package:sportifo_app/features/platform_plans/presentation/view_model/platform_plans_cubit.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../../../ ads/presentation/view_model/ads_cubit.dart';
@@ -29,7 +30,8 @@ class TraineeScreen extends StatefulWidget {
   State<TraineeScreen> createState() => _TraineeScreenState();
 }
 
-class _TraineeScreenState extends State<TraineeScreen> with WidgetsBindingObserver {
+class _TraineeScreenState extends State<TraineeScreen>
+    with WidgetsBindingObserver {
   late final NutritionCubit _nutritionCubit;
 
   @override
@@ -59,10 +61,15 @@ class _TraineeScreenState extends State<TraineeScreen> with WidgetsBindingObserv
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => getIt<AdsCubit>()),
-        BlocProvider(create: (context) => getIt<TargetCubit>()..fetchLatestTarget()),
+        BlocProvider(
+          create: (context) => getIt<TargetCubit>()..fetchLatestTarget(),
+        ),
         BlocProvider(create: (context) => _nutritionCubit..initialize()),
-// 🔥 استبدلي السطر القديم بهذا السطر:
-        BlocProvider.value(value: getIt<PlatformPlansCubit>()..fetchPlatformPlans()),      ],
+        // 🔥 استبدلي السطر القديم بهذا السطر:
+        BlocProvider.value(
+          value: getIt<PlatformPlansCubit>()..fetchPlatformPlans(),
+        ),
+      ],
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(
@@ -76,7 +83,11 @@ class _TraineeScreenState extends State<TraineeScreen> with WidgetsBindingObserv
                 if (targetState is TargetLoading) {
                   return const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                    child: LoadingShimmer(width: double.infinity, height: 160, borderRadius: 24),
+                    child: LoadingShimmer(
+                      width: double.infinity,
+                      height: 160,
+                      borderRadius: 24,
+                    ),
                   );
                 } else if (targetState is TargetSuccess) {
                   return BlocBuilder<NutritionCubit, NutritionState>(
@@ -84,7 +95,10 @@ class _TraineeScreenState extends State<TraineeScreen> with WidgetsBindingObserv
                       if (nutritionState is NutritionLoading ||
                           nutritionState is NutritionInitial) {
                         return const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 10,
+                          ),
                           child: LoadingShimmer(
                             width: double.infinity,
                             height: 160,
@@ -116,6 +130,8 @@ class _TraineeScreenState extends State<TraineeScreen> with WidgetsBindingObserv
             const PlatformPlansSection(),
 
             const SizedBox(height: 15),
+            const CreateSelfPlanCard(),
+            const SizedBox(height: 10),
 
             BlocProvider(
               create: (context) => getIt<CoachesCubit>()..fetchCoaches(),
@@ -138,13 +154,18 @@ class _TraineeScreenState extends State<TraineeScreen> with WidgetsBindingObserv
                             children: [
                               Text(
                                 l10n.coaches,
-                                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                               TextButton(
                                 onPressed: () {
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (_) => const AllCoachesScreen()),
+                                    MaterialPageRoute(
+                                      builder: (_) => const AllCoachesScreen(),
+                                    ),
                                   );
                                 },
                                 child: Text(l10n.see_all),
@@ -158,7 +179,8 @@ class _TraineeScreenState extends State<TraineeScreen> with WidgetsBindingObserv
                             scrollDirection: Axis.horizontal,
                             padding: const EdgeInsets.symmetric(horizontal: 12),
                             itemCount: coaches.length,
-                            separatorBuilder: (_, _) => const SizedBox(width: 8),
+                            separatorBuilder: (_, _) =>
+                                const SizedBox(width: 8),
                             itemBuilder: (context, index) {
                               final coach = coaches[index];
                               return CoachCard(
@@ -167,7 +189,8 @@ class _TraineeScreenState extends State<TraineeScreen> with WidgetsBindingObserv
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (_) => CoachDetailsScreen(coachId: coach.id),
+                                      builder: (_) =>
+                                          CoachDetailsScreen(coachId: coach.id),
                                     ),
                                   );
                                 },
@@ -178,7 +201,9 @@ class _TraineeScreenState extends State<TraineeScreen> with WidgetsBindingObserv
                       ],
                     );
                   } else if (state is CoachesError) {
-                    return Center(child: Text('${l10n.error}: ${state.message}'));
+                    return Center(
+                      child: Text('${l10n.error}: ${state.message}'),
+                    );
                   }
                   return const SizedBox.shrink();
                 },

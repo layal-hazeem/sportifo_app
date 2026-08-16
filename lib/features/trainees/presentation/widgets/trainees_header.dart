@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class TraineesHeader extends StatelessWidget {
   final int count;
@@ -8,15 +9,17 @@ class TraineesHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
+          gradient: const LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Colors.white, const Color(0xFFFFFBF5)],
+            colors: [Colors.white, Color(0xFFFFFBF5)],
           ),
           borderRadius: BorderRadius.circular(24),
           border: Border.all(
@@ -33,55 +36,62 @@ class TraineesHeader extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    AppColors.primaryBtn,
-                    AppColors.primaryBtn.withOpacity(0.8),
+            SizedBox(
+              width: 68,
+              height: 68,
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      AppColors.primaryBtn,
+                      AppColors.primaryBtn.withOpacity(0.8),
+                    ],
+                  ),
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.primaryBtn.withOpacity(0.3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    ),
                   ],
                 ),
-                borderRadius: BorderRadius.circular(18),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.primaryBtn.withOpacity(0.3),
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    '$count',
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.white,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '$count',
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w900,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                  const Text(
-                    'ACTIVE',
-                    style: TextStyle(
-                      fontSize: 9,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 1.2,
-                      color: Colors.white70,
+                    Text(
+                      l10n.active,
+                      maxLines: 1,
+                      overflow: TextOverflow.clip,
+                      style: const TextStyle(
+                        fontSize: 9,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0,
+                        color: Colors.white70,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
+
             const SizedBox(width: 16),
+
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Your Athletes',
-                    style: TextStyle(
+                  Text(
+                    l10n.yourTrainees,
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w800,
                       color: Color(0xFF0F172A),
@@ -89,7 +99,7 @@ class TraineesHeader extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Manage active training programs and monitor athlete progress seamlessly.',
+                    l10n.traineesHint,
                     style: TextStyle(
                       fontSize: 10,
                       color: Colors.grey.shade600,

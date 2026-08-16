@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../../data/models/users_subscribed_model.dart';
 
 class SubscriptionCard extends StatelessWidget {
@@ -17,6 +18,7 @@ class SubscriptionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final subscriptions = userModel.userSubscriptions ?? [];
     final activeSubscription = _getActiveSubscription(subscriptions);
     final subscription = isHistory
@@ -67,7 +69,6 @@ class SubscriptionCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                /// USER HEADER INFO
                 Row(
                   children: [
                     Stack(
@@ -124,7 +125,7 @@ class SubscriptionCard extends StatelessWidget {
                               ),
                               const SizedBox(width: 4),
                               Text(
-                                "${plan?.title ?? "Default Plan"} (${planType.toUpperCase()})",
+                                "${plan?.title ?? "${l10n.defaultPlan}"} (${planType.toUpperCase()})",
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
@@ -136,7 +137,9 @@ class SubscriptionCard extends StatelessWidget {
                         ],
                       ),
                     ),
-                    isHistory ? _historyBadge() : _planStatusBadge(hasPlan),
+                    isHistory
+                        ? _historyBadge(l10n)
+                        : _planStatusBadge(hasPlan, l10n),
                   ],
                 ),
 
@@ -144,7 +147,6 @@ class SubscriptionCard extends StatelessWidget {
                 Divider(color: Colors.grey.shade100, height: 1),
                 const SizedBox(height: 16),
 
-                /// DATES CONTAINER (Modern Pill Style)
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 14,
@@ -162,7 +164,7 @@ class SubscriptionCard extends StatelessWidget {
                     children: [
                       _infoItem(
                         Icons.calendar_today_rounded,
-                        "Start Date",
+                        l10n.startDate,
                         _formatDate(subscription?.startDate),
                       ),
                       Container(
@@ -172,14 +174,13 @@ class SubscriptionCard extends StatelessWidget {
                       ),
                       _infoItem(
                         Icons.event_available_rounded,
-                        "End Date",
+                        l10n.endDate,
                         _formatDate(subscription?.endDate),
                       ),
                     ],
                   ),
                 ),
 
-                /// CREATE PLAN BUTTON
                 if (!isHistory && !hasPlan) ...[
                   const SizedBox(height: 16),
                   Container(
@@ -198,8 +199,8 @@ class SubscriptionCard extends StatelessWidget {
                       child: ElevatedButton.icon(
                         onPressed: onCreatePlan,
                         icon: const Icon(Icons.auto_awesome_rounded, size: 18),
-                        label: const Text(
-                          "Create Training Plan",
+                        label: Text(
+                          l10n.createTrainingPlan,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 13.5,
@@ -227,7 +228,7 @@ class SubscriptionCard extends StatelessWidget {
     );
   }
 
-  Widget _planStatusBadge(bool hasPlan) {
+  Widget _planStatusBadge(bool hasPlan, AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
@@ -251,7 +252,7 @@ class SubscriptionCard extends StatelessWidget {
           ),
           const SizedBox(width: 4),
           Text(
-            hasPlan ? "Active Plan" : "Needs Plan",
+            hasPlan ? l10n.activePlan : l10n.needs_a_plan,
             style: TextStyle(
               color: hasPlan ? Colors.green.shade700 : Colors.amber.shade800,
               fontSize: 11,
@@ -263,15 +264,15 @@ class SubscriptionCard extends StatelessWidget {
     );
   }
 
-  Widget _historyBadge() {
+  Widget _historyBadge(AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
         color: Colors.grey.withOpacity(0.1),
         borderRadius: BorderRadius.circular(30),
       ),
-      child: const Text(
-        "Expired",
+      child: Text(
+        l10n.expired,
         style: TextStyle(
           color: Colors.grey,
           fontSize: 11,

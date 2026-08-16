@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/features/trainees/data/models/coach_plan_model.dart';
-import 'package:sportifo_app/features/trainees/presentation/widgets/trainee_card_horizontal.dart'; // تأكد من مسار الاستيراد الصحيح
+import 'package:sportifo_app/features/trainees/presentation/widgets/trainee_card_horizontal.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart'; // تأكد من مسار الاستيراد الصحيح
 
 class TraineesGrid extends StatelessWidget {
   final List<CoachPlanModel> plans;
@@ -14,10 +15,11 @@ class TraineesGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (plans.isEmpty) {
       return Center(
         child: Text(
-          'No trainees found',
+          l10n.noTraineesFound,
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,

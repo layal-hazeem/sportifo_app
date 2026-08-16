@@ -16,14 +16,14 @@ class SubscriptionsScreen extends StatefulWidget {
 }
 
 class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
-  int _selectedFilterIndex = 0; // 0: Active, 1: History
+  int _selectedFilterIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC), // لون خلفية أحدث وأكثر نعومة
+      backgroundColor: const Color(0xFFF8FAFC),
       body: BlocBuilder<SubscriptionCubit, SubscriptionState>(
         builder: (context, state) {
           if (state is SubscriptionLoading) {
@@ -112,7 +112,6 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          /// WARNING BANNER (مطور وعصري)
                           if (needsPlanCount > 0) ...[
                             Container(
                               padding: const EdgeInsets.all(16),
@@ -157,8 +156,8 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        const Text(
-                                          "Action Required",
+                                        Text(
+                                          l10n.actionRequired,
                                           style: TextStyle(
                                             color: Color(0xFF0F172A),
                                             fontWeight: FontWeight.w800,
@@ -167,7 +166,9 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                                         ),
                                         const SizedBox(height: 2),
                                         Text(
-                                          "You have $needsPlanCount active subscribers who don't have a training plan yet.",
+                                          l10n.subscribersNeedPlan(
+                                            needsPlanCount,
+                                          ),
                                           style: TextStyle(
                                             color: Colors.grey.shade700,
                                             fontSize: 12.5,
@@ -183,7 +184,6 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                             const SizedBox(height: 20),
                           ],
 
-                          /// FILTER TABS (تصميم أزرار عائمة احترافية)
                           Container(
                             padding: const EdgeInsets.all(4),
                             decoration: BoxDecoration(
@@ -202,7 +202,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                               children: [
                                 Expanded(
                                   child: _buildFilterTab(
-                                    title: "Active",
+                                    title: l10n.active,
                                     count: activeSubscriptions.length,
                                     isSelected: _selectedFilterIndex == 0,
                                     onTap: () => setState(
@@ -213,7 +213,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                                 const SizedBox(width: 4),
                                 Expanded(
                                   child: _buildFilterTab(
-                                    title: "History",
+                                    title: l10n.history,
                                     count: historySubscriptions.length,
                                     isSelected: _selectedFilterIndex == 1,
                                     onTap: () => setState(
@@ -352,13 +352,14 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
   }
 
   Widget _buildHistorySectionSliver(List<UsersSubscribedModel> historyList) {
+    final l10n = AppLocalizations.of(context)!;
     if (historyList.isEmpty) {
       return SliverToBoxAdapter(
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: _emptySection(
             icon: Icons.history_rounded,
-            text: "No recent expired history found",
+            text: l10n.noRecentExpiredPlansHistoryFound,
           ),
         ),
       );

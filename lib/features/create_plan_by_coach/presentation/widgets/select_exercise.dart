@@ -49,11 +49,11 @@ class ExerciseSelectableCard extends StatelessWidget {
                       height: 110,
                       width: double.infinity,
                       color: Colors.white,
-
                       child: CachedStaticGif(imageUrl: exercise.gifUrl ?? ''),
                     ),
                   ),
                 ),
+
                 Positioned(
                   top: 8,
                   right: 8,
@@ -101,7 +101,9 @@ class ExerciseSelectableCard extends StatelessWidget {
                         letterSpacing: -0.1,
                       ),
                     ),
+
                     const SizedBox(height: 4),
+
                     Text(
                       exercise.category?.organ?.name ?? l10n.workout,
                       maxLines: 1,
@@ -112,6 +114,7 @@ class ExerciseSelectableCard extends StatelessWidget {
                         fontWeight: FontWeight.w700,
                       ),
                     ),
+
                     if (exercise.category?.organ?.part != null) ...[
                       const SizedBox(height: 2),
                       Text(

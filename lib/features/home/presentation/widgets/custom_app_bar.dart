@@ -28,10 +28,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     switch (currentIndex) {
       case 0:
-        title = isCoach ? "Subscriptions" : l10n.progress;
+        title = isCoach ? l10n.sub : l10n.progress;
         break;
       case 1:
-        title = isCoach ? "Trainees" : l10n.myPlans;
+        title = isCoach ? l10n.trainees : l10n.myPlans;
         break;
       case 2:
         title = l10n.welcomeBack;
@@ -64,16 +64,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           scale: Tween<double>(begin: 0.8, end: 1.0).animate(
             CurvedAnimation(parent: animation, curve: Curves.easeOutBack),
           ),
-          // 2. أنيميشن الـ Fade (شفافية)
-          child: FadeTransition(
-            opacity: animation,
-            // 3. لمسة دورات بسيطة جداً (اختياري، إذا ما حبيتيها فيكِ تمسحي RotationTransition)
-            // child: RotationTransition(
-            //   turns: Tween<double>(begin: -0.02, end: 0.0).animate(
-            //     CurvedAnimation(parent: animation, curve: Curves.easeOut),
-            //   ),
-            child: child,
-          ),
+          child: FadeTransition(opacity: animation, child: child),
         );
       },
       child: WaveAppBar(
