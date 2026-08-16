@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class PlanDetailsCard extends StatelessWidget {
   final String? selectedGoal;
@@ -17,24 +18,9 @@ class PlanDetailsCard extends StatelessWidget {
   });
 
   static const List<_GoalOption> _goals = [
-    _GoalOption(
-      value: 'cut',
-      title: 'Cut',
-      subtitle: 'Lose fat',
-      icon: Icons.local_fire_department_rounded,
-    ),
-    _GoalOption(
-      value: 'bulk',
-      title: 'Bulk',
-      subtitle: 'Build muscle',
-      icon: Icons.fitness_center_rounded,
-    ),
-    _GoalOption(
-      value: 'maintain',
-      title: 'Maintain',
-      subtitle: 'Stay balanced',
-      icon: Icons.balance_rounded,
-    ),
+    _GoalOption(value: 'cut', icon: Icons.local_fire_department_rounded),
+    _GoalOption(value: 'bulk', icon: Icons.fitness_center_rounded),
+    _GoalOption(value: 'maintain', icon: Icons.balance_rounded),
   ];
 
   @override
@@ -72,11 +58,11 @@ class PlanDetailsCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildGoalSection(),
+              _buildGoalSection(context),
               const SizedBox(height: 15),
               _buildDivider(),
               const SizedBox(height: 20),
-              _buildDurationSection(),
+              _buildDurationSection(context),
             ],
           ),
         ),
@@ -84,15 +70,19 @@ class PlanDetailsCard extends StatelessWidget {
     );
   }
 
-  Widget _buildGoalSection() {
+  Widget _buildGoalSection(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildSectionTitle(
           icon: Icons.track_changes_rounded,
-          title: "What's the main goal?",
+          title: l10n.mainGoalQuestion,
         ),
+
         const SizedBox(height: 16),
+
         Column(
           children: _goals.map((goal) {
             return Padding(
@@ -101,6 +91,8 @@ class PlanDetailsCard extends StatelessWidget {
                 width: double.infinity,
                 child: _GoalCard(
                   option: goal,
+                  title: _getGoalTitle(l10n, goal.value),
+                  subtitle: _getGoalSubtitle(l10n, goal.value),
                   selected: selectedGoal == goal.value,
                   onTap: () => onGoalChanged(goal.value),
                 ),
@@ -112,15 +104,51 @@ class PlanDetailsCard extends StatelessWidget {
     );
   }
 
-  Widget _buildDurationSection() {
+  String _getGoalTitle(AppLocalizations l10n, String value) {
+    switch (value) {
+      case 'cut':
+        return l10n.cutGoal;
+
+      case 'bulk':
+        return l10n.bulkGoal;
+
+      case 'maintain':
+        return l10n.maintainGoal;
+
+      default:
+        return value;
+    }
+  }
+
+  String _getGoalSubtitle(AppLocalizations l10n, String value) {
+    switch (value) {
+      case 'cut':
+        return l10n.cutGoalSubtitle;
+
+      case 'bulk':
+        return l10n.bulkGoalSubtitle;
+
+      case 'maintain':
+        return l10n.maintainGoalSubtitle;
+
+      default:
+        return '';
+    }
+  }
+
+  Widget _buildDurationSection(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildSectionTitle(
           icon: Icons.calendar_month_rounded,
-          title: 'Plan duration',
+          title: l10n.duration,
         ),
+
         const SizedBox(height: 15),
+
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
           decoration: BoxDecoration(
@@ -146,6 +174,7 @@ class PlanDetailsCard extends StatelessWidget {
                   }
                 },
               ),
+
               Expanded(
                 child: AnimatedSwitcher(
                   duration: const Duration(milliseconds: 220),
@@ -181,9 +210,13 @@ class PlanDetailsCard extends StatelessWidget {
                           ),
                         ),
                       ),
+
                       const SizedBox(height: 3),
+
                       Text(
-                        durationMonths == 1 ? 'MONTH' : 'MONTHS',
+                        durationMonths == 1
+                            ? l10n.month.toUpperCase()
+                            : l10n.months.toUpperCase(),
                         style: TextStyle(
                           color: Colors.grey.shade600,
                           fontSize: 11,
@@ -195,6 +228,7 @@ class PlanDetailsCard extends StatelessWidget {
                   ),
                 ),
               ),
+
               _buildStepperButton(
                 icon: Icons.add_rounded,
                 enabled: durationMonths < 12,
@@ -252,7 +286,9 @@ class PlanDetailsCard extends StatelessWidget {
           ),
           child: Icon(icon, size: 16, color: AppColors.primaryBtn),
         ),
+
         const SizedBox(width: 10),
+
         Text(
           title,
           style: const TextStyle(
@@ -283,11 +319,15 @@ class PlanDetailsCard extends StatelessWidget {
 
 class _GoalCard extends StatelessWidget {
   final _GoalOption option;
+  final String title;
+  final String subtitle;
   final bool selected;
   final VoidCallback onTap;
 
   const _GoalCard({
     required this.option,
+    required this.title,
+    required this.subtitle,
     required this.selected,
     required this.onTap,
   });
@@ -361,14 +401,16 @@ class _GoalCard extends StatelessWidget {
                   color: selected ? Colors.white : Colors.grey.shade600,
                 ),
               ),
+
               const SizedBox(width: 14),
+
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      option.title,
+                      title,
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w800,
@@ -376,9 +418,11 @@ class _GoalCard extends StatelessWidget {
                         color: selected ? AppColors.primaryBtn : Colors.black87,
                       ),
                     ),
+
                     const SizedBox(height: 2),
+
                     Text(
-                      option.subtitle,
+                      subtitle,
                       style: TextStyle(
                         fontSize: 11.5,
                         color: Colors.grey.shade500,
@@ -388,6 +432,7 @@ class _GoalCard extends StatelessWidget {
                   ],
                 ),
               ),
+
               AnimatedScale(
                 duration: const Duration(milliseconds: 180),
                 curve: Curves.easeOutBack,
@@ -416,14 +461,7 @@ class _GoalCard extends StatelessWidget {
 
 class _GoalOption {
   final String value;
-  final String title;
-  final String subtitle;
   final IconData icon;
 
-  const _GoalOption({
-    required this.value,
-    required this.title,
-    required this.subtitle,
-    required this.icon,
-  });
+  const _GoalOption({required this.value, required this.icon});
 }

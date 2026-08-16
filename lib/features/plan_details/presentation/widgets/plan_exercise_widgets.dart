@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/features/workout/data/models/exercise_model.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class PlanExerciseMatrix extends StatelessWidget {
   final List<ExerciseModel> exercises;
@@ -33,6 +34,7 @@ class PlanExerciseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final imageUrl =
         exercise.gifUrl ??
         (exercise.pictureUrls.isNotEmpty ? exercise.pictureUrls.first : null);
@@ -89,18 +91,18 @@ class PlanExerciseCard extends StatelessWidget {
                       _ExerciseTypeBadge(isCardio: exercise.isCardio),
                     ],
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 8),
                   Row(
                     children: [
                       _MetricChip(
                         icon: Icons.repeat_rounded,
-                        label: 'Sets',
+                        label: l10n.sets,
                         value: '${exercise.sets ?? '-'}',
                       ),
                       const SizedBox(width: 8),
                       _MetricChip(
                         icon: Icons.fitness_center_rounded,
-                        label: 'Reps',
+                        label: l10n.reps,
                         value: exercise.reps ?? exercise.duration ?? '-',
                       ),
                     ],
@@ -186,7 +188,7 @@ class _MetricChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: BoxDecoration(
         color: AppColors.background,
         borderRadius: BorderRadius.circular(10),
@@ -201,7 +203,7 @@ class _MetricChip extends StatelessWidget {
             value,
             style: const TextStyle(
               color: AppColors.textDark,
-              fontSize: 12,
+              fontSize: 10,
               fontWeight: FontWeight.w800,
             ),
           ),
@@ -227,6 +229,7 @@ class _ExerciseTypeBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final color = isCardio ? AppColors.textDark : AppColors.primaryBtn;
 
     return Container(
@@ -236,7 +239,7 @@ class _ExerciseTypeBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
-        isCardio ? 'CARDIO' : 'STRENGTH',
+        isCardio ? l10n.cardio : l10n.strength,
         style: TextStyle(
           color: color,
           fontSize: 9,
@@ -255,6 +258,7 @@ class _InstructionSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       constraints: const BoxConstraints(maxHeight: 500),
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
@@ -279,7 +283,7 @@ class _InstructionSheet extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Text(
-                'TECHNICAL NOTES',
+                l10n.technicalNotes,
                 style: TextStyle(
                   color: AppColors.primaryBtn,
                   fontSize: 11,
@@ -336,6 +340,7 @@ class _EmptyExercises extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(30),
@@ -347,8 +352,8 @@ class _EmptyExercises extends StatelessWidget {
               size: 36,
             ),
             const SizedBox(height: 10),
-            const Text(
-              'No exercises assigned',
+             Text(
+              l10n.noExercisesAssigned,
               style: TextStyle(color: AppColors.hintText, fontSize: 14),
             ),
           ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class QuickAction {
@@ -103,9 +104,6 @@ class QuickActionCard extends StatelessWidget {
 
 class QuickActionsSection extends StatelessWidget {
   final VoidCallback onSubscriptionsTap;
-  // Optional — wire these up once the corresponding screens/routes exist.
-  // Leaving them null keeps today's behaviour (a single "Subscriptions"
-  // card) instead of showing actions that don't do anything yet.
   final VoidCallback? onAddTraineeTap;
   final VoidCallback? onCreatePlanTap;
 
@@ -118,26 +116,27 @@ class QuickActionsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final actions = <QuickAction>[
       QuickAction(
         icon: Icons.card_membership_rounded,
-        title: 'Subscriptions',
-        subtitle: 'See who needs a new training plan',
+        title: l10n.sub,
+        subtitle: l10n.seeWhoNeedsANewTrainingPlan,
         isPrimary: true,
         onTap: onSubscriptionsTap,
       ),
       if (onAddTraineeTap != null)
         QuickAction(
           icon: Icons.person_add_alt_1_rounded,
-          title: 'Add Trainee',
-          subtitle: 'Invite a new client',
+          title: l10n.trainees,
+          subtitle: l10n.waitANewTrainee,
           onTap: onAddTraineeTap!,
         ),
       if (onCreatePlanTap != null)
         QuickAction(
           icon: Icons.fitness_center_rounded,
-          title: 'Create Plan',
-          subtitle: 'Build a new training plan',
+          title: l10n.createPlan,
+          subtitle: l10n.hintForCreatePlan,
           onTap: onCreatePlanTap!,
         ),
     ];
@@ -146,7 +145,7 @@ class QuickActionsSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Quick Actions',
+          l10n.quickActions,
           style: TextStyle(
             fontSize: AppSizes.labelFontSize + 2,
             fontWeight: FontWeight.bold,

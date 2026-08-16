@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 
-/// Skeleton placeholder shown while [CoachHomeCubit] is loading, mirroring
-/// the loaded layout (greeting, ads, stats, trainees, quick actions) so the
-/// screen doesn't "jump" once real content arrives. Self-contained animated
-/// gradient — no extra dependency (e.g. `shimmer`) required.
 class CoachHomeSkeleton extends StatefulWidget {
   const CoachHomeSkeleton({super.key});
 
@@ -73,7 +69,7 @@ class _CoachHomeSkeletonState extends State<CoachHomeSkeleton>
           height: 100,
           child: Row(
             children: List.generate(
-              5,
+              4,
               (i) => Padding(
                 padding: const EdgeInsets.only(right: 14),
                 child: _shimmerBox(width: 70, height: 100, radius: 12),

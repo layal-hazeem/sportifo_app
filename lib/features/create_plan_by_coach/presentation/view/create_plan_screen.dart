@@ -23,6 +23,7 @@ import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class CreatePlanScreen extends StatefulWidget {
   final int userId;
+
   const CreatePlanScreen({super.key, required this.userId});
 
   @override
@@ -48,9 +49,12 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
   void _goToNextStep() {
     if (_currentStep == 0) {
       if (selectedGoal == null) {
-        _showValidationMessage( AppLocalizations.of(context)!.chooseGoalForTrainingPlan);
+        _showValidationMessage(
+          AppLocalizations.of(context)!.chooseGoalForTrainingPlan,
+        );
         return;
       }
+
       _pageController
           .animateToPage(
             1,
@@ -83,12 +87,14 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return BlocListener<CreatePlanCubit, CreatePlanState>(
       listener: (context, state) {
-        final l10n = AppLocalizations.of(context)!;
         if (state is CreatePlanLoading) {
           if (!isLoadingDialogShown) {
             isLoadingDialogShown = true;
+
             showDialog(
               context: context,
               barrierDismissible: false,
@@ -122,16 +128,16 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
                           ),
                         ),
                         const SizedBox(height: 20),
-                         Text(
-                          "Creating your plan...",
-                          style: TextStyle(
+                        Text(
+                          l10n.creatingYourPlan,
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                         SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         Text(
-                          "Please wait while we save your workout",
+                          l10n.pleaseWaitWhileSavingWorkout,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.grey.shade600,
@@ -152,10 +158,12 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
             isLoadingDialogShown = false;
             Navigator.pop(context);
           }
+
           Navigator.pop(context, true);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Plan created successfully")),
-          );
+
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(l10n.planCreatedSuccessfully)));
         }
 
         if (state is CreatePlanError) {
@@ -163,24 +171,22 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
             isLoadingDialogShown = false;
             Navigator.pop(context);
           }
+
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text(state.message)));
         }
       },
       child: Scaffold(
-        appBar: WaveAppBar(title:  AppLocalizations.of(context)!.createPlan, showBackButton: true),
+        appBar: WaveAppBar(title: l10n.createPlan, showBackButton: true),
         body: Column(
           children: [
-            // Header with Steps Indicator Line
             _buildStepHeader(),
 
-            // Pages View
             Expanded(
               child: PageView(
                 controller: _pageController,
-                physics:
-                    const NeverScrollableScrollPhysics(), 
+                physics: const NeverScrollableScrollPhysics(),
                 children: [
                   _buildGoalAndDurationStep(),
                   _buildDaysAndExercisesStep(),
@@ -201,7 +207,9 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
                     setState(() {
                       isFabOpen = !isFabOpen;
                     });
+
                     await Future.delayed(const Duration(milliseconds: 200));
+
                     CustomGlassBottomSheet.show(
                       context: context,
                       height: 0.30,
@@ -217,24 +225,28 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
                             ),
                           ),
                           const SizedBox(height: 20),
+
                           _buildActionTile(
                             icon: Icons.add_circle_outline,
                             color: AppColors.primaryBtn,
-                            title: "Create New Day",
-                            subtitle: "Build a custom workout day",
+                            title: l10n.createNewDay,
+                            subtitle: l10n.creatDaySubtitle,
                             onTap: () {
                               Navigator.pop(context);
                               addDay();
                             },
                           ),
+
                           const SizedBox(height: 12),
+
                           _buildActionTile(
                             icon: Icons.copy_outlined,
                             color: Colors.blue,
-                            title: "Add Existing Day",
-                            subtitle: "Reuse a saved workout",
+                            title: l10n.addExistingDay,
+                            subtitle: l10n.addExistingDaySubtitle,
                             onTap: () async {
                               Navigator.pop(context);
+
                               final selectedDays =
                                   await CustomGlassBottomSheet.show<
                                     List<ExistingDaysModel>
@@ -321,8 +333,9 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
     );
   }
 
-  // Header Widget showing the steps and orange line
   Widget _buildStepHeader() {
+    final l10n = AppLocalizations.of(context)!;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       child: Row(
@@ -332,9 +345,7 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  _currentStep == 0
-                      ? "Step 1: Goal & Duration"
-                      : "Step 2: Days & Exercises",
+                  _currentStep == 0 ? l10n.stepOne : l10n.stepTwo,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
@@ -348,8 +359,7 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
                       child: Container(
                         height: 4,
                         decoration: BoxDecoration(
-                          color: AppColors
-                              .primaryBtn, // الخط الأول دائماً مفعل أو مكتمل عند الانتقال
+                          color: AppColors.primaryBtn,
                           borderRadius: BorderRadius.circular(2),
                         ),
                       ),
@@ -361,9 +371,7 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
                         decoration: BoxDecoration(
                           color: _currentStep == 1
                               ? AppColors.primaryBtn
-                              : Colors
-                                    .grey
-                                    .shade300, // يلون برتقالي فقط عند الوصول للخطوة الثانية
+                              : Colors.grey.shade300,
                           borderRadius: BorderRadius.circular(2),
                         ),
                       ),
@@ -378,7 +386,6 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
     );
   }
 
-  // Step 1 Widget
   Widget _buildGoalAndDurationStep() {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
@@ -399,8 +406,9 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
     );
   }
 
-  // Step 2 Widget
   Widget _buildDaysAndExercisesStep() {
+    final l10n = AppLocalizations.of(context)!;
+
     return CustomScrollView(
       slivers: [
         SliverToBoxAdapter(
@@ -417,17 +425,21 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
                   ),
                 ),
                 const SizedBox(width: 10),
-                const Text(
-                  'WORKOUT DAYS',
-                  style: TextStyle(
+
+                Text(
+                  l10n.workoutDays,
+                  style: const TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w800,
                     letterSpacing: 1.1,
                   ),
                 ),
+
                 const Spacer(),
+
                 Text(
-                  '${days.length} ${days.length == 1 ? 'day' : 'days'}',
+                  '${days.length} '
+                  '${days.length == 1 ? l10n.day : l10n.days}',
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey.shade600,
@@ -444,6 +456,7 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
         SliverList(
           delegate: SliverChildBuilderDelegate((context, index) {
             final day = days[index];
+
             return PlanDayCard(
               day: day,
               onSettings: () async {
@@ -451,6 +464,7 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
                   context,
                   day,
                 );
+
                 if (applyAll == true) {
                   setState(() {
                     for (final exercise in day.exercises) {
@@ -489,8 +503,9 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
     );
   }
 
-  // Bottom Navigation Bar with dynamic buttons (Next / Create Plan)
   Widget _buildBottomNavigationBar() {
+    final l10n = AppLocalizations.of(context)!;
+
     return Container(
       padding: const EdgeInsets.all(16),
       child: Row(
@@ -507,7 +522,7 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
                   ),
                 ),
                 child: Text(
-                  "Back",
+                  l10n.back,
                   style: TextStyle(
                     color: AppColors.primaryBtn,
                     fontSize: 16,
@@ -518,6 +533,7 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
             ),
             const SizedBox(width: 12),
           ],
+
           Expanded(
             flex: _currentStep == 1 ? 2 : 1,
             child: ElevatedButton(
@@ -530,7 +546,7 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
                 ),
               ),
               child: Text(
-                _currentStep == 0 ? "Next" : "Create Plan",
+                _currentStep == 0 ? l10n.next : l10n.createPlan,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 16,
@@ -554,7 +570,9 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
 
   Future<void> addExercise(int dayIndex) async {
     final workoutRepository = getIt<WorkoutRepository>();
+
     final result = await workoutRepository.getExercises();
+
     if (result is Failure) return;
 
     final exercises = (result as Success<List<ExerciseModel>>).data;
@@ -579,15 +597,10 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
     setState(() {
       days[dayIndex].exercises.addAll(
         selected.map((exercise) {
-          if (exercise.isCardio) {
-            exercise.sets = null;
-            exercise.reps = null;
-            exercise.duration = null;
-          } else {
-            exercise.sets = null;
-            exercise.reps = null;
-            exercise.duration = null;
-          }
+          exercise.sets = null;
+          exercise.reps = null;
+          exercise.duration = null;
+
           return exercise;
         }).toList(),
       );
@@ -595,13 +608,15 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
   }
 
   Future<void> savePlan() async {
+    final l10n = AppLocalizations.of(context)!;
+
     if (days.isEmpty) {
-      _showValidationMessage("Add at least one workout day");
+      _showValidationMessage(l10n.addAtLeastOneWorkoutDay);
       return;
     }
 
     if (days.any((day) => day.exercises.isEmpty)) {
-      _showValidationMessage("Every workout day needs at least one exercise");
+      _showValidationMessage(l10n.everyWorkoutDayNeedsExercise);
       return;
     }
 
@@ -620,6 +635,7 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
     );
 
     print(request.toMap());
+
     context.read<CreatePlanCubit>().createPlan(request);
   }
 
@@ -637,110 +653,120 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
         ),
       );
   }
-}
 
-Widget _buildEmptyDaysState() {
-  return Container(
-    margin: const EdgeInsets.fromLTRB(20, 8, 20, 20),
-    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
-    decoration: BoxDecoration(
-      color: Colors.grey.shade50,
-      borderRadius: BorderRadius.circular(24),
-      border: Border.all(color: Colors.grey.shade200),
-    ),
-    child: Column(
-      children: [
-        Container(
-          width: 64,
-          height: 64,
-          decoration: BoxDecoration(
-            color: AppColors.primaryBtn.withOpacity(.10),
-            shape: BoxShape.circle,
-          ),
-          child: Icon(
-            Icons.calendar_today_rounded,
-            color: AppColors.primaryBtn,
-            size: 28,
-          ),
-        ),
-        const SizedBox(height: 16),
-        const Text(
-          'No workout days yet',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
-        ),
-        const SizedBox(height: 6),
-        Text(
-          'Create a new workout day or reuse one '
-          'from your saved workouts.',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Colors.grey.shade600,
-            fontSize: 13,
-            height: 1.4,
-          ),
-        ),
-        const SizedBox(height: 18),
-        Text(
-          'Tap + to get started',
-          style: TextStyle(
-            color: AppColors.primaryBtn,
-            fontSize: 12,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      ],
-    ),
-  );
-}
+  Widget _buildEmptyDaysState() {
+    final l10n = AppLocalizations.of(context)!;
 
-Widget _buildActionTile({
-  required IconData icon,
-  required Color color,
-  required String title,
-  required String subtitle,
-  required VoidCallback onTap,
-}) {
-  return InkWell(
-    onTap: onTap,
-    borderRadius: BorderRadius.circular(18),
-    child: Container(
-      padding: const EdgeInsets.all(14),
+    return Container(
+      margin: const EdgeInsets.fromLTRB(20, 8, 20, 20),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
       decoration: BoxDecoration(
         color: Colors.grey.shade50,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(24),
         border: Border.all(color: Colors.grey.shade200),
       ),
-      child: Row(
+      child: Column(
         children: [
           Container(
-            width: 52,
-            height: 52,
+            width: 64,
+            height: 64,
             decoration: BoxDecoration(
-              color: color.withOpacity(.12),
-              borderRadius: BorderRadius.circular(16),
+              color: AppColors.primaryBtn.withOpacity(.10),
+              shape: BoxShape.circle,
             ),
-            child: Icon(icon, color: color),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(subtitle, style: TextStyle(color: Colors.grey.shade600)),
-              ],
+            child: Icon(
+              Icons.calendar_today_rounded,
+              color: AppColors.primaryBtn,
+              size: 28,
             ),
           ),
-          const Icon(Icons.arrow_forward_ios, size: 16),
+
+          const SizedBox(height: 16),
+
+          Text(
+            l10n.noWorkoutDaysYet,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+          ),
+
+          const SizedBox(height: 6),
+
+          Text(
+            l10n.hintForCreateDay,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.grey.shade600,
+              fontSize: 13,
+              height: 1.4,
+            ),
+          ),
+
+          const SizedBox(height: 18),
+
+          Text(
+            l10n.tapPlus,
+            style: TextStyle(
+              color: AppColors.primaryBtn,
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
         ],
       ),
-    ),
-  );
+    );
+  }
+
+  Widget _buildActionTile({
+    required IconData icon,
+    required Color color,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(18),
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: Colors.grey.shade50,
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: Colors.grey.shade200),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 52,
+              height: 52,
+              decoration: BoxDecoration(
+                color: color.withOpacity(.12),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Icon(icon, color: color),
+            ),
+
+            const SizedBox(width: 16),
+
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(subtitle, style: TextStyle(color: Colors.grey.shade600)),
+                ],
+              ),
+            ),
+
+            const Icon(Icons.arrow_forward_ios, size: 16),
+          ],
+        ),
+      ),
+    );
+  }
 }

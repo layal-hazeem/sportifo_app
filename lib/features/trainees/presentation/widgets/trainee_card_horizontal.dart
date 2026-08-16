@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/features/trainees/data/models/coach_plan_model.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class TraineeCardHorizontal extends StatefulWidget {
   final CoachPlanModel plan;
@@ -61,15 +62,18 @@ class _TraineeCardHorizontalState extends State<TraineeCardHorizontal>
         .toUpperCase();
   }
 
-  // الصيغة التي طلبتها لعدد الأشهر
-  String get _durationText {
+  String _durationText(AppLocalizations l10n) {
     final duration = widget.plan.durationMonths;
 
     if (duration == null) {
-      return 'Plan active';
+      return l10n.planActive;
     }
 
-    return duration == 1 ? '1 month plan' : '$duration months plan';
+    if (duration == 1) {
+      return l10n.oneMonthPlan;
+    }
+
+    return l10n.monthsPlan(duration);
   }
 
   IconData get goalIcon {
@@ -86,6 +90,7 @@ class _TraineeCardHorizontalState extends State<TraineeCardHorizontal>
   @override
   Widget build(BuildContext context) {
     final profilePic = widget.plan.user?.profilePic;
+    final l10n = AppLocalizations.of(context)!;
 
     return ScaleTransition(
       scale: _scaleAnimation,
@@ -186,7 +191,7 @@ class _TraineeCardHorizontalState extends State<TraineeCardHorizontal>
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
-                          _durationText,
+                          _durationText(l10n),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/features/home/presentation/widgets/empty_state_widget.dart';
 import 'package:sportifo_app/features/subscriptions/data/models/users_subscribed_model.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 
 /// Expects the FULL client list (not pre-filtered by `hasPlan`) — otherwise
@@ -20,6 +21,7 @@ class ClientsPreviewSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -27,7 +29,7 @@ class ClientsPreviewSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Your Trainees',
+              l10n.yourTrainees,
               style: TextStyle(
                 fontSize: AppSizes.labelFontSize + 2,
                 fontWeight: FontWeight.bold,
@@ -41,7 +43,7 @@ class ClientsPreviewSection extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(4),
                   child: Text(
-                    'See All',
+                    l10n.see_all,
                     style: TextStyle(
                       fontSize: AppSizes.hintFontSize,
                       color: AppColors.linkColor,
@@ -54,9 +56,9 @@ class ClientsPreviewSection extends StatelessWidget {
         ),
         const SizedBox(height: 14),
         if (clients.isEmpty)
-          const EmptyStateWidget(
+          EmptyStateWidget(
             icon: Icons.people_outline_rounded,
-            message: 'No trainees yet',
+            message: l10n.noTraineesYet,
             height: 95,
           )
         else
@@ -88,15 +90,16 @@ class _ClientAvatarItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final bool hasPlan = client.hasPlan ?? false;
-    final String name =
-        '${client.firstName ?? ''} ${client.lastName ?? ''}'.trim();
+    final String name = '${client.firstName ?? ''} ${client.lastName ?? ''}'
+        .trim();
     final String displayName = name.isEmpty ? 'Unknown name' : name;
 
     return Semantics(
       button: true,
       label:
-          '$displayName, ${hasPlan ? 'has an active plan' : 'needs a plan'}',
+          '$displayName, ${hasPlan ? l10n.hasAnActivePlan : l10n.needs_a_plan}',
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(50),
@@ -112,14 +115,14 @@ class _ClientAvatarItem extends StatelessWidget {
                     backgroundColor: AppColors.background,
                     backgroundImage:
                         (client.profilePic != null &&
-                                client.profilePic!.isNotEmpty)
-                            ? NetworkImage(client.profilePic!)
-                            : null,
+                            client.profilePic!.isNotEmpty)
+                        ? NetworkImage(client.profilePic!)
+                        : null,
                     child:
                         (client.profilePic == null ||
-                                client.profilePic!.isEmpty)
-                            ? Icon(Icons.person, color: AppColors.hintText)
-                            : null,
+                            client.profilePic!.isEmpty)
+                        ? Icon(Icons.person, color: AppColors.hintText)
+                        : null,
                   ),
                   Positioned(
                     bottom: 0,

@@ -4,6 +4,7 @@ import 'package:sportifo_app/features/auth/presentation/widgets/custom_button.da
 import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/select_exercise.dart';
 import 'package:sportifo_app/features/workout/data/models/exercise_model.dart';
 import 'package:sportifo_app/features/workout/presentation/widgets/part_filter_chip.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class ExerciseMultiPickerBottomSheet extends StatefulWidget {
   final List<ExerciseModel> exercises;
@@ -18,8 +19,10 @@ class ExerciseMultiPickerBottomSheet extends StatefulWidget {
 class _ExerciseMultiPickerBottomSheetState
     extends State<ExerciseMultiPickerBottomSheet> {
   final Set<ExerciseModel> selected = {};
+
   late List<ExerciseModel> resistanceExercises;
   late List<ExerciseModel> cardioExercises;
+
   String selectedMuscle = "All";
 
   @override
@@ -59,6 +62,8 @@ class _ExerciseMultiPickerBottomSheetState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return DefaultTabController(
       length: 2,
       child: Container(
@@ -85,8 +90,11 @@ class _ExerciseMultiPickerBottomSheetState
 
             Center(
               child: Text(
-                "Select Exercises",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                l10n.selectExercises,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
 
@@ -94,8 +102,11 @@ class _ExerciseMultiPickerBottomSheetState
               labelColor: AppColors.primaryBtn,
               indicatorColor: AppColors.primaryBtn,
               tabs: [
-                Tab(icon: Icon(Icons.fitness_center), text: "Resistance"),
-                Tab(icon: Icon(Icons.directions_run), text: "Cardio"),
+                Tab(
+                  icon: const Icon(Icons.fitness_center),
+                  text: l10n.resistance,
+                ),
+                Tab(icon: const Icon(Icons.directions_run), text: l10n.cardio),
               ],
             ),
 
@@ -110,7 +121,7 @@ class _ExerciseMultiPickerBottomSheetState
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: CustomAuthButton(
-                  text: "Add (${selected.length})",
+                  text: l10n.addExercises(selected.length),
                   onPressed: selected.isEmpty
                       ? null
                       : () {
@@ -158,6 +169,8 @@ class _ExerciseMultiPickerBottomSheetState
   }
 
   Widget buildResistanceTab() {
+    final l10n = AppLocalizations.of(context)!;
+
     return Column(
       children: [
         Padding(
@@ -165,7 +178,7 @@ class _ExerciseMultiPickerBottomSheetState
           child: Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              "Target Muscle",
+              l10n.target_muscle,
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 color: Colors.grey.shade700,
@@ -179,7 +192,6 @@ class _ExerciseMultiPickerBottomSheetState
           child: ListView.separated(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             scrollDirection: Axis.horizontal,
-
             itemBuilder: (context, index) {
               final muscle = muscles[index];
               final selectedChip = selectedMuscle == muscle;
@@ -194,9 +206,7 @@ class _ExerciseMultiPickerBottomSheetState
                 },
               );
             },
-
             separatorBuilder: (_, __) => const SizedBox(width: 0),
-
             itemCount: muscles.length,
           ),
         ),
@@ -213,7 +223,7 @@ class _ExerciseMultiPickerBottomSheetState
                   });
                 },
                 child: Text(
-                  "Select All",
+                  l10n.selectAll,
                   style: TextStyle(color: AppColors.primaryBtn),
                 ),
               ),
@@ -225,7 +235,7 @@ class _ExerciseMultiPickerBottomSheetState
                   });
                 },
                 child: Text(
-                  "Clear",
+                  l10n.clear,
                   style: TextStyle(color: AppColors.primaryBtn),
                 ),
               ),
@@ -239,6 +249,8 @@ class _ExerciseMultiPickerBottomSheetState
   }
 
   Widget buildCardioTab() {
+    final l10n = AppLocalizations.of(context)!;
+
     return Column(
       children: [
         Padding(
@@ -253,10 +265,11 @@ class _ExerciseMultiPickerBottomSheetState
                   });
                 },
                 child: Text(
-                  "Select All",
+                  l10n.selectAll,
                   style: TextStyle(color: AppColors.primaryBtn),
                 ),
               ),
+
               TextButton(
                 onPressed: () {
                   setState(() {
@@ -264,7 +277,7 @@ class _ExerciseMultiPickerBottomSheetState
                   });
                 },
                 child: Text(
-                  "Clear",
+                  l10n.clear,
                   style: TextStyle(color: AppColors.primaryBtn),
                 ),
               ),

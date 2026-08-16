@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/features/progress/presentation/widgets/stat_card.dart';
 import 'package:sportifo_app/features/subscriptions/data/models/users_subscribed_model.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 
-/// Receives the FULL client list (no pre-filtering upstream) so every stat
-/// here is computed from the same source of truth.
 class CoachStatsRow extends StatelessWidget {
   final List<UsersSubscribedModel> clients;
 
@@ -11,6 +10,7 @@ class CoachStatsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final activeCount = clients.where((c) => c.isActive == 1).length;
     final needsPlanCount =
         clients.where((c) => (c.hasPlan ?? false) == false).length;
@@ -19,7 +19,7 @@ class CoachStatsRow extends StatelessWidget {
       children: [
         Expanded(
           child: StatCard(
-            'Active Trainees',
+            l10n.activeTrainees,
             '$activeCount',
             Icons.groups_rounded,
           ),
@@ -27,7 +27,7 @@ class CoachStatsRow extends StatelessWidget {
         const SizedBox(width: 12),
         Expanded(
           child: StatCard(
-            'Needs a Plan',
+            l10n.needs_a_plan,
             '$needsPlanCount',
             Icons.assignment_late_rounded,
           ),
@@ -35,7 +35,7 @@ class CoachStatsRow extends StatelessWidget {
         const SizedBox(width: 12),
         Expanded(
           child: StatCard(
-            'Total Trainees',
+            l10n.totalTrainees,
             '${clients.length}',
             Icons.people_alt_rounded,
           ),

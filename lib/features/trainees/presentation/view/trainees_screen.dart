@@ -6,6 +6,7 @@ import 'package:sportifo_app/features/trainees/presentation/view_model/trainees_
 import 'package:sportifo_app/features/trainees/presentation/view_model/trainees_state.dart';
 import 'package:sportifo_app/features/trainees/presentation/widgets/trainees_grid.dart';
 import 'package:sportifo_app/features/trainees/presentation/widgets/trainees_header.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class TraineesScreen extends StatefulWidget {
   const TraineesScreen({super.key});
@@ -70,7 +71,6 @@ class _TraineesContent extends StatelessWidget {
 
   const _TraineesContent({required this.plans});
 
-  // تصفية القائمة لعرض أحدث خطة لكل متدرب فقط
   List<CoachPlanModel> get _latestPlansPerTrainee {
     final Map<int, CoachPlanModel> latestMap = {};
 
@@ -78,12 +78,9 @@ class _TraineesContent extends StatelessWidget {
       final userId = plan.user?.id;
       if (userId == null) continue;
 
-      // إذا لم يكن المتدرب موجوداً من قبل، أو إذا كانت الخطة الحالية أحدث
-      // (يمكنك الاعتماد على الـ id الأكبر أو تاريخ الإنشاء إذا وجد في الموديل)
       if (!latestMap.containsKey(userId)) {
         latestMap[userId] = plan;
       } else {
-        // نفترض هنا أن الـ ID الأكبر أو الترتيب الأحدث يعبر عن الخطة الأحدث
         final existingPlanId = latestMap[userId]?.id ?? 0;
         final currentPlanId = plan.id ?? 0;
 
@@ -173,6 +170,7 @@ class _TraineesError extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(30),
@@ -185,8 +183,8 @@ class _TraineesError extends StatelessWidget {
               color: Colors.black.withOpacity(0.25),
             ),
             const SizedBox(height: 16),
-            const Text(
-              'Couldn’t load trainees',
+            Text(
+              l10n.couldntLoadTrainees,
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 8),
@@ -202,7 +200,7 @@ class _TraineesError extends StatelessWidget {
             ElevatedButton.icon(
               onPressed: onRetry,
               icon: const Icon(Icons.refresh_rounded),
-              label: const Text('Try Again'),
+              label: Text(l10n.tryAgain),
             ),
           ],
         ),

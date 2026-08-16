@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 
-/// Unified empty / error state used across the app (empty lists, load
-/// failures, etc.) so every screen shares the same visual language:
-/// icon + message + optional action.
 class EmptyStateWidget extends StatelessWidget {
   final IconData icon;
   final String message;

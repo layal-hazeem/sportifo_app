@@ -6,6 +6,7 @@ import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/features/%20ads/presentation/widgets/ads_carousel_widget.dart';
 import 'package:sportifo_app/features/home/presentation/widgets/empty_state_widget.dart';
 import 'package:sportifo_app/features/subscriptions/data/models/users_subscribed_model.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 
 import '../view_model/coach_home_cubit.dart';
 import '../view_model/coach_home_state.dart';
@@ -42,6 +43,7 @@ class _CoachHomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocBuilder<CoachHomeCubit, CoachHomeState>(
       builder: (context, state) {
         if (state is CoachHomeLoading) {
@@ -53,7 +55,7 @@ class _CoachHomeView extends StatelessWidget {
             child: EmptyStateWidget(
               icon: Icons.error_outline_rounded,
               message: state.message,
-              actionLabel: 'Try again',
+              actionLabel: l10n.tryAgain,
               onAction: () => context.read<CoachHomeCubit>().loadHomeData(),
               height: 240,
             ),

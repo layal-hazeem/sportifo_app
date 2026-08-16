@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class CoachGreetingHeader extends StatelessWidget {
@@ -15,15 +16,23 @@ class CoachGreetingHeader extends StatelessWidget {
     required this.onNotificationTap,
   });
 
-  String get _greeting {
+  String _getGreeting(AppLocalizations l10n) {
     final hour = DateTime.now().hour;
-    if (hour < 12) return 'Good morning';
-    if (hour < 17) return 'Good afternoon';
-    return 'Good evening';
+
+    if (hour < 12) {
+      return l10n.goodMorning;
+    }
+
+    if (hour < 17) {
+      return l10n.goodAfternoon;
+    }
+
+    return l10n.goodEvening;
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final displayName = coachName.trim();
 
     return Row(
@@ -44,14 +53,14 @@ class CoachGreetingHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                _greeting,
+                _getGreeting(l10n),
                 style: TextStyle(
                   fontSize: AppSizes.hintFontSize,
                   color: AppColors.hintText,
                 ),
               ),
               Text(
-                displayName.isEmpty ? 'Coach' : 'Coach $displayName',
+                displayName.isEmpty ? l10n.coach : '${l10n.coach} $displayName',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(

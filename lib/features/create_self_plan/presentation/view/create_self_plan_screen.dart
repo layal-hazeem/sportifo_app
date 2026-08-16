@@ -92,6 +92,8 @@ class _CreateSelfPlanScreenState extends State<CreateSelfPlanScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return BlocListener<CreateSelfPlanCubit, CreateSelfPlanState>(
       listener: (context, state) {
         if (state is CreateSelfPlanLoading) {
@@ -101,21 +103,19 @@ class _CreateSelfPlanScreenState extends State<CreateSelfPlanScreen> {
         if (state is CreateSelfPlanSuccess) {
           if (isLoadingDialogShown) {
             isLoadingDialogShown = false;
-
             Navigator.pop(context);
           }
 
           Navigator.pop(context, true);
 
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Plan created successfully")),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(l10n.planCreatedSuccessfully)));
         }
 
         if (state is CreateSelfPlanError) {
           if (isLoadingDialogShown) {
             isLoadingDialogShown = false;
-
             Navigator.pop(context);
           }
 
@@ -125,7 +125,7 @@ class _CreateSelfPlanScreenState extends State<CreateSelfPlanScreen> {
         }
       },
       child: Scaffold(
-        appBar: WaveAppBar(title: "Create Self Plan", showBackButton: true),
+        appBar: WaveAppBar(title: l10n.createSelfPlan, showBackButton: true),
 
         body: Column(
           children: [
@@ -163,6 +163,8 @@ class _CreateSelfPlanScreenState extends State<CreateSelfPlanScreen> {
 
     isLoadingDialogShown = true;
 
+    final l10n = AppLocalizations.of(context)!;
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -195,15 +197,18 @@ class _CreateSelfPlanScreenState extends State<CreateSelfPlanScreen> {
 
                 const SizedBox(height: 20),
 
-                const Text(
-                  "Creating your plan...",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                Text(
+                  l10n.creatingYourPlan,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
 
                 const SizedBox(height: 8),
 
                 Text(
-                  "Please wait while we save your workout",
+                  l10n.pleaseWaitWhileSavingWorkout,
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
                 ),
@@ -216,6 +221,8 @@ class _CreateSelfPlanScreenState extends State<CreateSelfPlanScreen> {
   }
 
   Widget _buildStepHeader() {
+    final l10n = AppLocalizations.of(context)!;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       child: Row(
@@ -226,8 +233,8 @@ class _CreateSelfPlanScreenState extends State<CreateSelfPlanScreen> {
               children: [
                 Text(
                   _currentStep == 0
-                      ? "Step 1: Goal & Duration"
-                      : "Step 2: Days & Exercises",
+                      ? l10n.stepOne
+                      : l10n.stepTwo,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
@@ -293,6 +300,8 @@ class _CreateSelfPlanScreenState extends State<CreateSelfPlanScreen> {
   }
 
   Widget _buildDaysAndExercisesStep() {
+    final l10n = AppLocalizations.of(context)!;
+
     return CustomScrollView(
       slivers: [
         SliverToBoxAdapter(
@@ -311,9 +320,9 @@ class _CreateSelfPlanScreenState extends State<CreateSelfPlanScreen> {
 
                 const SizedBox(width: 10),
 
-                const Text(
-                  'WORKOUT DAYS',
-                  style: TextStyle(
+                Text(
+                  l10n.workoutDays,
+                  style: const TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w800,
                     letterSpacing: 1.1,
@@ -323,7 +332,9 @@ class _CreateSelfPlanScreenState extends State<CreateSelfPlanScreen> {
                 const Spacer(),
 
                 Text(
-                  '${days.length} ${days.length == 1 ? 'day' : 'days'}',
+                  days.length == 1
+                      ? '1 ${l10n.day}'
+                      : '${days.length} ${l10n.days}',
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey.shade600,
@@ -392,6 +403,8 @@ class _CreateSelfPlanScreenState extends State<CreateSelfPlanScreen> {
   }
 
   Widget _buildBottomNavigationBar() {
+    final l10n = AppLocalizations.of(context)!;
+
     return Container(
       padding: const EdgeInsets.all(16),
       child: Row(
@@ -408,7 +421,7 @@ class _CreateSelfPlanScreenState extends State<CreateSelfPlanScreen> {
                   ),
                 ),
                 child: Text(
-                  "Back",
+                  l10n.back,
                   style: TextStyle(
                     color: AppColors.primaryBtn,
                     fontSize: 16,
@@ -433,7 +446,7 @@ class _CreateSelfPlanScreenState extends State<CreateSelfPlanScreen> {
                 ),
               ),
               child: Text(
-                _currentStep == 0 ? "Next" : "Create Plan",
+                _currentStep == 0 ? l10n.next : l10n.createPlan,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 16,
@@ -497,20 +510,20 @@ class _CreateSelfPlanScreenState extends State<CreateSelfPlanScreen> {
   }
 
   Future<void> savePlan() async {
+    final l10n = AppLocalizations.of(context)!;
+
     if (days.isEmpty) {
-      _showValidationMessage("Add at least one workout day");
+      _showValidationMessage(l10n.addAtLeastOneWorkoutDay);
       return;
     }
 
     if (days.any((day) => day.exercises.isEmpty)) {
-      _showValidationMessage("Every workout day needs at least one exercise");
+      _showValidationMessage(l10n.everyWorkoutDayNeedsExercise);
       return;
     }
 
     if (selectedGoal == null) {
-      _showValidationMessage(
-        AppLocalizations.of(context)!.chooseGoalForTrainingPlan,
-      );
+      _showValidationMessage(l10n.chooseGoalForTrainingPlan);
       return;
     }
 
@@ -546,121 +559,65 @@ class _CreateSelfPlanScreenState extends State<CreateSelfPlanScreen> {
         ),
       );
   }
-}
 
-Widget _buildEmptyDaysState() {
-  return Container(
-    margin: const EdgeInsets.fromLTRB(20, 8, 20, 20),
-    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
-    decoration: BoxDecoration(
-      color: Colors.grey.shade50,
-      borderRadius: BorderRadius.circular(24),
-      border: Border.all(color: Colors.grey.shade200),
-    ),
-    child: Column(
-      children: [
-        Container(
-          width: 64,
-          height: 64,
-          decoration: BoxDecoration(
-            color: AppColors.primaryBtn.withOpacity(.10),
-            shape: BoxShape.circle,
-          ),
-          child: Icon(
-            Icons.calendar_today_rounded,
-            color: AppColors.primaryBtn,
-            size: 28,
-          ),
-        ),
+  Widget _buildEmptyDaysState() {
+    final l10n = AppLocalizations.of(context)!;
 
-        const SizedBox(height: 16),
-
-        const Text(
-          'No workout days yet',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
-        ),
-
-        const SizedBox(height: 6),
-
-        Text(
-          'Create your first workout day and start '
-          'building your personal plan.',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Colors.grey.shade600,
-            fontSize: 13,
-            height: 1.4,
-          ),
-        ),
-
-        const SizedBox(height: 18),
-
-        Text(
-          'Tap + to get started',
-          style: TextStyle(
-            color: AppColors.primaryBtn,
-            fontSize: 12,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
-Widget _buildActionTile({
-  required IconData icon,
-  required Color color,
-  required String title,
-  required String subtitle,
-  required VoidCallback onTap,
-}) {
-  return InkWell(
-    onTap: onTap,
-    borderRadius: BorderRadius.circular(18),
-    child: Container(
-      padding: const EdgeInsets.all(14),
+    return Container(
+      margin: const EdgeInsets.fromLTRB(20, 8, 20, 20),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
       decoration: BoxDecoration(
         color: Colors.grey.shade50,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(24),
         border: Border.all(color: Colors.grey.shade200),
       ),
-      child: Row(
+      child: Column(
         children: [
           Container(
-            width: 52,
-            height: 52,
+            width: 64,
+            height: 64,
             decoration: BoxDecoration(
-              color: color.withOpacity(.12),
-              borderRadius: BorderRadius.circular(16),
+              color: AppColors.primaryBtn.withOpacity(.10),
+              shape: BoxShape.circle,
             ),
-            child: Icon(icon, color: color),
-          ),
-
-          const SizedBox(width: 16),
-
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-
-                const SizedBox(height: 4),
-
-                Text(subtitle, style: TextStyle(color: Colors.grey.shade600)),
-              ],
+            child: Icon(
+              Icons.calendar_today_rounded,
+              color: AppColors.primaryBtn,
+              size: 28,
             ),
           ),
 
-          const Icon(Icons.arrow_forward_ios, size: 16),
+          const SizedBox(height: 16),
+
+          Text(
+            l10n.noWorkoutDaysYet,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+          ),
+
+          const SizedBox(height: 6),
+
+          Text(
+            l10n.createFirstWorkoutDay,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.grey.shade600,
+              fontSize: 13,
+              height: 1.4,
+            ),
+          ),
+
+          const SizedBox(height: 18),
+
+          Text(
+            l10n.tapPlusToGetStarted,
+            style: TextStyle(
+              color: AppColors.primaryBtn,
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
         ],
       ),
-    ),
-  );
+    );
+  }
 }

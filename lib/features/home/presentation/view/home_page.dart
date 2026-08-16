@@ -48,7 +48,6 @@ class _HomePageState extends State<HomePage> {
   List<Widget> _getTraineeScreens() {
     return [
       const ProgressScreen(),
-      // 🔥 التعديل هنا: استخدام .value لحماية الكيوبيت من الموت!
       BlocProvider.value(
         value: getIt<MyPlansCubit>(),
         child: const MyPlansScreen(),
@@ -157,8 +156,8 @@ class _HomePageState extends State<HomePage> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primaryBtn,
                         ),
-                        child: const Text(
-                          "Retry",
+                        child:  Text(
+                          l10n.retry,
                           style: TextStyle(color: Colors.white),
                         ),
                       ),

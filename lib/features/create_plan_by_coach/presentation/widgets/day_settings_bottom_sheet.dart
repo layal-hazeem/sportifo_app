@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/features/create_plan_by_coach/data/models/plan_day_ui_model.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class DaySettingsBottomSheet extends StatefulWidget {
   final PlanDayUiModel day;
 
-  const DaySettingsBottomSheet({super.key, required this.day});
+  const DaySettingsBottomSheet({
+    super.key,
+    required this.day,
+  });
 
-  static Future<bool?> show(BuildContext context, PlanDayUiModel day) async {
+  static Future<bool?> show(
+    BuildContext context,
+    PlanDayUiModel day,
+  ) async {
     return await showModalBottomSheet<bool>(
       context: context,
       isScrollControlled: true,
@@ -19,12 +26,15 @@ class DaySettingsBottomSheet extends StatefulWidget {
   }
 
   @override
-  State<DaySettingsBottomSheet> createState() => _DaySettingsBottomSheetState();
+  State<DaySettingsBottomSheet> createState() =>
+      _DaySettingsBottomSheetState();
 }
 
-class _DaySettingsBottomSheetState extends State<DaySettingsBottomSheet> {
+class _DaySettingsBottomSheetState
+    extends State<DaySettingsBottomSheet> {
   late TextEditingController setsController;
   late TextEditingController repsController;
+
   bool applyToAll = false;
 
   @override
@@ -32,12 +42,13 @@ class _DaySettingsBottomSheetState extends State<DaySettingsBottomSheet> {
     super.initState();
 
     setsController = TextEditingController(
-      text: widget.day.defaultSets?.toString() ?? "",
+      text: widget.day.defaultSets?.toString() ?? '',
     );
 
     repsController = TextEditingController(
-      text: widget.day.defaultReps?.toString() ?? "",
+      text: widget.day.defaultReps?.toString() ?? '',
     );
+
     applyToAll = false;
   }
 
@@ -50,32 +61,32 @@ class _DaySettingsBottomSheetState extends State<DaySettingsBottomSheet> {
   }
 
   void save() {
-    widget.day.defaultSets = int.tryParse(setsController.text.trim());
+    widget.day.defaultSets = int.tryParse(
+      setsController.text.trim(),
+    );
 
-    widget.day.defaultReps = int.tryParse(repsController.text.trim());
+    widget.day.defaultReps = int.tryParse(
+      repsController.text.trim(),
+    );
 
     Navigator.pop(context, applyToAll);
   }
 
-  Widget inputField(String label, TextEditingController controller) {
+  Widget inputField(
+    String label,
+    TextEditingController controller,
+  ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
-
       child: TextField(
         controller: controller,
-
-        keyboardType: TextInputType.number,
-
+        keyboardType: TextInputType.text,
         decoration: InputDecoration(
           labelText: label,
-
           filled: true,
-
           fillColor: Colors.grey.shade100,
-
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
-
             borderSide: BorderSide.none,
           ),
         ),
@@ -85,127 +96,128 @@ class _DaySettingsBottomSheetState extends State<DaySettingsBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Padding(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
-
       child: Container(
         padding: const EdgeInsets.all(24),
-
         decoration: const BoxDecoration(
           color: Colors.white,
-
-          borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(30),
+          ),
         ),
-
         child: Column(
           mainAxisSize: MainAxisSize.min,
-
           children: [
+            // Drag handle
             Container(
               width: 45,
               height: 5,
-
               decoration: BoxDecoration(
                 color: Colors.grey.shade300,
-
                 borderRadius: BorderRadius.circular(20),
               ),
             ),
 
             const SizedBox(height: 20),
 
+            // Icon
             Container(
               width: 70,
               height: 70,
-
               decoration: BoxDecoration(
                 color: AppColors.primaryBtn.withOpacity(.12),
-
                 borderRadius: BorderRadius.circular(22),
               ),
-
               child: const Icon(
                 Icons.tune_rounded,
-
                 size: 35,
-
                 color: AppColors.primaryBtn,
               ),
             ),
 
             const SizedBox(height: 16),
 
+            // Title
             Text(
-              "${widget.day.name} Settings",
-
-              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              '${widget.day.name} ${l10n.settings}',
+              style: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
             ),
 
             const SizedBox(height: 8),
 
+            // Description
             Text(
-              "These values will be used for resistance exercises without custom settings",
-
+              l10n.daySettingsDescription,
               textAlign: TextAlign.center,
-
-              style: TextStyle(color: Colors.grey.shade600),
+              style: TextStyle(
+                color: Colors.grey.shade600,
+              ),
             ),
 
             const SizedBox(height: 25),
 
-            inputField("Default Sets", setsController),
+            // Default Sets
+            inputField(
+              l10n.defaultSets,
+              setsController,
+            ),
 
-            inputField("Default Reps", repsController),
+            // Default Reps
+            inputField(
+              l10n.defaultReps,
+              repsController,
+            ),
 
+            // Apply to all
             CheckboxListTile(
               value: applyToAll,
-
               activeColor: AppColors.primaryBtn,
-
               onChanged: (value) {
                 setState(() {
                   applyToAll = value ?? false;
                 });
               },
-
-              title: const Text(
-                "Apply to all resistance exercises",
-                style: TextStyle(fontWeight: FontWeight.w600),
+              title: Text(
+                l10n.applyToAllResistanceExercises,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-
-              subtitle: const Text(
-                "Update sets and reps for every resistance exercise in this day",
+              subtitle: Text(
+                l10n.applyToAllResistanceExercisesDescription,
               ),
-
               contentPadding: EdgeInsets.zero,
             ),
 
             const SizedBox(height: 10),
 
+            // Save button
             SizedBox(
               width: double.infinity,
-
               child: ElevatedButton(
                 onPressed: save,
-
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primaryBtn,
-
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 16,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18),
                   ),
                 ),
-
-                child: const Text(
-                  "Save Settings",
-
-                  style: TextStyle(
+                child: Text(
+                  l10n.saveSettings,
+                  style: const TextStyle(
                     color: Colors.white,
-
                     fontWeight: FontWeight.bold,
                   ),
                 ),

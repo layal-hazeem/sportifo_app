@@ -112,7 +112,7 @@ class CreateSelfPlanCard extends StatelessWidget {
                         const SizedBox(width: 8),
 
                         Text(
-                          "PERSONAL WORKOUT",
+                          l10n.personalWorkout,
                           style: TextStyle(
                             color: Colors.white.withOpacity(.78),
                             fontSize: 11,

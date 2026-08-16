@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/features/plan_details/data/models/plan_details_model.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class PlanDaySelector extends StatelessWidget {
   final List<PlanDayModel> days;
@@ -56,6 +57,7 @@ class _DayNode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return AnimatedContainer(
       duration: const Duration(milliseconds: 220),
       curve: Curves.easeOutCubic,
@@ -91,7 +93,7 @@ class _DayNode extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'DAY',
+              l10n.day,
               style: TextStyle(
                 color: isSelected
                     ? Colors.white.withOpacity(.85)
