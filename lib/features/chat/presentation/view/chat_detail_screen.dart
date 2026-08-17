@@ -289,12 +289,9 @@ void _showDeleteConfirmation(int? messageId, String? clientUuid) {
       type: DialogType.warning,
       confirmBtnText: l10n.delete,
       onConfirm: () {
-        Navigator.pop(context); // إغلاق الديالوغ
-        
-        // استدعاء الدالة بنفس الـ parameters المحددة في الكيوبيت
         context.read<ChatDetailCubit>().deleteMessage(
           widget.conversationId,
-          messageId ?? -1,        // تمرير -1 إذا كانت الرسالة محلية ولم تأخذ ID بعد
+          messageId ?? -1,       
           clientUuid ?? '',
         );
       },

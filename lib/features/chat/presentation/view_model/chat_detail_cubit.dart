@@ -446,32 +446,49 @@ class ChatDetailCubit extends Cubit<ChatDetailState> {
     }
   }
 
-  Future<void> deleteMessage(int conversationId, int messageId, String clientUuid) async {
-    if (isClosed) return;
-    final currentState = state;
-    if (currentState is! ChatDetailLoaded) return;
+Future<void> deleteMessage(int conversationId, int messageId, String clientUuid) async {
+  final currentState = state;
+  if (currentState is! ChatDetailLoaded) return;
 
-    final optimistic = currentState.messages
-        .where((msg) => msg.id != messageId && msg.clientUuid != clientUuid)
-        .toList();
+  // حفظ القائمة القديمة لحالة الفشل
+  final previousMessages = List<MessageModel>.from(currentState.messages);
 
-    emit(ChatDetailLoaded(
-      messages: optimistic,
-      canSend: currentState.canSend,
-      isSending: currentState.isSending,
-    ));
+  // تحديث واجهة المستخدم فوراً (حذف مؤقت)
+  final optimistic = currentState.messages
+      .where((msg) => msg.id != messageId && msg.clientUuid != clientUuid)
+      .toList();
 
-    try {
-      final result = await _chatRepository.deleteMessage(conversationId, messageId);
-      if (result is Failure<bool>) {
-        emit(ChatDetailError(result.message));
-        await fetchMessages(conversationId);
-      }
-    } catch (e) {
-      emit(ChatDetailError('فشل حذف الرسالة: ${e.toString()}'));
-      await fetchMessages(conversationId);
+  emit(ChatDetailLoaded(
+    messages: optimistic,
+    canSend: currentState.canSend,
+    isSending: currentState.isSending,
+  ));
+
+  try {
+    final result = await _chatRepository.deleteMessage(conversationId, messageId);
+
+    if (result is Success<bool>) {
+      // ✅ نجح الحذف، لا حاجة لفعل أي شيء (التحديث المؤقت صحيح)
+      dev.log('✅ Message deleted successfully');
+    } else if (result is Failure<bool>) {
+      // ❌ فشل الحذف: نعيد القائمة القديمة ونعرض خطأ
+      emit(ChatDetailLoaded(
+        messages: previousMessages,
+        canSend: currentState.canSend,
+        isSending: false,
+      ));
+      emit(ChatDetailError(result.message));
     }
+  } catch (e) {
+    // ❌ خطأ غير متوقع: نعيد القائمة القديمة
+    emit(ChatDetailLoaded(
+      messages: previousMessages,
+      canSend: currentState.canSend,
+      isSending: false,
+    ));
+    emit(ChatDetailError('فشل حذف الرسالة: ${e.toString()}'));
   }
+}
 
   Future<void> unsubscribe() async {
     if (_currentConversationId != null) {
