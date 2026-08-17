@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/core/widgets/cached_static_gif.dart';
 import 'package:sportifo_app/features/workout/data/models/exercise_model.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class ExerciseDetailsScreen extends StatefulWidget {
   final ExerciseModel exercise;
@@ -23,17 +24,17 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
     super.initState();
 
     setsController = TextEditingController(
-      text: widget.exercise.sets?.toString() ?? "",
+      text: widget.exercise.sets?.toString() ?? '',
     );
 
-    repsController = TextEditingController(text: widget.exercise.reps ?? "");
+    repsController = TextEditingController(text: widget.exercise.reps ?? '');
 
     durationController = TextEditingController(
-      text: widget.exercise.duration ?? "",
+      text: widget.exercise.duration ?? '',
     );
 
     orderController = TextEditingController(
-      text: widget.exercise.order?.toString() ?? "",
+      text: widget.exercise.order?.toString() ?? '',
     );
   }
 
@@ -104,7 +105,10 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
-            borderSide: BorderSide(color: AppColors.primaryBtn, width: 1.4),
+            borderSide: const BorderSide(
+              color: AppColors.primaryBtn,
+              width: 1.4,
+            ),
           ),
         ),
       ),
@@ -114,9 +118,11 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     final ex = widget.exercise;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: Colors.white,
+
       appBar: AppBar(
         title: Text(
           ex.name,
@@ -128,10 +134,12 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
         backgroundColor: Colors.white,
         foregroundColor: Colors.black87,
       ),
+
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
+            // Exercise GIF
             ClipRRect(
               borderRadius: BorderRadius.circular(18),
               child: Container(
@@ -140,12 +148,13 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
                   border: Border.all(color: Colors.grey.shade200),
                   borderRadius: BorderRadius.circular(18),
                 ),
-                child: CachedStaticGif(imageUrl: ex.gifUrl ?? ""),
+                child: CachedStaticGif(imageUrl: ex.gifUrl ?? ''),
               ),
             ),
 
             const SizedBox(height: 22),
 
+            // Exercise name
             Text(
               ex.name,
               style: const TextStyle(
@@ -157,6 +166,7 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
 
             const SizedBox(height: 8),
 
+            // Exercise description
             Text(
               ex.description,
               style: TextStyle(
@@ -168,6 +178,7 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
 
             const SizedBox(height: 24),
 
+            // Info message
             Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
@@ -185,17 +196,19 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
                       shape: BoxShape.circle,
                       border: Border.all(color: Colors.grey.shade200),
                     ),
-                    child: Icon(
+                    child: const Icon(
                       Icons.info_outline_rounded,
                       color: AppColors.primaryBtn,
                       size: 17,
                     ),
                   ),
+
                   const SizedBox(width: 12),
-                  const Expanded(
+
+                  Expanded(
                     child: Text(
-                      "Leave Sets and Reps empty to use the workout day defaults.",
-                      style: TextStyle(
+                      l10n.exerciseDefaultsInfo,
+                      style: const TextStyle(
                         fontSize: 12.5,
                         fontWeight: FontWeight.w600,
                         height: 1.4,
@@ -208,8 +221,9 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
 
             const SizedBox(height: 26),
 
+            // Section title
             Text(
-              "CUSTOM VALUES",
+              l10n.customValues,
               style: TextStyle(
                 fontSize: 11.5,
                 fontWeight: FontWeight.w800,
@@ -220,20 +234,23 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
 
             const SizedBox(height: 12),
 
+            // Custom Sets
             field(
-              "Custom Sets",
+              l10n.customSets,
               setsController,
               TextInputType.number,
-              "Example: 4",
+              l10n.exampleSets,
             ),
 
+            // Custom Reps
             field(
-              "Custom Reps",
+              l10n.customReps,
               repsController,
               TextInputType.text,
-              "Example: 12",
+              l10n.exampleReps,
             ),
 
+            // Use Day Defaults
             if (ex.sets != null || ex.reps != null)
               Align(
                 alignment: Alignment.centerRight,
@@ -243,29 +260,35 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
                     foregroundColor: AppColors.primaryBtn,
                   ),
                   icon: const Icon(Icons.restore_rounded, size: 17),
-                  label: const Text(
-                    "Use Day Defaults",
-                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
+                  label: Text(
+                    l10n.useDayDefaults,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 13,
+                    ),
                   ),
                 ),
               ),
 
+            // Duration
             field(
-              "Duration",
+              l10n.duration,
               durationController,
               TextInputType.text,
-              "Example: 30 sec",
+              l10n.exampleDuration,
             ),
 
+            // Order
             field(
-              "Order",
+              l10n.order,
               orderController,
               TextInputType.number,
-              "Exercise order",
+              l10n.exerciseOrder,
             ),
 
             const SizedBox(height: 16),
 
+            // Save button
             SizedBox(
               height: 54,
               child: ElevatedButton(
@@ -277,9 +300,9 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
                   ),
                 ),
                 onPressed: save,
-                child: const Text(
-                  "Save",
-                  style: TextStyle(
+                child: Text(
+                  l10n.save,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w800,
                     fontSize: 15,

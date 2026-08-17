@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/features/trainees/data/models/coach_plan_model.dart';
-import 'package:sportifo_app/features/trainees/presentation/widgets/trainee_circle.dart';
+import 'package:sportifo_app/features/trainees/presentation/widgets/trainee_card_horizontal.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart'; // تأكد من مسار الاستيراد الصحيح
 
 class TraineesGrid extends StatelessWidget {
   final List<CoachPlanModel> plans;
-  final ValueChanged<CoachPlanModel> onTraineeTap;
+  final Function(CoachPlanModel) onTraineeTap;
 
   const TraineesGrid({
     super.key,
@@ -12,70 +13,36 @@ class TraineesGrid extends StatelessWidget {
     required this.onTraineeTap,
   });
 
-  List<CoachPlanModel> get uniqueTrainees {
-    final Map<int, CoachPlanModel> latestPlans = {};
-
-    for (final plan in plans) {
-      final userId = plan.user?.id;
-
-      if (userId == null) {
-        continue;
-      }
-
-      final existingPlan = latestPlans[userId];
-
-      if (existingPlan == null) {
-        latestPlans[userId] = plan;
-        continue;
-      }
-
-      final existingDate = existingPlan.createdAt;
-      final currentDate = plan.createdAt;
-
-      if (currentDate != null &&
-          (existingDate == null || currentDate.isAfter(existingDate))) {
-        latestPlans[userId] = plan;
-      }
-    }
-
-    return latestPlans.values.toList();
-  }
-
   @override
   Widget build(BuildContext context) {
-    final trainees = uniqueTrainees;
-
-    if (trainees.isEmpty) {
-      return const Center(
+    final l10n = AppLocalizations.of(context)!;
+    if (plans.isEmpty) {
+      return Center(
         child: Text(
-          'No trainees found',
+          l10n.noTraineesFound,
           style: TextStyle(
-            color: Colors.black54,
-            fontSize: 15,
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: Colors.grey.shade500,
           ),
         ),
       );
     }
 
     return GridView.builder(
-      padding: const EdgeInsets.fromLTRB(20, 18, 20, 32),
-      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 22,
-        mainAxisSpacing: 2,
-        childAspectRatio: 0.82,
+        crossAxisCount: 2, // عمودين لملء الواجهة وجعل الكاردات عريضة وواضحة
+        crossAxisSpacing: 16, // المسافة الأفقية بين الكاردات
+        mainAxisSpacing: 16, // المسافة العمودية بين الكاردات
+        childAspectRatio: 1.6, // نسبة العرض للارتفاع لتناسب التصميم الأفقي
       ),
-      itemCount: trainees.length,
+      itemCount: plans.length,
       itemBuilder: (context, index) {
-        final plan = trainees[index];
-
-        return Center(
-          child: TraineeCircle(
-            plan: plan,
-            index: index,
-            onTap: () => onTraineeTap(plan),
-          ),
+        return TraineeCardHorizontal(
+          plan: plans[index],
+          index: index,
+          onTap: () => onTraineeTap(plans[index]),
         );
       },
     );

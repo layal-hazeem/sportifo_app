@@ -28,10 +28,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     switch (currentIndex) {
       case 0:
-        title = isCoach ? "Subscriptions" : l10n.progress;
+        title = isCoach ? l10n.sub : l10n.progress;
         break;
       case 1:
-        title = isCoach ? "Trainees" : l10n.myPlans;
+        title = isCoach ? l10n.trainees : l10n.myPlans;
         break;
       case 2:
       // 🚀 هون التعديل الأهم: خلينا الـ title = null في حالة الهوم

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class CreateDayBottomSheet extends StatefulWidget {
   final Function(String) onCreate;
@@ -22,13 +23,16 @@ class CreateDayBottomSheet extends StatefulWidget {
 class _CreateDayBottomSheetState extends State<CreateDayBottomSheet> {
   final controller = TextEditingController();
   final focusNode = FocusNode();
+
   bool hasText = false;
 
   @override
   void initState() {
     super.initState();
+
     controller.addListener(() {
       final value = controller.text.trim().isNotEmpty;
+
       if (value != hasText) {
         setState(() => hasText = value);
       }
@@ -44,6 +48,7 @@ class _CreateDayBottomSheetState extends State<CreateDayBottomSheet> {
 
   void _submit() {
     final value = controller.text.trim();
+
     if (value.isEmpty) return;
 
     widget.onCreate(value);
@@ -52,6 +57,8 @@ class _CreateDayBottomSheetState extends State<CreateDayBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Padding(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -95,9 +102,9 @@ class _CreateDayBottomSheetState extends State<CreateDayBottomSheet> {
 
             const SizedBox(height: 16),
 
-            const Text(
-              "Create Workout Day",
-              style: TextStyle(
+            Text(
+              l10n.createWorkoutDay,
+              style: const TextStyle(
                 fontSize: 19,
                 fontWeight: FontWeight.w800,
                 letterSpacing: -0.3,
@@ -107,7 +114,7 @@ class _CreateDayBottomSheetState extends State<CreateDayBottomSheet> {
             const SizedBox(height: 6),
 
             Text(
-              "Give your training day a name",
+              l10n.giveTrainingDayName,
               style: TextStyle(
                 color: Colors.grey.shade600,
                 fontSize: 13,
@@ -126,7 +133,7 @@ class _CreateDayBottomSheetState extends State<CreateDayBottomSheet> {
                 fontWeight: FontWeight.w600,
               ),
               decoration: InputDecoration(
-                hintText: "Example: Chest Day",
+                hintText: l10n.exampleChestDay,
                 hintStyle: TextStyle(
                   color: Colors.grey.shade400,
                   fontWeight: FontWeight.w500,
@@ -148,7 +155,7 @@ class _CreateDayBottomSheetState extends State<CreateDayBottomSheet> {
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide(
+                  borderSide: const BorderSide(
                     color: AppColors.primaryBtn,
                     width: 1.4,
                   ),
@@ -173,9 +180,9 @@ class _CreateDayBottomSheetState extends State<CreateDayBottomSheet> {
                     borderRadius: BorderRadius.circular(16),
                   ),
                 ),
-                child: const Text(
-                  "Create Day",
-                  style: TextStyle(
+                child: Text(
+                  l10n.createDayButton,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w800,
                     fontSize: 15,
