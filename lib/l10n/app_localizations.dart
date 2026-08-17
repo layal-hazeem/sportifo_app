@@ -1841,6 +1841,47 @@ abstract class AppLocalizations {
   /// **'Maintain'**
   String get maintainGoal;
 
+  /// No description provided for @exercisesList.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercises List'**
+  String get exercisesList;
+
+  /// No description provided for @total.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get total;
+
+  /// No description provided for @completedUppercase.
+  ///
+  /// In en, this message translates to:
+  /// **'COMPLETED'**
+  String get completedUppercase;
+
+  /// No description provided for @noDaysCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'No days created yet.'**
+  String get noDaysCreated;
+
+  /// No description provided for @workoutSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'WORKOUT SUMMARY'**
+  String get workoutSummary;
+
+  /// No description provided for @workoutCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Completed'**
+  String get workoutCompleted;
+
+  /// No description provided for @sessionSummaryFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Session summary for'**
+  String get sessionSummaryFor;
   /// No description provided for @createYourOwnPlan.
   ///
   /// In en, this message translates to:
@@ -2066,6 +2107,38 @@ abstract class AppLocalizations {
   /// No description provided for @duration.
   ///
   /// In en, this message translates to:
+  /// **'DURATION'**
+  String get duration;
+
+  /// No description provided for @exercises.
+  ///
+  /// In en, this message translates to:
+  /// **'EXERCISES'**
+  String get exercises;
+
+  /// No description provided for @performanceSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'PERFORMANCE SUMMARY'**
+  String get performanceSummary;
+
+  /// No description provided for @set.
+  ///
+  /// In en, this message translates to:
+  /// **'Set'**
+  String get set;
+
+  /// No description provided for @skipped.
+  ///
+  /// In en, this message translates to:
+  /// **'Skipped'**
+  String get skipped;
+
+  /// No description provided for @min.
+  ///
+  /// In en, this message translates to:
+  /// **'Min'**
+  String get min;
   /// **'Duration'**
   String get duration;
 
@@ -2105,6 +2178,149 @@ abstract class AppLocalizations {
   /// **'Reps'**
   String get reps;
 
+  /// No description provided for @noSetsLogged.
+  ///
+  /// In en, this message translates to:
+  /// **'No sets logged'**
+  String get noSetsLogged;
+
+  /// No description provided for @done.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get done;
+
+  /// No description provided for @of_word.
+  ///
+  /// In en, this message translates to:
+  /// **'OF'**
+  String get of_word;
+
+  /// No description provided for @completeSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete Set'**
+  String get completeSet;
+
+  /// No description provided for @remaining.
+  ///
+  /// In en, this message translates to:
+  /// **'REMAINING'**
+  String get remaining;
+
+  /// No description provided for @logCompletedSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Log Completed Set'**
+  String get logCompletedSet;
+
+  /// No description provided for @new_word.
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get new_word;
+
+  /// No description provided for @yourPersonalCoach.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Personal Coach'**
+  String get yourPersonalCoach;
+
+  /// No description provided for @openDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Duration'**
+  String get openDuration;
+
+  /// No description provided for @months.
+  ///
+  /// In en, this message translates to:
+  /// **'Months'**
+  String get months;
+
+  /// No description provided for @daysPerWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Days / Week'**
+  String get daysPerWeek;
+
+  /// No description provided for @wks.
+  ///
+  /// In en, this message translates to:
+  /// **'Wks'**
+  String get wks;
+
+  /// No description provided for @viewDays.
+  ///
+  /// In en, this message translates to:
+  /// **'View Days'**
+  String get viewDays;
+
+  /// No description provided for @coachPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Coach Plan'**
+  String get coachPlan;
+
+  /// No description provided for @noCoachPlanFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No Coach Plan Found'**
+  String get noCoachPlanFound;
+
+  /// No description provided for @noCoachPlanSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Get a personalized workout routine from our expert coaches.'**
+  String get noCoachPlanSub;
+
+  /// No description provided for @exploreCoaches.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore Coaches'**
+  String get exploreCoaches;
+
+  /// No description provided for @noCustomPlans.
+  ///
+  /// In en, this message translates to:
+  /// **'No Custom Plans Yet'**
+  String get noCustomPlans;
+
+  /// No description provided for @noCustomPlansSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Build your own custom plan and train on your schedule.'**
+  String get noCustomPlansSub;
+
+  /// No description provided for @createCustomPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Custom Plan'**
+  String get createCustomPlan;
+
+  /// No description provided for @saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get saved;
+
+  /// No description provided for @noSavedPlans.
+  ///
+  /// In en, this message translates to:
+  /// **'No Saved Plans Yet'**
+  String get noSavedPlans;
+
+  /// No description provided for @noSavedPlansSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Plans you save from the platform library will show up here.'**
+  String get noSavedPlansSub;
+
+  /// No description provided for @exploreFreePlans.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore Sportifo Plans'**
+  String get exploreFreePlans;
   /// No description provided for @strength.
   ///
   /// In en, this message translates to:

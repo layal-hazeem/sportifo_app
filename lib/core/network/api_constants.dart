@@ -26,7 +26,6 @@ class ApiConstants {
   static const String createPlan = "plans";
   static const String getUserPlans = "plans/user";
 
-  // 🔥 الباك إند فصل الـ endpoint الواحد لتلاتة منفصلين (كل تاب بريكويست لحاله)
   static const String plansSubscribedCoach = "plans/subscribed-coach";
   static const String plansSelf = "plans/self";
   static const String plansPlatformSaved = "plans/platform/saved";

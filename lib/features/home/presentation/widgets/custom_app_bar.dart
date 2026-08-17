@@ -6,7 +6,7 @@ import '../../../../core/widgets/wave_app_bar.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final int currentIndex;
-  final String userName;
+  final String userName; // 🔥 الاسم موجود هون وجاهز
   final bool isCoach;
 
   const CustomAppBar({
@@ -23,7 +23,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    String title = "";
+    String? title; // 🔥 خليناها تقبل null
     List<Widget>? actions;
 
     switch (currentIndex) {
@@ -34,7 +34,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         title = isCoach ? l10n.trainees : l10n.myPlans;
         break;
       case 2:
-        title = l10n.welcomeBack;
+      // 🚀 هون التعديل الأهم: خلينا الـ title = null في حالة الهوم
+      // مشان الـ WaveAppBar ينفذ الـ UI الترحيبي الخاص اللي بياخد الاسم الممرر
+        title = null;
         actions = [
           IconButton(
             icon: const Icon(Icons.chat, color: Colors.white),
@@ -64,12 +66,17 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           scale: Tween<double>(begin: 0.8, end: 1.0).animate(
             CurvedAnimation(parent: animation, curve: Curves.easeOutBack),
           ),
-          child: FadeTransition(opacity: animation, child: child),
+          child: FadeTransition(
+            opacity: animation,
+            child: child,
+          ),
         );
       },
       child: WaveAppBar(
         key: ValueKey<int>(currentIndex),
         title: title,
+        userName: userName, // 🔥 مررنا الاسم للـ WaveAppBar
+        currentIndex: currentIndex, // 🔥 مررنا الـ Index ليفهم الـ WaveAppBar إننا بالهوم
         actions: actions,
         showBackButton: false,
         leading: IconButton(

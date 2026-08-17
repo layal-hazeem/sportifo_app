@@ -6,6 +6,7 @@ import '../theme/app_colors.dart';
 
 class WaveAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
+  final String? userName; // 🔥 المتغير اللي رح يحمل اسم المستخدم
   final int? currentIndex;
   final bool? isCoach;
   final List<Widget>? actions;
@@ -15,42 +16,87 @@ class WaveAppBar extends StatelessWidget implements PreferredSizeWidget {
   const WaveAppBar({
     super.key,
     this.title,
+    this.userName, // 🔥
     this.currentIndex,
     this.isCoach,
     this.actions,
     this.leading,
     this.showBackButton = true,
   });
-
-  String _getAppBarTitle() {
+  Widget _getAppBarTitleWidget() {
     if (title != null) {
-      return title!;
+      return Text(
+        title!,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 25,
+          fontWeight: FontWeight.bold,
+        ),
+        overflow: TextOverflow.ellipsis,
+      );
     }
+
     final String? role = getIt<SharedPreferences>().getString('user_role');
     final bool userIsCoach = isCoach ?? (role == 'coach');
+
+    String defaultTitle = "Sportifo";
+
     switch (currentIndex) {
       case 0:
-        return (!userIsCoach) ? "Subscriptions" : "Progress";
+        defaultTitle = (!userIsCoach) ? "Subscriptions" : "Progress";
+        break;
       case 1:
-        return (!userIsCoach) ? "Trainees" :"My Plans";
+        defaultTitle = (!userIsCoach) ? "Trainees" : "My Plans";
+        break;
       case 2:
-        return "Home";
+      // 🚀 جنب بعض، بدون "to Sportifo"، حجم أكبر شوي، نفس الحجم، والاسم أغمق وأبرز
+        final name = (userName != null && userName!.isNotEmpty) ? userName! : "Champion";
+        return RichText(
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          text: TextSpan(
+            text: "Welcome, ",
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.85),
+              fontSize: 16, // حجم أكبر شوي
+              fontWeight: FontWeight.w600,
+            ),
+            children: [
+              TextSpan(
+                text: name,
+                style: const TextStyle(
+                  color: Colors.white, // أبيض صافي وبارز
+                  fontSize: 18, // نفس الحجم
+                  fontWeight: FontWeight.w900, // أغمق وأعرض (أبرز)
+                ),
+              ),
+            ],
+          ),
+        );
       case 3:
-        return "Workouts";
+        defaultTitle = "Workouts";
+        break;
       case 4:
-        return "Chat";
-      default:
-        return "Sportifo";
+        defaultTitle = "Chat";
+        break;
     }
-  }
 
+    return Text(
+      defaultTitle,
+      style: const TextStyle(
+        color: Colors.white,
+        fontSize: 25,
+        fontWeight: FontWeight.bold,
+      ),
+      overflow: TextOverflow.ellipsis,
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // 1. رسم الموجة
         ClipPath(
-          clipper: WaveClipper(), // تأكدي أن هذا الاسم مطابق للكلاس أدناه
+          clipper: WaveClipper(),
           child: Container(
             height: 150,
             decoration: const BoxDecoration(
@@ -58,24 +104,25 @@ class WaveAppBar extends StatelessWidget implements PreferredSizeWidget {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  AppColors.primaryBtn, // البرتقالي الأساسي
+                  AppColors.primaryBtn,
                   Color(0xFFFF9D42),
                 ],
               ),
             ),
           ),
         ),
-        // 2. المحتوى
         SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5), // حواف مريحة
             child: SizedBox(
-              height: 60, // تحديد ارتفاع منطقة الأزرار
+              height: 65,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Expanded(
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         if (leading != null)
                           leading!
@@ -90,15 +137,7 @@ class WaveAppBar extends StatelessWidget implements PreferredSizeWidget {
                           ),
                         const SizedBox(width: 5),
                         Expanded(
-                          child: Text(
-                            _getAppBarTitle(),
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                          child: _getAppBarTitleWidget(), // 🔥 استدعاء واجهة النصوص هنا
                         ),
                       ],
                     ),
@@ -117,7 +156,6 @@ class WaveAppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(150);
 }
 
-// تأكدي أن هذا الكلاس خارج حدود كلاس WaveAppBar
 class WaveClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {

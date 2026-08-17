@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
-
+import '../../../../l10n/app_localizations.dart';
 class TimedSetInputCard extends StatefulWidget {
   final int currentSet;
   final int totalSets;
@@ -148,6 +148,7 @@ class _TimedSetInputCardState extends State<TimedSetInputCard> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     double progress = _targetSeconds > 0 ? (_remainingSeconds / _targetSeconds) : 0;
 
     return Container(
@@ -173,14 +174,14 @@ class _TimedSetInputCardState extends State<TimedSetInputCard> {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
-                  "SET ${widget.currentSet} /${widget.totalSets}",
+                  "${l10n.set.toUpperCase()} ${widget.currentSet} /${widget.totalSets}",
                   style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w900, color: AppColors.primaryBtn),
                 ),
               ),
               IconButton(
                 icon: const Icon(Icons.skip_next_rounded, color: AppColors.hintText, size: 22),
                 onPressed: widget.isPaused || widget.isLoading ? null : widget.onSkipSet,
-                tooltip: "Skip Set",
+                tooltip: l10n.skip,
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
               ),
@@ -218,7 +219,7 @@ class _TimedSetInputCardState extends State<TimedSetInputCard> {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    "REMAINING",
+                    l10n.remaining,
                     style: TextStyle(color: Colors.grey.shade400, fontSize: 9, fontWeight: FontWeight.w800, letterSpacing: 1.0),
                   ),
                 ],
@@ -264,7 +265,7 @@ class _TimedSetInputCardState extends State<TimedSetInputCard> {
               ),
               child: widget.isLoading
                   ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(color: AppColors.primaryBtn, strokeWidth: 2))
-                  : const Text("Log Completed Set", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900)),
+                  : Text(l10n.logCompletedSet, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w900)),
             ),
           ),
         ],

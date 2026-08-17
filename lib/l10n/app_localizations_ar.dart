@@ -914,6 +914,73 @@ class AppLocalizationsAr extends AppLocalizations {
   String get maintainGoal => 'ثبات';
 
   @override
+  String get exercisesList => 'قائمة التمارين';
+
+  @override
+  String get total => 'المجموع';
+
+  @override
+  String get completedUppercase => 'مكتمل';
+
+  @override
+  String get noDaysCreated => 'لم يتم إضافة أيام بعد.';
+
+  @override
+  String get workoutSummary => 'ملخص التمرين';
+
+  @override
+  String get workoutCompleted => 'اكتمل التمرين';
+
+  @override
+  String get sessionSummaryFor => 'ملخص جلسة';
+
+  @override
+  String get duration => 'المدة';
+
+  @override
+  String get exercises => 'التمارين';
+
+  @override
+  String get performanceSummary => 'ملخص الأداء';
+
+  @override
+  String get set => 'جولة';
+
+  @override
+  String get skipped => 'تم التخطي';
+
+  @override
+  String get min => 'دقيقة';
+
+  @override
+  String get reps => 'عدة';
+
+  @override
+  String get noSetsLogged => 'لم يتم تسجيل أي جولة';
+
+  @override
+  String get done => 'تم';
+
+  @override
+  String get of_word => 'من';
+
+  @override
+  String get completeSet => 'إكمال الجولة';
+
+  @override
+  String get remaining => 'المتبقي';
+
+  @override
+  String get logCompletedSet => 'تسجيل الجولة';
+
+  @override
+  String get new_word => 'جديد';
+
+  @override
+  String get yourPersonalCoach => 'مدربك الشخصي';
+
+  @override
+  String get openDuration => 'مفتوح المدة';
   String get createYourOwnPlan => 'أنشئ خطتك الخاصة';
 
   @override
@@ -1040,6 +1107,46 @@ class AppLocalizationsAr extends AppLocalizations {
   String get months => 'أشهر';
 
   @override
+  String get daysPerWeek => 'أيام / أسبوع';
+
+  @override
+  String get wks => 'أسابيع';
+
+  @override
+  String get viewDays => 'عرض الأيام';
+
+  @override
+  String get coachPlan => 'خطة المدرب';
+
+  @override
+  String get noCoachPlanFound => 'لا توجد خطة مدرب';
+
+  @override
+  String get noCoachPlanSub => 'احصل على روتين تمرين مخصص من مدربينا الخبراء.';
+
+  @override
+  String get exploreCoaches => 'استكشف المدربين';
+
+  @override
+  String get noCustomPlans => 'لا توجد خطط مخصصة';
+
+  @override
+  String get noCustomPlansSub => 'قم ببناء خطتك المخصصة وتدرب حسب جدولك.';
+
+  @override
+  String get createCustomPlan => 'إنشاء خطة';
+
+  @override
+  String get saved => 'المحفوظات';
+
+  @override
+  String get noSavedPlans => 'لا توجد خطط محفوظة';
+
+  @override
+  String get noSavedPlansSub => 'الخطط التي تحفظها من المكتبة ستظهر هنا.';
+
+  @override
+  String get exploreFreePlans => 'استكشف خطط سبورتيفو';
   String get unknownAthlete => 'اللاعب غير معروف';
 
   @override
