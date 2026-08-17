@@ -2139,8 +2139,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Min'**
   String get min;
-  /// **'Duration'**
-  String get duration;
 
   /// No description provided for @month.
   ///
@@ -2231,12 +2229,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open Duration'**
   String get openDuration;
-
-  /// No description provided for @months.
-  ///
-  /// In en, this message translates to:
-  /// **'Months'**
-  String get months;
 
   /// No description provided for @daysPerWeek.
   ///
@@ -2417,12 +2409,6 @@ abstract class AppLocalizations {
   /// **'Create Day'**
   String get createDayButton;
 
-  /// No description provided for @exercises.
-  ///
-  /// In en, this message translates to:
-  /// **'Exercises'**
-  String get exercises;
-
   /// No description provided for @noExercisesAddedYet.
   ///
   /// In en, this message translates to:
@@ -2573,11 +2559,6 @@ abstract class AppLocalizations {
   /// **'Save Exercise Settings'**
   String get saveExerciseSettings;
 
-  /// No description provided for @min.
-  ///
-  /// In en, this message translates to:
-  /// **'min'**
-  String get min;
 
   /// No description provided for @sec.
   ///

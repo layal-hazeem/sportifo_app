@@ -1068,9 +1068,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get expired => 'Expired';
 
   @override
-  String get duration => 'Duration';
-
-  @override
   String get month => 'month';
 
   @override
@@ -1114,9 +1111,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get openDuration => 'Open Duration';
-
-  @override
-  String get months => 'Months';
 
   @override
   String get daysPerWeek => 'Days / Week';
@@ -1207,9 +1201,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get createDayButton => 'Create Day';
 
   @override
-  String get exercises => 'Exercises';
-
-  @override
   String get noExercisesAddedYet => 'No exercises added yet';
 
   @override
@@ -1283,9 +1274,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get saveExerciseSettings => 'Save Exercise Settings';
-
-  @override
-  String get min => 'min';
 
   @override
   String get sec => 'sec';

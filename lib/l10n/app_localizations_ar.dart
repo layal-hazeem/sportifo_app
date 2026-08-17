@@ -1098,9 +1098,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get expired => 'منهية';
 
   @override
-  String get duration => 'المدة';
-
-  @override
   String get month => 'شهر';
 
   @override
@@ -1156,9 +1153,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sets => 'مجموعات';
 
   @override
-  String get reps => 'تكرارات';
-
-  @override
   String get strength => 'مقاومة';
 
   @override
@@ -1205,9 +1199,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get createDayButton => 'إنشاء اليوم';
-
-  @override
-  String get exercises => 'تمارين';
 
   @override
   String get noExercisesAddedYet => 'لم تتم إضافة أي تمارين بعد';
@@ -1283,9 +1274,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get saveExerciseSettings => 'حفظ إعدادات التمرين';
-
-  @override
-  String get min => 'د';
 
   @override
   String get sec => 'ث';
