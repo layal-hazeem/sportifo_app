@@ -231,7 +231,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get getStarted => 'إبدأ';
 
   @override
-  String get termsText => 'By continuing, you agree to our Terms & Conditions and Privacy Policy';
+  String get termsText => 'بالتسجيل، فإنك توافق على شروط الاستخدام و سياسة الخصوصية';
 
   @override
   String get onboardingTitle1 => 'بيتك هو ناديك';
@@ -446,7 +446,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get subscriptions => 'الاشتراكات';
 
   @override
-  String get retry => 'أعد المحاولة';
+  String get retry => 'إعادة محاولة';
 
   @override
   String get pendingApproval => 'بانتظار الموافقة';
@@ -702,4 +702,70 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get endedLastMonth => 'الاشتراكات التي انتهت خلال الشهر الماضي';
+
+  @override
+  String get today => 'اليوم';
+
+  @override
+  String get yesterday => 'أمس';
+
+  @override
+  String get messageDetails => 'تفاصيل الرسالة';
+
+  @override
+  String get sentAt => 'وقت الإرسال';
+
+  @override
+  String get deliveredAt => 'وقت التوصيل';
+
+  @override
+  String get readAt => 'وقت القراءة';
+
+  @override
+  String get deleteMessageTitle => 'حذف الرسالة';
+
+  @override
+  String get deleteMessageConfirmation => 'هل أنت متأكد من حذف هذه الرسالة؟ لا يمكن التراجع عن هذا الإجراء.';
+
+  @override
+  String get ok => 'حسناً';
+
+  @override
+  String get noDetails => 'لا توجد تفاصيل';
+
+  @override
+  String get max5Images => 'يمكنك اختيار 5 صور كحد أقصى';
+
+  @override
+  String get errorUserNotFound => 'خطأ: لم يتم تحديد المستخدم الحالي';
+
+  @override
+  String get noMessagesYet => 'لا توجد رسائل حتى الآن';
+
+  @override
+  String get startConversation => 'ابدأ المحادثة الآن';
+
+  @override
+  String get trainerOnlyCanSend => 'يمكن للمدرب فقط إرسال رسائل في هذا الاشتراك';
+
+  @override
+  String get you => 'أنت';
+
+  @override
+  String get chats => 'المحادثات';
+
+  @override
+  String get noConversations => 'لا توجد محادثات';
+
+  @override
+  String get messageDeleted => 'تم حذف هذه الرسالة';
+
+  @override
+  String get sendingMessage => 'جاري الإرسال...';
+
+  @override
+  String get typeMessage => 'اكتب رسالة...';
+
+  @override
+  String get cannotSend => 'لا يمكنك الإرسال';
 }

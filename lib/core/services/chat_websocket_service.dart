@@ -1,12 +1,18 @@
 import 'dart:async';
-import 'dart:convert'; // 🔥 ADD THIS
+import 'dart:convert';
 import 'package:dart_pusher_channels/dart_pusher_channels.dart';
 import 'package:sportifo_app/core/storage/local_storage.dart';
 import 'package:sportifo_app/core/di/service_locator.dart';
 import 'dart:developer' as dev;
 
-typedef OnEventCallback = void Function(String eventName, Map<String, dynamic> data);
-typedef OnConnectionChange = void Function(String currentState);
+/// الحدث يلي بيوصل من الـ WebSocket
+class ChatWebSocketEvent {
+  final String eventName;
+  final Map<String, dynamic> data;
+  final int conversationId;
+
+  ChatWebSocketEvent(this.eventName, this.data, this.conversationId);
+}
 
 class ChatWebSocketService {
   static final ChatWebSocketService _instance = ChatWebSocketService._internal();
@@ -14,32 +20,32 @@ class ChatWebSocketService {
   ChatWebSocketService._internal();
 
   PusherChannelsClient? _client;
-  
-  Channel? _currentChannel;
-  PresenceChannel? _presenceChannel;
-  
+
+  final Map<int, Channel> _channels = {};
+  final Map<int, StreamSubscription> _eventSubs = {};
+  final Map<int, int> _refCount = {};
+
   final LocalStorage _localStorage = getIt<LocalStorage>();
 
   bool _isConnected = false;
-  String? _currentChannelName;
-  OnEventCallback? _onEvent;
-  OnConnectionChange? _onConnectionChange;
+  bool _isInitialized = false;
 
-  StreamSubscription? _connectionSub;
-  StreamSubscription? _eventSub;
+  // 🔥 Broadcast Streams — أكتر من مستمع بيقدر يسمع
+  final _eventController = StreamController<ChatWebSocketEvent>.broadcast();
+  final _connectionController = StreamController<String>.broadcast();
+
+  Stream<ChatWebSocketEvent> get events => _eventController.stream;
+  Stream<String> get connectionState => _connectionController.stream;
 
   static const String appKey = 'xciiem3ixu10pjwb6pbr';
   static const String host = '192.168.1.106';
   static const int wsPort = 8080;
 
-  Future<void> init({
-    required OnEventCallback onEvent,
-    required OnConnectionChange onConnectionChange,
-  }) async {
-    if (_client != null) return;
+  bool get isConnected => _isConnected;
 
-    _onEvent = onEvent;
-    _onConnectionChange = onConnectionChange;
+  Future<void> init() async {
+    if (_isInitialized) return;
+    _isInitialized = true;
 
     final options = PusherChannelsOptions.fromHost(
       scheme: 'ws',
@@ -53,17 +59,17 @@ class ChatWebSocketService {
       connectionErrorHandler: (exception, trace, refresh) {
         dev.log('❌ WebSocket Error: $exception');
         _isConnected = false;
-        _onConnectionChange?.call('ERROR');
+        _connectionController.add('ERROR');
         refresh();
       },
     );
 
-    _connectionSub = _client!.onConnectionEstablished.listen((_) {
+    _client!.onConnectionEstablished.listen((_) {
       _isConnected = true;
-      _onConnectionChange?.call('CONNECTED');
+      _connectionController.add('CONNECTED');
       dev.log('🟢 WebSocket Connected');
-      if (_currentChannel != null) {
-        _currentChannel!.subscribeIfNotUnsubscribed();
+      for (final entry in _channels.entries.toList()) {
+        entry.value.subscribe();
       }
     });
 
@@ -72,54 +78,56 @@ class ChatWebSocketService {
 
   Future<void> subscribeToChannel(int conversationId) async {
     final presenceName = 'presence-conversation.$conversationId';
-    
-    if (_currentChannelName == presenceName) return;
+
+    if (_channels.containsKey(conversationId)) {
+      _refCount[conversationId] = (_refCount[conversationId] ?? 1) + 1;
+      dev.log('📡 RefCount for $conversationId: ${_refCount[conversationId]}');
+      return;
+    }
     if (_client == null) return;
 
     final token = _localStorage.getToken() ?? '';
 
     try {
-      dev.log('🔐 Trying presence channel: $presenceName');
-      
-      _presenceChannel = _client!.presenceChannel(
+      dev.log('🔐 Subscribing to: $presenceName');
+
+      final presenceChannel = _client!.presenceChannel(
         presenceName,
-        authorizationDelegate: EndpointAuthorizableChannelTokenAuthorizationDelegate
-            .forPresenceChannel(
-          authorizationEndpoint: Uri.parse('http://$host:8000/broadcasting/auth'),
+        authorizationDelegate:
+            EndpointAuthorizableChannelTokenAuthorizationDelegate
+                .forPresenceChannel(
+          authorizationEndpoint:
+              Uri.parse('http://$host:8000/broadcasting/auth'),
           headers: {
             'Authorization': 'Bearer $token',
             'Accept': 'application/json',
           },
         ),
       );
-      
-      _currentChannel = _presenceChannel;
-      
-      _eventSub = _currentChannel!.bindToAll().listen((event) {
-        _handleEvent(event, presenceName);
+
+      final sub = presenceChannel.bindToAll().listen((event) {
+        _handleEvent(event, conversationId);
       });
-      
-      _currentChannel!.subscribe();
-      _currentChannelName = presenceName;
+
+      presenceChannel.subscribe();
+      _channels[conversationId] = presenceChannel;
+      _eventSubs[conversationId] = sub;
+      _refCount[conversationId] = 1;
+
       dev.log('📡 Subscribed to PRESENCE: $presenceName');
-      
     } catch (e) {
       dev.log('❌ Presence channel failed: $e');
     }
   }
 
-  // 🔥🔥🔥 FIXED METHOD - Handle String JSON events
-  void _handleEvent(ChannelReadEvent event, String channelName) {
+  void _handleEvent(ChannelReadEvent event, int conversationId) {
     dev.log('📩 RAW EVENT: ${event.name}');
-    
+
     Map<String, dynamic> eventData;
-    
-    // Handle Map data directly
+
     if (event.data is Map<String, dynamic>) {
       eventData = event.data as Map<String, dynamic>;
-    } 
-    // Handle JSON String data (THIS WAS THE MISSING PART!)
-    else if (event.data is String) {
+    } else if (event.data is String) {
       try {
         final parsed = jsonDecode(event.data as String);
         if (parsed is Map<String, dynamic>) {
@@ -132,30 +140,51 @@ class ChatWebSocketService {
         dev.log('❌ Failed to parse JSON: $e');
         return;
       }
-    } 
-    else {
+    } else {
       dev.log('⚠️ Unknown data type: ${event.data.runtimeType}');
       return;
     }
-    
+
     dev.log('✅ Event processed: ${event.name}');
-    _onEvent?.call(event.name, eventData);
+    _eventController.add(ChatWebSocketEvent(event.name, eventData, conversationId));
   }
 
-  Future<void> unsubscribeFromChannel() async {
-    _currentChannel?.unsubscribe();
-    await _eventSub?.cancel();
-    _eventSub = null;
-    _currentChannel = null;
-    _presenceChannel = null;
-    _currentChannelName = null;
-    dev.log('🔌 Unsubscribed');
+  Future<void> unsubscribeFromChannel(int? conversationId) async {
+    if (conversationId == null) {
+      for (final sub in _eventSubs.values) {
+        await sub.cancel();
+      }
+      for (final ch in _channels.values) {
+        ch.unsubscribe();
+      }
+      _eventSubs.clear();
+      _channels.clear();
+      _refCount.clear();
+      dev.log('🔌 Unsubscribed from ALL channels');
+      return;
+    }
+
+    final currentCount = _refCount[conversationId] ?? 0;
+    if (currentCount <= 1) {
+      _eventSubs[conversationId]?.cancel();
+      _channels[conversationId]?.unsubscribe();
+      _eventSubs.remove(conversationId);
+      _channels.remove(conversationId);
+      _refCount.remove(conversationId);
+      dev.log('🔌 Unsubscribed from channel: $conversationId');
+    } else {
+      _refCount[conversationId] = currentCount - 1;
+      dev.log('📡 RefCount for $conversationId: ${_refCount[conversationId]}');
+    }
   }
 
   Future<void> sendTypingEvent(int conversationId, int userId) async {
-    if (!_isConnected || _presenceChannel == null) return;
+    if (!_isConnected) return;
+    final channel = _channels[conversationId];
+    if (channel is! PresenceChannel) return;
+
     try {
-      _presenceChannel!.trigger(
+      channel.trigger(
         eventName: 'client-typing',
         data: {'user_id': userId},
       );
@@ -165,16 +194,21 @@ class ChatWebSocketService {
   }
 
   Future<void> disconnect() async {
-    await _connectionSub?.cancel();
-    await _eventSub?.cancel();
+    await _eventController.close();
+    await _connectionController.close();
+    for (final sub in _eventSubs.values) {
+      await sub.cancel();
+    }
+    for (final ch in _channels.values) {
+      ch.unsubscribe();
+    }
     _client?.dispose();
     _client = null;
     _isConnected = false;
-    _currentChannel = null;
-    _presenceChannel = null;
-    _currentChannelName = null;
-    dev.log('🔌 Disconnected');
+    _isInitialized = false;
+    _channels.clear();
+    _eventSubs.clear();
+    _refCount.clear();
+    dev.log('🔌 Global Disconnected');
   }
-
-  bool get isConnected => _isConnected;
 }

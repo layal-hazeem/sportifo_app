@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class MessageInputField extends StatelessWidget {
   final TextEditingController controller;
@@ -7,7 +9,7 @@ class MessageInputField extends StatelessWidget {
   final VoidCallback onSend;
   final ValueChanged<String>? onChanged;
   final String? disabledReason;
-  final VoidCallback? onImageTap; // 🔥 جديد
+  final VoidCallback? onImageTap;
 
   const MessageInputField({
     Key? key,
@@ -17,11 +19,13 @@ class MessageInputField extends StatelessWidget {
     this.isLoading = false,
     this.onChanged,
     this.disabledReason,
-    this.onImageTap, // 🔥 جديد
+    this.onImageTap,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
@@ -44,13 +48,13 @@ class MessageInputField extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 margin: const EdgeInsets.only(bottom: 8),
                 decoration: BoxDecoration(
-                  color: Colors.orange.withOpacity(0.08),
+                  color: const Color(0xFFF57C00),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
                   disabledReason!,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.orange, fontSize: 12),
+                  style: const TextStyle(color: Colors.white, fontSize: 12),
                 ),
               ),
             Row(
@@ -60,10 +64,10 @@ class MessageInputField extends StatelessWidget {
                   icon: Icon(
                     Icons.image,
                     color: enabled && !isLoading
-                        ? const Color(0xFFFF9800)
+                        ? const Color(0xFFF57C00)
                         : Colors.grey.shade400,
                   ),
-                  onPressed: enabled && !isLoading ? onImageTap : null, // 🔥 ربط
+                  onPressed: enabled && !isLoading ? onImageTap : null,
                 ),
                 Expanded(
                   child: TextField(
@@ -76,8 +80,8 @@ class MessageInputField extends StatelessWidget {
                     onSubmitted: (_) => enabled && !isLoading ? onSend() : null,
                     decoration: InputDecoration(
                       hintText: isLoading
-                          ? 'جاري الإرسال...'
-                          : (enabled ? 'اكتب رسالة...' : 'لا يمكنك الإرسال'),
+                          ? l10n.sendingMessage
+                          : (enabled ? l10n.typeMessage : l10n.cannotSend),
                       hintStyle: TextStyle(color: Colors.grey.shade400),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(24),
@@ -100,7 +104,7 @@ class MessageInputField extends StatelessWidget {
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       color: enabled && !isLoading
-                          ? const Color(0xFFFF9800)
+                          ? const Color(0xFFF57C00)
                           : Colors.grey.shade300,
                       shape: BoxShape.circle,
                     ),

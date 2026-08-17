@@ -8,12 +8,14 @@ class ConversationModel {
   final ParticipantModel otherParticipant;
   final MessageModel? lastMessage;
   final DateTime lastMessageAt;
+  final String? subscriptionType;
 
   ConversationModel({
     required this.id,
     required this.otherParticipant,
     required this.lastMessage,
     required this.lastMessageAt,
+    this.subscriptionType,
   });
 
   factory ConversationModel.fromJson(Map<String, dynamic> json) {
@@ -37,16 +39,32 @@ class ConversationModel {
           ParticipantModel.fromJson(json['other_participant'] ?? {}),
       lastMessage: lastMsg,
       lastMessageAt: parseTime,
+      subscriptionType: json['subscription_type']?.toString(),
     );
   }
 
-
+ConversationModel copyWith({
+  int? id,
+  ParticipantModel? otherParticipant,
+  MessageModel? lastMessage,
+  DateTime? lastMessageAt,
+  String? subscriptionType,
+}) {
+  return ConversationModel(
+    id: id ?? this.id,
+    otherParticipant: otherParticipant ?? this.otherParticipant,
+    lastMessage: lastMessage ?? this.lastMessage,
+    lastMessageAt: lastMessageAt ?? this.lastMessageAt,
+    subscriptionType: subscriptionType ?? this.subscriptionType,
+  );
+}
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'other_participant': otherParticipant.toJson(),
       'last_message': lastMessage?.toJson(),
       'last_message_at': lastMessageAt.toIso8601String(),
+      'subscription_type': subscriptionType,
     };
   }
 

@@ -390,7 +390,7 @@ case AppRoutes.chatDetail:
           conversationId: args['conversationId'] as int,
           otherParticipantName: args['otherParticipantName'] as String,
           otherParticipantImage: args['otherParticipantImage'] as String?,
-          canSend: args['canSend'] as bool? ?? true,
+          subscriptionType: args['subscriptionType'] as String?, // ← جديد
         ),
       ),
     );
@@ -401,7 +401,7 @@ case AppRoutes.chatDetail:
         child: ChatDetailScreen(
           conversationId: args,
           otherParticipantName: 'Unknown',
-          canSend: true,
+          subscriptionType: null, // ← جديد
         ),
       ),
     );

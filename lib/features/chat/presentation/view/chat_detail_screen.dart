@@ -1,3 +1,4 @@
+import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
@@ -11,25 +12,28 @@ import 'package:sportifo_app/core/helpers/dialog_helper.dart';
 import 'package:sportifo_app/core/storage/local_storage.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/core/utils/url_fixer.dart';
+import 'package:sportifo_app/features/ai_chat/presentation/widgets/typing_indicator.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart'; // ← جديد
 import '../../data/models/message_model.dart';
 import '../view_model/chat_detail_cubit.dart';
 import '../view_model/chat_detail_state.dart';
 import '../widgets/message_bubble.dart';
 import '../widgets/message_input_field.dart';
 import '../widgets/message_date_separator.dart';
+import 'package:sportifo_app/core/helpers/snack_bar_utils.dart';
 
 class ChatDetailScreen extends StatefulWidget {
   final int conversationId;
   final String otherParticipantName;
   final String? otherParticipantImage;
-  final bool canSend;
+  final String? subscriptionType;
 
   const ChatDetailScreen({
     Key? key,
     required this.conversationId,
     required this.otherParticipantName,
     this.otherParticipantImage,
-    this.canSend = true,
+    this.subscriptionType,
   }) : super(key: key);
 
   @override
@@ -39,22 +43,27 @@ class ChatDetailScreen extends StatefulWidget {
 class _ChatDetailScreenState extends State<ChatDetailScreen> {
   late final TextEditingController _messageController;
   late final ScrollController _scrollController;
-   late final ChatDetailCubit _cubit;
+  late final ChatDetailCubit _cubit;
+  StreamSubscription<ConnectivityResult>? _connectivitySub;
   int? _currentUserId;
+  bool _initialScrollDone = false;
 
   List<XFile> _selectedImages = [];
-
   bool _showScrollButton = false;
+  bool _canSend = false;
 
   @override
   void initState() {
     super.initState();
+    _initialScrollDone = false;
     _cubit = context.read<ChatDetailCubit>();
     _messageController = TextEditingController();
     _scrollController = ScrollController();
     _loadUserId();
     _initAsync();
-_setupConnectivityListener();
+    _setupConnectivityListener();
+    _calculateCanSend();
+
     _scrollController.addListener(() {
       if (_scrollController.hasClients) {
         final maxScroll = _scrollController.position.maxScrollExtent;
@@ -69,6 +78,17 @@ _setupConnectivityListener();
     });
   }
 
+  void _calculateCanSend() {
+    final localStorage = getIt<LocalStorage>();
+    final userRole = localStorage.getRole()?.toLowerCase(); // 'coach' أو 'user'/'trainee'
+    final subType = widget.subscriptionType?.toLowerCase();
+
+    if (userRole == 'coach') {
+      _canSend = true; // الكوتش دائماً يرسل
+    } else {
+      _canSend = subType == 'gold'; // المتدرب بس Gold بيقدر يرسل
+    }
+  }
   void _loadUserId() {
     final localStorage = getIt<LocalStorage>();
     final dynamic rawUserId = localStorage.getUserId();
@@ -85,53 +105,47 @@ _setupConnectivityListener();
     }
   }
 
-Future<void> _initAsync() async {
-  final cubit = context.read<ChatDetailCubit>();
-  cubit.setCanSend(widget.canSend);
-  
-  // 1. حمل الرسائل الأولى
-  await cubit.fetchMessages(widget.conversationId);
-  
-  // 2. اشترك بالـ WebSocket (بعد ما يكون فيه messages)
-  await cubit.subscribeToChannel(widget.conversationId);
-  
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    _scrollToBottom(animated: false);
-  });
-}
+  Future<void> _initAsync() async {
+    _cubit.setCanSend(_canSend);
+    if (_currentUserId != null) _cubit.setCurrentUserId(_currentUserId!);
+    await _cubit.fetchMessages(widget.conversationId);
+    await _cubit.subscribeToChannel(widget.conversationId);
+    _cubit.subscribeToChannel(widget.conversationId);
+    _cubit.setScreenActive(true);
+  }
 
-void _setupConnectivityListener() {
-  Connectivity().onConnectivityChanged.listen((result) {
-    if (result != ConnectivityResult.none) {
-      // 🔥 عند رجوع النت، أعد محاولة إرسال المعلقات و resync
-      context.read<ChatDetailCubit>().checkConnectivityAndRetry();
-    }
-  });
-}
+  void _setupConnectivityListener() {
+    _connectivitySub = Connectivity().onConnectivityChanged.listen((result) {
+      if (result != ConnectivityResult.none && mounted) {
+        _cubit.checkConnectivityAndRetry();
+      }
+    });
+  }
+
   @override
-void dispose() {
-  _cubit.unsubscribe();
-  // 🔥 إلغاء الاشتراك عند الخروج
-  context.read<ChatDetailCubit>().unsubscribe();
-  _messageController.dispose();
-  _scrollController.dispose();
-  super.dispose();
-}
+  void dispose() {
+    _cubit.setScreenActive(false);
+    _connectivitySub?.cancel();
+    _cubit.unsubscribe();
+    _messageController.dispose();
+    _scrollController.dispose();
+    super.dispose();
+  }
 
-  // 🔥 دالة التمرير مع اختيار الحركة أو القفز المباشر
   void _scrollToBottom({bool animated = true}) {
-    if (!_scrollController.hasClients) return;
-    final maxExtent = _scrollController.position.maxScrollExtent;
-    if (animated) {
-      _scrollController.animateTo(
-        maxExtent,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeOut,
-      );
-    } else {
-      // 🔥 القفز المباشر بدون حركة
-      _scrollController.jumpTo(maxExtent);
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!_scrollController.hasClients) return;
+      final maxExtent = _scrollController.position.maxScrollExtent;
+      if (animated) {
+        _scrollController.animateTo(
+          maxExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      } else {
+        _scrollController.jumpTo(maxExtent);
+      }
+    });
   }
 
   bool _isSentByMe(MessageModel message) {
@@ -141,116 +155,109 @@ void dispose() {
   }
 
   String _getDateSeparator(DateTime messageDate) {
+    final l10n = AppLocalizations.of(context)!;
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final yesterday = today.subtract(const Duration(days: 1));
-    final msgDate = DateTime(messageDate.year, messageDate.month, messageDate.day);
+    final msgDate = DateTime(
+      messageDate.year,
+      messageDate.month,
+      messageDate.day,
+    );
 
-    if (msgDate == today) return 'اليوم';
-    if (msgDate == yesterday) return 'أمس';
+    if (msgDate == today) return l10n.today;
+    if (msgDate == yesterday) return l10n.yesterday;
     return '${msgDate.day}/${msgDate.month}/${msgDate.year}';
   }
 
-  void _showMessageDetails(MessageModel message) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return Container(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'تفاصيل الرسالة',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.primaryBtn,
-                ),
-              ),
-              const Divider(height: 24),
-              if (message.sentAt != null)
-                _detailRow(' وقت الإرسال', '${message.sentAt!['date']} ${message.sentAt!['time']}'),
-              if (message.deliveredAt != null)
-                _detailRow('وقت التوصيل', '${message.deliveredAt!['date']} ${message.deliveredAt!['time']}'),
-              if (message.readAt != null)
-                _detailRow(' وقت القراءة', '${message.readAt!['date']} ${message.readAt!['time']}'),
-              const SizedBox(height: 16),
-            ],
-          ),
-        );
-      },
-    );
-  }
+ void _showMessageDetails(MessageModel message) {
+  final l10n = AppLocalizations.of(context)!;
 
-  Widget _detailRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              label,
+  showModalBottomSheet(
+    context: context,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    ),
+    builder: (context) {
+      return Container(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              l10n.messageDetails,
               style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey.shade600,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: AppColors.primaryBtn,
               ),
             ),
-          ),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+            const Divider(height: 24),
+            if (message.sentAt != null)
+              _detailRow(
+                l10n.sentAt,
+                '${message.sentAt!['date']} ${message.sentAt!['time']}',
+              ),
+            if (message.deliveredAt != null)
+              _detailRow(
+                l10n.deliveredAt,
+                '${message.deliveredAt!['date']} ${message.deliveredAt!['time']}',
+              ),
+            if (message.readAt != null)
+              _detailRow(
+                l10n.readAt,
+                '${message.readAt!['date']} ${message.readAt!['time']}',
+              ),
+            const SizedBox(height: 16),
+          ],
+        ),
+      );
+    },
+  );
+}
 
-  void _showDeleteConfirmation(int messageId, String clientUuid) {
-    DialogHelper.showCustomDialog(
-      context: context,
-      title: 'حذف الرسالة',
-      message: 'هل أنت متأكد من حذف هذه الرسالة؟ لا يمكن التراجع عن هذا الإجراء.',
-      type: DialogType.warning,
-      confirmBtnText: 'حذف',
-      onConfirm: () {
-        context.read<ChatDetailCubit>().deleteMessage(
-              widget.conversationId,
-              messageId,
-              clientUuid,
-            );
-      },
-    );
-  }
+Widget _detailRow(String label, String value) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 8),
+    child: Row(
+      children: [
+        Expanded(
+          child: Text(
+            label,
+            style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+          ),
+        ),
+        Text(
+          value,
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+        ),
+      ],
+    ),
+  );
+}
 
   Future<void> _pickImages() async {
+    final l10n = AppLocalizations.of(context)!;
     final picker = ImagePicker();
     final List<XFile> images = await picker.pickMultiImage();
     if (images.isNotEmpty) {
       if (images.length > 5) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('يمكنك اختيار 5 صور كحد أقصى'),
-            backgroundColor: Colors.orange,
-          ),
+        AppSnackBar.show(
+          context,
+          message: l10n.max5Images,
+          type: SnackBarType.warning,
         );
         return;
       }
@@ -265,13 +272,34 @@ void dispose() {
       _selectedImages.clear();
     });
   }
+void _showDeleteConfirmation(int? messageId, String? clientUuid) {
+    final l10n = AppLocalizations.of(context)!;
 
+    DialogHelper.showCustomDialog(
+      context: context,
+      title: l10n.deleteMessageTitle ,
+      message: l10n.deleteMessageConfirmation ,
+      type: DialogType.warning,
+      confirmBtnText: l10n.delete,
+      onConfirm: () {
+        Navigator.pop(context); // إغلاق الديالوغ
+        
+        // استدعاء الدالة بنفس الـ parameters المحددة في الكيوبيت
+        context.read<ChatDetailCubit>().deleteMessage(
+          widget.conversationId,
+          messageId ?? -1,        // تمرير -1 إذا كانت الرسالة محلية ولم تأخذ ID بعد
+          clientUuid ?? '',
+        );
+      },
+    );
+  }
   Future<List<XFile>> _compressImages(List<XFile> images) async {
     List<XFile> compressed = [];
     final tempDir = await getTemporaryDirectory();
 
     for (var image in images) {
-      final targetPath = '${tempDir.path}/compressed_${DateTime.now().millisecondsSinceEpoch}_${image.name}';
+      final targetPath =
+          '${tempDir.path}/compressed_${DateTime.now().millisecondsSinceEpoch}_${image.name}';
       final result = await FlutterImageCompress.compressAndGetFile(
         image.path,
         targetPath,
@@ -291,293 +319,353 @@ void dispose() {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFECE5DD),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFFFF9800),
-        elevation: 0,
-        titleSpacing: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
+    final l10n = AppLocalizations.of(context)!; // ← نفس أسلوب LoginScreen
+
+    return Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/images/chat_background1.jpg'),
+          fit: BoxFit.cover,
         ),
-        title: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CircleAvatar(
-              radius: 18,
-              backgroundImage: widget.otherParticipantImage != null
-                  ? NetworkImage(UrlFixer.image(widget.otherParticipantImage!)!)
-                  : null,
-              backgroundColor: Colors.white24,
-              child: widget.otherParticipantImage == null
-                  ? const Icon(Icons.person, size: 18, color: Colors.white)
-                  : null,
-            ),
-            const SizedBox(width: 10),
-            Text(
-              widget.otherParticipantName,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
-        ),
-        centerTitle: false,
       ),
-      body: BlocListener<ChatDetailCubit, ChatDetailState>(
-        listener: (context, state) {
-          if (state is ChatDetailLoaded) {
-            // 🔥 عند تحميل الرسائل أو إضافة جديدة، نستخدم animated: true
-            // ليعطي حركة سلسة عند الإرسال
-            _scrollToBottom(animated: true);
-          }
-          if (state is ChatDetailError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: Colors.red,
-                behavior: SnackBarBehavior.floating,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          backgroundColor: const Color(0xFFFAF3E0).withValues(alpha: 0.0),
+          elevation: 0,
+          titleSpacing: 8,
+          leadingWidth: 56,
+          leading: Center(
+            child: GestureDetector(
+              onTap: () => Navigator.pop(context),
+              child: Container(
+                width: 40,
+                height: 40,
+                decoration: const BoxDecoration(
+                  color: Color(0xFFF57C00),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.arrow_back_ios_new,
+                  color: Colors.white,
+                  size: 18,
+                ),
               ),
-            );
-          }
-        },
-        child: BlocBuilder<ChatDetailCubit, ChatDetailState>(
-          builder: (context, state) {
-            if (state is ChatDetailLoading) {
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: AppColors.primaryBtn,
+            ),
+          ),
+          title: Container(
+            padding: const EdgeInsets.only(
+              left: 15,
+              right: 45,
+              top: 6,
+              bottom: 6,
+            ),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF57C00),
+              borderRadius: BorderRadius.circular(24),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircleAvatar(
+                  radius: 17,
+                  backgroundImage: widget.otherParticipantImage != null
+                      ? NetworkImage(
+                          UrlFixer.image(widget.otherParticipantImage!)!,
+                        )
+                      : null,
+                  backgroundColor: Colors.white24,
+                  child: widget.otherParticipantImage == null
+                      ? const Icon(Icons.person, size: 16, color: Colors.white)
+                      : null,
                 ),
+                const SizedBox(width: 18),
+                Text(
+                  widget.otherParticipantName,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          centerTitle: false,
+        ),
+        body: BlocListener<ChatDetailCubit, ChatDetailState>(
+          listener: (context, state) {
+            if (state is ChatDetailLoaded && !_initialScrollDone) {
+              _initialScrollDone = true;
+              _scrollToBottom(animated: false);
+            }
+            if (state is ChatDetailError) {
+              AppSnackBar.show(
+                context,
+                message: state.message,
+                type: SnackBarType.error,
               );
             }
+          },
+          child: BlocBuilder<ChatDetailCubit, ChatDetailState>(
+            builder: (context, state) {
+              if (state is ChatDetailLoading) {
+                return const Center(
+                  child: CircularProgressIndicator(color: AppColors.primaryBtn),
+                );
+              }
 
-            if (state is ChatDetailError && state is! ChatDetailLoaded) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.error_outline,
-                      size: 48,
-                      color: Colors.red,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      state.message,
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 16),
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        context
-                            .read<ChatDetailCubit>()
-                            .fetchMessages(widget.conversationId);
-                      },
-                      icon: const Icon(Icons.refresh),
-                      label: const Text('إعادة محاولة'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primaryBtn,
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }
-
-            if (state is ChatDetailLoaded) {
-              final messages = state.messages;
-
-              return Stack(
-                children: [
-                  Column(
+              if (state is ChatDetailError && state is! ChatDetailLoaded) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Expanded(
-                        child: messages.isEmpty
-                            ? Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.chat_bubble_outline,
-                                      size: 64,
-                                      color: Colors.grey[400],
-                                    ),
-                                    const SizedBox(height: 16),
-                                    Text(
-                                      'لا توجد رسائل حتى الآن',
-                                      style: TextStyle(
-                                        color: Colors.grey[600],
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      'ابدأ المحادثة الآن',
-                                      style: TextStyle(
-                                        color: Colors.grey[500],
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            : ListView.builder(
-                                controller: _scrollController,
-                                itemCount: messages.length,
-                                itemBuilder: (context, index) {
-                                  final message = messages[index];
-                                  final isSentByMe = _isSentByMe(message);
-
-                                  String? dateSeparator;
-                                  if (index == 0) {
-                                    dateSeparator = _getDateSeparator(message.getDateTime());
-                                  } else {
-                                    final previousMessage = messages[index - 1];
-                                    if (message.getDateTime().day !=
-                                        previousMessage.getDateTime().day) {
-                                      dateSeparator = _getDateSeparator(message.getDateTime());
-                                    }
-                                  }
-
-                                  return Column(
-                                    children: [
-                                      if (dateSeparator != null)
-                                        MessageDateSeparator(date: dateSeparator),
-                                      MessageBubble(
-                                        message: message,
-                                        isSentByCurrentUser: isSentByMe,
-                                        canDelete: isSentByMe,
-                                        onDelete: () {
-                                          _showDeleteConfirmation(
-                                            message.id,
-                                            message.clientUuid,
-                                          );
-                                        },
-                                        onShowDetails: () {
-                                          _showMessageDetails(message);
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                },
-                              ),
+                      const Icon(
+                        Icons.error_outline,
+                        size: 48,
+                        color: Colors.red,
                       ),
-                      if (_selectedImages.isNotEmpty)
-                        Container(
-                          height: 100,
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                          child: ListView.separated(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: _selectedImages.length,
-                            separatorBuilder: (_, __) => const SizedBox(width: 8),
-                            itemBuilder: (context, index) {
-                              return Stack(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(12),
-                                    child: Image.file(
-                                      File(_selectedImages[index].path),
-                                      width: 80,
-                                      height: 80,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                  Positioned(
-                                    top: 0,
-                                    right: 0,
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          _selectedImages.removeAt(index);
-                                        });
-                                      },
-                                      child: Container(
-                                        decoration: const BoxDecoration(
-                                          color: Colors.red,
-                                          shape: BoxShape.circle,
-                                        ),
-                                        padding: const EdgeInsets.all(4),
-                                        child: const Icon(
-                                          Icons.close,
-                                          size: 14,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                          ),
-                        ),
-                      MessageInputField(
-                        controller: _messageController,
-                        enabled: widget.canSend,
-                        isLoading: state.isSending,
-                        disabledReason: widget.canSend
-                            ? null
-                            : 'يمكن للمدرب فقط إرسال رسائل في هذا الاشتراك',
-                        onImageTap: _pickImages,
-                        onSend: () async {
-                          final text = _messageController.text.trim();
-
-                          if (text.isEmpty && _selectedImages.isEmpty) return;
-
-                          if (_currentUserId == null) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('خطأ: لم يتم تحديد المستخدم الحالي'),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                            return;
-                          }
-
-                          final List<XFile> compressedImages = await _compressImages(_selectedImages);
-                          final List<String> imagePaths = compressedImages.map((xfile) => xfile.path).toList();
-
-                          context.read<ChatDetailCubit>().sendMessage(
-                                widget.conversationId,
-                                text,
-                                _currentUserId!,
-                                'أنت',
-                                null,
-                                imagePaths: imagePaths,
-                              );
-
-                          _messageController.clear();
-                          _clearImages();
+                      const SizedBox(height: 16),
+                      Text(state.message, textAlign: TextAlign.center),
+                      const SizedBox(height: 16),
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          _cubit.fetchMessages(widget.conversationId);
                         },
+                        icon: const Icon(Icons.refresh),
+                        label: Text(l10n.retry),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFF57C00),
+                        ),
                       ),
                     ],
                   ),
-                  if (_showScrollButton)
-                    Positioned(
-                      bottom: 120,
-                      right: 16,
-                      child: FloatingActionButton(
-                        mini: true,
-                        backgroundColor: const Color(0xFFFF9800),
-                        onPressed: () => _scrollToBottom(animated: true),
-                        child: const Icon(
-                          Icons.arrow_downward,
-                          color: Colors.white,
-                          size: 24,
+                );
+              }
+
+              if (state is ChatDetailLoaded) {
+                final messages = state.messages;
+
+                return Stack(
+                  children: [
+                    Column(
+                      children: [
+                        Expanded(
+                          child: messages.isEmpty
+                              ? Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.chat_bubble_outline,
+                                        size: 64,
+                                        color: Colors.grey[400],
+                                      ),
+                                      const SizedBox(height: 16),
+                                      Text(
+                                        l10n.noMessagesYet,
+                                        style: TextStyle(
+                                          color: Colors.grey[600],
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        l10n.startConversation,
+                                        style: TextStyle(
+                                          color: Colors.grey[500],
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : ListView.builder(
+                                  controller: _scrollController,
+                                  itemCount:
+                                      messages.length +
+                                      (state.typingUserId != null ? 1 : 0),
+                                  itemBuilder: (context, index) {
+                                    if (state.typingUserId != null &&
+                                        index == messages.length) {
+                                      return const TypingIndicator();
+                                    }
+                                    final message = messages[index];
+                                    final isSentByMe = _isSentByMe(message);
+
+                                    String? dateSeparator;
+                                    if (index == 0) {
+                                      dateSeparator = _getDateSeparator(
+                                        message.getDateTime(),
+                                      );
+                                    } else {
+                                      final previousMessage =
+                                          messages[index - 1];
+                                      if (message.getDateTime().day !=
+                                          previousMessage.getDateTime().day) {
+                                        dateSeparator = _getDateSeparator(
+                                          message.getDateTime(),
+                                        );
+                                      }
+                                    }
+
+                                    return Column(
+                                      children: [
+                                        if (dateSeparator != null)
+                                          MessageDateSeparator(
+                                            date: dateSeparator,
+                                          ),
+                                        MessageBubble(
+                                          message: message,
+                                          isSentByCurrentUser: isSentByMe,
+                                          canDelete: isSentByMe,
+                                          onDelete: () {
+                                            _showDeleteConfirmation(
+                                              message.id,
+                                              message.clientUuid,
+                                            );
+                                          },
+                                          onShowDetails: () {
+                                            _showMessageDetails(message);
+                                          },
+                                          onRetry: message.status == 'failed'
+                                              ? () => _cubit.retryMessage(
+                                                  message.clientUuid,
+                                                )
+                                              : null,
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ),
+                        ),
+                        if (_selectedImages.isNotEmpty)
+                          Container(
+                            height: 100,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            child: ListView.separated(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: _selectedImages.length,
+                              separatorBuilder: (_, __) =>
+                                  const SizedBox(width: 8),
+                              itemBuilder: (context, index) {
+                                return Stack(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(12),
+                                      child: Image.file(
+                                        File(_selectedImages[index].path),
+                                        width: 80,
+                                        height: 80,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    Positioned(
+                                      top: 0,
+                                      right: 0,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            _selectedImages.removeAt(index);
+                                          });
+                                        },
+                                        child: Container(
+                                          decoration: const BoxDecoration(
+                                            color: Colors.red,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          padding: const EdgeInsets.all(4),
+                                          child: const Icon(
+                                            Icons.close,
+                                            size: 14,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
+                        MessageInputField(
+                          controller: _messageController,
+                          enabled: _canSend,
+                          isLoading: state.isSending,
+                          disabledReason: _canSend
+                              ? null
+                              : l10n.trainerOnlyCanSend,
+                          onImageTap: _pickImages,
+                          onChanged: (text) {
+                            if (text.isNotEmpty && _currentUserId != null) {
+                              _cubit.sendTypingNotification(
+                                widget.conversationId,
+                                _currentUserId!,
+                              );
+                            }
+                          },
+                          onSend: () async {
+                            final text = _messageController.text.trim();
+
+                            if (text.isEmpty && _selectedImages.isEmpty) return;
+
+                            if (_currentUserId == null) {
+                              AppSnackBar.show(
+                                context,
+                                message: l10n.errorUserNotFound,
+                                type: SnackBarType.error,
+                              );
+                              return;
+                            }
+
+                            final List<XFile> compressedImages =
+                                await _compressImages(_selectedImages);
+                            final List<String> imagePaths = compressedImages
+                                .map((xfile) => xfile.path)
+                                .toList();
+
+                            _cubit.sendMessage(
+                              widget.conversationId,
+                              text,
+                              _currentUserId!,
+                              l10n.you,
+                              null,
+                              imagePaths: imagePaths,
+                            );
+
+                            _messageController.clear();
+                            _clearImages();
+                          },
+                        ),
+                      ],
+                    ),
+                    if (_showScrollButton)
+                      Positioned(
+                        bottom: 120,
+                        right: 16,
+                        child: FloatingActionButton(
+                          mini: true,
+                          backgroundColor: Colors.white,
+                          onPressed: () => _scrollToBottom(animated: true),
+                          child: const Icon(
+                            Icons.arrow_downward,
+                            color: Color(0xFFF57C00),
+                            size: 24,
+                          ),
                         ),
                       ),
-                    ),
-                ],
-              );
-            }
+                  ],
+                );
+              }
 
-            return const SizedBox.shrink();
-          },
+              return const SizedBox.shrink();
+            },
+          ),
         ),
       ),
     );
   }
 }
-

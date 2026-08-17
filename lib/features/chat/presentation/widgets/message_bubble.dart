@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/core/utils/url_fixer.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../../data/models/message_model.dart';
 
 class MessageBubble extends StatelessWidget {
@@ -9,6 +11,7 @@ class MessageBubble extends StatelessWidget {
   final bool canDelete;
   final VoidCallback? onDelete;
   final VoidCallback? onShowDetails;
+  final VoidCallback? onRetry;
 
   const MessageBubble({
     Key? key,
@@ -17,26 +20,25 @@ class MessageBubble extends StatelessWidget {
     required this.canDelete,
     this.onDelete,
     this.onShowDetails,
+    this.onRetry,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    if (message.isDeleted) {
-      return _buildDeletedMessage();
-    }
+    final l10n = AppLocalizations.of(context)!;
+
+    if (message.isDeleted) return _buildDeletedMessage(l10n);
 
     return Align(
-      alignment: isSentByCurrentUser
-          ? Alignment.centerRight
-          : Alignment.centerLeft,
+      alignment: isSentByCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
       child: GestureDetector(
         onLongPress: () {
-          if (canDelete && isSentByCurrentUser) {
+          if (canDelete && isSentByCurrentUser && message.status == 'sent') {
             onDelete?.call();
           }
         },
         onTap: () {
-          if (isSentByCurrentUser) {
+          if (isSentByCurrentUser && message.status == 'sent') {
             onShowDetails?.call();
           }
         },
@@ -48,17 +50,13 @@ class MessageBubble extends StatelessWidget {
             ),
             decoration: BoxDecoration(
               color: isSentByCurrentUser
-                  ? const Color(0xFFFF9800)
+                  ? const Color(0xFFF57C00)
                   : const Color(0xFFF5F5F5),
               borderRadius: BorderRadius.only(
                 topLeft: const Radius.circular(18),
                 topRight: const Radius.circular(18),
-                bottomLeft: Radius.circular(
-                  isSentByCurrentUser ? 18 : 4,
-                ),
-                bottomRight: Radius.circular(
-                  isSentByCurrentUser ? 4 : 18,
-                ),
+                bottomLeft: Radius.circular(isSentByCurrentUser ? 18 : 4),
+                bottomRight: Radius.circular(isSentByCurrentUser ? 4 : 18),
               ),
               boxShadow: [
                 BoxShadow(
@@ -68,15 +66,11 @@ class MessageBubble extends StatelessWidget {
                 ),
               ],
             ),
-            padding: const EdgeInsets.symmetric(
-              horizontal: 14,
-              vertical: 10,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                // عرض الصور
                 if (message.media.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8),
@@ -90,13 +84,9 @@ class MessageBubble extends StatelessWidget {
                         } else {
                           url = mediaItem.toString();
                         }
-                        if (url == null || url.isEmpty) {
-                          return const SizedBox.shrink();
-                        }
+                        if (url == null || url.isEmpty) return const SizedBox.shrink();
                         final fixedUrl = UrlFixer.image(url);
-                        if (fixedUrl == null) {
-                          return const SizedBox.shrink();
-                        }
+                        if (fixedUrl == null) return const SizedBox.shrink();
                         return GestureDetector(
                           onTap: () => _showFullImage(context, fixedUrl),
                           child: ClipRRect(
@@ -124,14 +114,11 @@ class MessageBubble extends StatelessWidget {
                       }).toList(),
                     ),
                   ),
-                // عرض النص
                 if (message.body.isNotEmpty)
                   Text(
                     message.body,
                     style: TextStyle(
-                      color: isSentByCurrentUser
-                          ? Colors.white
-                          : Colors.black87,
+                      color: isSentByCurrentUser ? Colors.white : Colors.black87,
                       fontSize: 15,
                       height: 1.3,
                     ),
@@ -165,6 +152,28 @@ class MessageBubble extends StatelessWidget {
   }
 
   Widget _buildStatusIcon() {
+    if (message.status == 'pending') {
+      return SizedBox(
+        width: 12,
+        height: 12,
+        child: CircularProgressIndicator(
+          strokeWidth: 1.5,
+          color: Colors.white.withOpacity(0.8),
+        ),
+      );
+    }
+
+    if (message.status == 'failed') {
+      return GestureDetector(
+        onTap: onRetry,
+        child: Icon(
+          Icons.error_outline,
+          size: 14,
+          color: Colors.red.shade100,
+        ),
+      );
+    }
+
     final status = message.getStatus();
     if (status == 2) {
       return const Icon(Icons.done_all, size: 14, color: Colors.lightBlueAccent);
@@ -175,11 +184,9 @@ class MessageBubble extends StatelessWidget {
     }
   }
 
-  Widget _buildDeletedMessage() {
+  Widget _buildDeletedMessage(AppLocalizations l10n) {
     return Align(
-      alignment: isSentByCurrentUser
-          ? Alignment.centerRight
-          : Alignment.centerLeft,
+      alignment: isSentByCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Container(
@@ -191,14 +198,10 @@ class MessageBubble extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                Icons.block,
-                size: 14,
-                color: Colors.grey.shade500,
-              ),
+              Icon(Icons.block, size: 14, color: Colors.grey.shade500),
               const SizedBox(width: 6),
               Text(
-                'تم حذف هذه الرسالة',
+                l10n.messageDeleted,
                 style: TextStyle(
                   color: Colors.grey.shade500,
                   fontSize: 13,
@@ -233,14 +236,8 @@ class MessageBubble extends StatelessWidget {
                     child: CachedNetworkImage(
                       imageUrl: imageUrl,
                       fit: BoxFit.contain,
-                      placeholder: (context, url) => const CircularProgressIndicator(
-                        color: Colors.white,
-                      ),
-                      errorWidget: (context, url, error) => const Icon(
-                        Icons.error,
-                        color: Colors.white,
-                        size: 48,
-                      ),
+                      placeholder: (context, url) => const CircularProgressIndicator(color: Colors.white),
+                      errorWidget: (context, url, error) => const Icon(Icons.error, color: Colors.white, size: 48),
                     ),
                   ),
                 ),
@@ -258,10 +255,7 @@ class MessageBubble extends StatelessWidget {
         );
       },
       transitionBuilder: (context, anim1, anim2, child) {
-        return FadeTransition(
-          opacity: anim1,
-          child: child,
-        );
+        return FadeTransition(opacity: anim1, child: child);
       },
     );
   }

@@ -1,4 +1,3 @@
-
 import 'package:equatable/equatable.dart';
 import '../../data/models/message_model.dart';
 
@@ -21,15 +20,17 @@ class ChatDetailLoaded extends ChatDetailState {
   final List<MessageModel> messages;
   final bool canSend;
   final bool isSending;
+  final int? typingUserId;
 
   const ChatDetailLoaded({
     required this.messages,
     required this.canSend,
     this.isSending = false,
+    this.typingUserId,
   });
 
   @override
-  List<Object?> get props => [messages, canSend, isSending];
+  List<Object?> get props => [messages, canSend, isSending, typingUserId];
 }
 
 class MessageDeleting extends ChatDetailState {

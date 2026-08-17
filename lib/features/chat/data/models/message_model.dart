@@ -12,6 +12,7 @@ class MessageModel {
   final Map<String, String>? readAt;
   final bool isDeleted;
   final String? deletedAt;
+  final String status;
 
   MessageModel({
     required this.id,
@@ -27,6 +28,7 @@ class MessageModel {
     this.readAt,
     this.isDeleted = false,
     this.deletedAt,
+    this.status = 'sent',
   });
 
   factory MessageModel.fromJson(Map<String, dynamic> json) {
@@ -52,6 +54,7 @@ class MessageModel {
       readAt: parseDateTimeObj(json['read_at']),
       isDeleted: json['deleted_at'] != null,
       deletedAt: json['deleted_at']?.toString(),
+      status: 'sent',
     );
   }
 
@@ -86,6 +89,7 @@ class MessageModel {
     Map<String, String>? readAt,
     bool? isDeleted,
     String? deletedAt,
+    String? status,
   }) {
     return MessageModel(
       id: id ?? this.id,
@@ -101,6 +105,7 @@ class MessageModel {
       readAt: readAt ?? this.readAt,
       isDeleted: isDeleted ?? this.isDeleted,
       deletedAt: deletedAt ?? this.deletedAt,
+      status: status ?? this.status,
     );
   }
 
@@ -125,15 +130,42 @@ class MessageModel {
     return buffer.toString().trim();
   }
 
-  DateTime getDateTime() {
+   DateTime getDateTime() {
     try {
-      if (sentAt != null && sentAt!['date'] != null) {
-        return DateTime.parse(sentAt!['date']!);
+      if (sentAt != null) {
+        final dateStr = sentAt!['date']; // "2026-08-16"
+        final timeStr = sentAt!['time']; // "03:48 AM" or "15:30"
+        if (dateStr != null && dateStr.isNotEmpty) {
+          if (timeStr != null && timeStr.isNotEmpty) {
+            return _parseDateTime(dateStr, timeStr);
+          }
+          return DateTime.parse(dateStr);
+        }
       }
     } catch (e) {
       // ignore
     }
     return DateTime.now();
+  }
+
+  DateTime _parseDateTime(String date, String time) {
+    try {
+      final parts = time.split(' ');
+      final hm = parts[0].split(':');
+      int hour = int.parse(hm[0]);
+      int minute = int.parse(hm[1]);
+      
+      if (parts.length == 2) {
+        final period = parts[1].toUpperCase();
+        if (period == 'PM' && hour != 12) hour += 12;
+        if (period == 'AM' && hour == 12) hour = 0;
+      }
+      
+      final dt = DateTime.parse(date);
+      return DateTime(dt.year, dt.month, dt.day, hour, minute);
+    } catch (_) {
+      return DateTime.parse(date);
+    }
   }
 
   int getStatus() {

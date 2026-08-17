@@ -39,17 +39,21 @@ class ConversationTile extends StatelessWidget {
         child: Row(
           children: [
             // صورة الطرف الآخر
-            CircleAvatar(
-              radius: 28,
-              backgroundColor: Colors.grey.shade300,
-              backgroundImage: fixedProfilePic != null
-                  ? CachedNetworkImageProvider(fixedProfilePic)
-                  : const AssetImage('assets/images/female.jpg') as ImageProvider,
-              child: fixedProfilePic == null
-                  ? const Icon(Icons.person, color: Colors.grey, size: 28)
-                  : null,
-            ),
-            const SizedBox(width: 12),
+           // داخل الـ Row children، استبدل CircleAvatar بـ:
+GestureDetector(
+  onTap: () => _showFullImage(context, fixedProfilePic),
+  child: CircleAvatar(
+    radius: 28,
+    backgroundColor: Colors.grey.shade300,
+    backgroundImage: fixedProfilePic != null
+        ? CachedNetworkImageProvider(fixedProfilePic)
+        : const AssetImage('assets/images/female.jpg') as ImageProvider,
+    child: fixedProfilePic == null
+        ? const Icon(Icons.person, color: Colors.grey, size: 28)
+        : null,
+  ),
+),
+const SizedBox(width: 16), // ← مسافة أكبر
             // النصوص (الاسم، معاينة الرسالة، الوقت)
             Expanded(
               child: Column(
@@ -120,7 +124,64 @@ class ConversationTile extends StatelessWidget {
       ),
     );
   }
+void _showFullImage(BuildContext context, String? imageUrl) {
+  if (imageUrl == null) return;
 
+  showDialog(
+    context: context,
+    barrierDismissible: true, // تسكير بالكبسة على الخلفية
+    builder: (context) => Dialog(
+      backgroundColor: Colors.black87,
+      insetPadding: EdgeInsets.zero,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          // صورة قابلة للتكبير/التصغير بالإصبع
+          InteractiveViewer(
+            panEnabled: true,
+            boundaryMargin: const EdgeInsets.all(20),
+            minScale: 0.5,
+            maxScale: 4.0,
+            child: Center(
+              child: CachedNetworkImage(
+                imageUrl: imageUrl,
+                fit: BoxFit.contain,
+                placeholder: (context, url) => const CircularProgressIndicator(
+                  color: Colors.white,
+                ),
+                errorWidget: (context, url, error) => const Icon(
+                  Icons.error,
+                  color: Colors.white,
+                  size: 50,
+                ),
+              ),
+            ),
+          ),
+          // زر الإغلاق
+          Positioned(
+            top: 40,
+            right: 20,
+            child: GestureDetector(
+              onTap: () => Navigator.pop(context),
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Colors.black54,
+                  shape: BoxShape.circle,
+                ),
+                padding: const EdgeInsets.all(8),
+                child: const Icon(
+                  Icons.close,
+                  color: Colors.white,
+                  size: 28,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
   // 🔥 أيقونة حالة الرسالة (للمرسلة مني فقط)
   Widget _buildStatusIcon(MessageModel message) {
     final status = message.getStatus();
