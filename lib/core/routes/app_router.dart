@@ -49,7 +49,6 @@ import '../../features/workout/presentation/view_model/saved_exercises/saved_exe
 import '../../features/workout/presentation/view/search_screen.dart';
 import '../../features/workout/presentation/view_model/search_cubit/search_cubit.dart';
 import '../di/service_locator.dart';
-import 'app_routes.dart';
 import '../../features/auth/presentation/view/forgot_password_screen.dart';
 import '../../features/auth/presentation/view/login_screen.dart';
 import '../../features/auth/presentation/view/otp_screen.dart';

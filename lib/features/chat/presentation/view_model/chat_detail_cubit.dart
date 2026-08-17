@@ -31,7 +31,10 @@ class ChatDetailCubit extends Cubit<ChatDetailState> {
         _pendingService = pendingService,
         super(const ChatDetailInitial());
 
-  void setCanSend(bool canSend) => _canSend = canSend;
+  void setCanSend(bool canSend) {
+  _canSend = canSend;
+  dev.log('🔑 setCanSend -> $_canSend');
+}
   void setCurrentUserId(int userId) => _currentUserId = userId; // 🔥 جديد
   void setScreenActive(bool active) {
     _isScreenActive = active;

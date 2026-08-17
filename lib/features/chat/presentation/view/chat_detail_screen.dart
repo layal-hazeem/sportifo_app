@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as dev;
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
@@ -60,9 +61,10 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
     _messageController = TextEditingController();
     _scrollController = ScrollController();
     _loadUserId();
+    _calculateCanSend();
     _initAsync();
     _setupConnectivityListener();
-    _calculateCanSend();
+    
 
     _scrollController.addListener(() {
       if (_scrollController.hasClients) {
@@ -78,17 +80,22 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
     });
   }
 
-  void _calculateCanSend() {
-    final localStorage = getIt<LocalStorage>();
-    final userRole = localStorage.getRole()?.toLowerCase(); // 'coach' أو 'user'/'trainee'
-    final subType = widget.subscriptionType?.toLowerCase();
 
-    if (userRole == 'coach') {
-      _canSend = true; // الكوتش دائماً يرسل
-    } else {
-      _canSend = subType == 'gold'; // المتدرب بس Gold بيقدر يرسل
-    }
+  void _calculateCanSend() {
+  final localStorage = getIt<LocalStorage>();
+  final userRole = localStorage.getRole()?.toLowerCase();
+  final subType = widget.subscriptionType?.toLowerCase();
+print ('🔍 userRole = $userRole');
+print ('🔍 subscriptionType = $subType');
+ 
+
+  if (userRole == 'coach') {
+    _canSend = true;
+  } else {
+    _canSend = subType == 'gold';
   }
+  print('🔍 _canSend = $_canSend');
+}
   void _loadUserId() {
     final localStorage = getIt<LocalStorage>();
     final dynamic rawUserId = localStorage.getUserId();

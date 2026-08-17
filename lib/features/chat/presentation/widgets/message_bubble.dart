@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/core/utils/url_fixer.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../../data/models/message_model.dart';
