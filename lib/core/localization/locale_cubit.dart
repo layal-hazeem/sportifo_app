@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../services/notification_service.dart';
 import '../storage/local_storage.dart'; // تأكدي من مسار الـ LocalStorage
 
 class LocaleCubit extends Cubit<Locale> {
@@ -15,5 +16,7 @@ class LocaleCubit extends Cubit<Locale> {
 
     // 2. نطلق الحالة الجديدة ليتم تحديث واجهات التطبيق فوراً
     emit(Locale(languageCode));
+    await NotificationService().registerDeviceToBackend();
+
   }
 }

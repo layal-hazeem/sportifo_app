@@ -6,6 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+import 'features/notifications/presentation/view_model/notifications_cubit.dart';
 import 'firebase_options.dart';
 import 'core/services/notification_service.dart';
 
@@ -30,23 +31,28 @@ void main() async {
   // 🔥 2. تسجيل Background Handler قبل أي شي
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
-  // 🔥 3. تشغيل خدمة الإشعارات
-  await NotificationService().init();
 
   // باقي الخدمات
   await Hive.initFlutter();
   await setupServiceLocator();
 
+
+  // 🔥 3. تشغيل خدمة الإشعارات
+  await NotificationService().init();
   runApp(const MyApp());
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => getIt<LocaleCubit>(),
+    // 🔥 حولنا الـ BlocProvider لـ MultiBlocProvider لحتى نحط الإشعارات
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => getIt<LocaleCubit>()),
+        // 🔥 إضافة كيوبيت الإشعارات ليكون متاحاً في كل التطبيق وزر الجرس
+        BlocProvider(create: (context) => getIt<NotificationsCubit>()),
+      ],
       child: BlocBuilder<LocaleCubit, Locale>(
         builder: (context, locale) {
           return NeumorphicApp(
