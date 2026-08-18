@@ -33,6 +33,7 @@ import '../../features/my_plans(user)/presentation/view/plan_days_screen.dart';
 import '../../features/my_plans(user)/presentation/view/workout_summary_screen.dart';
 import '../../features/my_plans(user)/presentation/view_model/my_plans_cubit.dart';
 import '../../features/my_plans(user)/presentation/view_model/plan_days_cubit.dart';
+import '../../features/notifications/presentation/view/notifications_screen.dart';
 import '../../features/platform_plans/presentation/view/all_platform_plans_screen.dart';
 import '../../features/platform_plans/presentation/view_model/platform_plans_cubit.dart';
 import '../../features/trainee_subscriptions/data/models/subscription_month_model.dart';
@@ -91,6 +92,11 @@ class AppRouter {
             create: (_) => getIt<RegisterCubit>(),
             child: const RegisterScreen(),
           ),
+        );
+
+      case AppRoutes.notifications:
+        return MaterialPageRoute(
+          builder: (_) => const NotificationsScreen(), // 👈 الشاشة اللي عملناها بالخطوة الماضية
         );
 
       case AppRoutes.login:

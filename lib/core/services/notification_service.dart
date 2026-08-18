@@ -3,7 +3,12 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 import 'dart:typed_data';
 import 'dart:developer';
+import 'dart:convert';
+import 'dart:io'; // 👈 لمعرفة نوع النظام برمجياً (Android / iOS)
 import 'package:url_launcher/url_launcher.dart';
+import 'package:sportifo_app/core/di/service_locator.dart';
+
+import '../storage/local_storage.dart';
 
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -21,6 +26,9 @@ class NotificationService {
   final FirebaseMessaging _fcm = FirebaseMessaging.instance;
   final FlutterLocalNotificationsPlugin _localNotifications =
   FlutterLocalNotificationsPlugin();
+
+  // ✅ رابط الباك
+  static const String _baseUrl = 'https://sportifo.moayadismail.com/api/app';
 
   Future<void> init() async {
     NotificationSettings settings = await _fcm.requestPermission(
@@ -47,25 +55,88 @@ class NotificationService {
         firebaseMessagingBackgroundHandler,
       );
 
+      // ✅ لما يتجدد التوكن من فايربيز، نحدثه بالسيرفر إذا كان اليوزر مسجل دخول
+      _fcm.onTokenRefresh.listen((newToken) async {
+        log("🔄 Token refreshed: $newToken");
+        await registerDeviceToBackend();
+      });
+
+      // ✅ Foreground Message
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
         log("🔔 Foreground Message: ${message.notification?.title}");
         log("📦 Data: ${message.data}");
         _showLocalNotification(message);
       });
 
+      // ✅ الضغط على الإشعار بالخلفية
       FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
         log("👆 User tapped notification from background");
         log("🔗 deep_link: ${message.data['deep_link']}");
         _handleDeepLink(message.data['deep_link']);
       });
 
+      // ✅ فتح التطبيق من حالة الإغلاق عبر الإشعار
       RemoteMessage? initialMessage = await _fcm.getInitialMessage();
       if (initialMessage != null) {
         log("🚀 App opened from terminated state via notification");
         _handleDeepLink(initialMessage.data['deep_link']);
       }
+
+      // 🔥 محاولة المزامنة فور فتح التطبيق (ستعمل فقط إذا كان مسجلاً دخول)
+      await registerDeviceToBackend();
+
     } else {
       log('User declined or has not accepted permission');
+    }
+  }
+
+  // ✅ دالة المزامنة المخصصة حصراً للمستخدمين المسجلين (User Auth Only)
+  Future<void> registerDeviceToBackend() async {
+    try {
+      final localStorage = getIt<LocalStorage>();
+
+      // 🔍 1. فحص هل المستخدم مسجل دخول حالياً؟
+      final String? userAuthToken = localStorage.getToken();
+
+      if (userAuthToken == null || userAuthToken.isEmpty) {
+        log("ℹ️ User is NOT logged in. Skipping FCM token registration.");
+        return; // ⛔ خروج فوراً بدون إرسال أي Request
+      }
+
+      // 2. جلب FCM Token الحالي
+      String? token = await _fcm.getToken();
+      if (token == null) return;
+
+      final String locale = localStorage.getLanguage() ?? 'en';
+      final String platform = Platform.isAndroid ? 'android' : 'ios';
+
+      log("📤 Sending FCM token to backend for AUTHENTICATED USER...");
+
+      // 3. إرسال الطلب مع إرفاق Bearer Token الخاص بهوية المستخدم
+      final response = await http.post(
+        Uri.parse('$_baseUrl/guest/device'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $userAuthToken', // 🔥 هوية المستخدم المسجل
+        },
+        body: jsonEncode({
+          'fcm_token': token,
+          'platform': platform,
+          'locale': locale,
+        }),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = jsonDecode(response.body);
+        log("✅ Device registered successfully for User!");
+        log("🎯 Response: ${data['message']}");
+      } else {
+        log("❌ Failed: ${response.statusCode}");
+        log("❌ Response: ${response.body}");
+      }
+    } catch (e) {
+      log("❌ Error registering device: $e");
     }
   }
 
@@ -90,12 +161,12 @@ class NotificationService {
       },
     );
 
-    // ✅ السطر المصحح - في < و > بالشكل الصح
     final AndroidFlutterLocalNotificationsPlugin? androidPlugin =
-        _localNotifications.resolvePlatformSpecificImplementation
-   <AndroidFlutterLocalNotificationsPlugin>();
+    _localNotifications.resolvePlatformSpecificImplementation
+    <AndroidFlutterLocalNotificationsPlugin>();
 
-    await androidPlugin?.deleteNotificationChannel(channelId: 'sportifo_channel');
+    await androidPlugin?.deleteNotificationChannel(
+        channelId: 'sportifo_channel');
     await androidPlugin?.createNotificationChannel(
       const AndroidNotificationChannel(
         'sportifo_channel',
