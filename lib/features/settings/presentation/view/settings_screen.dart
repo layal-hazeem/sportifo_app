@@ -4,6 +4,8 @@ import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:sportifo_app/core/localization/locale_cubit.dart';
 import 'package:sportifo_app/core/routes/app_routes.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart'; // 👈 استدعاء الـ Extension
+import 'package:sportifo_app/core/theme/theme_cubit.dart'; // 👈 استدعاء الـ ThemeCubit
 import 'package:sportifo_app/core/widgets/wave_app_bar.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../widgets/settings_section.dart';
@@ -16,7 +18,8 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context
+          .backgroundColor, // 👈 استخدام الـ Extension لتغيير الخلفية تلقائياً
 
       appBar: WaveAppBar(title: l10n.settings, showBackButton: true),
 
@@ -34,10 +37,18 @@ class SettingsScreen extends StatelessWidget {
                 },
               ),
 
-              SettingsTile(
-                icon: Icons.dark_mode_outlined,
-                title: l10n.theme,
-                onTap: () {},
+              // 🔥 زر الثيم مع جلب الحالة الحالية لعرضها
+              BlocBuilder<ThemeCubit, ThemeMode>(
+                builder: (context, themeMode) {
+                  bool isDark = themeMode == ThemeMode.dark;
+                  return SettingsTile(
+                    icon: isDark ? Icons.dark_mode : Icons.light_mode_outlined,
+                    title: l10n.theme,
+                    onTap: () {
+                      _showThemeDialog(context); // 👈 إظهار حوار اختيار الثيم
+                    },
+                  );
+                },
               ),
 
               SettingsTile(
@@ -83,10 +94,16 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
+  // دالة حوار اختيار اللغة (كما هي لديك)
   void _showLanguageDialog(BuildContext context) {
+    // ... محتوى دالة اللغة القديم
+  }
+
+  // 🔥 دالة حوار اختيار الثيم (شبيهة بدالة اللغة)
+  void _showThemeDialog(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final localeCubit = context.read<LocaleCubit>();
-    final currentLocale = Localizations.localeOf(context).languageCode;
+    final themeCubit = context.read<ThemeCubit>();
+    final isDarkMode = themeCubit.state == ThemeMode.dark;
 
     showModalBottomSheet(
       context: context,
@@ -95,14 +112,13 @@ class SettingsScreen extends StatelessWidget {
       builder: (context) {
         return Container(
           padding: const EdgeInsets.fromLTRB(24, 20, 24, 35),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(35)),
+          decoration: BoxDecoration(
+            color: context.backgroundColor,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(35)),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Handle
               Container(
                 width: 45,
                 height: 5,
@@ -111,10 +127,7 @@ class SettingsScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
-
               const SizedBox(height: 25),
-
-              // Icon
               Container(
                 height: 75,
                 width: 75,
@@ -123,53 +136,45 @@ class SettingsScreen extends StatelessWidget {
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
-                  Icons.language_rounded,
+                  Icons.dark_mode_rounded,
                   size: 40,
                   color: AppColors.primaryBtn,
                 ),
               ),
-
               const SizedBox(height: 16),
-
               Text(
-                l10n.chooseLanguage,
-                style: Theme.of(
-                  context,
-                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                l10n.theme,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: context.textColor,
+                ),
               ),
-
-              const SizedBox(height: 8),
-
-              Text(
-                l10n.chooseLanguageHint,
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
-              ),
-
               const SizedBox(height: 25),
 
-              _languageItem(
+              // خيار الوضع الفاتح
+              _themeItem(
                 context,
-                title: "English",
-                subtitle: l10n.english,
-                languageIcon: "EN",
-                selected: currentLocale == "en",
+                title: "Light Mode",
+                subtitle: "الوضع النهاري",
+                icon: Icons.light_mode_outlined,
+                selected: !isDarkMode,
                 onTap: () {
-                  localeCubit.changeLanguage("en");
+                  themeCubit.toggleTheme(false);
                   Navigator.pop(context);
                 },
               ),
 
               const SizedBox(height: 14),
 
-              _languageItem(
+              // خيار الوضع الليلي
+              _themeItem(
                 context,
-                title: "العربية",
-                subtitle: "Arabic",
-                languageIcon: "ع",
-                selected: currentLocale == "ar",
+                title: "Dark Mode",
+                subtitle: "الوضع الليلي",
+                icon: Icons.dark_mode_outlined,
+                selected: isDarkMode,
                 onTap: () {
-                  localeCubit.changeLanguage("ar");
+                  themeCubit.toggleTheme(true);
                   Navigator.pop(context);
                 },
               ),
@@ -180,15 +185,14 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  Widget _languageItem(
+  Widget _themeItem(
     BuildContext context, {
     required String title,
     required String subtitle,
-    required String languageIcon,
+    required IconData icon,
     required bool selected,
     required VoidCallback onTap,
   }) {
-    final l10n = AppLocalizations.of(context)!;
     return InkWell(
       borderRadius: BorderRadius.circular(20),
       onTap: onTap,
@@ -198,82 +202,61 @@ class SettingsScreen extends StatelessWidget {
         decoration: BoxDecoration(
           color: selected
               ? AppColors.primaryBtn.withOpacity(0.12)
-              : Colors.grey.shade50,
+              : Colors.grey.shade50.withOpacity(0.1),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: selected ? AppColors.primaryBtn : Colors.grey.shade200,
+            color: selected ? AppColors.primaryBtn : Colors.grey.shade300,
             width: selected ? 1.5 : 1,
           ),
         ),
-
         child: Row(
           children: [
             Container(
               height: 55,
               width: 55,
               decoration: BoxDecoration(
-                color: selected ? AppColors.primaryBtn : Colors.grey.shade200,
+                color: selected
+                    ? AppColors.primaryBtn
+                    : Colors.grey.shade300.withOpacity(0.3),
                 shape: BoxShape.circle,
               ),
-              child: Center(
-                child: Text(
-                  languageIcon,
-                  style: TextStyle(
-                    color: selected ? Colors.white : AppColors.primaryBtn,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
-                ),
+              child: Icon(
+                icon,
+                color: selected ? Colors.white : AppColors.primaryBtn,
+                size: 26,
               ),
             ),
-
             const SizedBox(width: 16),
-
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.bold,
+                      color: context.textColor,
                     ),
                   ),
-
                   const SizedBox(height: 3),
-
                   Text(
                     subtitle,
-                    style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
+                    style: TextStyle(fontSize: 13, color: Colors.grey.shade500),
                   ),
                 ],
               ),
             ),
-
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 200),
-              child: selected
-                  ? Container(
-                      key: ValueKey(l10n.selected),
-                      height: 28,
-                      width: 28,
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryBtn,
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.check,
-                        color: Colors.white,
-                        size: 18,
-                      ),
-                    )
-                  :  SizedBox(
-                      key: ValueKey(l10n.empty),
-                      height: 28,
-                      width: 28,
-                    ),
-            ),
+            if (selected)
+              Container(
+                height: 28,
+                width: 28,
+                decoration: BoxDecoration(
+                  color: AppColors.primaryBtn,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.check, color: Colors.white, size: 18),
+              ),
           ],
         ),
       ),

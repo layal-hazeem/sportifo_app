@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/features/auth/presentation/widgets/custom_neumorphic_field.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/helpers/snack_bar_utils.dart';
@@ -70,7 +71,7 @@ class _ManualMealEntryScreenState extends State<ManualMealEntryScreen> {
           final isLoading = state is AddMealLoading;
 
           return Scaffold(
-            backgroundColor: AppColors.background,
+            backgroundColor: context.backgroundColor,
             appBar: const WaveAppBar(title: 'Add Meal', showBackButton: true),
             body: SingleChildScrollView(
               padding: const EdgeInsets.all(20),
@@ -79,12 +80,12 @@ class _ManualMealEntryScreenState extends State<ManualMealEntryScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'Meal Details',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.textDark,
+                        color: context.textColor,
                       ),
                     ),
                     const SizedBox(height: 6),

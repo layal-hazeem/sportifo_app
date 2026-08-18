@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/features/home/presentation/widgets/empty_state_widget.dart';
 import 'package:sportifo_app/features/subscriptions/data/models/users_subscribed_model.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
@@ -33,7 +34,7 @@ class ClientsPreviewSection extends StatelessWidget {
               style: TextStyle(
                 fontSize: AppSizes.labelFontSize + 2,
                 fontWeight: FontWeight.bold,
-                color: AppColors.textDark,
+                color: context.textColor,
               ),
             ),
             if (clients.isNotEmpty)
@@ -112,7 +113,7 @@ class _ClientAvatarItem extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 30,
-                    backgroundColor: AppColors.background,
+                    backgroundColor: context.backgroundColor,
                     backgroundImage:
                         (client.profilePic != null &&
                             client.profilePic!.isNotEmpty)
@@ -149,7 +150,7 @@ class _ClientAvatarItem extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 11, color: AppColors.textDark),
+                style: TextStyle(fontSize: 11, color: context.textColor),
               ),
             ],
           ),

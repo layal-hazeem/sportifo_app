@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/features/plan_details/data/models/plan_details_model.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
@@ -29,7 +30,7 @@ class PlanDaySelector extends StatelessWidget {
             child: Center(
               child: Container(
                 height: 1.4,
-                color: AppColors.textDark.withOpacity(.15),
+                color: context.textColor.withOpacity(.15),
               ),
             ),
           );
@@ -69,7 +70,7 @@ class _DayNode extends StatelessWidget {
         border: Border.all(
           color: isSelected
               ? AppColors.primaryBtn
-              : AppColors.textDark.withOpacity(.10),
+              : context.textColor.withOpacity(.10),
           width: isSelected ? 2 : 1,
         ),
         boxShadow: isSelected
@@ -82,7 +83,7 @@ class _DayNode extends StatelessWidget {
               ]
             : [
                 BoxShadow(
-                  color: AppColors.textDark.withOpacity(.06),
+                  color: context.textColor.withOpacity(.06),
                   blurRadius: 8,
                   offset: const Offset(0, 3),
                 ),
@@ -107,7 +108,7 @@ class _DayNode extends StatelessWidget {
             Text(
               '${index + 1}',
               style: TextStyle(
-                color: isSelected ? Colors.white : AppColors.textDark,
+                color: isSelected ? Colors.white : context.textColor,
                 fontSize: 15,
                 fontWeight: FontWeight.w900,
               ),

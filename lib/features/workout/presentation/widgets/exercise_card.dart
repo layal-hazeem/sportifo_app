@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/helpers/snack_bar_utils.dart';
@@ -19,7 +20,8 @@ class ExerciseCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final String displayImageUrl = (exercise.images != null && exercise.images!.isNotEmpty)
+    final String displayImageUrl =
+        (exercise.images != null && exercise.images!.isNotEmpty)
         ? exercise.images!.first.url ?? ''
         : '';
 
@@ -45,7 +47,9 @@ class ExerciseCard extends StatelessWidget {
                 Hero(
                   tag: 'exercise_${exercise.id}',
                   child: ClipRRect(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
                     child: Container(
                       height: 110,
                       width: double.infinity,
@@ -59,9 +63,15 @@ class ExerciseCard extends StatelessWidget {
                                 height: 110,
                                 borderRadius: 20,
                               ),
-                              errorWidget: (context, url, error) => const Icon(Icons.fitness_center, color: Colors.grey),
+                              errorWidget: (context, url, error) => const Icon(
+                                Icons.fitness_center,
+                                color: Colors.grey,
+                              ),
                             )
-                          : const Icon(Icons.image_not_supported, color: Colors.grey),
+                          : const Icon(
+                              Icons.image_not_supported,
+                              color: Colors.grey,
+                            ),
                     ),
                   ),
                 ),
@@ -71,48 +81,62 @@ class ExerciseCard extends StatelessWidget {
                   child: CircleAvatar(
                     backgroundColor: Colors.white.withValues(alpha: 0.8),
                     radius: 16,
-                    child: BlocConsumer<SavedExercisesCubit, SavedExercisesState>(
-                      listener: (context, state) {
-                        if (state is SavedExercisesToggleSuccess && state.exerciseId == exercise.id) {
-                          AppSnackBar.show(
-                            context,
-                            message: state.isSaved ? "Added to saved" : "Removed from saved",
-                            type: SnackBarType.success,
-                            onActionPressed: () {
-                              if (!context.mounted) return;
-                              final currentRoute = ModalRoute.of(context)?.settings.name;
-                              if (currentRoute == AppRoutes.savedExercises) {
-                                Navigator.of(context).pop();
-                                return;
-                              }
-                              Navigator.of(context).pushNamed(AppRoutes.savedExercises);
-                            },
-                          );
-                        }
-                      },
-                      builder: (context, state) {
-                        final cubit = context.read<SavedExercisesCubit>();
-                        final isCurrentlySaved = cubit.isSaved(exercise.id);
+                    child:
+                        BlocConsumer<SavedExercisesCubit, SavedExercisesState>(
+                          listener: (context, state) {
+                            if (state is SavedExercisesToggleSuccess &&
+                                state.exerciseId == exercise.id) {
+                              AppSnackBar.show(
+                                context,
+                                message: state.isSaved
+                                    ? "Added to saved"
+                                    : "Removed from saved",
+                                type: SnackBarType.success,
+                                onActionPressed: () {
+                                  if (!context.mounted) return;
+                                  final currentRoute = ModalRoute.of(
+                                    context,
+                                  )?.settings.name;
+                                  if (currentRoute ==
+                                      AppRoutes.savedExercises) {
+                                    Navigator.of(context).pop();
+                                    return;
+                                  }
+                                  Navigator.of(
+                                    context,
+                                  ).pushNamed(AppRoutes.savedExercises);
+                                },
+                              );
+                            }
+                          },
+                          builder: (context, state) {
+                            final cubit = context.read<SavedExercisesCubit>();
+                            final isCurrentlySaved = cubit.isSaved(exercise.id);
 
-                        return GestureDetector(
-                          onTap: () => cubit.toggleSave(exercise),
-                          child: Center(
-                            child: Icon(
-                              isCurrentlySaved ? Icons.bookmark : Icons.bookmark_border,
-                              color: AppColors.primaryBtn,
-                              size: 20,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+                            return GestureDetector(
+                              onTap: () => cubit.toggleSave(exercise),
+                              child: Center(
+                                child: Icon(
+                                  isCurrentlySaved
+                                      ? Icons.bookmark
+                                      : Icons.bookmark_border,
+                                  color: AppColors.primaryBtn,
+                                  size: 20,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                   ),
                 ),
               ],
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -121,8 +145,8 @@ class ExerciseCard extends StatelessWidget {
                       exercise.name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: AppColors.textDark,
+                      style: TextStyle(
+                        color: context.textColor,
                         fontSize: 13,
                         fontWeight: FontWeight.bold,
                       ),

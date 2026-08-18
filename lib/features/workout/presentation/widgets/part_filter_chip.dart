@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class PartFilterChip extends StatelessWidget {
@@ -25,10 +26,12 @@ class PartFilterChip extends StatelessWidget {
         showCheckmark: false, // شلناها لحتى يضل النص بمركز الكبسولة أرتب
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
-          side: BorderSide(color: isSelected ? AppColors.primaryBtn : Colors.grey.shade300),
+          side: BorderSide(
+            color: isSelected ? AppColors.primaryBtn : Colors.grey.shade300,
+          ),
         ),
         labelStyle: TextStyle(
-          color: isSelected ? Colors.white : AppColors.textDark,
+          color: isSelected ? Colors.white : context.textColor,
           fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
         ),
         onSelected: onSelected,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/routes/app_routes.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/storage/local_storage.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -68,10 +69,9 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     final l10n = AppLocalizations.of(context)!;
     final pages = onboardingPages(l10n);
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.backgroundColor,
       body: Stack(
         children: [
-
           PageView.builder(
             controller: _controller,
             onPageChanged: (index) {
@@ -95,7 +95,9 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                       margin: const EdgeInsets.symmetric(horizontal: 20),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(AppSizes.borderRadius),
+                        borderRadius: BorderRadius.circular(
+                          AppSizes.borderRadius,
+                        ),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black12,
@@ -105,7 +107,9 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                         ],
                       ),
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(AppSizes.borderRadius),
+                        borderRadius: BorderRadius.circular(
+                          AppSizes.borderRadius,
+                        ),
                         child: Image.asset(
                           page.image,
                           height: 260,
@@ -125,7 +129,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                         style: TextStyle(
                           fontSize: AppSizes.titleFontSize - 4,
                           fontWeight: FontWeight.bold,
-                          color: AppColors.textDark,
+                          color: context.textColor,
                         ),
                       ),
                     ),
@@ -157,7 +161,6 @@ class _OnboardingScreenState extends State<OnboardingScreen>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-
                 Row(
                   children: [
                     Icon(
@@ -171,12 +174,11 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.textDark,
+                        color: context.textColor,
                       ),
                     ),
                   ],
                 ),
-
 
                 if (currentIndex != pages.length - 1)
                   TextButton(
@@ -200,10 +202,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
             right: 20,
             child: Column(
               children: [
-                DotsIndicator(
-                  currentIndex: currentIndex,
-                  length: pages.length,
-                ),
+                DotsIndicator(currentIndex: currentIndex, length: pages.length),
                 const SizedBox(height: 20),
 
                 CustomAuthButton(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 
@@ -71,7 +72,7 @@ class QuickActionCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: AppSizes.labelFontSize,
                         fontWeight: FontWeight.bold,
-                        color: isPrimary ? Colors.white : AppColors.textDark,
+                        color: isPrimary ? Colors.white : context.textColor,
                       ),
                     ),
                     const SizedBox(height: 2),
@@ -149,7 +150,7 @@ class QuickActionsSection extends StatelessWidget {
           style: TextStyle(
             fontSize: AppSizes.labelFontSize + 2,
             fontWeight: FontWeight.bold,
-            color: AppColors.textDark,
+            color: context.textColor,
           ),
         ),
         const SizedBox(height: 14),

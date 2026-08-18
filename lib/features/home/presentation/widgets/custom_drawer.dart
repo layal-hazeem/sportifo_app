@@ -4,6 +4,7 @@ import 'package:sportifo_app/core/enum/drawer_enum.dart';
 import 'package:sportifo_app/core/helpers/dialog_helper.dart';
 import 'package:sportifo_app/core/routes/app_routes.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/logout/logout_cubit.dart';
 import 'package:sportifo_app/features/home/presentation/view/home_page.dart';
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_cubit.dart';
@@ -33,9 +34,11 @@ class CustomDrawer extends StatelessWidget {
             top: 120,
             child: Container(
               padding: const EdgeInsets.fromLTRB(20, 80, 20, 20),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(40)),
+              decoration: BoxDecoration(
+                color: context.backgroundColor,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(40),
+                ),
               ),
               child: Column(
                 children: [
@@ -48,6 +51,7 @@ class CustomDrawer extends StatelessWidget {
                           name: "${user.firstName} ${user.lastName}",
                           email: user.email ?? "",
                           imageUrl: user.profilePic,
+                          context: context,
                         );
                       }
 
@@ -106,7 +110,7 @@ class CustomDrawer extends StatelessWidget {
                     style: NeumorphicStyle(
                       depth: 6,
                       boxShape: const NeumorphicBoxShape.circle(),
-                      color: Colors.white,
+                      color: context.backgroundColor,
                     ),
                     child: BlocBuilder<ProfileCubit, ProfileState>(
                       builder: (context, state) {
@@ -189,6 +193,7 @@ class CustomDrawer extends StatelessWidget {
     required String name,
     required String email,
     String? imageUrl,
+    required BuildContext context,
   }) {
     return Column(
       children: [
@@ -199,7 +204,7 @@ class CustomDrawer extends StatelessWidget {
 
         const SizedBox(height: 5),
 
-        Text(email, style: const TextStyle(color: Colors.grey)),
+        Text(email, style: TextStyle(color: context.textColor)),
       ],
     );
   }
@@ -212,45 +217,56 @@ class CustomDrawer extends StatelessWidget {
   }) {
     final isSelected = homeViewModel.currentIndex == item;
 
-    return GestureDetector(
-      onTap: () {
-        onItemTap(item);
-        Navigator.pop(context);
-        _navigateToPage(context, item);
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 6),
-        child: Neumorphic(
-          style: NeumorphicStyle(
-            depth: isSelected ? 6 : -4,
-            intensity: 0.8,
-            boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(20)),
-            color: isSelected
-                ? AppColors.primaryBtn.withOpacity(0.15)
-                : Colors.white,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
-            child: Row(
-              children: [
-                Icon(
-                  icon,
-                  color: isSelected ? AppColors.primaryBtn : AppColors.hintText,
+    final backgroundColor = context.backgroundColor;
+
+    final iconColor = item == DrawerItem.logout
+        ? Colors.red
+        : AppColors.primaryBtn;
+
+    final textColor = item == DrawerItem.logout
+        ? Colors.red
+        : context.textColor;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: NeumorphicButton(
+        onPressed: () {
+          onItemTap(item);
+          Navigator.pop(context);
+          _navigateToPage(context, item);
+        },
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+        style: NeumorphicStyle(
+          depth: isSelected ? 5 : 3,
+          intensity: .9,
+          boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(18)),
+          color: backgroundColor,
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: iconColor, size: 23),
+
+            const SizedBox(width: 16),
+
+            Expanded(
+              child: Text(
+                text,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
+                  color: textColor,
                 ),
-                const SizedBox(width: 15),
-                Text(
-                  text,
-                  style: TextStyle(
-                    fontWeight: isSelected
-                        ? FontWeight.bold
-                        : FontWeight.normal,
-                  ),
-                ),
-                const Spacer(),
-                const Icon(Icons.arrow_forward_ios, size: 14),
-              ],
+              ),
             ),
-          ),
+
+            Icon(
+              Icons.arrow_forward_ios,
+              size: 17,
+              color: item == DrawerItem.logout
+                  ? Colors.red
+                  : context.textColor.withOpacity(.45),
+            ),
+          ],
         ),
       ),
     );

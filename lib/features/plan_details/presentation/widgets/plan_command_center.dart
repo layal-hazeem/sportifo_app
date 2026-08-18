@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/features/plan_details/data/models/plan_details_model.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
@@ -21,10 +22,10 @@ class PlanCommandCenter extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: AppColors.textDark.withOpacity(.06)),
+          border: Border.all(color: context.textColor.withOpacity(.06)),
           boxShadow: [
             BoxShadow(
-              color: AppColors.textDark.withOpacity(.06),
+              color: context.textColor.withOpacity(.06),
               blurRadius: 24,
               offset: const Offset(0, 10),
             ),
@@ -42,7 +43,7 @@ class PlanCommandCenter extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 18),
-            Container(height: 1, color: AppColors.textDark.withOpacity(.06)),
+            Container(height: 1, color: context.textColor.withOpacity(.06)),
             const SizedBox(height: 16),
             Row(
               children: [
@@ -85,7 +86,7 @@ class _Divider extends StatelessWidget {
     return Container(
       width: 1,
       height: 34,
-      color: AppColors.textDark.withOpacity(.06),
+      color: context.textColor.withOpacity(.06),
     );
   }
 }
@@ -119,8 +120,8 @@ class _AthleteBlock extends StatelessWidget {
           name,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: const TextStyle(
-            color: AppColors.textDark,
+          style: TextStyle(
+            color: context.textColor,
             fontSize: 22,
             fontWeight: FontWeight.w900,
             letterSpacing: -.5,
@@ -211,8 +212,8 @@ class _StatTile extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           value,
-          style: const TextStyle(
-            color: AppColors.textDark,
+          style: TextStyle(
+            color: context.textColor,
             fontSize: 14,
             fontWeight: FontWeight.w900,
           ),

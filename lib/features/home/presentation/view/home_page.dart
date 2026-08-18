@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/routes/app_routes.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/features/%20ads/presentation/view_model/ads_cubit.dart';
 import 'package:sportifo_app/features/ai_chat/presentation/view/ai_chat_screen.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/logout/logout_cubit.dart';
@@ -39,7 +40,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   DrawerItem selectedDrawerItem = DrawerItem.profile;
-  
+
   bool _isNavBarHidden = false;
   int _previousIndex = 2; // حفظ التبويب السابق للتأكد من تغير الصفحة
 
@@ -239,7 +240,9 @@ class _HomePageState extends State<HomePage> {
                                   height: 5,
                                   margin: const EdgeInsets.only(bottom: 4),
                                   decoration: BoxDecoration(
-                                    color: AppColors.primaryBtn.withOpacity(0.7),
+                                    color: AppColors.primaryBtn.withOpacity(
+                                      0.7,
+                                    ),
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                 ),
@@ -250,40 +253,53 @@ class _HomePageState extends State<HomePage> {
                                   },
                                   type: BottomNavigationBarType.fixed,
                                   showSelectedLabels: false,
-                                  backgroundColor: AppColors.background,
+                                  backgroundColor: context.backgroundColor,
                                   elevation: 0,
                                   selectedItemColor: AppColors.primaryBtn,
                                   unselectedItemColor: AppColors.hintText,
                                   items: [
                                     CustomBottomNavBar.build(
+                                      context,
                                       icon: isCoach
                                           ? Icons.workspace_premium_rounded
                                           : Icons.show_chart,
                                       label: isCoach ? l10n.sub : l10n.progress,
-                                      isSelected: homeViewModel.currentIndex == 0,
+                                      isSelected:
+                                          homeViewModel.currentIndex == 0,
                                     ),
                                     CustomBottomNavBar.build(
+                                      context,
                                       icon: isCoach
                                           ? Icons.groups_rounded
                                           : Icons.calendar_today,
-                                      label: isCoach ? l10n.trainees : l10n.myPlans,
-                                      isSelected: homeViewModel.currentIndex == 1,
+                                      label: isCoach
+                                          ? l10n.trainees
+                                          : l10n.myPlans,
+                                      isSelected:
+                                          homeViewModel.currentIndex == 1,
                                     ),
                                     CustomBottomNavBar.build(
+                                      context,
                                       icon: Icons.home,
                                       label: l10n.home,
-                                      isSelected: homeViewModel.currentIndex == 2,
+                                      isSelected:
+                                          homeViewModel.currentIndex == 2,
                                     ),
                                     CustomBottomNavBar.build(
+                                      context,
                                       icon: Icons.fitness_center_outlined,
                                       label: l10n.workouts,
-                                      isSelected: homeViewModel.currentIndex == 3,
+                                      isSelected:
+                                          homeViewModel.currentIndex == 3,
                                     ),
                                     CustomBottomNavBar.build(
+                                      context,
                                       icon: Icons.chat,
-                                      svgIcon: 'assets/icons/bot-message-square.svg',
+                                      svgIcon:
+                                          'assets/icons/bot-message-square.svg',
                                       label: l10n.chatAI,
-                                      isSelected: homeViewModel.currentIndex == 4,
+                                      isSelected:
+                                          homeViewModel.currentIndex == 4,
                                     ),
                                   ],
                                 ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/features/workout/data/models/exercise_model.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
@@ -79,8 +80,8 @@ class PlanExerciseCard extends StatelessWidget {
                           exercise.name,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            color: AppColors.textDark,
+                          style: TextStyle(
+                            color: context.textColor,
                             fontSize: 15,
                             fontWeight: FontWeight.w800,
                             height: 1.2,
@@ -190,7 +191,7 @@ class _MetricChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: BoxDecoration(
-        color: AppColors.background,
+        color: context.backgroundColor,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: Colors.black.withOpacity(0.04)),
       ),
@@ -201,8 +202,8 @@ class _MetricChip extends StatelessWidget {
           const SizedBox(width: 5),
           Text(
             value,
-            style: const TextStyle(
-              color: AppColors.textDark,
+            style: TextStyle(
+              color: context.textColor,
               fontSize: 10,
               fontWeight: FontWeight.w800,
             ),
@@ -230,7 +231,7 @@ class _ExerciseTypeBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final color = isCardio ? AppColors.textDark : AppColors.primaryBtn;
+    final color = isCardio ? context.textColor : AppColors.primaryBtn;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -294,8 +295,8 @@ class _InstructionSheet extends StatelessWidget {
               const SizedBox(height: 6),
               Text(
                 exercise.name,
-                style: const TextStyle(
-                  color: AppColors.textDark,
+                style: TextStyle(
+                  color: context.textColor,
                   fontSize: 22,
                   fontWeight: FontWeight.w900,
                 ),
@@ -304,7 +305,7 @@ class _InstructionSheet extends StatelessWidget {
               Text(
                 exercise.description,
                 style: TextStyle(
-                  color: AppColors.textDark.withOpacity(0.7),
+                  color: context.textColor.withOpacity(0.7),
                   fontSize: 14,
                   height: 1.6,
                 ),
@@ -323,7 +324,7 @@ class _MediaPlaceholder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColors.background,
+      color: context.backgroundColor,
       child: Center(
         child: Icon(
           Icons.fitness_center_rounded,

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/features/profile/data/models/get_profile_response.dart';
 import '../theme/app_colors.dart';
 
@@ -35,7 +36,7 @@ class AppImagePicker {
 
     await showModalBottomSheet(
       context: context,
-      backgroundColor: AppColors.background,
+      backgroundColor: context.backgroundColor,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
       ),
@@ -55,17 +56,20 @@ class AppImagePicker {
                   ),
                 ),
                 const SizedBox(height: 20),
-                const Text(
+                 Text(
                   "Choose Image Source", // يمكنك استبدالها بالترجمة l10n لاحقاً
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.textDark,
+                    color: context.textColor,
                   ),
                 ),
                 const SizedBox(height: 20),
                 ListTile(
-                  leading: const Icon(Icons.photo_library, color: AppColors.primaryBtn),
+                  leading: const Icon(
+                    Icons.photo_library,
+                    color: AppColors.primaryBtn,
+                  ),
                   title: const Text("Gallery"),
                   onTap: () async {
                     selectedImage = await _pickImage(ImageSource.gallery);
@@ -73,7 +77,10 @@ class AppImagePicker {
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.camera_alt, color: AppColors.primaryBtn),
+                  leading: const Icon(
+                    Icons.camera_alt,
+                    color: AppColors.primaryBtn,
+                  ),
                   title: const Text("Camera"),
                   onTap: () async {
                     selectedImage = await _pickImage(ImageSource.camera);

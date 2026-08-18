@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/core/widgets/cached_static_gif.dart';
 import 'package:sportifo_app/features/workout/data/models/exercise_model.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
@@ -94,8 +95,8 @@ class ExerciseSelectableCard extends StatelessWidget {
                       exercise.name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: AppColors.textDark,
+                      style: TextStyle(
+                        color: context.textColor,
                         fontSize: 13,
                         fontWeight: FontWeight.w700,
                         letterSpacing: -0.1,

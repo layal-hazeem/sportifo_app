@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class LightPremiumWorkoutCard extends StatelessWidget {
@@ -39,10 +40,7 @@ class LightPremiumWorkoutCard extends StatelessWidget {
               fit: StackFit.expand,
               children: [
                 // 🔥 استخدام Image.asset للصور المحلية
-                Image.asset(
-                  imagePath,
-                  fit: BoxFit.cover,
-                ),
+                Image.asset(imagePath, fit: BoxFit.cover),
                 Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
@@ -66,8 +64,8 @@ class LightPremiumWorkoutCard extends StatelessWidget {
                     children: [
                       Text(
                         title,
-                        style: const TextStyle(
-                          color: AppColors.textDark,
+                        style: TextStyle(
+                          color: context.textColor,
                           fontSize: 18,
                           fontWeight: FontWeight.w900,
                           letterSpacing: 1.0,

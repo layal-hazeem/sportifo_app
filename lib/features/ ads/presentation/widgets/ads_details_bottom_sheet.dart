@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/widgets/custom_cached_image.dart';
@@ -54,12 +55,12 @@ class _AdDetailsBottomSheetState extends State<AdDetailsBottomSheet> {
               // 🛑 1. الحاوية العلوية الضبابية الشفافة (تأثير الزجاج)
               Positioned.fill(
                 child: ClipRRect(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(30),
+                  ),
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 17, sigmaY: 17),
-                    child: Container(
-                      color: Colors.black.withOpacity(0.13),
-                    ),
+                    child: Container(color: Colors.black.withOpacity(0.13)),
                   ),
                 ),
               ),
@@ -125,7 +126,9 @@ class _AdDetailsBottomSheetState extends State<AdDetailsBottomSheet> {
                         margin: const EdgeInsets.symmetric(horizontal: 4.0),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: isActive ? Colors.white : Colors.white.withOpacity(0.4),
+                          color: isActive
+                              ? Colors.white
+                              : Colors.white.withOpacity(0.4),
                         ),
                       );
                     }).toList(),
@@ -139,13 +142,16 @@ class _AdDetailsBottomSheetState extends State<AdDetailsBottomSheet> {
                     constraints: BoxConstraints(minHeight: screenHeight * 0.5),
                     decoration: const BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(35)),
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(35),
+                      ),
                     ),
                     padding: const EdgeInsets.fromLTRB(24, 35, 24, 120),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        if (widget.ad.type == 'product' && widget.ad.price != null) ...[
+                        if (widget.ad.type == 'product' &&
+                            widget.ad.price != null) ...[
                           Text(
                             "\$${widget.ad.price}",
                             style: const TextStyle(
@@ -160,10 +166,10 @@ class _AdDetailsBottomSheetState extends State<AdDetailsBottomSheet> {
                         Text(
                           widget.ad.name,
                           textAlign: TextAlign.center,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
-                            color: AppColors.textDark,
+                            color: context.textColor,
                           ),
                         ),
                         const SizedBox(height: 6),
@@ -183,10 +189,10 @@ class _AdDetailsBottomSheetState extends State<AdDetailsBottomSheet> {
                         const SizedBox(height: 30),
                         Text(
                           l10n.details, // 🔥 ترجمة كلمة التفاصيل
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.bold,
-                            color: AppColors.textDark,
+                            color: context.textColor,
                           ),
                         ),
                         const SizedBox(height: 10),
@@ -226,8 +232,13 @@ class _AdDetailsBottomSheetState extends State<AdDetailsBottomSheet> {
                       ),
                     ),
                     child: Text(
-                      widget.ad.type == 'product' ? l10n.shopNow : l10n.learnMore, // 🔥 ترجمة نص الزر
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      widget.ad.type == 'product'
+                          ? l10n.shopNow
+                          : l10n.learnMore, // 🔥 ترجمة نص الزر
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),

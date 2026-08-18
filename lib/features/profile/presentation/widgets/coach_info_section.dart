@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/features/profile/data/models/get_profile_response.dart';
 import 'package:sportifo_app/features/profile/presentation/widgets/basic_info_section.dart';
-
 
 class CoachInfoSection extends StatelessWidget {
   final ProfileResponseModel profile;
 
-  const CoachInfoSection({
-    super.key,
-    required this.profile,
-  });
+  const CoachInfoSection({super.key, required this.profile});
 
   Coach? get coach => profile.coach;
 
@@ -41,29 +37,20 @@ class CoachInfoSection extends StatelessWidget {
 
           const Divider(height: 32),
 
-          _item(
-            "Years of Experience",
-            "${coach?.yearsOfExp ?? "-"}",
-          ),
+          _item("Years of Experience", "${coach?.yearsOfExp ?? "-"}"),
 
           const SizedBox(height: 18),
 
           const Text(
             "Description",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 15,
-            ),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
           ),
 
           const SizedBox(height: 10),
 
           Text(
             coach?.description ?? "-",
-            style: const TextStyle(
-              color: AppColors.textDark,
-              height: 1.5,
-            ),
+            style: TextStyle(color: context.textColor, height: 1.5),
           ),
         ],
       ),
@@ -74,12 +61,7 @@ class CoachInfoSection extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          title,
-          style: const TextStyle(
-            fontWeight: FontWeight.w600,
-          ),
-        ),
+        Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
         Text(value),
       ],
     );

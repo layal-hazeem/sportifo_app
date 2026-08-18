@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/core/helpers/snack_bar_utils.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/features/auth/presentation/widgets/custom_button.dart';
 import 'package:sportifo_app/features/auth/presentation/widgets/custom_neumorphic_field.dart';
 import 'package:sportifo_app/features/profile/data/models/edit_coach_profile_request_model.dart';
@@ -87,13 +88,13 @@ class _EditProfilePageState extends State<EditProfilePage>
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.backgroundColor,
       appBar: NeumorphicAppBar(
         title: Text(
           l10n.editProfile,
-          style: TextStyle(color: AppColors.textDark),
+          style: TextStyle(color: context.textColor),
         ),
-        color: AppColors.background,
+        color: context.backgroundColor,
       ),
       body: BlocConsumer<ProfileCubit, ProfileState>(
         listener: (context, state) {
@@ -454,7 +455,7 @@ class _EditProfilePageState extends State<EditProfilePage>
             margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: AppColors.background,
+              color: context.backgroundColor,
               borderRadius: BorderRadius.circular(30),
             ),
             child: Row(

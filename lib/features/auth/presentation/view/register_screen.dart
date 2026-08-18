@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/utils/app_validators.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -36,7 +37,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   @override
   void dispose() {
@@ -124,7 +126,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppColors.background,
+      backgroundColor: context.backgroundColor,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
       ),
@@ -146,22 +148,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
               const SizedBox(height: 20),
               Text(
                 l10n.chooseOtpMethod,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.textDark,
+                  color: context.textColor,
                 ),
               ),
               const SizedBox(height: 20),
               ListTile(
                 leading: const Icon(Icons.email_outlined),
                 title: Text(l10n.viaEmail),
-                onTap: () => _submitRegistration('email', fromBottomSheet: true),
+                onTap: () =>
+                    _submitRegistration('email', fromBottomSheet: true),
               ),
               ListTile(
                 leading: const Icon(Icons.phone_outlined),
                 title: Text(l10n.viaPhone),
-                onTap: () => _submitRegistration('phone', fromBottomSheet: true),
+                onTap: () =>
+                    _submitRegistration('phone', fromBottomSheet: true),
               ),
               const SizedBox(height: 10),
             ],
@@ -176,7 +180,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.backgroundColor,
       body: BlocConsumer<RegisterCubit, RegisterState>(
         listener: (context, state) {
           if (state is RegisterSuccess) {
@@ -209,10 +213,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   const SizedBox(height: 40),
                   Text(
                     l10n.createAccount,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: AppColors.textDark,
+                      color: context.textColor,
                     ),
                   ),
                   const SizedBox(height: 30),
@@ -227,51 +231,88 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ///  STEP 1
                         _buildScrollablePage(
                           formKey: _step1FormKey,
-                          autovalidateMode: _step1AutovalidateMode, // 🔥 تمرير الحالة الديناميكية
+                          autovalidateMode:
+                              _step1AutovalidateMode, // 🔥 تمرير الحالة الديناميكية
                           l10n: l10n,
                           state: state,
                           isLastStep: false,
                           children: [
                             buildField(
-                              l10n.firstName, l10n.enterFirstName, Icons.person_outline,
+                              l10n.firstName,
+                              l10n.enterFirstName,
+                              Icons.person_outline,
                               controller: _firstNameController,
-                              validator: (val) => AppValidators.validateRequired(val, message: l10n.requiredField),
+                              validator: (val) =>
+                                  AppValidators.validateRequired(
+                                    val,
+                                    message: l10n.requiredField,
+                                  ),
                             ),
                             buildField(
-                              l10n.lastName, l10n.enterLastName, Icons.person_outline,
+                              l10n.lastName,
+                              l10n.enterLastName,
+                              Icons.person_outline,
                               controller: _lastNameController,
-                              validator: (val) => AppValidators.validateRequired(val, message: l10n.requiredField),
+                              validator: (val) =>
+                                  AppValidators.validateRequired(
+                                    val,
+                                    message: l10n.requiredField,
+                                  ),
                             ),
                             buildField(
-                              l10n.email, l10n.enterEmail, Icons.email_outlined,
+                              l10n.email,
+                              l10n.enterEmail,
+                              Icons.email_outlined,
                               controller: _emailController,
                               validator: (val) {
-                                if (val!.trim().isEmpty && _phoneController.text.trim().isEmpty) {
+                                if (val!.trim().isEmpty &&
+                                    _phoneController.text.trim().isEmpty) {
                                   return l10n.enterEmailOrPhone;
                                 }
-                                return AppValidators.validateEmail(val, isRequired: false, message: l10n.invalidEmail);
+                                return AppValidators.validateEmail(
+                                  val,
+                                  isRequired: false,
+                                  message: l10n.invalidEmail,
+                                );
                               },
                             ),
                             buildField(
-                              l10n.phone, l10n.enterPhone, Icons.phone_outlined,
+                              l10n.phone,
+                              l10n.enterPhone,
+                              Icons.phone_outlined,
                               controller: _phoneController,
                               validator: (val) {
-                                if (val!.trim().isEmpty && _emailController.text.trim().isEmpty) {
+                                if (val!.trim().isEmpty &&
+                                    _emailController.text.trim().isEmpty) {
                                   return l10n.enterEmailOrPhone;
                                 }
-                                return AppValidators.validatePhone(val, isRequired: false, message: l10n.invalidPhone);
+                                return AppValidators.validatePhone(
+                                  val,
+                                  isRequired: false,
+                                  message: l10n.invalidPhone,
+                                );
                               },
                             ),
                             const SizedBox(height: 30),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text(l10n.dontHaveAccount, style: const TextStyle(color: AppColors.textDark, fontSize: 14)),
+                                Text(
+                                  l10n.dontHaveAccount,
+                                  style: TextStyle(
+                                    color: context.textColor,
+                                    fontSize: 14,
+                                  ),
+                                ),
                                 TextButton(
                                   onPressed: login,
                                   child: Text(
                                     l10n.login,
-                                    style: const TextStyle(color: AppColors.primaryBtn, fontWeight: FontWeight.bold, fontSize: 16),
+                                    style: const TextStyle(
+                                      color: AppColors.primaryBtn,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -282,26 +323,36 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ///  STEP 2
                         _buildScrollablePage(
                           formKey: _step2FormKey,
-                          autovalidateMode: _step2AutovalidateMode, // 🔥 تمرير الحالة الديناميكية
+                          autovalidateMode:
+                              _step2AutovalidateMode, // 🔥 تمرير الحالة الديناميكية
                           l10n: l10n,
                           state: state,
                           isLastStep: true,
                           children: [
                             buildField(
-                              l10n.password, l10n.passwordHint, Icons.lock_outline,
+                              l10n.password,
+                              l10n.passwordHint,
+                              Icons.lock_outline,
                               isPassword: true,
                               controller: _passwordController,
-                              validator: (val) => AppValidators.validatePassword(val, message: l10n.requiredField),
+                              validator: (val) =>
+                                  AppValidators.validatePassword(
+                                    val,
+                                    message: l10n.requiredField,
+                                  ),
                             ),
                             buildField(
-                              l10n.confirmPassword, l10n.confirmPassword, Icons.lock_outline,
+                              l10n.confirmPassword,
+                              l10n.confirmPassword,
+                              Icons.lock_outline,
                               isPassword: true,
                               controller: _confirmPasswordController,
-                              validator: (val) => AppValidators.validateConfirmPassword(
-                                val,
-                                _passwordController.text,
-                                message: l10n.passwordMismatch,
-                              ),
+                              validator: (val) =>
+                                  AppValidators.validateConfirmPassword(
+                                    val,
+                                    _passwordController.text,
+                                    message: l10n.passwordMismatch,
+                                  ),
                             ),
                           ],
                         ),
@@ -319,7 +370,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Widget _buildScrollablePage({
     required GlobalKey<FormState> formKey,
-    required AutovalidateMode autovalidateMode, // 🔥 أصبحت تستقبل الـ mode كمعامل مرن
+    required AutovalidateMode
+    autovalidateMode, // 🔥 أصبحت تستقبل الـ mode كمعامل مرن
     required AppLocalizations l10n,
     required RegisterState state,
     required bool isLastStep,
@@ -344,14 +396,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     const SizedBox(height: 20),
                     CustomAuthButton(
                       text: !isLastStep ? l10n.next : l10n.register,
-                      onPressed: (isLastStep && !_isTermsAccepted) ? null : nextStep,
+                      onPressed: (isLastStep && !_isTermsAccepted)
+                          ? null
+                          : nextStep,
                       isLoading: state is RegisterLoading,
                     ),
                     const SizedBox(height: 10),
                     if (currentPage == 1)
                       TextButton(
-                        onPressed: () => _controller.previousPage(duration: const Duration(milliseconds: 400), curve: Curves.easeInOut),
-                        child: Text(l10n.back, style: const TextStyle(color: AppColors.linkColor, fontWeight: FontWeight.bold)),
+                        onPressed: () => _controller.previousPage(
+                          duration: const Duration(milliseconds: 400),
+                          curve: Curves.easeInOut,
+                        ),
+                        child: Text(
+                          l10n.back,
+                          style: const TextStyle(
+                            color: AppColors.linkColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     const SizedBox(height: 20),
                   ],
@@ -374,7 +437,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
           child: Checkbox(
             value: _isTermsAccepted,
             activeColor: AppColors.primaryBtn,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4),
+            ),
             onChanged: (val) => setState(() => _isTermsAccepted = val ?? false),
           ),
         ),
@@ -382,12 +447,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
         Expanded(
           child: RichText(
             text: TextSpan(
-              style: const TextStyle(color: AppColors.hintText, fontSize: 13, height: 1.4, fontFamily: 'Cairo'),
+              style: const TextStyle(
+                color: AppColors.hintText,
+                fontSize: 13,
+                height: 1.4,
+                fontFamily: 'Cairo',
+              ),
               children: [
                 TextSpan(text: l10n.termsPart1),
-                TextSpan(text: l10n.termsPart2, style: const TextStyle(color: AppColors.primaryBtn, fontWeight: FontWeight.bold)),
+                TextSpan(
+                  text: l10n.termsPart2,
+                  style: const TextStyle(
+                    color: AppColors.primaryBtn,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 TextSpan(text: l10n.termsPart3),
-                TextSpan(text: l10n.termsPart4, style: const TextStyle(color: AppColors.primaryBtn, fontWeight: FontWeight.bold)),
+                TextSpan(
+                  text: l10n.termsPart4,
+                  style: const TextStyle(
+                    color: AppColors.primaryBtn,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ],
             ),
           ),
@@ -396,14 +478,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Widget buildField(String label, String hint, IconData icon, {bool isPassword = false, required TextEditingController controller, String? Function(String?)? validator}) {
+  Widget buildField(
+    String label,
+    String hint,
+    IconData icon, {
+    bool isPassword = false,
+    required TextEditingController controller,
+    String? Function(String?)? validator,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 20),
-        Text(label, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+        Text(
+          label,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        ),
         const SizedBox(height: 10),
-        CustomNeumorphicField(hint: hint, icon: icon, isPassword: isPassword, controller: controller, validator: validator),
+        CustomNeumorphicField(
+          hint: hint,
+          icon: icon,
+          isPassword: isPassword,
+          controller: controller,
+          validator: validator,
+        ),
       ],
     );
   }

@@ -16,6 +16,8 @@ import 'package:sportifo_app/features/edit_self_plan/presentation/view_model/edi
 import 'package:sportifo_app/features/existing_days/data/repository/existing_days_repository.dart';
 import 'package:sportifo_app/features/existing_days/data/web_services/existing_days_web_services.dart';
 import 'package:sportifo_app/features/existing_days/presentation/view_model/existing_days_cubit.dart';
+import 'package:sportifo_app/features/home/data/repository/coach_home_repository.dart';
+import 'package:sportifo_app/features/home/presentation/view_model/coach_home_cubit.dart';
 import 'package:sportifo_app/features/nutrition/data/repository/nutrition_repository.dart';
 import 'package:sportifo_app/features/nutrition/data/web_services/nutrition_web_service.dart';
 import 'package:sportifo_app/features/nutrition/presentation/view_model/nutrition_cubit.dart';
@@ -366,4 +368,17 @@ getIt.registerFactory<EditSelfPlanCubit>(
   getIt.registerFactory<CreateSelfPlanCubit>(
     () => CreateSelfPlanCubit(getIt<CreateSelfPlanRepository>()),
   );
+
+  getIt.registerLazySingleton<CoachHomeRepository>(
+  () => CoachHomeRepositoryImpl(
+    getIt<ProfileRepository>(),
+    getIt<SubscriptionRepository>(),
+  ),
+);
+
+getIt.registerFactory<CoachHomeCubit>(
+  () => CoachHomeCubit(
+    getIt<CoachHomeRepository>(),
+  ),
+);
 }

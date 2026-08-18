@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../view_model/target_cubit/target_cubit.dart';
 import 'goal_selector_bottom_sheet.dart';
@@ -40,14 +41,22 @@ class TargetActivationCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       "Activate Your Smart Plan ",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: context.textColor,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       "Set your main physical target now to dynamically evaluate your necessary daily calories and macronutrients.",
-                      style: TextStyle(fontSize: 12, color: Colors.grey.shade500, height: 1),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey.shade500,
+                        height: 1,
+                      ),
                     ),
                   ],
                 ),
@@ -61,7 +70,9 @@ class TargetActivationCard extends StatelessWidget {
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primaryBtn,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
                 elevation: 0,
               ),
               onPressed: () {
@@ -69,7 +80,9 @@ class TargetActivationCard extends StatelessWidget {
                 final profileState = context.read<ProfileCubit>().state;
                 double? userWeight;
                 if (profileState is ProfileSuccess) {
-                  userWeight = profileState.profileModel.weight; // تأكد من اسم المتغير في موديلك
+                  userWeight = profileState
+                      .profileModel
+                      .weight; // تأكد من اسم المتغير في موديلك
                 }
 
                 GoalSelectorBottomSheet.show(
@@ -80,7 +93,11 @@ class TargetActivationCard extends StatelessWidget {
               },
               child: const Text(
                 "Set My Goal Now",
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
               ),
             ),
           ),
