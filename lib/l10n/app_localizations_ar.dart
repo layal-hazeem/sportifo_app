@@ -455,7 +455,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get pendingApproval => 'بانتظار الموافقة';
 
   @override
-  String get actionRequired => 'يلزم اتخاذ إجراء';
+  String get actionRequired => 'يتطلب إجراء';
 
   @override
   String get noPendingSubscriptions => 'لا توجد اشتراكات معلقة';
@@ -707,6 +707,60 @@ class AppLocalizationsAr extends AppLocalizations {
   String get endedLastMonth => 'الاشتراكات التي انتهت خلال الشهر الماضي';
 
   @override
+  String get editPlan => 'تعديل الخطة';
+
+  @override
+  String get createNewDay => 'إنشاء يوم جديد';
+
+  @override
+  String get creatDaySubtitle => 'صمم برنامج تمارين رياضية مخصص';
+
+  @override
+  String get addExistingDay => 'أضافة يوم موجود مسبقاً';
+
+  @override
+  String get addExistingDaySubtitle => 'استخدم يوم محفوظ مسبقاً';
+
+  @override
+  String get workoutDays => 'ايام التمرين';
+
+  @override
+  String get day => 'يوم';
+
+  @override
+  String get days => 'ايام';
+
+  @override
+  String get waitUpdatePlan => 'يرجى الانتظار بينما يتم تحديث الخطة';
+
+  @override
+  String get noWorkoutDaysYet => 'لم يتم تحديد أيام للتمرين بعد';
+
+  @override
+  String get hintForCreateDay => 'أنشئ يوم تمرين جديد أو أعد استخدام يوم من أيام التمرين المحفوظة لديك';
+
+  @override
+  String get tapPlus => 'انقر على علامة + للبدء';
+
+  @override
+  String get stepOne => 'الخطوة الأولى: الهدف والمدة';
+
+  @override
+  String get stepTwo => 'الخطوة الثانية: الأيام والتمارين';
+
+  @override
+  String get chooseGoalForTrainingPlan => 'اختر هدفًا لخطة التدريب هذه';
+
+  @override
+  String get addAtLeastOneWorkoutDay => 'أضف يومًا واحدًا على الأقل للتمرين';
+
+  @override
+  String get everyWorkoutDayNeedsExercise => 'يحتاج كل يوم تمرين إلى تمرين واحد على الأقل';
+
+  @override
+  String get createPlan => 'أنشاء خطة';
+
+  @override
   String get addedToSaved => 'تمت الإضافة إلى المحفوظات';
 
   @override
@@ -884,7 +938,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get duration => 'المدة';
 
   @override
-  String get exercises => 'التمارين';
+  String get exercises => 'تمارين';
 
   @override
   String get performanceSummary => 'ملخص الأداء';
@@ -896,10 +950,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get skipped => 'تم التخطي';
 
   @override
-  String get min => 'دقيقة';
+  String get min => 'د';
 
   @override
-  String get reps => 'عدة';
+  String get reps => 'تكرارات';
 
   @override
   String get noSetsLogged => 'لم يتم تسجيل أي جولة';
@@ -972,4 +1026,300 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get exploreFreePlans => 'استكشف خطط سبورتيفو';
+
+  @override
+  String get createYourOwnPlan => 'أنشئ خطتك الخاصة';
+
+  @override
+  String get buildWorkoutPlanThatFitsYou => 'قم ببناء خطة تمارين تناسبك';
+
+  @override
+  String get tryAgain => 'حاول مجدداً';
+
+  @override
+  String get yourTrainees => 'متدربينك';
+
+  @override
+  String get noTraineesYet => 'لا يوجد متدربين بعد';
+
+  @override
+  String get needs_a_plan => 'يحتاج خطة';
+
+  @override
+  String get hasAnActivePlan => 'لديه خطة فعالة';
+
+  @override
+  String get coach => 'المدرب';
+
+  @override
+  String get goodMorning => 'صباح الخير';
+
+  @override
+  String get goodAfternoon => 'مساء الخير';
+
+  @override
+  String get goodEvening => 'مساء الخير';
+
+  @override
+  String get activeTrainees => 'المتدربون النشطون';
+
+  @override
+  String get totalTrainees => 'إجمالي المتدربين';
+
+  @override
+  String get personalWorkout => 'تمرين شخصي';
+
+  @override
+  String get seeWhoNeedsANewTrainingPlan => 'تعرف على من يحتاج إلى خطة تدريب جديدة';
+
+  @override
+  String get hintForCreatePlan => 'وضع خطة تدريب جديدة';
+
+  @override
+  String get waitANewTrainee => 'انتظر متدرب جديد';
+
+  @override
+  String get quickActions => 'الإجراءات السريعة';
+
+  @override
+  String get couldntLoadTrainees => 'لا يمكن تحميل المتدربين';
+
+  @override
+  String get planActive => 'الخطة فعّالة';
+
+  @override
+  String get oneMonthPlan => 'خطة لمدة شهر';
+
+  @override
+  String monthsPlan(int count) {
+    return 'خطة لمدة $count أشهر';
+  }
+
+  @override
+  String get trainee => 'متدرب';
+
+  @override
+  String get activePlan => 'خطة فعّالة';
+
+  @override
+  String get oneMonthProgram => 'برنامج شهر';
+
+  @override
+  String monthsProgram(int count) {
+    return 'برنامج $count أشهر';
+  }
+
+  @override
+  String get noTraineesFound => 'لم يتم العثور على متدربين';
+
+  @override
+  String get active => 'نشط';
+
+  @override
+  String get traineesHint => 'إدارة برامج التدريب النشطة ومراقبة تقدم الرياضيين بسلاسة';
+
+  @override
+  String get history => 'السجل';
+
+  @override
+  String get noRecentExpiredPlansHistoryFound => 'لم يتم العثور على سجل لخطط منتهية مؤخراً';
+
+  @override
+  String subscribersNeedPlan(int count) {
+    return 'لديك $count مشتركين نشطين لا يملكون خطة تدريبية بعد.';
+  }
+
+  @override
+  String get createTrainingPlan => 'إنشاء خطة تدريب';
+
+  @override
+  String get defaultPlan => 'خطة افتراضية';
+
+  @override
+  String get startDate => 'تاريخ البداية';
+
+  @override
+  String get endDate => 'تاريخ النهاية';
+
+  @override
+  String get expired => 'منهية';
+
+  @override
+  String get month => 'شهر';
+
+  @override
+  String get unknownAthlete => 'اللاعب غير معروف';
+
+  @override
+  String get athlete => 'متدرب';
+
+  @override
+  String get sets => 'مجموعات';
+
+  @override
+  String get strength => 'مقاومة';
+
+  @override
+  String get cardio => 'كارديو';
+
+  @override
+  String get technicalNotes => 'ملاحظات';
+
+  @override
+  String get noExercisesAssigned => 'لم يتم تحديد أي تمارين';
+
+  @override
+  String get blueprint => 'برنامج';
+
+  @override
+  String get plan => 'الخطة';
+
+  @override
+  String get createFirstWorkoutDay => 'أنشئ أول يوم تمرين وابدأ ببناء خطتك الشخصية.';
+
+  @override
+  String get tapPlusToGetStarted => 'اضغط على + للبدء';
+
+  @override
+  String get createSelfPlan => 'إنشاء خطة شخصية';
+
+  @override
+  String get creatingYourPlan => 'جارٍ إنشاء خطتك...';
+
+  @override
+  String get pleaseWaitWhileSavingWorkout => 'يرجى الانتظار بينما نقوم بحفظ تمارينك';
+
+  @override
+  String get planCreatedSuccessfully => 'تم إنشاء الخطة بنجاح';
+
+  @override
+  String get createWorkoutDay => 'إنشاء يوم تمرين';
+
+  @override
+  String get giveTrainingDayName => 'أعطِ يوم التمرين اسمًا';
+
+  @override
+  String get exampleChestDay => 'مثال: يوم الصدر';
+
+  @override
+  String get createDayButton => 'إنشاء اليوم';
+
+  @override
+  String get noExercisesAddedYet => 'لم تتم إضافة أي تمارين بعد';
+
+  @override
+  String get showLess => 'عرض أقل';
+
+  @override
+  String get more => 'إضافية';
+
+  @override
+  String get addExercise => 'إضافة تمرين';
+
+  @override
+  String get workoutDaySettings => 'إعدادات يوم التمرين';
+
+  @override
+  String get workoutDaySettingsHint => 'سيتم تطبيق هذه القيم على جميع التمارين ما لم يتم تخصيصها.';
+
+  @override
+  String get defaultSets => 'المجموعات الافتراضية';
+
+  @override
+  String get exampleSets => 'مثال: 4';
+
+  @override
+  String get defaultReps => 'التكرارات الافتراضية';
+
+  @override
+  String get exampleReps => 'مثال: 12';
+
+  @override
+  String get saveSettings => 'حفظ الإعدادات';
+
+  @override
+  String get daySettingsDescription => 'سيتم استخدام هذه القيم لتمارين المقاومة التي لا تحتوي على إعدادات مخصصة';
+
+  @override
+  String get applyToAllResistanceExercises => 'تطبيق على جميع تمارين المقاومة';
+
+  @override
+  String get applyToAllResistanceExercisesDescription => 'تحديث المجموعات والتكرارات لجميع تمارين المقاومة في هذا اليوم';
+
+  @override
+  String get exerciseDefaultsInfo => 'اترك المجموعات والتكرارات فارغة لاستخدام الإعدادات الافتراضية ليوم التمرين.';
+
+  @override
+  String get customValues => 'القيم المخصصة';
+
+  @override
+  String get customSets => 'المجموعات المخصصة';
+
+  @override
+  String get customReps => 'التكرارات المخصصة';
+
+  @override
+  String get useDayDefaults => 'استخدام إعدادات اليوم';
+
+  @override
+  String get exampleDuration => 'مثال: 30 ثانية';
+
+  @override
+  String get order => 'الترتيب';
+
+  @override
+  String get exerciseOrder => 'ترتيب التمرين';
+
+  @override
+  String get save => 'حفظ';
+
+  @override
+  String get customizeExerciseSettings => 'تخصيص إعدادات هذا التمرين';
+
+  @override
+  String get saveExerciseSettings => 'حفظ إعدادات التمرين';
+
+  @override
+  String get sec => 'ث';
+
+  @override
+  String get selectExercises => 'اختر التمارين';
+
+  @override
+  String get resistance => 'مقاومة';
+
+  @override
+  String addExercises(int count) {
+    return 'إضافة ($count)';
+  }
+
+  @override
+  String get selectAll => 'تحديد الكل';
+
+  @override
+  String get clear => 'مسح';
+
+  @override
+  String get mainGoalQuestion => 'ما هو الهدف الرئيسي؟';
+
+  @override
+  String get cutGoalSubtitle => 'خسارة الدهون';
+
+  @override
+  String get bulkGoalSubtitle => 'بناء العضلات';
+
+  @override
+  String get maintainGoalSubtitle => 'الحفاظ على التوازن';
+
+  @override
+  String get noExistingDaysFound => 'لا توجد أيام موجودة مسبقًا.';
+
+  @override
+  String get addExistingDays => 'إضافة أيام موجودة مسبقًا';
+
+  @override
+  String get availableDays => 'أيام متاحة';
+
+  @override
+  String get addSelectedDays => 'إضافة الأيام المحددة';
 }

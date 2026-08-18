@@ -6,6 +6,7 @@ import 'package:sportifo_app/features/trainees/presentation/view_model/trainees_
 import 'package:sportifo_app/features/trainees/presentation/view_model/trainees_state.dart';
 import 'package:sportifo_app/features/trainees/presentation/widgets/trainees_grid.dart';
 import 'package:sportifo_app/features/trainees/presentation/widgets/trainees_header.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class TraineesScreen extends StatefulWidget {
   const TraineesScreen({super.key});
@@ -70,29 +71,42 @@ class _TraineesContent extends StatelessWidget {
 
   const _TraineesContent({required this.plans});
 
-  int get uniqueTraineesCount {
-    final ids = <int>{};
+  List<CoachPlanModel> get _latestPlansPerTrainee {
+    final Map<int, CoachPlanModel> latestMap = {};
 
     for (final plan in plans) {
-      final id = plan.user?.id;
+      final userId = plan.user?.id;
+      if (userId == null) continue;
 
-      if (id != null) {
-        ids.add(id);
+      if (!latestMap.containsKey(userId)) {
+        latestMap[userId] = plan;
+      } else {
+        final existingPlanId = latestMap[userId]?.id ?? 0;
+        final currentPlanId = plan.id ?? 0;
+
+        if (currentPlanId > existingPlanId) {
+          latestMap[userId] = plan;
+        }
       }
     }
 
-    return ids.length;
+    return latestMap.values.toList();
+  }
+
+  int get uniqueTraineesCount {
+    return _latestPlansPerTrainee.length;
   }
 
   @override
   Widget build(BuildContext context) {
+    final filteredPlans = _latestPlansPerTrainee;
+
     return Column(
       children: [
         TraineesHeader(count: uniqueTraineesCount),
-
         Expanded(
           child: TraineesGrid(
-            plans: plans,
+            plans: filteredPlans,
             onTraineeTap: (plan) => _openPlan(context, plan),
           ),
         ),
@@ -102,11 +116,9 @@ class _TraineesContent extends StatelessWidget {
 
   void _openPlan(BuildContext context, CoachPlanModel plan) {
     final planId = plan.id;
-
     if (planId == null) {
       return;
     }
-
     Navigator.pushNamed(context, AppRoutes.planDetails, arguments: planId);
   }
 }
@@ -158,6 +170,7 @@ class _TraineesError extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(30),
@@ -170,8 +183,8 @@ class _TraineesError extends StatelessWidget {
               color: Colors.black.withOpacity(0.25),
             ),
             const SizedBox(height: 16),
-            const Text(
-              'Couldn’t load trainees',
+            Text(
+              l10n.couldntLoadTrainees,
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 8),
@@ -187,7 +200,7 @@ class _TraineesError extends StatelessWidget {
             ElevatedButton.icon(
               onPressed: onRetry,
               icon: const Icon(Icons.refresh_rounded),
-              label: const Text('Try Again'),
+              label: Text(l10n.tryAgain),
             ),
           ],
         ),

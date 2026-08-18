@@ -42,9 +42,6 @@ import '../../features/my_plans(user)/data/web_services/my_plans_service.dart';
 import '../../features/my_plans(user)/presentation/view_model/active_workout_cubit.dart';
 import '../../features/my_plans(user)/presentation/view_model/my_plans_cubit.dart';
 import '../../features/my_plans(user)/presentation/view_model/plan_days_cubit.dart';
-import '../../features/notifications/data/repository/notifications_repository.dart';
-import '../../features/notifications/data/web_services/notifications_web_service.dart';
-import '../../features/notifications/presentation/view_model/notifications_cubit.dart';
 import '../../features/platform_plans/data/repository/platform_plans_repository.dart';
 import '../../features/platform_plans/data/service/platform_plans_service.dart';
 import '../../features/platform_plans/presentation/view_model/platform_plans_cubit.dart';
@@ -320,14 +317,6 @@ getIt.registerLazySingleton<PlanDetailsRepository>(
 getIt.registerFactory<PlanDetailsCubit>(
 () => PlanDetailsCubit(getIt<PlanDetailsRepository>()),
 );
-// تسجيل الـ Web Service
-  getIt.registerLazySingleton<NotificationsWebService>(
-          () => NotificationsWebService(getIt<Dio>()));
 
-// تسجيل الـ Repository
-  getIt.registerLazySingleton<NotificationsRepository>(
-          () => NotificationsRepository(getIt<NotificationsWebService>()));
-// تسجيل الكيوبيت
-  getIt.registerFactory<NotificationsCubit>(
-          () => NotificationsCubit(getIt<NotificationsRepository>()));
+
 }

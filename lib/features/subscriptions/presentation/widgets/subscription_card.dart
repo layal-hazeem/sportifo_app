@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../../data/models/users_subscribed_model.dart';
 
 class SubscriptionCard extends StatelessWidget {
@@ -17,14 +18,14 @@ class SubscriptionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final subscriptions = userModel.userSubscriptions ?? [];
     final activeSubscription = _getActiveSubscription(subscriptions);
     final subscription = isHistory
         ? _getHistorySubscription(subscriptions)
         : activeSubscription;
 
-    final hasPlan = userModel.hasPlan;
-
+    final hasPlan = userModel.hasPlan ?? false;
     final plan = subscription?.subscription;
     final planType = plan?.type?.trim().toLowerCase() ?? "bronze";
     final colors = _getPlanColors(planType);
@@ -33,200 +34,245 @@ class SubscriptionCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: !isHistory && !hasPlan!
-              ? Colors.amber.shade600.withOpacity(0.5)
+          color: !isHistory && !hasPlan
+              ? Colors.amber.shade400.withOpacity(0.6)
               : Colors.grey.shade200,
-          width: 1.5,
+          width: !isHistory && !hasPlan ? 1.5 : 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 12,
-            offset: const Offset(0, 6),
+            color: colors.primary.withOpacity(0.08),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.02),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: colors.primary.withOpacity(0.5),
-                        width: 2,
-                      ),
-                    ),
-                    child: CircleAvatar(
-                      radius: 26,
-                      backgroundColor: colors.primary.withOpacity(0.1),
-                      backgroundImage: userModel.profilePic != null
-                          ? NetworkImage(userModel.profilePic!)
-                          : null,
-                      child: userModel.profilePic == null
-                          ? Icon(Icons.person, size: 24, color: colors.primary)
-                          : null,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+        borderRadius: BorderRadius.circular(24),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              colors: [Colors.white, colors.primary.withOpacity(0.02)],
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(18),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Stack(
                       children: [
-                        Text(
-                          "${userModel.firstName ?? ""} ${userModel.lastName ?? ""}",
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF1E293B),
+                        Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: LinearGradient(
+                              colors: [
+                                colors.primary,
+                                colors.primary.withOpacity(0.5),
+                              ],
+                            ),
+                          ),
+                          padding: const EdgeInsets.all(2),
+                          child: CircleAvatar(
+                            radius: 28,
+                            backgroundColor: Colors.white,
+                            backgroundImage: userModel.profilePic != null
+                                ? NetworkImage(userModel.profilePic!)
+                                : null,
+                            child: userModel.profilePic == null
+                                ? Icon(
+                                    Icons.person,
+                                    size: 28,
+                                    color: colors.primary,
+                                  )
+                                : null,
                           ),
                         ),
                       ],
                     ),
-                  ),
-                  isHistory ? _historyBadge() : _planStatusBadge(hasPlan!),
-                ],
-              ),
-
-              const SizedBox(height: 14),
-              Divider(color: Colors.grey.shade100, height: 1),
-              const SizedBox(height: 14),
-
-              /// PLAN INFO MINI BANNER
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: colors.primary.withOpacity(0.08),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: colors.primary.withOpacity(0.2)),
-                ),
-                child: Row(
-                  children: [
-                    Icon(colors.icon, color: colors.primary, size: 22),
-                    const SizedBox(width: 10),
+                    const SizedBox(width: 14),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            plan?.title ?? "Default Plan",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                              color: colors.primary,
+                            "${userModel.firstName ?? ""} ${userModel.lastName ?? ""}",
+                            style: const TextStyle(
+                              fontSize: 16.5,
+                              fontWeight: FontWeight.w800,
+                              color: Color(0xFF0F172A),
+                              letterSpacing: -0.3,
                             ),
                           ),
-                          const SizedBox(height: 2),
-                          Text(
-                            planType.toUpperCase(),
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: colors.primary.withOpacity(0.8),
-                              fontWeight: FontWeight.w600,
-                            ),
+                          const SizedBox(height: 3),
+                          Row(
+                            children: [
+                              Icon(
+                                colors.icon,
+                                size: 14,
+                                color: colors.primary,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                "${plan?.title ?? "${l10n.defaultPlan}"} (${planType.toUpperCase()})",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: colors.primary,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
                     ),
+                    isHistory
+                        ? _historyBadge(l10n)
+                        : _planStatusBadge(hasPlan, l10n),
                   ],
                 ),
-              ),
 
-              const SizedBox(height: 14),
-
-              /// DATES (Start & End Date)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _infoItem(
-                    Icons.calendar_today_rounded,
-                    "Start Date",
-                    _formatDate(subscription?.startDate),
-                  ),
-                  _infoItem(
-                    Icons.event_available_rounded,
-                    "End Date",
-                    _formatDate(subscription?.endDate),
-                  ),
-                ],
-              ),
-
-              /// CREATE PLAN BUTTON
-              if (!isHistory && !hasPlan!) ...[
                 const SizedBox(height: 16),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    onPressed: onCreatePlan,
-                    icon: const Icon(Icons.auto_awesome_rounded, size: 18),
-                    label: const Text(
-                      "✨ Create Training Plan Now",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 13,
-                      ),
+                Divider(color: Colors.grey.shade100, height: 1),
+                const SizedBox(height: 16),
+
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 12,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade50,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: Colors.grey.shade200.withOpacity(0.8),
                     ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primaryBtn,
-                      foregroundColor: Colors.white,
-                      elevation: 0,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _infoItem(
+                        Icons.calendar_today_rounded,
+                        l10n.startDate,
+                        _formatDate(subscription?.startDate),
                       ),
-                    ),
+                      Container(
+                        height: 24,
+                        width: 1,
+                        color: Colors.grey.shade300,
+                      ),
+                      _infoItem(
+                        Icons.event_available_rounded,
+                        l10n.endDate,
+                        _formatDate(subscription?.endDate),
+                      ),
+                    ],
                   ),
                 ),
+
+                if (!isHistory && !hasPlan) ...[
+                  const SizedBox(height: 16),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(14),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.primaryBtn.withOpacity(0.25),
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: onCreatePlan,
+                        icon: const Icon(Icons.auto_awesome_rounded, size: 18),
+                        label: Text(
+                          l10n.createTrainingPlan,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13.5,
+                            letterSpacing: 0.2,
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primaryBtn,
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _planStatusBadge(bool hasPlan) {
+  Widget _planStatusBadge(bool hasPlan, AppLocalizations l10n) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
         color: hasPlan
             ? Colors.green.withOpacity(0.1)
             : Colors.amber.withOpacity(0.15),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(30),
         border: Border.all(
           color: hasPlan
               ? Colors.green.withOpacity(0.3)
-              : Colors.amber.withOpacity(0.4),
+              : Colors.amber.withOpacity(0.5),
         ),
       ),
-      child: Text(
-        hasPlan ? "Active Plan" : "⚠️ Needs Plan",
-        style: TextStyle(
-          color: hasPlan ? Colors.green.shade700 : Colors.amber.shade800,
-          fontSize: 11,
-          fontWeight: FontWeight.bold,
-        ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            hasPlan ? Icons.check_circle_rounded : Icons.warning_rounded,
+            size: 12,
+            color: hasPlan ? Colors.green.shade700 : Colors.amber.shade800,
+          ),
+          const SizedBox(width: 4),
+          Text(
+            hasPlan ? l10n.activePlan : l10n.needs_a_plan,
+            style: TextStyle(
+              color: hasPlan ? Colors.green.shade700 : Colors.amber.shade800,
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _historyBadge() {
+  Widget _historyBadge(AppLocalizations l10n) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.grey.withOpacity(0.15),
-        borderRadius: BorderRadius.circular(20),
+        color: Colors.grey.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(30),
       ),
-      child: const Text(
-        "Expired",
+      child: Text(
+        l10n.expired,
         style: TextStyle(
           color: Colors.grey,
           fontSize: 11,
@@ -239,15 +285,30 @@ class SubscriptionCard extends StatelessWidget {
   Widget _infoItem(IconData icon, String title, String value) {
     return Row(
       children: [
-        Icon(icon, size: 16, color: Colors.grey.shade500),
-        const SizedBox(width: 6),
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 4),
+            ],
+          ),
+          child: Icon(icon, size: 14, color: Colors.grey.shade600),
+        ),
+        const SizedBox(width: 8),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               title,
-              style: TextStyle(fontSize: 10, color: Colors.grey.shade500),
+              style: TextStyle(
+                fontSize: 10,
+                color: Colors.grey.shade500,
+                fontWeight: FontWeight.w500,
+              ),
             ),
+            const SizedBox(height: 1),
             Text(
               value,
               style: const TextStyle(
@@ -271,17 +332,17 @@ class SubscriptionCard extends StatelessWidget {
     switch (type) {
       case "gold":
         return _PlanColors(
-          primary: const Color(0xFFFFA500),
+          primary: const Color(0xFFF59E0B),
           icon: Icons.workspace_premium_rounded,
         );
       case "silver":
         return _PlanColors(
-          primary: const Color(0xFF94A3B8),
+          primary: const Color(0xFF64748B),
           icon: Icons.star_rounded,
         );
       default:
         return _PlanColors(
-          primary: const Color(0xFFCD7F32),
+          primary: const Color(0xFFB45309),
           icon: Icons.emoji_events_rounded,
         );
     }
@@ -346,6 +407,5 @@ class SubscriptionCard extends StatelessWidget {
 class _PlanColors {
   final Color primary;
   final IconData icon;
-
   _PlanColors({required this.primary, required this.icon});
 }

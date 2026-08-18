@@ -39,6 +39,6 @@ class AppRoutes {
   static const String allPlatformPlans = "/allPlatformPlans";
 static const String trainees = "/plans/coach";
 static const String planDetails = "/planDetails";
-  static const String notifications = "/notifications";
-
+  static const String notifications = "/notifications";static const String editCoachPlan = "/plans";
+   static const String createSelfPlan = "/plans/create/self";
 }

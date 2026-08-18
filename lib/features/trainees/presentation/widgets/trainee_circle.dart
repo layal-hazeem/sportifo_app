@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/features/trainees/data/models/coach_plan_model.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class TraineeCircle extends StatefulWidget {
   final CoachPlanModel plan;
@@ -29,7 +30,7 @@ class _TraineeCircleState extends State<TraineeCircle>
 
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 450),
+      duration: const Duration(milliseconds: 400),
     );
 
     _scaleAnimation = CurvedAnimation(
@@ -37,7 +38,7 @@ class _TraineeCircleState extends State<TraineeCircle>
       curve: Curves.easeOutBack,
     );
 
-    Future.delayed(Duration(milliseconds: 80 * widget.index), () {
+    Future.delayed(Duration(milliseconds: 60 * widget.index), () {
       if (mounted) {
         _controller.forward();
       }
@@ -50,9 +51,13 @@ class _TraineeCircleState extends State<TraineeCircle>
     super.dispose();
   }
 
-  String get fullName {
+  String _fullName(AppLocalizations l10n) {
     final first = widget.plan.user?.firstName.trim() ?? '';
     final last = widget.plan.user?.lastName.trim() ?? '';
+
+    if (first.isEmpty && last.isEmpty) {
+      return l10n.trainee;
+    }
 
     return '$first $last'.trim();
   }
@@ -65,15 +70,29 @@ class _TraineeCircleState extends State<TraineeCircle>
       return '?';
     }
 
-    final firstInitial = first.isNotEmpty ? first[0] : '';
-    final lastInitial = last.isNotEmpty ? last[0] : '';
-
-    return '$firstInitial$lastInitial'.toUpperCase();
+    return '${first.isNotEmpty ? first[0] : ''}'
+            '${last.isNotEmpty ? last[0] : ''}'
+        .toUpperCase();
   }
 
-  String get firstName {
+  String _firstName(AppLocalizations l10n) {
     final first = widget.plan.user?.firstName.trim() ?? '';
-    return first.isEmpty ? 'Trainee' : first;
+
+    return first.isEmpty ? l10n.trainee : first;
+  }
+
+  String _durationText(AppLocalizations l10n) {
+    final duration = widget.plan.durationMonths;
+
+    if (duration == null) {
+      return l10n.hasAnActivePlan;
+    }
+
+    if (duration == 1) {
+      return l10n.oneMonthProgram;
+    }
+
+    return l10n.monthsProgram(duration);
   }
 
   IconData get goalIcon {
@@ -84,199 +103,181 @@ class _TraineeCircleState extends State<TraineeCircle>
     }
 
     if (goal.contains('weight') || goal.contains('loss')) {
-      return Icons.local_fire_department;
+      return Icons.local_fire_department_rounded;
     }
-    return Icons.monitor_weight_outlined;
+
+    return Icons.bolt_rounded;
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final profilePic = widget.plan.user?.profilePic;
 
     return ScaleTransition(
       scale: _scaleAnimation,
-      child: GestureDetector(
-        onTap: widget.onTap,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Stack(
-              clipBehavior: Clip.none,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: widget.onTap,
+          borderRadius: BorderRadius.circular(24),
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(
+                color: Colors.grey.shade100,
+                width: 1.5,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.03),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Outer soft glow
-                Container(
-                  width: 112,
-                  height: 112,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.primaryBtn.withOpacity(0.18),
-                        blurRadius: 22,
-                        spreadRadius: 4,
-                      ),
-                    ],
-                  ),
-                ),
-
-                // Orange ring
-                Container(
-                  width: 112,
-                  height: 112,
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        AppColors.primaryBtn,
-                        AppColors.primaryBtn.withOpacity(0.45),
-                      ],
-                    ),
-                  ),
-                  child: Container(
-                    padding: const EdgeInsets.all(3),
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                    ),
-                    child: ClipOval(
-                      child: profilePic != null && profilePic.isNotEmpty
-                          ? Image.network(
-                              profilePic,
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) {
-                                return _InitialsAvatar(initials: initials);
-                              },
-                            )
-                          : _InitialsAvatar(initials: initials),
-                    ),
-                  ),
-                ),
-
-                // Goal badge
-                Positioned(
-                  right: -3,
-                  top: 3,
-                  child: Container(
-                    width: 32,
-                    height: 32,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                      border: Border.all(
-                        color: AppColors.primaryBtn.withOpacity(0.2),
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.08),
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Container(
+                      width: 80,
+                      height: 80,
+                      padding: const EdgeInsets.all(3),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            AppColors.primaryBtn,
+                            AppColors.primaryBtn.withOpacity(0.3),
+                          ],
                         ),
-                      ],
+                      ),
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white,
+                        ),
+                        child: ClipOval(
+                          child: profilePic != null &&
+                                  profilePic.isNotEmpty
+                              ? Image.network(
+                                  profilePic,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (_, __, ___) =>
+                                      _InitialsAvatar(
+                                    initials: initials,
+                                  ),
+                                )
+                              : _InitialsAvatar(
+                                  initials: initials,
+                                ),
+                        ),
+                      ),
                     ),
-                    child: Icon(
-                      goalIcon,
-                      size: 16,
-                      color: AppColors.primaryBtn,
+
+                    // Goal icon
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child: Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white,
+                          border: Border.all(
+                            color: AppColors.primaryBtn.withOpacity(0.3),
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.08),
+                              blurRadius: 6,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Icon(
+                          goalIcon,
+                          size: 12,
+                          color: AppColors.primaryBtn,
+                        ),
+                      ),
                     ),
+                  ],
+                ),
+
+                const SizedBox(height: 12),
+
+                // Trainee name
+                Text(
+                  _firstName(l10n),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF1E293B),
                   ),
                 ),
 
-                // Plan indicator
-                Positioned(
-                  bottom: 1,
-                  left: 1,
-                  child: Container(
-                    width: 27,
-                    height: 27,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: const Color(0xFFFFFBF5),
-                      border: Border.all(color: Colors.white, width: 2),
-                    ),
-                    child: Icon(
-                      Icons.arrow_forward_rounded,
-                      size: 14,
+                const SizedBox(height: 4),
+
+                // Plan duration
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 3,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryBtn.withOpacity(0.08),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    _durationText(l10n),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w600,
                       color: AppColors.primaryBtn,
                     ),
                   ),
                 ),
               ],
             ),
-
-            const SizedBox(height: 10),
-
-            SizedBox(
-              width: 125,
-              child: Text(
-                firstName,
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF242424),
-                  letterSpacing: 0.1,
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 3),
-
-            Text(
-              _durationText,
-              style: TextStyle(
-                fontSize: 11,
-                color: Colors.black.withOpacity(0.45),
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
-  }
-
-  String get _durationText {
-    final duration = widget.plan.durationMonths;
-
-    if (duration == null) {
-      return 'Plan active';
-    }
-
-    return duration == 1 ? '1 month plan' : '$duration months plan';
   }
 }
 
 class _InitialsAvatar extends StatelessWidget {
   final String initials;
 
-  const _InitialsAvatar({required this.initials});
+  const _InitialsAvatar({
+    required this.initials,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppColors.primaryBtn.withOpacity(0.18),
-            AppColors.primaryBtn.withOpacity(0.05),
-          ],
-        ),
+        color: AppColors.primaryBtn.withOpacity(0.1),
       ),
       alignment: Alignment.center,
       child: Text(
         initials,
         style: TextStyle(
-          fontSize: 27,
-          fontWeight: FontWeight.w700,
+          fontSize: 22,
+          fontWeight: FontWeight.bold,
           color: AppColors.primaryBtn,
-          letterSpacing: 1,
         ),
       ),
     );

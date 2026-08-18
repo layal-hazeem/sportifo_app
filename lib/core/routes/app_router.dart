@@ -2,11 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/routes/app_routes.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/logout/logout_cubit.dart';
+import 'package:sportifo_app/features/create_self_plan/presentation/view/create_self_plan_screen.dart';
+import 'package:sportifo_app/features/create_self_plan/presentation/view_model/create_self_plan_cubit.dart';
+import 'package:sportifo_app/features/edit_coach_plan/data/models/edit_coach_plan_model.dart';
+import 'package:sportifo_app/features/edit_coach_plan/presentation/view/edit_coach_plan_screen.dart';
+import 'package:sportifo_app/features/edit_coach_plan/presentation/view_model/edit_coach_plan_cubit.dart';
 import 'package:sportifo_app/features/existing_days/presentation/view/existing_days_screen.dart';
 import 'package:sportifo_app/features/existing_days/presentation/view_model/existing_days_cubit.dart';
 import 'package:sportifo_app/features/nutrition/presentation/view/food_logs_screen.dart';
 import 'package:sportifo_app/features/create_plan_by_coach/presentation/view/create_plan_screen.dart';
 import 'package:sportifo_app/features/create_plan_by_coach/presentation/view_model/create_plan_cubit.dart';
+import 'package:sportifo_app/features/plan_details/data/models/plan_details_model.dart';
 import 'package:sportifo_app/features/plan_details/presentation/view/plan_details_screen.dart';
 import 'package:sportifo_app/features/plan_details/presentation/view_model/plan_details_cubit.dart';
 import 'package:sportifo_app/features/profile/data/models/get_profile_response.dart';
@@ -46,7 +52,6 @@ import '../../features/workout/presentation/view_model/saved_exercises/saved_exe
 import '../../features/workout/presentation/view/search_screen.dart';
 import '../../features/workout/presentation/view_model/search_cubit/search_cubit.dart';
 import '../di/service_locator.dart';
-import 'app_routes.dart';
 import '../../features/auth/presentation/view/forgot_password_screen.dart';
 import '../../features/auth/presentation/view/login_screen.dart';
 import '../../features/auth/presentation/view/otp_screen.dart';
@@ -112,7 +117,8 @@ class AppRouter {
               BlocProvider.value(value: getIt<SavedExercisesCubit>()),
               // 🔥 إضافة الكيوبيت الجديد وتشغيله فورا لجلب الخطط
               BlocProvider(
-                create: (_) => getIt<PlatformPlansCubit>()..fetchPlatformPlans(),
+                create: (_) =>
+                    getIt<PlatformPlansCubit>()..fetchPlatformPlans(),
               ),
             ],
             child: const HomePage(),
@@ -145,7 +151,7 @@ class AppRouter {
           ),
         );
 
-   case AppRoutes.muscleGroups:
+      case AppRoutes.muscleGroups:
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
             providers: [
@@ -205,26 +211,33 @@ class AppRouter {
           ),
         );
 
-        case AppRoutes.trainees:
-  return MaterialPageRoute(
-    builder: (_) => BlocProvider(
-      create: (_) => getIt<TraineesCubit>()..getCoachTrainees(),
-      child: const TraineesScreen(),
-    ),
-  );
+      case AppRoutes.trainees:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => getIt<TraineesCubit>()..getCoachTrainees(),
+            child: const TraineesScreen(),
+          ),
+        );
 
-  case AppRoutes.planDetails:
-    final planId = settings.arguments as int;
+      case AppRoutes.planDetails:
+        final planId = settings.arguments as int;
 
-    return MaterialPageRoute(
-      builder: (_) => BlocProvider(
-        create: (_) => getIt<PlanDetailsCubit>()
-          ..getPlanDetails(planId),
-        child: PlanDetailsScreen(planId: planId),
-      ),
-    );
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => getIt<PlanDetailsCubit>()..getPlanDetails(planId),
+            child: PlanDetailsScreen(planId: planId),
+          ),
+        );
 
+      case AppRoutes.editCoachPlan:
+        final plan = settings.arguments as PlanDetailsModel;
 
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => getIt<EditCoachPlanCubit>(),
+            child: EditCoachPlanScreen(plan: plan),
+          ),
+        );
 
       case AppRoutes.otpScreen:
         final args = settings.arguments;
@@ -264,11 +277,14 @@ class AppRouter {
           builder: (_) => MultiBlocProvider(
             providers: [
               BlocProvider(
-                create: (context) => getIt<ExercisesCubit>()
-                  ..fetchExercises(categoryId: args['categoryId']),
+                create: (context) =>
+                    getIt<ExercisesCubit>()
+                      ..fetchExercises(categoryId: args['categoryId']),
               ),
               // ✅ أضفنا SavedExercisesCubit هون
-              BlocProvider.value(value: getIt<ExercisesCubit>()), // ✅ التعديل السحري هنا
+              BlocProvider.value(
+                value: getIt<ExercisesCubit>(),
+              ), // ✅ التعديل السحري هنا
               BlocProvider.value(value: getIt<SavedExercisesCubit>()),
             ],
             child: ExercisesListScreen(
@@ -287,7 +303,7 @@ class AppRouter {
           ),
         );
 
-    case AppRoutes.searchScreen:
+      case AppRoutes.searchScreen:
         final args = settings.arguments as Map<String, dynamic>?;
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
@@ -304,7 +320,7 @@ class AppRouter {
           ),
         );
 
-     case AppRoutes.savedExercises:
+      case AppRoutes.savedExercises:
         return MaterialPageRoute(
           builder: (_) => BlocProvider.value(
             value: getIt<SavedExercisesCubit>()..fetchSavedExercises(),
@@ -319,6 +335,14 @@ class AppRouter {
           builder: (_) => BlocProvider(
             create: (_) => getIt<CreatePlanCubit>(),
             child: CreatePlanScreen(userId: user.id!),
+          ),
+        );
+
+      case AppRoutes.createSelfPlan:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => getIt<CreateSelfPlanCubit>(),
+            child: const CreateSelfPlanScreen(),
           ),
         );
 
@@ -360,10 +384,8 @@ class AppRouter {
           ),
         );
 
-case AppRoutes.foodLogs:
-  return MaterialPageRoute(
-    builder: (_) => const FoodLogsScreen(),
-  );
+      case AppRoutes.foodLogs:
+        return MaterialPageRoute(builder: (_) => const FoodLogsScreen());
       case AppRoutes.planDays:
         final plan = settings.arguments as PlanModel;
         return MaterialPageRoute(
@@ -380,7 +402,6 @@ case AppRoutes.foodLogs:
             body: Center(child: Text('No route defined for ${settings.name}')),
           ),
         );
-
     }
   }
 }

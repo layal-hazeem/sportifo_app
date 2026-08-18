@@ -974,7 +974,7 @@ abstract class AppLocalizations {
   /// No description provided for @actionRequired.
   ///
   /// In en, this message translates to:
-  /// **'ACTION REQUIRED'**
+  /// **'Action Required'**
   String get actionRequired;
 
   /// No description provided for @noPendingSubscriptions.
@@ -1427,6 +1427,114 @@ abstract class AppLocalizations {
   /// **'Subscriptions that ended during the last month'**
   String get endedLastMonth;
 
+  /// No description provided for @editPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Plan'**
+  String get editPlan;
+
+  /// No description provided for @createNewDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Create New Day'**
+  String get createNewDay;
+
+  /// No description provided for @creatDaySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Build a custom workout day'**
+  String get creatDaySubtitle;
+
+  /// No description provided for @addExistingDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Existing Day'**
+  String get addExistingDay;
+
+  /// No description provided for @addExistingDaySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reuse a saved day'**
+  String get addExistingDaySubtitle;
+
+  /// No description provided for @workoutDays.
+  ///
+  /// In en, this message translates to:
+  /// **'WORKOUT DAYS'**
+  String get workoutDays;
+
+  /// No description provided for @day.
+  ///
+  /// In en, this message translates to:
+  /// **'DAY'**
+  String get day;
+
+  /// No description provided for @days.
+  ///
+  /// In en, this message translates to:
+  /// **'DAYS'**
+  String get days;
+
+  /// No description provided for @waitUpdatePlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Please wait while the plan is updated'**
+  String get waitUpdatePlan;
+
+  /// No description provided for @noWorkoutDaysYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No workout days yet'**
+  String get noWorkoutDaysYet;
+
+  /// No description provided for @hintForCreateDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a new workout day or reuse one from your saved workouts'**
+  String get hintForCreateDay;
+
+  /// No description provided for @tapPlus.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap + to get started'**
+  String get tapPlus;
+
+  /// No description provided for @stepOne.
+  ///
+  /// In en, this message translates to:
+  /// **'Step 1: Goal & Duration'**
+  String get stepOne;
+
+  /// No description provided for @stepTwo.
+  ///
+  /// In en, this message translates to:
+  /// **'Step 2: Days & Exercises'**
+  String get stepTwo;
+
+  /// No description provided for @chooseGoalForTrainingPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a goal for this training plan'**
+  String get chooseGoalForTrainingPlan;
+
+  /// No description provided for @addAtLeastOneWorkoutDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Add at least one workout day'**
+  String get addAtLeastOneWorkoutDay;
+
+  /// No description provided for @everyWorkoutDayNeedsExercise.
+  ///
+  /// In en, this message translates to:
+  /// **'Every workout day needs at least one exercise'**
+  String get everyWorkoutDayNeedsExercise;
+
+  /// No description provided for @createPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Plan'**
+  String get createPlan;
+
   /// No description provided for @addedToSaved.
   ///
   /// In en, this message translates to:
@@ -1778,13 +1886,13 @@ abstract class AppLocalizations {
   /// No description provided for @duration.
   ///
   /// In en, this message translates to:
-  /// **'DURATION'**
+  /// **'Duration'**
   String get duration;
 
   /// No description provided for @exercises.
   ///
   /// In en, this message translates to:
-  /// **'EXERCISES'**
+  /// **'Exercises'**
   String get exercises;
 
   /// No description provided for @performanceSummary.
@@ -1808,7 +1916,7 @@ abstract class AppLocalizations {
   /// No description provided for @min.
   ///
   /// In en, this message translates to:
-  /// **'Min'**
+  /// **'min'**
   String get min;
 
   /// No description provided for @reps.
@@ -1874,7 +1982,7 @@ abstract class AppLocalizations {
   /// No description provided for @months.
   ///
   /// In en, this message translates to:
-  /// **'Months'**
+  /// **'months'**
   String get months;
 
   /// No description provided for @daysPerWeek.
@@ -1960,6 +2068,582 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Explore Sportifo Plans'**
   String get exploreFreePlans;
+
+  /// No description provided for @createYourOwnPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Your Own Plan'**
+  String get createYourOwnPlan;
+
+  /// No description provided for @buildWorkoutPlanThatFitsYou.
+  ///
+  /// In en, this message translates to:
+  /// **'Build Workout Plan That Fits You'**
+  String get buildWorkoutPlanThatFitsYou;
+
+  /// No description provided for @tryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try Again'**
+  String get tryAgain;
+
+  /// No description provided for @yourTrainees.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Trainees'**
+  String get yourTrainees;
+
+  /// No description provided for @noTraineesYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No Trainees Yet'**
+  String get noTraineesYet;
+
+  /// No description provided for @needs_a_plan.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs A Plan'**
+  String get needs_a_plan;
+
+  /// No description provided for @hasAnActivePlan.
+  ///
+  /// In en, this message translates to:
+  /// **'has an active plan'**
+  String get hasAnActivePlan;
+
+  /// No description provided for @coach.
+  ///
+  /// In en, this message translates to:
+  /// **'Coach'**
+  String get coach;
+
+  /// No description provided for @goodMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Good Morning'**
+  String get goodMorning;
+
+  /// No description provided for @goodAfternoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Good Afternoon'**
+  String get goodAfternoon;
+
+  /// No description provided for @goodEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'Good Evening'**
+  String get goodEvening;
+
+  /// No description provided for @activeTrainees.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Trainees'**
+  String get activeTrainees;
+
+  /// No description provided for @totalTrainees.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Trainees'**
+  String get totalTrainees;
+
+  /// No description provided for @personalWorkout.
+  ///
+  /// In en, this message translates to:
+  /// **'PERSONAL WORKOUT'**
+  String get personalWorkout;
+
+  /// No description provided for @seeWhoNeedsANewTrainingPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'See who needs a new training plan'**
+  String get seeWhoNeedsANewTrainingPlan;
+
+  /// No description provided for @hintForCreatePlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Build a new training plan'**
+  String get hintForCreatePlan;
+
+  /// No description provided for @waitANewTrainee.
+  ///
+  /// In en, this message translates to:
+  /// **'wait a new trainee'**
+  String get waitANewTrainee;
+
+  /// No description provided for @quickActions.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Actions'**
+  String get quickActions;
+
+  /// No description provided for @couldntLoadTrainees.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t Load Trainees'**
+  String get couldntLoadTrainees;
+
+  /// No description provided for @planActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan active'**
+  String get planActive;
+
+  /// No description provided for @oneMonthPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'1 month plan'**
+  String get oneMonthPlan;
+
+  /// Displays the duration of the trainee's plan in months
+  ///
+  /// In en, this message translates to:
+  /// **'{count} months plan'**
+  String monthsPlan(int count);
+
+  /// No description provided for @trainee.
+  ///
+  /// In en, this message translates to:
+  /// **'Trainee'**
+  String get trainee;
+
+  /// No description provided for @activePlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Plan'**
+  String get activePlan;
+
+  /// No description provided for @oneMonthProgram.
+  ///
+  /// In en, this message translates to:
+  /// **'1M Program'**
+  String get oneMonthProgram;
+
+  /// Displays the trainee plan duration in months
+  ///
+  /// In en, this message translates to:
+  /// **'{count}M Program'**
+  String monthsProgram(int count);
+
+  /// No description provided for @noTraineesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No trainees found'**
+  String get noTraineesFound;
+
+  /// No description provided for @active.
+  ///
+  /// In en, this message translates to:
+  /// **'ACTIVE'**
+  String get active;
+
+  /// No description provided for @traineesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage active training programs and monitor athlete progress seamlessly'**
+  String get traineesHint;
+
+  /// No description provided for @history.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get history;
+
+  /// No description provided for @noRecentExpiredPlansHistoryFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No recent expired plans history found'**
+  String get noRecentExpiredPlansHistoryFound;
+
+  /// Message showing the number of active subscribers who do not have a training plan
+  ///
+  /// In en, this message translates to:
+  /// **'You have {count} active subscribers who don\'t have a training plan yet.'**
+  String subscribersNeedPlan(int count);
+
+  /// No description provided for @createTrainingPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Training Plan'**
+  String get createTrainingPlan;
+
+  /// No description provided for @defaultPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Default Plan'**
+  String get defaultPlan;
+
+  /// No description provided for @startDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Date'**
+  String get startDate;
+
+  /// No description provided for @endDate.
+  ///
+  /// In en, this message translates to:
+  /// **'End Date'**
+  String get endDate;
+
+  /// No description provided for @expired.
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get expired;
+
+  /// No description provided for @month.
+  ///
+  /// In en, this message translates to:
+  /// **'month'**
+  String get month;
+
+  /// No description provided for @unknownAthlete.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown Athlete'**
+  String get unknownAthlete;
+
+  /// No description provided for @athlete.
+  ///
+  /// In en, this message translates to:
+  /// **'ATHLETE'**
+  String get athlete;
+
+  /// No description provided for @sets.
+  ///
+  /// In en, this message translates to:
+  /// **'Sets'**
+  String get sets;
+
+  /// No description provided for @strength.
+  ///
+  /// In en, this message translates to:
+  /// **'STRENGTH'**
+  String get strength;
+
+  /// No description provided for @cardio.
+  ///
+  /// In en, this message translates to:
+  /// **'Cardio'**
+  String get cardio;
+
+  /// No description provided for @technicalNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'TECHNICAL NOTES'**
+  String get technicalNotes;
+
+  /// No description provided for @noExercisesAssigned.
+  ///
+  /// In en, this message translates to:
+  /// **'No exercises assigned'**
+  String get noExercisesAssigned;
+
+  /// No description provided for @blueprint.
+  ///
+  /// In en, this message translates to:
+  /// **'BLUEPRINT'**
+  String get blueprint;
+
+  /// No description provided for @plan.
+  ///
+  /// In en, this message translates to:
+  /// **'PLAN'**
+  String get plan;
+
+  /// No description provided for @createFirstWorkoutDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Create your first workout day and start building your personal plan.'**
+  String get createFirstWorkoutDay;
+
+  /// No description provided for @tapPlusToGetStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap + to get started'**
+  String get tapPlusToGetStarted;
+
+  /// No description provided for @createSelfPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Self Plan'**
+  String get createSelfPlan;
+
+  /// No description provided for @creatingYourPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Creating your plan...'**
+  String get creatingYourPlan;
+
+  /// No description provided for @pleaseWaitWhileSavingWorkout.
+  ///
+  /// In en, this message translates to:
+  /// **'Please wait while we save your workout'**
+  String get pleaseWaitWhileSavingWorkout;
+
+  /// No description provided for @planCreatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan created successfully'**
+  String get planCreatedSuccessfully;
+
+  /// No description provided for @createWorkoutDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Workout Day'**
+  String get createWorkoutDay;
+
+  /// No description provided for @giveTrainingDayName.
+  ///
+  /// In en, this message translates to:
+  /// **'Give your training day a name'**
+  String get giveTrainingDayName;
+
+  /// No description provided for @exampleChestDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Example: Chest Day'**
+  String get exampleChestDay;
+
+  /// No description provided for @createDayButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Day'**
+  String get createDayButton;
+
+  /// No description provided for @noExercisesAddedYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No exercises added yet'**
+  String get noExercisesAddedYet;
+
+  /// No description provided for @showLess.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Less'**
+  String get showLess;
+
+  /// No description provided for @more.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get more;
+
+  /// No description provided for @addExercise.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Exercise'**
+  String get addExercise;
+
+  /// No description provided for @workoutDaySettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Day Settings'**
+  String get workoutDaySettings;
+
+  /// No description provided for @workoutDaySettingsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'These values will apply to all exercises unless customized.'**
+  String get workoutDaySettingsHint;
+
+  /// No description provided for @defaultSets.
+  ///
+  /// In en, this message translates to:
+  /// **'Default Sets'**
+  String get defaultSets;
+
+  /// No description provided for @exampleSets.
+  ///
+  /// In en, this message translates to:
+  /// **'Example: 4'**
+  String get exampleSets;
+
+  /// No description provided for @defaultReps.
+  ///
+  /// In en, this message translates to:
+  /// **'Default Reps'**
+  String get defaultReps;
+
+  /// No description provided for @exampleReps.
+  ///
+  /// In en, this message translates to:
+  /// **'Example: 12'**
+  String get exampleReps;
+
+  /// No description provided for @saveSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Settings'**
+  String get saveSettings;
+
+  /// No description provided for @daySettingsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'These values will be used for resistance exercises without custom settings'**
+  String get daySettingsDescription;
+
+  /// No description provided for @applyToAllResistanceExercises.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply to all resistance exercises'**
+  String get applyToAllResistanceExercises;
+
+  /// No description provided for @applyToAllResistanceExercisesDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Update sets and reps for every resistance exercise in this day'**
+  String get applyToAllResistanceExercisesDescription;
+
+  /// No description provided for @exerciseDefaultsInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave Sets and Reps empty to use the workout day defaults.'**
+  String get exerciseDefaultsInfo;
+
+  /// No description provided for @customValues.
+  ///
+  /// In en, this message translates to:
+  /// **'CUSTOM VALUES'**
+  String get customValues;
+
+  /// No description provided for @customSets.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Sets'**
+  String get customSets;
+
+  /// No description provided for @customReps.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Reps'**
+  String get customReps;
+
+  /// No description provided for @useDayDefaults.
+  ///
+  /// In en, this message translates to:
+  /// **'Use Day Defaults'**
+  String get useDayDefaults;
+
+  /// No description provided for @exampleDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Example: 30 sec'**
+  String get exampleDuration;
+
+  /// No description provided for @order.
+  ///
+  /// In en, this message translates to:
+  /// **'Order'**
+  String get order;
+
+  /// No description provided for @exerciseOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise order'**
+  String get exerciseOrder;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @customizeExerciseSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Customize this exercise settings'**
+  String get customizeExerciseSettings;
+
+  /// No description provided for @saveExerciseSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Exercise Settings'**
+  String get saveExerciseSettings;
+
+  /// No description provided for @sec.
+  ///
+  /// In en, this message translates to:
+  /// **'sec'**
+  String get sec;
+
+  /// No description provided for @selectExercises.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Exercises'**
+  String get selectExercises;
+
+  /// No description provided for @resistance.
+  ///
+  /// In en, this message translates to:
+  /// **'Resistance'**
+  String get resistance;
+
+  /// No description provided for @addExercises.
+  ///
+  /// In en, this message translates to:
+  /// **'Add ({count})'**
+  String addExercises(int count);
+
+  /// No description provided for @selectAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Select All'**
+  String get selectAll;
+
+  /// No description provided for @clear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get clear;
+
+  /// No description provided for @mainGoalQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s the main goal?'**
+  String get mainGoalQuestion;
+
+  /// No description provided for @cutGoalSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Lose fat'**
+  String get cutGoalSubtitle;
+
+  /// No description provided for @bulkGoalSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Build muscle'**
+  String get bulkGoalSubtitle;
+
+  /// No description provided for @maintainGoalSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Stay balanced'**
+  String get maintainGoalSubtitle;
+
+  /// No description provided for @noExistingDaysFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No existing days found.'**
+  String get noExistingDaysFound;
+
+  /// No description provided for @addExistingDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Existing Days'**
+  String get addExistingDays;
+
+  /// No description provided for @availableDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Available Days'**
+  String get availableDays;
+
+  /// No description provided for @addSelectedDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Selected Days'**
+  String get addSelectedDays;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
