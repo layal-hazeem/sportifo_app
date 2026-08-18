@@ -40,9 +40,9 @@ class CreateSelfPlanCard extends StatelessWidget {
           child: Stack(
             children: [
               // Background decoration
-              Positioned(
-                right: -55,
-                top: -55,
+              PositionedDirectional(
+                end: -20,
+                bottom: -70,
                 child: Container(
                   width: 170,
                   height: 170,
@@ -73,8 +73,8 @@ class CreateSelfPlanCard extends StatelessWidget {
               ),
 
               // Small decorative icon
-              Positioned(
-                right: 24,
+              PositionedDirectional(
+                end: 24,
                 top: 22,
                 child: Container(
                   width: 46,
@@ -93,7 +93,7 @@ class CreateSelfPlanCard extends StatelessWidget {
               ),
 
               Padding(
-                padding: const EdgeInsets.fromLTRB(22, 22, 22, 20),
+                padding: const EdgeInsetsDirectional.fromSTEB(22, 22, 22, 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -180,7 +180,9 @@ class CreateSelfPlanCard extends StatelessWidget {
                           const SizedBox(width: 9),
 
                           Icon(
-                            Icons.arrow_forward_rounded,
+                            Directionality.of(context) == TextDirection.rtl
+                                ? Icons.arrow_back_rounded
+                                : Icons.arrow_forward_rounded,
                             color: AppColors.primaryBtn,
                             size: 17,
                           ),
