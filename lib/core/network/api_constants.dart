@@ -54,12 +54,12 @@ class ApiConstants {
   static const String deleteMeal = 'food-logs';
   static const String addManualMeal = 'food-logs/manual';
   static const String trainees = "plans/coach";
-  static const String planDetails = "/plans";
-  static const String editCoachPlan = "/plans";
-  static const String createSelfPlan = "/plans/create/self";
-  static const String editSelfPlan = "/plans/update/self";
-  static const String notifications = "/notifications";
-  static const String notificationsCount = "/notifications";
+  static const String planDetails = "plans";
+  static const String editCoachPlan = "plans";
+  static const String createSelfPlan = "plans/create/self";
+  static const String editSelfPlan = "plans/update/self";
+  static const String notifications = "notifications";
+  static const String notificationsCount = "notifications";
 
 
 }
