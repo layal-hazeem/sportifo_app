@@ -1322,4 +1322,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get addSelectedDays => 'Add Selected Days';
+
+  @override
+  String get planUpdatedSuccessfully => 'Plan Updated Successfully';
 }

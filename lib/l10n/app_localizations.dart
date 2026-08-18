@@ -2644,6 +2644,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add Selected Days'**
   String get addSelectedDays;
+
+  /// No description provided for @planUpdatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan Updated Successfully'**
+  String get planUpdatedSuccessfully;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

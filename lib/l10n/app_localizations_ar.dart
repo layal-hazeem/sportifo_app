@@ -1306,7 +1306,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get cutGoalSubtitle => 'خسارة الدهون';
 
   @override
-  String get bulkGoalSubtitle => 'بناء العضلات';
+  String get bulkGoalSubtitle => 'زيادة الكتلة العضلية';
 
   @override
   String get maintainGoalSubtitle => 'الحفاظ على التوازن';
@@ -1322,4 +1322,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get addSelectedDays => 'إضافة الأيام المحددة';
+
+  @override
+  String get planUpdatedSuccessfully => 'تم تحديث الخطة بنجاح';
 }
