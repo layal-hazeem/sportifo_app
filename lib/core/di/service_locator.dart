@@ -42,8 +42,7 @@ import '../../features/auth/presentation/view_model/login/forgot_password_cubit.
 import '../../features/auth/presentation/view_model/login/login_cubit.dart';
 import '../../features/auth/presentation/view_model/register/register_cubit.dart';
 import '../../features/coaches/data/repositories/coach_repository.dart';
-import '../../features/coaches/data/web_services/coach_web_service.dart';
-import '../../features/coaches/presentation/view_model/all_coaches_cubit.dart';
+import '../../features/coaches/data/web_services/coach_web_service.dart';import '../../features/coaches/presentation/view_model/all_coaches_cubit.dart';
 import '../../features/coaches/presentation/view_model/coach_details_cubit.dart';
 import '../../features/coaches/presentation/view_model/coaches_cubit.dart';
 import '../../features/my_plans(user)/data/repository/my_plans_repository.dart';
@@ -51,6 +50,9 @@ import '../../features/my_plans(user)/data/web_services/my_plans_service.dart';
 import '../../features/my_plans(user)/presentation/view_model/active_workout_cubit.dart';
 import '../../features/my_plans(user)/presentation/view_model/my_plans_cubit.dart';
 import '../../features/my_plans(user)/presentation/view_model/plan_days_cubit.dart';
+import '../../features/notifications/data/repository/notifications_repository.dart';
+import '../../features/notifications/data/web_services/notifications_web_service.dart';
+import '../../features/notifications/presentation/view_model/notifications_cubit.dart';
 import '../../features/platform_plans/data/repository/platform_plans_repository.dart';
 import '../../features/platform_plans/data/service/platform_plans_service.dart';
 import '../../features/platform_plans/presentation/view_model/platform_plans_cubit.dart';
@@ -109,9 +111,7 @@ Future<void> setupServiceLocator() async {
 
   getIt.registerFactory<RegisterCubit>(
     () => RegisterCubit(getIt<AuthRepository>()),
-  );
-
-  getIt.registerFactory<CompleteProfileCubit>(
+  );getIt.registerFactory<CompleteProfileCubit>(
     () => CompleteProfileCubit(getIt<AuthRepository>()),
   );
 
@@ -221,9 +221,7 @@ Future<void> setupServiceLocator() async {
   );
   getIt.registerLazySingleton<TraineeSubscriptionRepository>(
         () => TraineeSubscriptionRepository(getIt<TraineeSubscriptionWebService>()),
-  );
-
-  // تسجيل WebService و Repository الخاص بالخطط (بما فيها الأيام)
+  );// تسجيل WebService و Repository الخاص بالخطط (بما فيها الأيام)
   getIt.registerLazySingleton<ExistingDaysWebService>(
     () => ExistingDaysWebService(getIt<Dio>()),
   );
@@ -343,4 +341,29 @@ getIt.registerFactory<EditSelfPlanCubit>(
     getIt<EditSelfPlanRepository>(),
   ),
 );
+// تسجيل الـ Web Service
+  getIt.registerLazySingleton<NotificationsWebService>(
+          () => NotificationsWebService(getIt<Dio>()));
+
+// تسجيل الـ Repository
+  getIt.registerLazySingleton<NotificationsRepository>(
+          () => NotificationsRepository(getIt<NotificationsWebService>()));
+// تسجيل الكيوبيت
+  getIt.registerFactory<NotificationsCubit>(
+          () => NotificationsCubit(getIt<NotificationsRepository>()));
+
+
+          // Create Self Plan Feature
+  getIt.registerLazySingleton<CreateSelfPlanService>(
+    () => CreateSelfPlanService(getIt<Dio>()),
+  );
+
+  getIt.registerLazySingleton<CreateSelfPlanRepository>(
+    () => CreateSelfPlanRepository(getIt<CreateSelfPlanService>()),
+  );
+
+  // 🔥 قم بإضافة هذا السطر لتسجيل الـ Cubit
+  getIt.registerFactory<CreateSelfPlanCubit>(
+    () => CreateSelfPlanCubit(getIt<CreateSelfPlanRepository>()),
+  );
 }

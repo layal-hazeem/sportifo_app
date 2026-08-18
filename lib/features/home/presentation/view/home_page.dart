@@ -12,10 +12,10 @@ import 'package:sportifo_app/features/home/presentation/view_model/home_view_mod
 import 'package:sportifo_app/features/home/presentation/widgets/custom_app_bar.dart';
 import 'package:sportifo_app/features/home/presentation/widgets/custom_bottom_nav_bar.dart';
 import 'package:sportifo_app/features/home/presentation/widgets/custom_drawer.dart';
+import 'package:sportifo_app/features/subscriptions/presentation/view_model/subscription_cubit.dart';
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_cubit.dart';
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_state.dart';
 import 'package:sportifo_app/features/subscriptions/presentation/view/subscriptions_screen.dart';
-import 'package:sportifo_app/features/subscriptions/presentation/view_model/subscription_cubit.dart';
 import 'package:sportifo_app/features/trainees/presentation/view/trainees_screen.dart';
 import 'package:sportifo_app/features/trainees/presentation/view_model/trainees_cubit.dart';
 import 'package:sportifo_app/features/workout/presentation/view_model/categories_cubit/categories_cubit.dart';
@@ -39,10 +39,31 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   DrawerItem selectedDrawerItem = DrawerItem.profile;
+  
+  bool _isNavBarHidden = false;
+  int _previousIndex = 2; // حفظ التبويب السابق للتأكد من تغير الصفحة
 
   @override
   void initState() {
     super.initState();
+    // ربط مستمع للـ ViewModel لإخفاء/إظهار البار حسب التبويب
+    homeViewModel.addListener(_onTabChanged);
+  }
+
+  @override
+  void dispose() {
+    homeViewModel.removeListener(_onTabChanged);
+    super.dispose();
+  }
+
+  void _onTabChanged() {
+    if (_previousIndex != homeViewModel.currentIndex) {
+      _previousIndex = homeViewModel.currentIndex;
+      setState(() {
+        // إذا كان التبويب الحالي هو الهوم (index 2) أظهر البار، غير ذلك أخفه تلقائياً
+        _isNavBarHidden = homeViewModel.currentIndex != 2;
+      });
+    }
   }
 
   List<Widget> _getTraineeScreens() {
@@ -123,14 +144,6 @@ class _HomePageState extends State<HomePage> {
         },
         child: BlocBuilder<ProfileCubit, ProfileState>(
           builder: (context, profileState) {
-            if (profileState is ProfileLoading) {
-              return const Scaffold(
-                body: Center(
-                  child: CircularProgressIndicator(color: AppColors.primaryBtn),
-                ),
-              );
-            }
-
             if (profileState is ProfileLoading ||
                 profileState is ProfileInitial) {
               return const Scaffold(
@@ -156,9 +169,9 @@ class _HomePageState extends State<HomePage> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primaryBtn,
                         ),
-                        child:  Text(
+                        child: Text(
                           l10n.retry,
-                          style: TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.white),
                         ),
                       ),
                     ],
@@ -179,10 +192,6 @@ class _HomePageState extends State<HomePage> {
                 listenable: homeViewModel,
                 builder: (context, child) {
                   return Scaffold(
-                    body: IndexedStack(
-                      index: homeViewModel.currentIndex,
-                      children: screens,
-                    ),
                     drawer: CustomDrawer(
                       selectedItem: selectedDrawerItem,
                       onItemTap: (item) {
@@ -196,43 +205,91 @@ class _HomePageState extends State<HomePage> {
                       userName: profile.firstName,
                       isCoach: isCoach,
                     ),
-                    bottomNavigationBar: BottomNavigationBar(
-                      currentIndex: homeViewModel.currentIndex,
-                      onTap: (index) => homeViewModel.changeTab(index),
-                      type: BottomNavigationBarType.fixed,
-                      showSelectedLabels: false,
-                      selectedItemColor: AppColors.primaryBtn,
-                      unselectedItemColor: AppColors.hintText,
-                      items: [
-                        CustomBottomNavBar.build(
-                          icon: isCoach
-                              ? Icons.workspace_premium_rounded
-                              : Icons.show_chart,
-                          label: isCoach ? l10n.sub : l10n.progress,
-                          isSelected: homeViewModel.currentIndex == 0,
+                    body: Stack(
+                      children: [
+                        IndexedStack(
+                          index: homeViewModel.currentIndex,
+                          children: screens,
                         ),
-                        CustomBottomNavBar.build(
-                          icon: isCoach
-                              ? Icons.groups_rounded
-                              : Icons.calendar_today,
-                          label: isCoach ? l10n.trainees : l10n.myPlans,
-                          isSelected: homeViewModel.currentIndex == 1,
-                        ),
-                        CustomBottomNavBar.build(
-                          icon: Icons.home,
-                          label: l10n.home,
-                          isSelected: homeViewModel.currentIndex == 2,
-                        ),
-                        CustomBottomNavBar.build(
-                          icon: Icons.fitness_center_outlined,
-                          label: l10n.workouts,
-                          isSelected: homeViewModel.currentIndex == 3,
-                        ),
-                        CustomBottomNavBar.build(
-                          icon: Icons.chat,
-                          svgIcon: 'assets/icons/bot-message-square.svg',
-                          label: l10n.chatAI,
-                          isSelected: homeViewModel.currentIndex == 4,
+
+                        // الـ BottomNavBar المتحرك
+                        AnimatedPositioned(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                          // ينزل البار ويترك جزءاً صغيراً جداً لسحبه للأعلى يدوياً عند الإخفاء
+                          bottom: _isNavBarHidden ? -70 : 0,
+                          left: 0,
+                          right: 0,
+                          child: GestureDetector(
+                            onVerticalDragUpdate: (details) {
+                              if (details.delta.dy > 5) {
+                                // سحب لأسفل -> إخفاء
+                                setState(() => _isNavBarHidden = true);
+                              } else if (details.delta.dy < -5) {
+                                // سحب لأعلى -> إظهار يدوياً
+                                setState(() => _isNavBarHidden = false);
+                              }
+                            },
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                // مقبض سحب بكتلة لمسية للسحب اليدوي
+                                Container(
+                                  width: 45,
+                                  height: 5,
+                                  margin: const EdgeInsets.only(bottom: 4),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.primaryBtn.withOpacity(0.7),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                BottomNavigationBar(
+                                  currentIndex: homeViewModel.currentIndex,
+                                  onTap: (index) {
+                                    homeViewModel.changeTab(index);
+                                  },
+                                  type: BottomNavigationBarType.fixed,
+                                  showSelectedLabels: false,
+                                  backgroundColor: AppColors.background,
+                                  elevation: 0,
+                                  selectedItemColor: AppColors.primaryBtn,
+                                  unselectedItemColor: AppColors.hintText,
+                                  items: [
+                                    CustomBottomNavBar.build(
+                                      icon: isCoach
+                                          ? Icons.workspace_premium_rounded
+                                          : Icons.show_chart,
+                                      label: isCoach ? l10n.sub : l10n.progress,
+                                      isSelected: homeViewModel.currentIndex == 0,
+                                    ),
+                                    CustomBottomNavBar.build(
+                                      icon: isCoach
+                                          ? Icons.groups_rounded
+                                          : Icons.calendar_today,
+                                      label: isCoach ? l10n.trainees : l10n.myPlans,
+                                      isSelected: homeViewModel.currentIndex == 1,
+                                    ),
+                                    CustomBottomNavBar.build(
+                                      icon: Icons.home,
+                                      label: l10n.home,
+                                      isSelected: homeViewModel.currentIndex == 2,
+                                    ),
+                                    CustomBottomNavBar.build(
+                                      icon: Icons.fitness_center_outlined,
+                                      label: l10n.workouts,
+                                      isSelected: homeViewModel.currentIndex == 3,
+                                    ),
+                                    CustomBottomNavBar.build(
+                                      icon: Icons.chat,
+                                      svgIcon: 'assets/icons/bot-message-square.svg',
+                                      label: l10n.chatAI,
+                                      isSelected: homeViewModel.currentIndex == 4,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ],
                     ),
