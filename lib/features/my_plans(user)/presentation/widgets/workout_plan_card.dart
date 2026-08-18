@@ -217,7 +217,7 @@ class WorkoutPlanCard extends StatelessWidget {
                           plan.durationMonths != null
                               ? '${plan.durationMonths} ${l10n.months}'
                               : l10n.openDuration,
-                              context,
+                          context,
                         ),
                         const SizedBox(height: 14),
                         _buildCompactStat(
@@ -320,7 +320,7 @@ class WorkoutPlanCard extends StatelessWidget {
     );
   }
 
-  Widget _buildCompactStat(IconData icon, String value, dynamic context) {
+  Widget _buildCompactStat(IconData icon, String value, BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
