@@ -938,7 +938,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get duration => 'المدة';
 
   @override
-  String get exercises => 'التمارين';
+  String get exercises => 'تمارين';
 
   @override
   String get performanceSummary => 'ملخص الأداء';
@@ -950,10 +950,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get skipped => 'تم التخطي';
 
   @override
-  String get min => 'دقيقة';
+  String get min => 'د';
 
   @override
-  String get reps => 'عدة';
+  String get reps => 'تكرارات';
 
   @override
   String get noSetsLogged => 'لم يتم تسجيل أي جولة';
@@ -981,6 +981,53 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get openDuration => 'مفتوح المدة';
+
+  @override
+  String get months => 'أشهر';
+
+  @override
+  String get daysPerWeek => 'أيام / أسبوع';
+
+  @override
+  String get wks => 'أسابيع';
+
+  @override
+  String get viewDays => 'عرض الأيام';
+
+  @override
+  String get coachPlan => 'خطة المدرب';
+
+  @override
+  String get noCoachPlanFound => 'لا توجد خطة مدرب';
+
+  @override
+  String get noCoachPlanSub => 'احصل على روتين تمرين مخصص من مدربينا الخبراء.';
+
+  @override
+  String get exploreCoaches => 'استكشف المدربين';
+
+  @override
+  String get noCustomPlans => 'لا توجد خطط مخصصة';
+
+  @override
+  String get noCustomPlansSub => 'قم ببناء خطتك المخصصة وتدرب حسب جدولك.';
+
+  @override
+  String get createCustomPlan => 'إنشاء خطة';
+
+  @override
+  String get saved => 'المحفوظات';
+
+  @override
+  String get noSavedPlans => 'لا توجد خطط محفوظة';
+
+  @override
+  String get noSavedPlansSub => 'الخطط التي تحفظها من المكتبة ستظهر هنا.';
+
+  @override
+  String get exploreFreePlans => 'استكشف خطط سبورتيفو';
+
+  @override
   String get createYourOwnPlan => 'أنشئ خطتك الخاصة';
 
   @override
@@ -1098,55 +1145,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get expired => 'منهية';
 
   @override
-  String get duration => 'المدة';
-
-  @override
   String get month => 'شهر';
 
   @override
-  String get months => 'أشهر';
-
-  @override
-  String get daysPerWeek => 'أيام / أسبوع';
-
-  @override
-  String get wks => 'أسابيع';
-
-  @override
-  String get viewDays => 'عرض الأيام';
-
-  @override
-  String get coachPlan => 'خطة المدرب';
-
-  @override
-  String get noCoachPlanFound => 'لا توجد خطة مدرب';
-
-  @override
-  String get noCoachPlanSub => 'احصل على روتين تمرين مخصص من مدربينا الخبراء.';
-
-  @override
-  String get exploreCoaches => 'استكشف المدربين';
-
-  @override
-  String get noCustomPlans => 'لا توجد خطط مخصصة';
-
-  @override
-  String get noCustomPlansSub => 'قم ببناء خطتك المخصصة وتدرب حسب جدولك.';
-
-  @override
-  String get createCustomPlan => 'إنشاء خطة';
-
-  @override
-  String get saved => 'المحفوظات';
-
-  @override
-  String get noSavedPlans => 'لا توجد خطط محفوظة';
-
-  @override
-  String get noSavedPlansSub => 'الخطط التي تحفظها من المكتبة ستظهر هنا.';
-
-  @override
-  String get exploreFreePlans => 'استكشف خطط سبورتيفو';
   String get unknownAthlete => 'اللاعب غير معروف';
 
   @override
@@ -1154,9 +1155,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get sets => 'مجموعات';
-
-  @override
-  String get reps => 'تكرارات';
 
   @override
   String get strength => 'مقاومة';
@@ -1205,9 +1203,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get createDayButton => 'إنشاء اليوم';
-
-  @override
-  String get exercises => 'تمارين';
 
   @override
   String get noExercisesAddedYet => 'لم تتم إضافة أي تمارين بعد';
@@ -1285,9 +1280,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get saveExerciseSettings => 'حفظ إعدادات التمرين';
 
   @override
-  String get min => 'د';
-
-  @override
   String get sec => 'ث';
 
   @override
@@ -1314,7 +1306,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get cutGoalSubtitle => 'خسارة الدهون';
 
   @override
-  String get bulkGoalSubtitle => 'بناء العضلات';
+  String get bulkGoalSubtitle => 'زيادة الكتلة العضلية';
 
   @override
   String get maintainGoalSubtitle => 'الحفاظ على التوازن';
@@ -1330,4 +1322,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get addSelectedDays => 'إضافة الأيام المحددة';
+
+  @override
+  String get planUpdatedSuccessfully => 'تم تحديث الخطة بنجاح';
 }

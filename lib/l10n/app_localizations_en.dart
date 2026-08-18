@@ -935,10 +935,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sessionSummaryFor => 'Session summary for';
 
   @override
-  String get duration => 'DURATION';
+  String get duration => 'Duration';
 
   @override
-  String get exercises => 'EXERCISES';
+  String get exercises => 'Exercises';
 
   @override
   String get performanceSummary => 'PERFORMANCE SUMMARY';
@@ -950,7 +950,84 @@ class AppLocalizationsEn extends AppLocalizations {
   String get skipped => 'Skipped';
 
   @override
-  String get min => 'Min';
+  String get min => 'min';
+
+  @override
+  String get reps => 'Reps';
+
+  @override
+  String get noSetsLogged => 'No sets logged';
+
+  @override
+  String get done => 'Done';
+
+  @override
+  String get of_word => 'OF';
+
+  @override
+  String get completeSet => 'Complete Set';
+
+  @override
+  String get remaining => 'REMAINING';
+
+  @override
+  String get logCompletedSet => 'Log Completed Set';
+
+  @override
+  String get new_word => 'New';
+
+  @override
+  String get yourPersonalCoach => 'Your Personal Coach';
+
+  @override
+  String get openDuration => 'Open Duration';
+
+  @override
+  String get months => 'months';
+
+  @override
+  String get daysPerWeek => 'Days / Week';
+
+  @override
+  String get wks => 'Wks';
+
+  @override
+  String get viewDays => 'View Days';
+
+  @override
+  String get coachPlan => 'Coach Plan';
+
+  @override
+  String get noCoachPlanFound => 'No Coach Plan Found';
+
+  @override
+  String get noCoachPlanSub => 'Get a personalized workout routine from our expert coaches.';
+
+  @override
+  String get exploreCoaches => 'Explore Coaches';
+
+  @override
+  String get noCustomPlans => 'No Custom Plans Yet';
+
+  @override
+  String get noCustomPlansSub => 'Build your own custom plan and train on your schedule.';
+
+  @override
+  String get createCustomPlan => 'Create Custom Plan';
+
+  @override
+  String get saved => 'Saved';
+
+  @override
+  String get noSavedPlans => 'No Saved Plans Yet';
+
+  @override
+  String get noSavedPlansSub => 'Plans you save from the platform library will show up here.';
+
+  @override
+  String get exploreFreePlans => 'Explore Sportifo Plans';
+
+  @override
   String get createYourOwnPlan => 'Create Your Own Plan';
 
   @override
@@ -1068,13 +1145,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get expired => 'Expired';
 
   @override
-  String get duration => 'Duration';
-
-  @override
   String get month => 'month';
-
-  @override
-  String get months => 'months';
 
   @override
   String get unknownAthlete => 'Unknown Athlete';
@@ -1086,79 +1157,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sets => 'Sets';
 
   @override
-  String get reps => 'Reps';
-
-  @override
-  String get noSetsLogged => 'No sets logged';
-
-  @override
-  String get done => 'Done';
-
-  @override
-  String get of_word => 'OF';
-
-  @override
-  String get completeSet => 'Complete Set';
-
-  @override
-  String get remaining => 'REMAINING';
-
-  @override
-  String get logCompletedSet => 'Log Completed Set';
-
-  @override
-  String get new_word => 'New';
-
-  @override
-  String get yourPersonalCoach => 'Your Personal Coach';
-
-  @override
-  String get openDuration => 'Open Duration';
-
-  @override
-  String get months => 'Months';
-
-  @override
-  String get daysPerWeek => 'Days / Week';
-
-  @override
-  String get wks => 'Wks';
-
-  @override
-  String get viewDays => 'View Days';
-
-  @override
-  String get coachPlan => 'Coach Plan';
-
-  @override
-  String get noCoachPlanFound => 'No Coach Plan Found';
-
-  @override
-  String get noCoachPlanSub => 'Get a personalized workout routine from our expert coaches.';
-
-  @override
-  String get exploreCoaches => 'Explore Coaches';
-
-  @override
-  String get noCustomPlans => 'No Custom Plans Yet';
-
-  @override
-  String get noCustomPlansSub => 'Build your own custom plan and train on your schedule.';
-
-  @override
-  String get createCustomPlan => 'Create Custom Plan';
-
-  @override
-  String get saved => 'Saved';
-
-  @override
-  String get noSavedPlans => 'No Saved Plans Yet';
-
-  @override
-  String get noSavedPlansSub => 'Plans you save from the platform library will show up here.';
-
-  @override
-  String get exploreFreePlans => 'Explore Sportifo Plans';
   String get strength => 'STRENGTH';
 
   @override
@@ -1205,9 +1203,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get createDayButton => 'Create Day';
-
-  @override
-  String get exercises => 'Exercises';
 
   @override
   String get noExercisesAddedYet => 'No exercises added yet';
@@ -1285,9 +1280,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get saveExerciseSettings => 'Save Exercise Settings';
 
   @override
-  String get min => 'min';
-
-  @override
   String get sec => 'sec';
 
   @override
@@ -1330,4 +1322,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get addSelectedDays => 'Add Selected Days';
+
+  @override
+  String get planUpdatedSuccessfully => 'Plan Updated Successfully';
 }
