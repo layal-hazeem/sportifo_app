@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
-// إذا ضفتي الروابط بملف الثوابت اعملي import للـ ApiConstants هون
+
+import '../../../../core/network/api_constants.dart';
 
 class NotificationsWebService {
   final Dio _dio;
@@ -9,7 +10,7 @@ class NotificationsWebService {
   // 1️⃣ إند بوينت جلب عدد الإشعارات الغير مقروءة
   Future<Response> getUnreadNotificationsCount({Options? options}) async {
     return await _dio.get(
-      'notifications/count', // فيك تبدليها بـ ApiConstants.notificationsCount إذا ضفتيها
+       ApiConstants.notificationsCount ,
       options: options,
     );
   }
@@ -21,7 +22,7 @@ class NotificationsWebService {
     Options? options,
   }) async {
     return await _dio.get(
-      'notifications', // فيك تبدليها بـ ApiConstants.notifications
+       ApiConstants.notifications,
       queryParameters: {
         'page': page,
         'per_page': perPage,

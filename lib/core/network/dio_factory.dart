@@ -19,7 +19,11 @@ class DioFactory {
         receiveDataWhenStatusError: true,
         connectTimeout: const Duration(seconds: 20),
         receiveTimeout: const Duration(seconds: 20),
-        headers: {'Accept': 'application/json', 'Accept-Language': 'en'},
+        headers: {'Accept': 'application/json',
+          'Accept-Language': 'en', // 👈 الفاصلة هنا كانت ناقصة
+          // 'ngrok-skip-browser-warning': 'true',
+          // 'User-Agent': 'PostmanRuntime/7.32.3',
+        },
       ),
     );
   }
