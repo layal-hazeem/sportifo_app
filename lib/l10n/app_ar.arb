@@ -556,5 +556,6 @@
   "addExistingDays": "إضافة أيام موجودة مسبقًا",
   "availableDays": "أيام متاحة",
   "exercises": "تمارين",
-  "addSelectedDays": "إضافة الأيام المحددة"
+  "addSelectedDays": "إضافة الأيام المحددة",
+  "planUpdatedSuccessfully":"تم تحديث الخطة بنجاح"
 }
