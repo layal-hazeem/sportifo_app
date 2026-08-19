@@ -73,7 +73,7 @@ class _ManualMealEntryScreenState extends State<ManualMealEntryScreen> {
           final isLoading = state is AddMealLoading;
 
           return Scaffold(
-            backgroundColor: AppColors.background,
+            backgroundColor: AppColors.lightBackground,
             appBar: WaveAppBar(title: l10n.add_meal, showBackButton: true),
             body: SingleChildScrollView(
               padding: const EdgeInsets.all(20),

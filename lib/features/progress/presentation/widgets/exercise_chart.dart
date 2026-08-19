@@ -43,7 +43,7 @@ class ExerciseChart extends StatelessWidget {
         children: [
           Text(
             l10n.exercises_per_day,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
               color: context.textColor,

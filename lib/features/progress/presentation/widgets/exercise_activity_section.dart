@@ -31,10 +31,6 @@ class ExerciseActivitySection extends StatefulWidget {
 class _ExerciseActivitySectionState extends State<ExerciseActivitySection> {
   @override
   Widget build(BuildContext context) {
-    final totalWorkouts = widget.days.fold<int>(
-      0,
-      (sum, d) => sum + d.totalExercises,
-    );
     final l10n = AppLocalizations.of(context)!;
 
     final totalWorkouts =
@@ -53,7 +49,7 @@ class _ExerciseActivitySectionState extends State<ExerciseActivitySection> {
           children: [
             Text(
               l10n.workout_activity,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: context.textColor,
@@ -93,7 +89,7 @@ class _ExerciseActivitySectionState extends State<ExerciseActivitySection> {
 
         Text(
           l10n.activity_timeline,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
             color: context.textColor,

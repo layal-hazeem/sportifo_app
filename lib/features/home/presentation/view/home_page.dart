@@ -1,3 +1,4 @@
+//home page
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/helpers/snack_bar_utils.dart';
@@ -230,12 +231,13 @@ class _HomePageState extends State<HomePage> {
                               },
                               type: BottomNavigationBarType.fixed,
                               showSelectedLabels: false,
-                              backgroundColor: AppColors.background,
+                              backgroundColor: context.backgroundColor,
                               elevation: 0,
                               selectedItemColor: AppColors.primaryBtn,
                               unselectedItemColor: AppColors.hintText,
                               items: [
                                 CustomBottomNavBar.build(
+                                  context,
                                   icon: isCoach
                                       ? Icons.workspace_premium_rounded
                                       : Icons.show_chart,
@@ -243,6 +245,7 @@ class _HomePageState extends State<HomePage> {
                                   isSelected: homeViewModel.currentIndex == 0,
                                 ),
                                 CustomBottomNavBar.build(
+                                  context,
                                   icon: isCoach
                                       ? Icons.groups_rounded
                                       : Icons.calendar_today,
@@ -250,16 +253,19 @@ class _HomePageState extends State<HomePage> {
                                   isSelected: homeViewModel.currentIndex == 1,
                                 ),
                                 CustomBottomNavBar.build(
+                                  context,
                                   icon: Icons.home,
                                   label: l10n.home,
                                   isSelected: homeViewModel.currentIndex == 2,
                                 ),
                                 CustomBottomNavBar.build(
+                                  context,
                                   icon: Icons.fitness_center_outlined,
                                   label: l10n.workouts,
                                   isSelected: homeViewModel.currentIndex == 3,
                                 ),
                                 CustomBottomNavBar.build(
+                                  context,
                                   icon: Icons.chat,
                                   svgIcon: 'assets/icons/bot-message-square.svg',
                                   label: l10n.chatAI,
