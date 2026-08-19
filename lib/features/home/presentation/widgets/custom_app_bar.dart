@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
@@ -7,14 +6,16 @@ import '../../../notifications/presentation/widgets/notification_icon_button.dar
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final int currentIndex;
-  final String userName; // 🔥 الاسم موجود هون وجاهز
+  final String userName;
   final bool isCoach;
+  final VoidCallback? onHomeTap; // 🔥 كولباك العودة للهوم
 
   const CustomAppBar({
     super.key,
     required this.currentIndex,
     required this.userName,
     required this.isCoach,
+    this.onHomeTap,
   });
 
   @override
@@ -24,7 +25,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    String? title; // 🔥 خليناها تقبل null
+    String? title;
     List<Widget>? actions;
 
     switch (currentIndex) {
@@ -35,8 +36,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         title = isCoach ? l10n.trainees : l10n.myPlans;
         break;
       case 2:
-      // 🚀 هون التعديل الأهم: خلينا الـ title = null في حالة الهوم
-      // مشان الـ WaveAppBar ينفذ الـ UI الترحيبي الخاص اللي بياخد الاسم الممرر
         title = null;
         actions = [
           IconButton(
@@ -56,6 +55,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         break;
     }
 
+    // 🔥 إذا كنا خارج الهوم (currentIndex != 2)، نضيف زر الهوم ضمن الـ actions
+    if (currentIndex != 2) {
+      actions = [
+        IconButton(
+          icon: const Icon(Icons.home_rounded, color: Colors.white, size: 28),
+          tooltip: l10n.home,
+          onPressed: onHomeTap,
+        ),
+        ...?actions, // للحفاظ على باقي الأزرار إن وجدت
+      ];
+    }
+
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 500),
       transitionBuilder: (Widget child, Animation<double> animation) {
@@ -72,8 +83,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       child: WaveAppBar(
         key: ValueKey<int>(currentIndex),
         title: title,
-        userName: userName, // 🔥 مررنا الاسم للـ WaveAppBar
-        currentIndex: currentIndex, // 🔥 مررنا الـ Index ليفهم الـ WaveAppBar إننا بالهوم
+        userName: userName,
+        currentIndex: currentIndex,
         actions: actions,
         showBackButton: false,
         leading: IconButton(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/helpers/snack_bar_utils.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/chat_message_model.dart';
@@ -19,12 +20,8 @@ class AiChatScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (_) => getIt<AiChatCubit>()..fetchHistory(),
-        ),
-        BlocProvider.value(
-          value: getIt<NutritionCubit>(),
-        ),
+        BlocProvider(create: (_) => getIt<AiChatCubit>()..fetchHistory()),
+        BlocProvider.value(value: getIt<NutritionCubit>()),
       ],
       child: const _AiChatView(),
     );
@@ -138,19 +135,25 @@ class _AiChatViewState extends State<_AiChatView> {
   void _showCancelDialog(String pendingText) {
     if (_isDialogOpen) return;
     _isDialogOpen = true;
-
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (ctx) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
           title: Column(
             children: [
-              Icon(Icons.warning_amber_rounded, color: AppColors.primaryBtn, size: 50),
+              Icon(
+                Icons.warning_amber_rounded,
+                color: AppColors.primaryBtn,
+                size: 50,
+              ),
               const SizedBox(height: 12),
-              const Text(
-                "Stop Sending?",
+              Text(
+                l10n.stop_sending_title,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.black87,
@@ -160,8 +163,8 @@ class _AiChatViewState extends State<_AiChatView> {
               ),
             ],
           ),
-          content: const Text(
-            "Stopping will delete your message and it won't be saved.",
+          content: Text(
+            l10n.stop_sending_content,
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 14, color: Colors.black54),
           ),
@@ -173,9 +176,12 @@ class _AiChatViewState extends State<_AiChatView> {
                 Navigator.of(ctx).pop();
                 context.read<AiChatCubit>().resendPendingMessage();
               },
-              child: const Text(
-                "Undo",
-                style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w600),
+              child: Text(
+                l10n.undo,
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
             const SizedBox(width: 12),
@@ -188,10 +194,18 @@ class _AiChatViewState extends State<_AiChatView> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red.shade400,
                 foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 12,
+                ),
               ),
-              child: const Text("Delete", style: TextStyle(fontWeight: FontWeight.bold)),
+              child: Text(
+                l10n.delete,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
           ],
         );
@@ -273,7 +287,8 @@ class _AiChatViewState extends State<_AiChatView> {
 
                   final isSending = state is AiChatSending;
                   final isLoading = state is AiChatLoading;
-                  final lastAiId = state is AiChatSuccess && state.lastAiMessage != null
+                  final lastAiId =
+                      state is AiChatSuccess && state.lastAiMessage != null
                       ? state.lastAiMessage!.id
                       : -1;
 
@@ -295,7 +310,8 @@ class _AiChatViewState extends State<_AiChatView> {
                           }
 
                           final msg = messages[index];
-                          final showTyping = msg.sender == 'ai' && msg.id == lastAiId;
+                          final showTyping =
+                              msg.sender == 'ai' && msg.id == lastAiId;
 
                           return ChatBubble(
                             key: ValueKey(msg.id),
@@ -312,7 +328,7 @@ class _AiChatViewState extends State<_AiChatView> {
                         bottom: _showJumpButton ? 20 : -70,
                         child: Material(
                           elevation: 6,
-                          shadowColor: Colors.black.withValues(alpha:0.15),
+                          shadowColor: Colors.black.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(28),
                           color: Colors.white,
                           child: InkWell(
@@ -330,10 +346,8 @@ class _AiChatViewState extends State<_AiChatView> {
                               ),
                               child: AnimatedSwitcher(
                                 duration: const Duration(milliseconds: 200),
-                                transitionBuilder: (child, anim) => ScaleTransition(
-                                  scale: anim,
-                                  child: child,
-                                ),
+                                transitionBuilder: (child, anim) =>
+                                    ScaleTransition(scale: anim, child: child),
                                 child: Icon(
                                   _isAtBottom
                                       ? Icons.keyboard_arrow_up_rounded
@@ -375,6 +389,7 @@ class _EmptyChatView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return LayoutBuilder(
       builder: (context, constraints) {
         return SingleChildScrollView(
@@ -388,7 +403,7 @@ class _EmptyChatView extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
-                      color: AppColors.primaryBtn.withValues(alpha:0.08),
+                      color: AppColors.primaryBtn.withValues(alpha: 0.08),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
@@ -398,8 +413,8 @@ class _EmptyChatView extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  const Text(
-                    "Your AI Coach is ready!",
+                  Text(
+                    l10n.ai_coach_ready,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -408,11 +423,8 @@ class _EmptyChatView extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    "Ask about nutrition, workouts, or calories",
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey.shade500,
-                    ),
+                    l10n.empty_chat_subtitle,
+                    style: TextStyle(fontSize: 14, color: Colors.grey.shade500),
                   ),
                 ],
               ),

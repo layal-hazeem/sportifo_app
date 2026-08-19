@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../../data/models/weight_progress_model.dart';
 
 class WeightProgressSection extends StatelessWidget {
@@ -10,6 +11,8 @@ class WeightProgressSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     final currentWeight = data.user?.weight ?? 0;
     final target = data.target;
     final history = data.weightHistory;
@@ -46,21 +49,23 @@ class WeightProgressSection extends StatelessWidget {
           Row(
             children: [
               _StatCard(
-                label: "Current",
+                label: l10n.current_weight,
                 value: "${currentWeight.toStringAsFixed(1)} kg",
                 icon: Icons.monitor_weight,
                 color: AppColors.primaryBtn,
               ),
               const SizedBox(width: 12),
               _StatCard(
-                label: "Goal",
-                value: target != null ? _getGoalLabel(target.goal) : "N/A",
+                label: l10n.goal,
+                value: target != null
+                    ? _getGoalLabel(target.goal, l10n)
+                    : l10n.not_available_short,
                 icon: Icons.flag,
                 color: Colors.orange,
               ),
               const SizedBox(width: 12),
               _StatCard(
-                label: "Change",
+                label: l10n.change,
                 value:
                     "${weightChange > 0 ? '+' : ''}${weightChange.toStringAsFixed(1)} kg",
                 icon: Icons.trending_up,
@@ -77,7 +82,7 @@ class WeightProgressSection extends StatelessWidget {
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha:0.04),
+                    color: Colors.black.withValues(alpha: 0.04),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -86,9 +91,9 @@ class WeightProgressSection extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    "Weight History",
-                    style: TextStyle(
+                  Text(
+                    l10n.weight_history,
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: Colors.black54,
@@ -176,7 +181,7 @@ class WeightProgressSection extends StatelessWidget {
                             barWidth: 3,
                             belowBarData: BarAreaData(
                               show: true,
-                              color: AppColors.primaryBtn.withValues(alpha:0.1),
+                              color: AppColors.primaryBtn.withValues(alpha: 0.1),
                             ),
                             dotData: FlDotData(
                               show: true,
@@ -203,14 +208,14 @@ class WeightProgressSection extends StatelessWidget {
     );
   }
 
-  String _getGoalLabel(String goal) {
+  String _getGoalLabel(String goal, AppLocalizations l10n) {
     switch (goal.toLowerCase()) {
       case 'bulk':
-        return 'Bulk';
+        return l10n.goal_bulk;
       case 'cut':
-        return 'Cut';
+        return l10n.goal_cut;
       case 'maintain':
-        return 'Maintain';
+        return l10n.goal_maintain;
       default:
         return goal;
     }
@@ -240,7 +245,7 @@ class _StatCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha:0.04),
+              color: Colors.black.withValues(alpha: 0.04),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/features/progress/presentation/view_model/exercise_filter_params.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class FilterBottomSheet {
   static void show({
@@ -10,6 +11,8 @@ class FilterBottomSheet {
     required ExerciseFilterParams currentFilters,
     required void Function(ExerciseFilterParams) onApply,
   }) {
+    final l10n = AppLocalizations.of(context)!;
+
     int? tempPlanId = currentFilters.planId;
     int? tempExerciseId = currentFilters.exerciseId;
     DateTime? tempFrom = currentFilters.from != null
@@ -51,9 +54,9 @@ class FilterBottomSheet {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  const Text(
-                    "Filter Workouts",
-                    style: TextStyle(
+                  Text(
+                    l10n.filter_workouts,
+                    style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
@@ -61,13 +64,13 @@ class FilterBottomSheet {
                   const SizedBox(height: 20),
 
                   if (plans.isNotEmpty) ...[
-                    _buildLabel("Plan"),
+                    _buildLabel(l10n.plan),
                     const SizedBox(height: 8),
                     _buildDropdown<int?>(
                       value: tempPlanId,
-                      hint: "All Plans",
+                      hint: l10n.all_plans,
                       items: [
-                        const DropdownMenuItem(value: null, child: Text("All Plans")),
+                        DropdownMenuItem(value: null, child: Text(l10n.all_plans)),
                         ...plans.entries.map((e) => DropdownMenuItem(
                               value: e.key,
                               child: Text(e.value),
@@ -79,13 +82,13 @@ class FilterBottomSheet {
                   ],
 
                   if (exercises.isNotEmpty) ...[
-                    _buildLabel("Exercise"),
+                    _buildLabel(l10n.exercise),
                     const SizedBox(height: 8),
                     _buildDropdown<int?>(
                       value: tempExerciseId,
-                      hint: "All Exercises",
+                      hint: l10n.all_exercises,
                       items: [
-                        const DropdownMenuItem(value: null, child: Text("All Exercises")),
+                        DropdownMenuItem(value: null, child: Text(l10n.all_exercises)),
                         ...exercises.entries.map((e) => DropdownMenuItem(
                               value: e.key,
                               child: Text(e.value),
@@ -96,13 +99,13 @@ class FilterBottomSheet {
                     const SizedBox(height: 16),
                   ],
 
-                  _buildLabel("Date Range"),
+                  _buildLabel(l10n.date_range),
                   const SizedBox(height: 8),
                   Row(
                     children: [
                       Expanded(
                         child: _DateField(
-                          label: "From",
+                          label: l10n.from,
                           date: tempFrom,
                           onTap: () async {
                             final picked = await showDatePicker(
@@ -120,7 +123,7 @@ class FilterBottomSheet {
                       const SizedBox(width: 12),
                       Expanded(
                         child: _DateField(
-                          label: "To",
+                          label: l10n.to,
                           date: tempTo,
                           onTap: () async {
                             final picked = await showDatePicker(
@@ -150,7 +153,7 @@ class FilterBottomSheet {
                               borderRadius: BorderRadius.circular(14),
                             ),
                           ),
-                          child: const Text("Cancel"),
+                          child: Text(l10n.cancel),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -177,7 +180,7 @@ class FilterBottomSheet {
                               borderRadius: BorderRadius.circular(14),
                             ),
                           ),
-                          child: const Text("Apply"),
+                          child: Text(l10n.apply),
                         ),
                       ),
                     ],
