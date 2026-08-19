@@ -4,17 +4,21 @@ import 'package:http/http.dart' as http;
 import 'dart:typed_data';
 import 'dart:developer';
 import 'dart:convert';
-import 'dart:io'; // 👈 لمعرفة نوع النظام برمجياً (Android / iOS)
+import 'dart:io';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:sportifo_app/core/di/service_locator.dart';
 
+import '../../features/ ads/presentation/view_model/ads_cubit.dart';
+import '../../features/ ads/presentation/view_model/ads_state.dart';
+import '../../features/ ads/presentation/widgets/ads_details_bottom_sheet.dart';
+import '../../features/my_plans(user)/presentation/view/my_plans_screen.dart';
+import '../../main.dart';
+import '../routes/app_routes.dart';
 import '../storage/local_storage.dart';
 
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  log("🔔 Background Message: ${message.notification?.title}");
-  log("📦 Data: ${message.data}");
-
+  log("Background Message Received: ${message.notification?.title}");
   await NotificationService().showBackgroundNotification(message);
 }
 
@@ -24,11 +28,10 @@ class NotificationService {
   NotificationService._internal();
 
   final FirebaseMessaging _fcm = FirebaseMessaging.instance;
-  final FlutterLocalNotificationsPlugin _localNotifications =
-  FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin _localNotifications = FlutterLocalNotificationsPlugin();
 
-  // ✅ رابط الباك
   static const String _baseUrl = 'https://sportifo.moayadismail.com/api/app';
+  Map<String, dynamic>? pendingNotificationData;
 
   Future<void> init() async {
     NotificationSettings settings = await _fcm.requestPermission(
@@ -38,87 +41,68 @@ class NotificationService {
     );
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      log('User granted permission for notifications');
+      log('User granted notification permissions.');
 
       try {
         String? token = await _fcm.getToken();
-        log("====================================");
-        log("🔥 FCM Token: $token");
-        log("====================================");
+        log("FCM Token: $token");
       } catch (e) {
         log("Error getting FCM token: $e");
       }
 
       await _initLocalNotifications();
 
-      FirebaseMessaging.onBackgroundMessage(
-        firebaseMessagingBackgroundHandler,
-      );
+      FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
-      // ✅ لما يتجدد التوكن من فايربيز، نحدثه بالسيرفر إذا كان اليوزر مسجل دخول
       _fcm.onTokenRefresh.listen((newToken) async {
-        log("🔄 Token refreshed: $newToken");
+        log("Token refreshed.");
         await registerDeviceToBackend();
       });
 
-      // ✅ Foreground Message
+      // Listen for foreground messages
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-        log("🔔 Foreground Message: ${message.notification?.title}");
-        log("📦 Data: ${message.data}");
+        log("Foreground Message Received.");
         _showLocalNotification(message);
       });
 
-      // ✅ الضغط على الإشعار بالخلفية
+      // Listen for messages tapped in background
       FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-        log("👆 User tapped notification from background");
-        log("🔗 deep_link: ${message.data['deep_link']}");
-        _handleDeepLink(message.data['deep_link']);
+        log("Notification tapped from background.");
+        handleNotificationNavigation(message.data);
       });
 
-      // ✅ فتح التطبيق من حالة الإغلاق عبر الإشعار
+      // Handle app opened from terminated state via notification
       RemoteMessage? initialMessage = await _fcm.getInitialMessage();
       if (initialMessage != null) {
-        log("🚀 App opened from terminated state via notification");
-        _handleDeepLink(initialMessage.data['deep_link']);
+        log("App opened from terminated state via notification.");
+        Future.delayed(const Duration(milliseconds: 500), () {
+          pendingNotificationData = initialMessage.data;
+        });
       }
 
-      // 🔥 محاولة المزامنة فور فتح التطبيق (ستعمل فقط إذا كان مسجلاً دخول)
       await registerDeviceToBackend();
-
-    } else {
-      log('User declined or has not accepted permission');
     }
   }
 
-  // ✅ دالة المزامنة المخصصة حصراً للمستخدمين المسجلين (User Auth Only)
   Future<void> registerDeviceToBackend() async {
     try {
       final localStorage = getIt<LocalStorage>();
-
-      // 🔍 1. فحص هل المستخدم مسجل دخول حالياً؟
       final String? userAuthToken = localStorage.getToken();
 
-      if (userAuthToken == null || userAuthToken.isEmpty) {
-        log("ℹ️ User is NOT logged in. Skipping FCM token registration.");
-        return; // ⛔ خروج فوراً بدون إرسال أي Request
-      }
+      if (userAuthToken == null || userAuthToken.isEmpty) return;
 
-      // 2. جلب FCM Token الحالي
       String? token = await _fcm.getToken();
       if (token == null) return;
 
-      final String locale = localStorage.getLanguage() ?? 'en';
+      final String locale = localStorage.getLanguage();
       final String platform = Platform.isAndroid ? 'android' : 'ios';
 
-      log("📤 Sending FCM token to backend for AUTHENTICATED USER...");
-
-      // 3. إرسال الطلب مع إرفاق Bearer Token الخاص بهوية المستخدم
       final response = await http.post(
         Uri.parse('$_baseUrl/guest/device'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'Authorization': 'Bearer $userAuthToken', // 🔥 هوية المستخدم المسجل
+          'Authorization': 'Bearer $userAuthToken',
         },
         body: jsonEncode({
           'fcm_token': token,
@@ -128,15 +112,12 @@ class NotificationService {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        final data = jsonDecode(response.body);
-        log("✅ Device registered successfully for User!");
-        log("🎯 Response: ${data['message']}");
+        log("Device registered successfully.");
       } else {
-        log("❌ Failed: ${response.statusCode}");
-        log("❌ Response: ${response.body}");
+        log("Failed to register device: ${response.statusCode}");
       }
     } catch (e) {
-      log("❌ Error registering device: $e");
+      log("Error registering device: $e");
     }
   }
 
@@ -156,17 +137,22 @@ class NotificationService {
     await _localNotifications.initialize(
       settings: initSettings,
       onDidReceiveNotificationResponse: (NotificationResponse response) {
-        log("👆 Notification tapped: ${response.payload}");
-        _handleDeepLink(response.payload);
+        if (response.payload != null && response.payload!.isNotEmpty) {
+          try {
+            final data = jsonDecode(response.payload!);
+            handleNotificationNavigation(data);
+          } catch (e) {
+            log("Error parsing payload: $e");
+          }
+        }
       },
     );
 
     final AndroidFlutterLocalNotificationsPlugin? androidPlugin =
-    _localNotifications.resolvePlatformSpecificImplementation
-    <AndroidFlutterLocalNotificationsPlugin>();
+    _localNotifications.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>();
 
-    await androidPlugin?.deleteNotificationChannel(
-        channelId: 'sportifo_channel');
+    await androidPlugin?.deleteNotificationChannel(channelId: 'sportifo_channel');
     await androidPlugin?.createNotificationChannel(
       const AndroidNotificationChannel(
         'sportifo_channel',
@@ -175,27 +161,24 @@ class NotificationService {
         importance: Importance.high,
       ),
     );
-
-    log("✅ Notification channel created fresh");
   }
 
   Future<void> _showLocalNotification(RemoteMessage message) async {
     final String? imageUrl = message.data['icon_url'] ?? message.data['icon'];
+    final payload = jsonEncode(message.data);
 
     ByteArrayAndroidBitmap? largeIcon;
     if (imageUrl != null && imageUrl.isNotEmpty) {
       try {
-        final Uint8List imageBytes = await _downloadImage(imageUrl)
-            .timeout(const Duration(seconds: 5));
+        final Uint8List imageBytes =
+        await _downloadImage(imageUrl).timeout(const Duration(seconds: 5));
         largeIcon = ByteArrayAndroidBitmap(imageBytes);
-        log("✅ Image loaded successfully");
       } catch (e) {
-        log("❌ Error loading notification image: $e");
+        log("Error loading image: $e");
       }
     }
 
-    final AndroidNotificationDetails androidDetails =
-    AndroidNotificationDetails(
+    final AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
       'sportifo_channel',
       'Sportifo Notifications',
       channelDescription: 'Sportifo app notifications',
@@ -214,7 +197,8 @@ class NotificationService {
       title: message.notification?.title ?? '',
       body: message.notification?.body ?? '',
       notificationDetails: notificationDetails,
-      payload: message.data['deep_link'],
+      payload: payload,
+
     );
   }
 
@@ -223,25 +207,111 @@ class NotificationService {
     return response.bodyBytes;
   }
 
-  void _handleDeepLink(String? deepLink) {
-    if (deepLink == null || deepLink.isEmpty || deepLink == '/') return;
+  // Handle navigation based on notification data payload
+  void handleNotificationNavigation(Map<String, dynamic> data) {
+    final eventType = data['event_type']?.toString().toLowerCase();
+    final model = data['model']?.toString().toLowerCase();
+    final modelId = data['model_id'];
+    final deepLink = data['deep_link']?.toString();
 
-    log("🔗 Handling deep link: $deepLink");
-
-    if (deepLink.startsWith('http://') || deepLink.startsWith('https://')) {
-      _launchUrl(deepLink);
+    if (eventType == 'external' && deepLink != null && deepLink.isNotEmpty) {
+      _launchExternalUrl(deepLink);
       return;
     }
 
-    log("📱 Internal deep link: $deepLink");
+    if (eventType == 'plan_created' ||
+        eventType == 'coach_created_plan' ||
+        eventType == 'user_created_plan') {
+      MyPlansScreen.activeTabNotifier.value = 0;
+      navigatorKey.currentState?.pushNamed(AppRoutes.myPlans);
+      return;
+    }
+
+    switch (model) {
+      case 'home':
+        navigatorKey.currentState?.pushNamedAndRemoveUntil(
+          AppRoutes.home,
+              (route) => false,
+        );
+        break;
+      case 'plan':
+      case 'my_plan':
+      case 'my_plans':
+      case 'coach_plan':
+        MyPlansScreen.activeTabNotifier.value = 0;
+        navigatorKey.currentState?.pushNamed(AppRoutes.myPlans);
+        break;
+      case 'user_profile':
+        navigatorKey.currentState?.pushNamed(AppRoutes.getProfile);
+        break;
+      case 'coach_profile':
+      case 'coach':
+        if (modelId != null) {
+          final coachId = int.tryParse(modelId.toString());
+          if (coachId != null) {
+            navigatorKey.currentState?.pushNamed(
+              AppRoutes.coach,
+              arguments: coachId,
+            );
+          }
+        }
+        break;
+      case 'ad':
+        _handleAdNavigation(modelId);
+        break;
+    // 💬 حالة إشعار المحادثة الفورية
+      case 'chat':
+      case 'message':
+      case 'conversation':
+        if (modelId != null) {
+          final conversationId = int.tryParse(modelId.toString());
+
+          if (conversationId != null) {
+            // 🔥 جلب بيانات الطرف الآخر من الإشعار (إذا كان الباك إند يرسلها)
+            // إذا لم يرسلها، نضع قيمة افتراضية مثل "New Message"
+            final senderName = data['sender_name']?.toString() ?? 'New Message';
+            final senderImage = data['sender_image']?.toString();
+            final subType = data['subscription_type']?.toString();
+
+            navigatorKey.currentState?.pushNamed(
+              AppRoutes.chatDetail, // 👈 مسار الشات
+              arguments: {
+                'conversationId': conversationId,
+                'otherParticipantName': senderName,
+                'otherParticipantImage': senderImage,
+                'subscriptionType': subType,
+              },
+            );
+          }
+        }
+        break;
+    }
   }
 
-  Future<void> _launchUrl(String url) async {
+  Future<void> _launchExternalUrl(String url) async {
     final Uri uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } else {
-      log("❌ Could not launch: $url");
+    }
+  }
+
+  void _handleAdNavigation(dynamic adId) {
+    if (adId == null) return;
+
+    final context = navigatorKey.currentContext;
+    if (context == null) return;
+
+    final id = int.tryParse(adId.toString());
+    final adsCubit = getIt<AdsCubit>();
+
+    if (adsCubit.state is AdsSuccess) {
+      final adsList = (adsCubit.state as AdsSuccess).ads;
+      try {
+        final targetAd = adsList.firstWhere((ad) => ad.id == id);
+        AdDetailsBottomSheet.show(context, targetAd);
+      } catch (e) {
+        log("Ad with id $id not found locally.");
+      }
     }
   }
 }

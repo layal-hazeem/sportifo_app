@@ -21,6 +21,13 @@ class AiChatScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        // 🔥 التعديل الأول والأهم: استخدام value بدلاً من create لمنع تدمير الكيوبيت
+        BlocProvider.value(
+          value: getIt<AiChatCubit>(),
+        ),
+        BlocProvider.value(
+          value: getIt<NutritionCubit>(),
+        ),
         BlocProvider(create: (_) => getIt<AiChatCubit>()..fetchHistory()),
         BlocProvider.value(value: getIt<NutritionCubit>()),
       ],
@@ -51,6 +58,8 @@ class _AiChatViewState extends State<_AiChatView> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<NutritionCubit>().initialize();
+      // 🔥 التعديل الثاني: استدعاء التحديث من هنا لضمان عمله مرة واحدة عند فتح الشاشة
+      context.read<AiChatCubit>().initialize();
       _scrollToBottom(animate: false);
     });
   }
@@ -260,15 +269,13 @@ class _AiChatViewState extends State<_AiChatView> {
                     _showCancelDialog(state.pendingText);
                   }
 
-                  if (state is AiChatError) {
+                  if (state is AiChatError && _lastSentText != null) {
                     AppSnackBar.show(
                       context,
                       message: state.message,
                       type: _getErrorType(state.message),
-                      actionLabel: _lastSentText != null ? 'Retry' : null,
-                      onActionPressed: _lastSentText != null
-                          ? () => _handleSend(_lastSentText!)
-                          : null,
+                      actionLabel: 'Retry',
+                      onActionPressed: () => _handleSend(_lastSentText!),
                     );
                   }
 
@@ -287,6 +294,33 @@ class _AiChatViewState extends State<_AiChatView> {
                   };
 
                   final isSending = state is AiChatSending;
+                  final isLoading = state is AiChatLoading || state is AiChatInitial;
+                  final isError = state is AiChatError && messages.isEmpty;
+
+                  if (isLoading && messages.isEmpty) {
+                    return const Center(child: CircularProgressIndicator(color: AppColors.primaryBtn));
+                  }
+
+                  if (isError) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.wifi_off_rounded, size: 50, color: Colors.grey),
+                          const SizedBox(height: 16),
+                          const Text("Connection Failed", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                          const SizedBox(height: 8),
+                          TextButton.icon(
+                            onPressed: () => context.read<AiChatCubit>().fetchHistory(forceRefresh: true),
+                            icon: const Icon(Icons.refresh, color: AppColors.primaryBtn),
+                            label: const Text("Tap to retry", style: TextStyle(color: AppColors.primaryBtn)),
+                          )
+                        ],
+                      ),
+                    );
+                  }
+
+                  final lastAiId = state is AiChatSuccess && state.lastAiMessage != null
                   final isLoading = state is AiChatLoading;
                   final lastAiId =
                       state is AiChatSuccess && state.lastAiMessage != null
@@ -407,7 +441,7 @@ class _EmptyChatView extends StatelessWidget {
                       color: AppColors.primaryBtn.withValues(alpha: 0.08),
                       shape: BoxShape.circle,
                     ),
-                    child: Icon(
+                    child: const Icon(
                       Icons.smart_toy_outlined,
                       size: 48,
                       color: AppColors.primaryBtn,

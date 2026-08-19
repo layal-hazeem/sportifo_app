@@ -21,7 +21,7 @@ import 'core/localization/locale_cubit.dart';
 import 'core/routes/app_routes.dart';
 import 'core/routes/app_router.dart';
 import 'l10n/app_localizations.dart';
-
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -57,6 +57,29 @@ class MyApp extends StatelessWidget {
       ],
       child: BlocBuilder<LocaleCubit, Locale>(
         builder: (context, locale) {
+          return NeumorphicApp(
+            navigatorKey: navigatorKey,
+            debugShowCheckedModeBanner: false,
+            title: 'Sportifo',
+            initialRoute: AppRoutes.splash,
+            onGenerateRoute: AppRouter.generateRoute,
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const [
+              Locale('en'),
+              Locale('ar'),
+            ],
+            locale: locale,
+            themeMode: ThemeMode.light,
+            theme: const NeumorphicThemeData(
+              baseColor: Color(0xFFF2F2F2),
+              lightSource: LightSource.topLeft,
+              depth: 10,
+            ),
           // 🔥 استخدام BlocBuilder للـ ThemeCubit لتوفير متغير themeMode والتبديل ديناميكياً
           return BlocBuilder<ThemeCubit, ThemeMode>(
             builder: (context, themeMode) {

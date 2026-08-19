@@ -13,7 +13,6 @@ import '../../../coaches/presentation/views/all_coaches_screen.dart';
 import '../../../coaches/presentation/views/coach_details_screen.dart';
 import '../../../coaches/presentation/widgets/coach_card.dart';
 
-// 🔥 الاستيرادات الجديدة الخاصة بالأهداف الذكية
 import '../../../platform_plans/presentation/widgets/platform_plans_section.dart';
 import '../../../targets/presentation/view_model/target_cubit/target_cubit.dart';
 import '../../../targets/presentation/view_model/target_cubit/target_state.dart';
@@ -39,6 +38,12 @@ class _TraineeScreenState extends State<TraineeScreen>
     super.initState();
     _nutritionCubit = getIt<NutritionCubit>();
     WidgetsBinding.instance.addObserver(this);
+
+    // 🔥 السحر هنا: جلب كل البيانات مرة واحدة فقط عند فتح الشاشة!
+    // هذا يخفف الضغط عن الـ Main Thread ويمنع تكرار الريكويستات
+    _nutritionCubit.initialize();
+    getIt<TargetCubit>().fetchLatestTarget();
+    getIt<PlatformPlansCubit>().fetchPlatformPlans();
   }
 
   @override
@@ -60,15 +65,12 @@ class _TraineeScreenState extends State<TraineeScreen>
 
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => getIt<AdsCubit>()),
-        BlocProvider(
-          create: (context) => getIt<TargetCubit>()..fetchLatestTarget(),
-        ),
-        BlocProvider(create: (context) => _nutritionCubit..initialize()),
-        // 🔥 استبدلي السطر القديم بهذا السطر:
-        BlocProvider.value(
-          value: getIt<PlatformPlansCubit>()..fetchPlatformPlans(),
-        ),
+        BlocProvider(create: (context) => getIt<AdsCubit>()), // دالة create تستدعى مرة واحدة تلقائياً
+
+        // 🔥 واجهة نظيفة وسريعة، فقط تمرير القيمة المحفوظة بالذاكرة
+        BlocProvider.value(value: getIt<TargetCubit>()),
+        BlocProvider.value(value: _nutritionCubit),
+        BlocProvider.value(value: getIt<PlatformPlansCubit>()),
       ],
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -80,7 +82,7 @@ class _TraineeScreenState extends State<TraineeScreen>
             const SizedBox(height: 10),
             BlocBuilder<TargetCubit, TargetState>(
               builder: (context, targetState) {
-                if (targetState is TargetLoading) {
+                if (targetState is TargetLoading || targetState is TargetInitial) {
                   return const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                     child: LoadingShimmer(
@@ -95,10 +97,7 @@ class _TraineeScreenState extends State<TraineeScreen>
                       if (nutritionState is NutritionLoading ||
                           nutritionState is NutritionInitial) {
                         return const Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 10,
-                          ),
+                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                           child: LoadingShimmer(
                             width: double.infinity,
                             height: 160,
@@ -122,8 +121,18 @@ class _TraineeScreenState extends State<TraineeScreen>
                       );
                     },
                   );
-                } else {
+                } else if (targetState is TargetNotSet) {
                   return const TargetActivationCard();
+                } else {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    child: Center(
+                      child: TextButton(
+                        onPressed: () => context.read<TargetCubit>().fetchLatestTarget(),
+                        child: const Text("Couldn't load your target — Tap to retry"),
+                      ),
+                    ),
+                  );
                 }
               },
             ),
@@ -134,6 +143,7 @@ class _TraineeScreenState extends State<TraineeScreen>
             const SizedBox(height: 10),
 
             BlocProvider(
+              // دالة create آمنة هنا لأنها تستدعى مرة واحدة فقط عند بناء الـ BlocProvider
               create: (context) => getIt<CoachesCubit>()..fetchCoaches(),
               child: BlocBuilder<CoachesCubit, CoachesState>(
                 builder: (context, state) {
@@ -180,7 +190,7 @@ class _TraineeScreenState extends State<TraineeScreen>
                             padding: const EdgeInsets.symmetric(horizontal: 12),
                             itemCount: coaches.length,
                             separatorBuilder: (_, _) =>
-                                const SizedBox(width: 8),
+                            const SizedBox(width: 8),
                             itemBuilder: (context, index) {
                               final coach = coaches[index];
                               return CoachCard(

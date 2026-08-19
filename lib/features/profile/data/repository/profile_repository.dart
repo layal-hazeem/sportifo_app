@@ -15,14 +15,18 @@ class ProfileRepository {
 
   ProfileRepository(this._profileWebService);
 
-  Future<ApiResult<ProfileResponseModel>> getProfile() async {
+// 🔥 أضفنا باراميتر forceRefresh
+  Future<ApiResult<ProfileResponseModel>> getProfile({bool forceRefresh = false}) async {
     try {
       final cacheOptions = await DioFactory.getCacheOptions();
+
+      // إذا طلبنا تحديث إجباري بنستخدم refreshForceCache، غير هيك بنستخدم request العادية
+      final policy = forceRefresh ? CachePolicy.refreshForceCache : CachePolicy.request;
+
       final dioOptions = cacheOptions
-          .copyWith(policy: CachePolicy.refresh)
+          .copyWith(policy: policy)
           .toOptions();
 
-      // مرري الـ dioOptions للـ WebService
       final response = await _profileWebService.getProfile(options: dioOptions);
       return Success(ProfileResponseModel.fromJson(response.data['data']));
     } catch (e) {
@@ -36,7 +40,7 @@ class ProfileRepository {
     try {
       final response = await _profileWebService.updateProfileImage(imageFile);
       final json = response.data['data'] ?? response.data;
-
+      await getProfile(forceRefresh: true);
       return Success(ProfileResponseModel.fromJson(json));
     } catch (e) {
       return Failure(ApiErrorHandler.handle(e));
@@ -50,7 +54,7 @@ class ProfileRepository {
       final formData = await request.toFormData();
 
       final response = await _profileWebService.updateProfile(formData);
-
+      await getProfile(forceRefresh: true);
       return Success(ProfileResponseModel.fromJson(response.data['data']));
     } catch (e) {
       return Failure(ApiErrorHandler.handle(e));
@@ -64,7 +68,7 @@ class ProfileRepository {
     final formData = await request.toFormData();
 
     final response = await _profileWebService.updateProfile(formData);
-
+    await getProfile(forceRefresh: true);
     return Success(ProfileResponseModel.fromJson(response.data['data']));
   } catch (e) {
     return Failure(ApiErrorHandler.handle(e));

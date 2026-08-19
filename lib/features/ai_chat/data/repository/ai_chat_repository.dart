@@ -38,6 +38,12 @@ class AiChatRepository {
     await _chatBox!.put('messages', encoded);
   }
 
+  // 🔥 الدالة السحرية لمسح رسائل المستخدم القديم من ذاكرة الهاتف
+  Future<void> clearCache() async {
+    await _initBox();
+    await _chatBox!.clear();
+  }
+
   Future<ApiResult<List<ChatMessageModel>>> getChatHistory({
     bool forceRefresh = false,
   }) async {
@@ -52,7 +58,7 @@ class AiChatRepository {
 
       final cacheOptions = await DioFactory.getCacheOptions();
       final options = cacheOptions
-          .copyWith(policy: CachePolicy.refresh)
+          .copyWith(policy: CachePolicy.refreshForceCache) // 👈 إجبار جلب داتا جديدة
           .toOptions();
 
       final response = await _webService.getChatHistory(options: options);
@@ -70,9 +76,9 @@ class AiChatRepository {
   }
 
   Future<ApiResult<List<ChatMessageModel>>> sendMessage(
-    String message, {
-    CancelToken? cancelToken,
-  }) async {
+      String message, {
+        CancelToken? cancelToken,
+      }) async {
     try {
       final response = await _webService.sendMessage(
         message,

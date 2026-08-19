@@ -73,7 +73,7 @@ class TargetCubit extends Cubit<TargetState> {
           if (state is TargetSuccess) return;
         }
         if (result.message.contains("no targets") || result.message.contains("not found")) {
-          emit(TargetInitial());
+          emit(TargetNotSet());   // ✅ هلق حالة واضحة ومنفصلة تماماً
         } else {
           emit(TargetFailure(result.message));
         }
@@ -102,5 +102,9 @@ class TargetCubit extends Cubit<TargetState> {
         }
         break;
     }
+  }
+  // ✅ دالة جديدة - تصفير كامل وقت اللوغ أوت
+  void reset() {
+    emit(TargetInitial());
   }
 }

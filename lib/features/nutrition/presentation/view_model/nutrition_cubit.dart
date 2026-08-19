@@ -285,4 +285,16 @@ class NutritionCubit extends Cubit<NutritionState> {
       ));
     }
   }
+  // ✅ دالة جديدة - بتصفر كل شي بالذاكرة وبتمسح الكاش المحلي الخاص بالتغذية
+  Future<void> reset() async {
+    _isInitialized = false;
+    _lastSuccessfulResponse = null;
+    _messageToMealMap.clear();
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('nutrition_food_logs_cache');
+    await prefs.remove('nutrition_message_meal_map');
+
+    emit(NutritionInitial());
+  }
 }
