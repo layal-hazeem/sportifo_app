@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/routes/app_routes.dart';
 import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/features/ai_chat/presentation/widgets/nutrition_card.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/helpers/snack_bar_utils.dart';
 import '../../data/models/chat_message_model.dart';
@@ -97,7 +98,7 @@ class _ChatBubbleState extends State<ChatBubble> {
     final isUserMessage = widget.message.sender == 'user';
     final hasNutrition = _hasNutritionData();
     final displayBody = _displayedText ?? widget.message.body;
-
+final l10n = AppLocalizations.of(context)!;
     return Align(
       alignment: isUserMessage ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
@@ -184,9 +185,9 @@ class _ChatBubbleState extends State<ChatBubble> {
                             state.messageId == widget.message.id) {
                           AppSnackBar.show(
                             context,
-                            message: 'Meal saved successfully!',
+                            message: l10n.meal_saved_success,
                             type: SnackBarType.success,
-                            actionLabel: 'View Meals',
+                            actionLabel: l10n.view_meals,
                             onActionPressed: () {
                               Navigator.pushNamed(context, AppRoutes.foodLogs);
                             },
@@ -239,7 +240,7 @@ class _ChatBubbleState extends State<ChatBubble> {
                                     size: 16,
                                   ),
                             label: Text(
-                              isSaved ? 'Saved' : 'Save',
+                              isSaved ? l10n.saved : l10n.save,
                               style: const TextStyle(fontSize: 11),
                             ),
                             style: ElevatedButton.styleFrom(

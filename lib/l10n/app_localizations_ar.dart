@@ -93,7 +93,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get home => ' الرئيسية';
 
   @override
-  String get workouts => 'التمارين ';
+  String get workouts => 'التمارين';
 
   @override
   String get workout => 'تمرين ';
@@ -449,7 +449,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get subscriptions => 'الاشتراكات';
 
   @override
-  String get retry => 'أعد المحاولة';
+  String get retry => 'إعادة المحاولة';
 
   @override
   String get pendingApproval => 'بانتظار الموافقة';
@@ -728,7 +728,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get day => 'يوم';
 
   @override
-  String get days => 'ايام';
+  String get days => 'الأيام';
 
   @override
   String get waitUpdatePlan => 'يرجى الانتظار بينما يتم تحديث الخطة';
@@ -842,16 +842,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get dailyNutritionTargets => 'أهداف التغذية اليومية';
 
   @override
-  String get kcal => 'سعر حراري';
+  String get kcal => 'سعرة';
 
   @override
-  String get protein => 'بروتين';
+  String get protein => 'البروتين';
 
   @override
-  String get carbs => 'كاربوهيدرات';
+  String get carbs => 'الكارب';
 
   @override
-  String get fat => 'دهون';
+  String get fat => 'الدهون';
 
   @override
   String get currentWeight => 'الوزن الحالي:';
@@ -860,7 +860,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get notSet => 'غير محدد';
 
   @override
-  String get change => 'تغيير';
+  String get change => 'التغيير';
 
   @override
   String get selectFitnessGoal => 'اختر هدفك الرياضي ⚡';
@@ -1016,7 +1016,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get createCustomPlan => 'إنشاء خطة';
 
   @override
-  String get saved => 'المحفوظات';
+  String get saved => 'محفوظ';
 
   @override
   String get noSavedPlans => 'لا توجد خطط محفوظة';
@@ -1154,7 +1154,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get athlete => 'متدرب';
 
   @override
-  String get sets => 'مجموعات';
+  String get sets => 'الجلسات';
 
   @override
   String get strength => 'مقاومة';
@@ -1328,4 +1328,214 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get description => 'الوصف';
+  String get stop_sending_title => 'إيقاف الإرسال؟';
+
+  @override
+  String get stop_sending_content => 'سيؤدي الإيقاف إلى حذف رسالتك ولن يتم حفظها.';
+
+  @override
+  String get undo => 'تراجع';
+
+  @override
+  String get ai_coach_ready => 'مدربك الذكي جاهز!';
+
+  @override
+  String get empty_chat_subtitle => 'اسأل عن التغذية، التمارين، أو السعرات الحرارية';
+
+  @override
+  String get meal_saved_success => 'تم حفظ الوجبة بنجاح';
+
+  @override
+  String get view_meals => 'عرض الوجبات';
+
+  @override
+  String get sending_hint => 'جاري الإرسال...';
+
+  @override
+  String get ask_ai_hint => 'اسأل المدرب الذكي...';
+
+  @override
+  String get cal => 'سعرة';
+
+  @override
+  String get press_again_to_exit => 'اضغط مرة أخرى للخروج من التطبيق';
+
+  @override
+  String get todays_meals => 'وجبات اليوم';
+
+  @override
+  String get meal_deleted_success => 'تم حذف الوجبة بنجاح';
+
+  @override
+  String get no_more_meals => 'لا يوجد المزيد من الوجبات اليوم';
+
+  @override
+  String get calories => 'السعرات';
+
+  @override
+  String get no_meals_logged => 'لم يتم تسجيل أي وجبات اليوم';
+
+  @override
+  String get ask_ai_or_add_manual => 'إسأل الذكاء الاصطناعي أو أضف وجبة يدويًا';
+
+  @override
+  String get refresh => 'تحديث';
+
+  @override
+  String get delete_meal_title => 'حذف الوجبة';
+
+  @override
+  String get delete_meal_confirmation => 'هل أنت ألكيد من رغبتك في حذف هذه الوجبة؟';
+
+  @override
+  String get add_meal => 'إضافة وجبة';
+
+  @override
+  String get meal_added_success => 'تمت إضافة الوجبة بنجاح';
+
+  @override
+  String get meal_details => 'تفاصيل الوجبة';
+
+  @override
+  String get enter_nutritional_info_manually => 'أدخل القيم الغذائية يدويًا';
+
+  @override
+  String get meal_description_hint => 'وصف الوجبة (مثلاً: أرز مع دجاج)';
+
+  @override
+  String get required_field => 'هذا الحقل مطلوب';
+
+  @override
+  String get enter_valid_number => 'أدخل رقمًا صحيحًا';
+
+  @override
+  String get invalid_value => 'قيمة غير صالحة';
+
+  @override
+  String get protein_g => 'البروتين (غ)';
+
+  @override
+  String get carbs_g => 'الكارب (غ)';
+
+  @override
+  String get fat_g => 'الدهون (غ)';
+
+  @override
+  String get save_meal => 'حفظ الوجبة';
+
+  @override
+  String get p_short => 'بروتين';
+
+  @override
+  String get c_short => 'كارب';
+
+  @override
+  String get f_short => 'دهون';
+
+  @override
+  String get manual_tag => 'يدوي';
+
+  @override
+  String get ai_tag => 'ذكاء اصطناعي';
+
+  @override
+  String get your_progress => 'تقدمك';
+
+  @override
+  String exercises_count(Object count) {
+    return '$count تمارين';
+  }
+
+  @override
+  String set_info(Object reps, Object setNum, Object weight) {
+    return 'الجلسة $setNum: $reps تكرار ، الوزن: $weightكغ';
+  }
+
+  @override
+  String get workout_activity => 'نشاط التمارين';
+
+  @override
+  String get activity_timeline => 'الخط الزمني للنشاط';
+
+  @override
+  String plan_prefix(Object id) {
+    return 'خطة $id';
+  }
+
+  @override
+  String exercise_prefix(Object id) {
+    return 'تمرين #$id';
+  }
+
+  @override
+  String get exercises_per_day => 'التمارين يومياً';
+
+  @override
+  String get filter_workouts => 'فلترة التمارين';
+
+  @override
+  String get all_plans => 'جميع الخطط';
+
+  @override
+  String get exercise => 'التمرين';
+
+  @override
+  String get all_exercises => 'جميع التمارين';
+
+  @override
+  String get date_range => 'النطاق الزمني';
+
+  @override
+  String get from => 'من';
+
+  @override
+  String get to => 'إلى';
+
+  @override
+  String get apply => 'تطبيق';
+
+  @override
+  String get filter => 'فلترة';
+
+  @override
+  String get clear_all => 'مسح الكل';
+
+  @override
+  String get current_weight => 'الحالي';
+
+  @override
+  String get goal => 'الهدف';
+
+  @override
+  String get weight_history => 'سجل الوزن';
+
+  @override
+  String get goal_bulk => 'تضخيم';
+
+  @override
+  String get goal_cut => 'تنشيف';
+
+  @override
+  String get goal_maintain => 'محافظة';
+
+  @override
+  String get not_available_short => 'غير محدد';
+
+  @override
+  String get available_subscriptions => 'الاشتراكات المتاحة';
+
+  @override
+  String month_single(Object count) {
+    return 'شهر $count';
+  }
+
+  @override
+  String month_plural(Object count) {
+    return '$count أشهر';
+  }
+
+  @override
+  String months_range(Object max, Object min) {
+    return '$min - $max أشهر';
+  }
 }

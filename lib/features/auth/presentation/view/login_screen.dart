@@ -4,6 +4,7 @@ import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/routes/app_routes.dart';
+import '../../../../core/services/notification_service.dart';
 import '../../../../core/storage/local_storage.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/helpers/snack_bar_utils.dart';
@@ -66,6 +67,15 @@ class _LoginScreenState extends State<LoginScreen> {
             );
           } else if (state is LoginNeedsOtp) {
             Navigator.pop(context); // إغلاق الـ Loading Dialog
+              // 🔥 حفظ التوكن
+              await getIt<LocalStorage>().saveToken(token);
+              await getIt<LocalStorage>().saveRole(role);
+              await NotificationService().registerDeviceToBackend();
+              AppSnackBar.show(
+                context,
+                message: l10n.loginSuccess,
+                type: SnackBarType.success,
+              );
 
             Navigator.pushNamed(
               context,

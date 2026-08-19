@@ -11,6 +11,7 @@ import '../widgets/coach_grid_card.dart';
 
 class AllCoachesScreen extends StatefulWidget {
   const AllCoachesScreen({super.key});
+
   @override
   State<AllCoachesScreen> createState() => _AllCoachesScreenState();
 }

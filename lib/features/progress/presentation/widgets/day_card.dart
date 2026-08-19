@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/exercise_activity_model.dart';
 
 class DayCard extends StatelessWidget {
   final DayActivity day;
+  final bool showDetails;
 
-  const DayCard({super.key, required this.day});
+  const DayCard({
+    super.key,
+    required this.day,
+    this.showDetails = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -26,16 +32,88 @@ class DayCard extends StatelessWidget {
           ),
         ],
       ),
-      child: Theme(
-        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-        child: ExpansionTile(
-          tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          childrenPadding: const EdgeInsets.only(bottom: 12),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+      child: showDetails
+          ? _ExpandableDayContent(day: day, month: month)
+          : _CompactDayContent(day: day, month: month),
+    );
+  }
+}
+
+class _CompactDayContent extends StatelessWidget {
+  final DayActivity day;
+  final String month;
+
+  const _CompactDayContent({
+    required this.day,
+    required this.month,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      child: _DayHeader(day: day, month: month),
+    );
+  }
+}
+
+class _ExpandableDayContent extends StatelessWidget {
+  final DayActivity day;
+  final String month;
+
+  const _ExpandableDayContent({
+    required this.day,
+    required this.month,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Theme(
+      data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+      child: ExpansionTile(
+        tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        childrenPadding: const EdgeInsets.only(bottom: 12),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        collapsedShape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        title: _DayHeader(day: day, month: month),
+        children: day.logs.map((log) => LogTile(log: log)).toList(),
+      ),
+    );
+  }
+}
+
+class _DayHeader extends StatelessWidget {
+  final DayActivity day;
+  final String month;
+
+  const _DayHeader({
+    required this.day,
+    required this.month,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: AppColors.primaryBtn.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(12),
           ),
-          collapsedShape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+          child: Text(
+            month,
+            style: const TextStyle(
+              color: AppColors.primaryBtn,
+              fontWeight: FontWeight.bold,
+              fontSize: 12,
+            ),
           ),
           title: Row(
             children: [
@@ -71,16 +149,22 @@ class DayCard extends StatelessWidget {
                   ),
                 ],
               ),
-              const Spacer(),
-              Text(
-                day.date,
-                style: TextStyle(fontSize: 12, color: Colors.grey.shade400),
+            ),
+            Text(
+              l10n.exercises_count(day.totalExercises),
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey.shade500,
               ),
-            ],
-          ),
-          children: day.logs.map((log) => LogTile(log: log)).toList(),
+            ),
+          ],
         ),
-      ),
+        const Spacer(),
+        Text(
+          day.date,
+          style: TextStyle(fontSize: 12, color: Colors.grey.shade400),
+        ),
+      ],
     );
   }
 }
@@ -92,6 +176,8 @@ class LogTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       child: Row(
@@ -101,7 +187,7 @@ class LogTile extends StatelessWidget {
             width: 8,
             height: 8,
             margin: const EdgeInsets.only(top: 6),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: AppColors.primaryBtn,
               shape: BoxShape.circle,
             ),
@@ -125,7 +211,7 @@ class LogTile extends StatelessWidget {
                   children: log.sets.map((set) {
                     return Chip(
                       label: Text(
-                        "Set ${set.setNumber}: ${set.reps} reps @ ${set.weight}kg",
+                        l10n.set_info(set.setNumber, set.reps, set.weight),
                         style: const TextStyle(fontSize: 11),
                       ),
                       backgroundColor: Colors.grey.shade100,

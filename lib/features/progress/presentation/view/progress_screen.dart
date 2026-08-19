@@ -60,7 +60,9 @@ class _ProgressContentState extends State<_ProgressContent> {
         to: _filters.to,
         forceRefresh: true,
       ),
-      weightCubit.fetchWeightProgress(forceRefresh: true),
+      weightCubit.fetchWeightProgress(
+        forceRefresh: true,
+      ),
     ]);
   }
 
@@ -78,6 +80,8 @@ class _ProgressContentState extends State<_ProgressContent> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return RefreshIndicator(
       color: AppColors.primaryBtn,
       backgroundColor: context.backgroundColor,
@@ -86,7 +90,6 @@ class _ProgressContentState extends State<_ProgressContent> {
       child: CustomScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
-          // Header
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(20),
@@ -94,8 +97,8 @@ class _ProgressContentState extends State<_ProgressContent> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Your Progress",
-                    style: TextStyle(
+                    l10n.your_progress,
+                    style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
                       color: context.textColor,
@@ -158,7 +161,12 @@ class _ProgressContentState extends State<_ProgressContent> {
                     return _ErrorWidget(
                       message: state.message,
                       onRetry: () =>
-                          context.read<ExerciseActivityCubit>().fetchActivity(),
+                          context.read<ExerciseActivityCubit>().fetchActivity(
+                                planId: _filters.planId,
+                                exerciseId: _filters.exerciseId,
+                                from: _filters.from,
+                                to: _filters.to,
+                              ),
                     );
                   }
                   return const SizedBox.shrink();
@@ -183,6 +191,7 @@ class _ErrorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(20),

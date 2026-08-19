@@ -558,5 +558,120 @@
   "exercises": "تمارين",
   "addSelectedDays": "إضافة الأيام المحددة",
   "planUpdatedSuccessfully":"تم تحديث الخطة بنجاح",
-  "description":"الوصف"
+  "description":"الوصف",
+
+  "stop_sending_title": "إيقاف الإرسال؟",
+  "stop_sending_content": "سيؤدي الإيقاف إلى حذف رسالتك ولن يتم حفظها.",
+  "undo": "تراجع",
+  "delete": "حذف",
+  "retry": "إعادة المحاولة",
+  "ai_coach_ready": "مدربك الذكي جاهز!",
+  "empty_chat_subtitle": "اسأل عن التغذية، التمارين، أو السعرات الحرارية",
+  "meal_saved_success": "تم حفظ الوجبة بنجاح!",
+  "view_meals": "عرض الوجبات",
+  "saved": "محفوظ",
+  "save": "حفظ",
+  "sending_hint": "جاري الإرسال...",
+  "ask_ai_hint": "اسأل المدرب الذكي...",
+  "cal": "سعرة",
+  "protein": "بروتين",
+  "carbs": "كاربوهيدرات",
+  "fat": "دهون",
+
+
+  "press_again_to_exit": "اضغط مرة أخرى للخروج من التطبيق",
+
+
+
+  "todays_meals": "وجبات اليوم",
+  "meal_saved_success": "تم حفظ الوجبة بنجاح",
+  "meal_deleted_success": "تم حذف الوجبة بنجاح",
+  "retry": "إعادة المحاولة",
+  "no_more_meals": "لا يوجد المزيد من الوجبات اليوم",
+  "calories": "السعرات",
+  "protein": "البروتين",
+  "carbs": "الكارب",
+  "fat": "الدهون",
+  "no_meals_logged": "لم يتم تسجيل أي وجبات اليوم",
+  "ask_ai_or_add_manual": "إسأل الذكاء الاصطناعي أو أضف وجبة يدويًا",
+  "refresh": "تحديث",
+  "delete_meal_title": "حذف الوجبة",
+  "delete_meal_confirmation": "هل أنت ألكيد من رغبتك في حذف هذه الوجبة؟",
+  "cancel": "إلغاء",
+  "delete": "حذف",
+  "add_meal": "إضافة وجبة",
+  "meal_added_success": "تمت إضافة الوجبة بنجاح",
+  "meal_details": "تفاصيل الوجبة",
+  "enter_nutritional_info_manually": "أدخل القيم الغذائية يدويًا",
+  "meal_description_hint": "وصف الوجبة (مثلاً: أرز مع دجاج)",
+  "required_field": "هذا الحقل مطلوب",
+  "enter_valid_number": "أدخل رقمًا صحيحًا",
+  "invalid_value": "قيمة غير صالحة",
+  "protein_g": "البروتين (غ)",
+  "carbs_g": "الكارب (غ)",
+  "fat_g": "الدهون (غ)",
+  "save_meal": "حفظ الوجبة",
+  "kcal": "سعرة",
+  "p_short": "بروتين",
+  "c_short": "كارب",
+  "f_short": "دهون",
+  "manual_tag": "يدوي",
+  "ai_tag": "ذكاء اصطناعي",
+
+
+
+
+  "your_progress": "تقدمك",
+  "retry": "إعادة المحاولة",
+  "exercises_count": "{count} تمارين",
+  "set_info": "الجلسة {setNum}: {reps} تكرار ، الوزن: {weight}كغ",
+  "workout_activity": "نشاط التمارين",
+  "workouts": "التمارين",
+  "sets": "الجلسات",
+  "days": "الأيام",
+  "activity_timeline": "الخط الزمني للنشاط",
+  "plan_prefix": "خطة {id}",
+  "exercise_prefix": "تمرين #{id}",
+  "exercises_per_day": "التمارين يومياً",
+  "filter_workouts": "فلترة التمارين",
+  "plan": "الخطة",
+  "all_plans": "جميع الخطط",
+  "exercise": "التمرين",
+  "all_exercises": "جميع التمارين",
+  "date_range": "النطاق الزمني",
+  "from": "من",
+  "to": "إلى",
+  "cancel": "إلغاء",
+  "apply": "تطبيق",
+  "filter": "فلترة",
+  "clear_all": "مسح الكل",
+  "current_weight": "الحالي",
+  "goal": "الهدف",
+  "change": "التغيير",
+  "weight_history": "سجل الوزن",
+  "goal_bulk": "تضخيم",
+  "goal_cut": "تنشيف",
+  "goal_maintain": "محافظة",
+  "not_available_short": "غير محدد",
+
+
+
+  "available_subscriptions": "الاشتراكات المتاحة",
+"month_single": "شهر {count}",
+"month_plural": "{count} أشهر",
+"months_range": "{min} - {max} أشهر"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

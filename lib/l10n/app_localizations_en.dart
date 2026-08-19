@@ -728,7 +728,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get day => 'DAY';
 
   @override
-  String get days => 'DAYS';
+  String get days => 'Days';
 
   @override
   String get waitUpdatePlan => 'Please wait while the plan is updated';
@@ -842,7 +842,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dailyNutritionTargets => 'Daily Nutrition Targets';
 
   @override
-  String get kcal => 'Kcal';
+  String get kcal => 'kcal';
 
   @override
   String get protein => 'Protein';
@@ -1172,7 +1172,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get blueprint => 'BLUEPRINT';
 
   @override
-  String get plan => 'PLAN';
+  String get plan => 'Plan';
 
   @override
   String get createFirstWorkoutDay => 'Create your first workout day and start building your personal plan.';
@@ -1328,4 +1328,214 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get description => 'Description';
+  String get stop_sending_title => 'Stop Sending?';
+
+  @override
+  String get stop_sending_content => 'Stopping will delete your message and it won\'t be saved.';
+
+  @override
+  String get undo => 'Undo';
+
+  @override
+  String get ai_coach_ready => 'Your AI Coach is ready!';
+
+  @override
+  String get empty_chat_subtitle => 'Ask about nutrition, workouts, or calories';
+
+  @override
+  String get meal_saved_success => 'Meal saved successfully';
+
+  @override
+  String get view_meals => 'View Meals';
+
+  @override
+  String get sending_hint => 'Sending...';
+
+  @override
+  String get ask_ai_hint => 'Ask AI Coach...';
+
+  @override
+  String get cal => 'Cal';
+
+  @override
+  String get press_again_to_exit => 'Press back again to exit the app';
+
+  @override
+  String get todays_meals => 'Today\'s Meals';
+
+  @override
+  String get meal_deleted_success => 'Meal deleted successfully';
+
+  @override
+  String get no_more_meals => 'No more meals for today';
+
+  @override
+  String get calories => 'Calories';
+
+  @override
+  String get no_meals_logged => 'No meals logged today';
+
+  @override
+  String get ask_ai_or_add_manual => 'Ask AI or add a meal manually';
+
+  @override
+  String get refresh => 'Refresh';
+
+  @override
+  String get delete_meal_title => 'Delete Meal';
+
+  @override
+  String get delete_meal_confirmation => 'Are you sure you want to delete this meal?';
+
+  @override
+  String get add_meal => 'Add Meal';
+
+  @override
+  String get meal_added_success => 'Meal added successfully';
+
+  @override
+  String get meal_details => 'Meal Details';
+
+  @override
+  String get enter_nutritional_info_manually => 'Enter nutritional information manually';
+
+  @override
+  String get meal_description_hint => 'Meal description (e.g. Chicken Rice)';
+
+  @override
+  String get required_field => 'This field is required';
+
+  @override
+  String get enter_valid_number => 'Enter a valid number';
+
+  @override
+  String get invalid_value => 'Invalid value';
+
+  @override
+  String get protein_g => 'Protein (g)';
+
+  @override
+  String get carbs_g => 'Carbs (g)';
+
+  @override
+  String get fat_g => 'Fat (g)';
+
+  @override
+  String get save_meal => 'Save Meal';
+
+  @override
+  String get p_short => 'P';
+
+  @override
+  String get c_short => 'C';
+
+  @override
+  String get f_short => 'F';
+
+  @override
+  String get manual_tag => 'Manual';
+
+  @override
+  String get ai_tag => 'AI';
+
+  @override
+  String get your_progress => 'Your Progress';
+
+  @override
+  String exercises_count(Object count) {
+    return '$count exercises';
+  }
+
+  @override
+  String set_info(Object reps, Object setNum, Object weight) {
+    return 'Set $setNum: $reps reps , Weight: ${weight}kg';
+  }
+
+  @override
+  String get workout_activity => 'Workout Activity';
+
+  @override
+  String get activity_timeline => 'Activity Timeline';
+
+  @override
+  String plan_prefix(Object id) {
+    return 'Plan $id';
+  }
+
+  @override
+  String exercise_prefix(Object id) {
+    return 'Exercise #$id';
+  }
+
+  @override
+  String get exercises_per_day => 'Exercises Per Day';
+
+  @override
+  String get filter_workouts => 'Filter Workouts';
+
+  @override
+  String get all_plans => 'All Plans';
+
+  @override
+  String get exercise => 'Exercise';
+
+  @override
+  String get all_exercises => 'All Exercises';
+
+  @override
+  String get date_range => 'Date Range';
+
+  @override
+  String get from => 'From';
+
+  @override
+  String get to => 'To';
+
+  @override
+  String get apply => 'Apply';
+
+  @override
+  String get filter => 'Filter';
+
+  @override
+  String get clear_all => 'Clear All';
+
+  @override
+  String get current_weight => 'Current';
+
+  @override
+  String get goal => 'Goal';
+
+  @override
+  String get weight_history => 'Weight History';
+
+  @override
+  String get goal_bulk => 'Bulk';
+
+  @override
+  String get goal_cut => 'Cut';
+
+  @override
+  String get goal_maintain => 'Maintain';
+
+  @override
+  String get not_available_short => 'N/A';
+
+  @override
+  String get available_subscriptions => 'Available Subscriptions';
+
+  @override
+  String month_single(Object count) {
+    return '$count Month';
+  }
+
+  @override
+  String month_plural(Object count) {
+    return '$count Months';
+  }
+
+  @override
+  String months_range(Object max, Object min) {
+    return '$min - $max Months';
+  }
 }

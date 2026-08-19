@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/exercise_activity_model.dart';
 
@@ -11,6 +12,8 @@ class ExerciseChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     final sortedDays = List<DayActivity>.from(days)
       ..sort((a, b) => a.date.compareTo(b.date));
 
@@ -39,8 +42,8 @@ class ExerciseChart extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Exercises Per Day",
-            style: TextStyle(
+            l10n.exercises_per_day,
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
               color: context.textColor,
