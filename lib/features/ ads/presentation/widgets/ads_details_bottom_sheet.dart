@@ -181,16 +181,17 @@ class _AdDetailsBottomSheetState extends State<AdDetailsBottomSheet> {
                         ],
 
                         const SizedBox(height: 30),
+
+                        // 🔥 تم إصلاح هذا الجزء بنجاح
                         Text(
                           l10n.details,
-                          style: const TextStyle(
-                          l10n.details, // 🔥 ترجمة كلمة التفاصيل
                           style: TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.bold,
                             color: context.textColor,
                           ),
                         ),
+
                         const SizedBox(height: 10),
 
                         Text(

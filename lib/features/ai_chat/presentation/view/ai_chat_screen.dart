@@ -28,8 +28,6 @@ class AiChatScreen extends StatelessWidget {
         BlocProvider.value(
           value: getIt<NutritionCubit>(),
         ),
-        BlocProvider(create: (_) => getIt<AiChatCubit>()..fetchHistory()),
-        BlocProvider.value(value: getIt<NutritionCubit>()),
       ],
       child: const _AiChatView(),
     );
@@ -156,7 +154,7 @@ class _AiChatViewState extends State<_AiChatView> {
           ),
           title: Column(
             children: [
-              Icon(
+              const Icon(
                 Icons.warning_amber_rounded,
                 color: AppColors.primaryBtn,
                 size: 50,
@@ -165,7 +163,7 @@ class _AiChatViewState extends State<_AiChatView> {
               Text(
                 l10n.stop_sending_title,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.black87,
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
@@ -176,7 +174,7 @@ class _AiChatViewState extends State<_AiChatView> {
           content: Text(
             l10n.stop_sending_content,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14, color: Colors.black54),
+            style: const TextStyle(fontSize: 14, color: Colors.black54),
           ),
           actionsAlignment: MainAxisAlignment.center,
           actions: [
@@ -188,7 +186,7 @@ class _AiChatViewState extends State<_AiChatView> {
               },
               child: Text(
                 l10n.undo,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.grey,
                   fontWeight: FontWeight.w600,
                 ),
@@ -214,7 +212,7 @@ class _AiChatViewState extends State<_AiChatView> {
               ),
               child: Text(
                 l10n.delete,
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
           ],
@@ -320,10 +318,8 @@ class _AiChatViewState extends State<_AiChatView> {
                     );
                   }
 
+                  // 🔥 تم إصلاح هذا الجزء بنجاح وإزالة التكرار
                   final lastAiId = state is AiChatSuccess && state.lastAiMessage != null
-                  final isLoading = state is AiChatLoading;
-                  final lastAiId =
-                      state is AiChatSuccess && state.lastAiMessage != null
                       ? state.lastAiMessage!.id
                       : -1;
 
@@ -450,7 +446,7 @@ class _EmptyChatView extends StatelessWidget {
                   const SizedBox(height: 20),
                   Text(
                     l10n.ai_coach_ready,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
