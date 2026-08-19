@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/helpers/snack_bar_utils.dart';
@@ -32,11 +33,12 @@ class _FoodLogsScreenState extends State<FoodLogsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocProvider.value(
       value: _nutritionCubit,
       child: Scaffold(
         backgroundColor: const Color(0xFFF8F9FA),
-        appBar: WaveAppBar(title: "Today's Meals", showBackButton: true),
+        appBar: WaveAppBar(title: l10n.todays_meals, showBackButton: true),
         body: BlocConsumer<NutritionCubit, NutritionState>(
           listenWhen: (previous, current) {
             return current is AddMealSuccess ||
@@ -48,7 +50,7 @@ class _FoodLogsScreenState extends State<FoodLogsScreen> {
             if (state is AddMealSuccess) {
               AppSnackBar.show(
                 context,
-                message: 'Meal saved successfully!',
+                message: l10n.meal_saved_success,
                 type: SnackBarType.success,
               );
             } else if (state is AddMealError) {
@@ -60,7 +62,7 @@ class _FoodLogsScreenState extends State<FoodLogsScreen> {
             } else if (state is DeleteMealSuccess) {
               AppSnackBar.show(
                 context,
-                message: 'Meal deleted successfully!',
+                message: l10n.meal_deleted_success,
                 type: SnackBarType.success,
               );
             } else if (state is DeleteMealError) {
@@ -94,7 +96,7 @@ class _FoodLogsScreenState extends State<FoodLogsScreen> {
                     ElevatedButton.icon(
                       onPressed: _onRefresh,
                       icon: const Icon(Icons.refresh),
-                      label: const Text('Retry'),
+                      label:  Text(l10n.retry),
                     ),
                   ],
                 ),
@@ -126,7 +128,7 @@ class _FoodLogsScreenState extends State<FoodLogsScreen> {
               final total = foodLogsData.total;
 
               if (foodLogs.isEmpty) {
-                return _buildEmptyState(context);
+                return _buildEmptyState(context,l10n);
               }
 
               return RefreshIndicator(
@@ -135,7 +137,7 @@ class _FoodLogsScreenState extends State<FoodLogsScreen> {
                 child: CustomScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
                   slivers: [
-                    SliverToBoxAdapter(child: _buildMacrosSummary(total)),
+                    SliverToBoxAdapter(child: _buildMacrosSummary(total, l10n)),
                     SliverList(
                       delegate: SliverChildBuilderDelegate((context, index) {
                         final foodLog = foodLogs[index];
@@ -143,7 +145,7 @@ class _FoodLogsScreenState extends State<FoodLogsScreen> {
                           key: ValueKey(foodLog.id),
                           foodLog: foodLog,
                           onDelete: () =>
-                              _showDeleteConfirmation(context, foodLog.id),
+                              _showDeleteConfirmation(context, foodLog.id,l10n),
                         );
                       }, childCount: foodLogs.length),
                     ),
@@ -151,7 +153,7 @@ class _FoodLogsScreenState extends State<FoodLogsScreen> {
                       child: Padding(
                         padding: const EdgeInsets.all(16),
                         child: Text(
-                          'No more meals',
+                          l10n.no_more_meals,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.grey.shade400,
@@ -172,7 +174,7 @@ class _FoodLogsScreenState extends State<FoodLogsScreen> {
     );
   }
 
-  Widget _buildMacrosSummary(TotalMacros total) {
+  Widget _buildMacrosSummary(TotalMacros total, AppLocalizations l10n) {
     return Container(
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(16),
@@ -188,25 +190,25 @@ class _FoodLogsScreenState extends State<FoodLogsScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _buildMacroCard(
-            'Calories',
+            l10n.calories,
             total.calories,
             Icons.local_fire_department,
             const Color(0xFFFF9800),
           ),
           _buildMacroCard(
-            'Protein',
+            l10n.protein,
             total.protein,
             Icons.egg_alt_outlined,
             const Color(0xFFEF5350),
           ),
           _buildMacroCard(
-            'Carbs',
+            l10n.carbs,
             total.carbs,
             Icons.grain_outlined,
             const Color(0xFFFFB300),
           ),
           _buildMacroCard(
-            'Fat',
+            l10n.fat,
             total.fat,
             Icons.water_drop_outlined,
             const Color(0xFF42A5F5),
@@ -242,7 +244,7 @@ class _FoodLogsScreenState extends State<FoodLogsScreen> {
     );
   }
 
-  Widget _buildEmptyState(BuildContext context) {
+  Widget _buildEmptyState(BuildContext context, AppLocalizations l10n) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -254,7 +256,7 @@ class _FoodLogsScreenState extends State<FoodLogsScreen> {
           ),
           const SizedBox(height: 16),
           Text(
-            'No meals logged yet',
+            l10n.no_meals_logged,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -263,7 +265,7 @@ class _FoodLogsScreenState extends State<FoodLogsScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            'Ask AI Coach about nutrition\nor add meals manually',
+            l10n.ask_ai_or_add_manual,
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 14, color: Colors.grey.shade400),
           ),
@@ -271,7 +273,7 @@ class _FoodLogsScreenState extends State<FoodLogsScreen> {
           ElevatedButton.icon(
             onPressed: _onRefresh,
             icon: const Icon(Icons.refresh),
-            label: const Text('Refresh'),
+            label: Text(l10n.refresh),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primaryBtn,
               foregroundColor: Colors.white,
@@ -282,7 +284,7 @@ class _FoodLogsScreenState extends State<FoodLogsScreen> {
     );
   }
 
-  void _showDeleteConfirmation(BuildContext context, int mealId) {
+  void _showDeleteConfirmation(BuildContext context, int mealId, AppLocalizations l10n) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -296,8 +298,8 @@ class _FoodLogsScreenState extends State<FoodLogsScreen> {
               size: 50,
             ),
             const SizedBox(height: 12),
-            const Text(
-              'Delete Meal?',
+             Text(
+              l10n.delete_meal_title,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.black87,
@@ -307,8 +309,8 @@ class _FoodLogsScreenState extends State<FoodLogsScreen> {
             ),
           ],
         ),
-        content: const Text(
-          'This meal will be removed from your daily logs.',
+        content:  Text(
+          l10n.delete_meal_confirmation,
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 14, color: Colors.black54),
         ),
@@ -316,8 +318,8 @@ class _FoodLogsScreenState extends State<FoodLogsScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text(
-              'Cancel',
+            child:  Text(
+              l10n.cancel,
               style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w600),
             ),
           ),
@@ -334,7 +336,7 @@ class _FoodLogsScreenState extends State<FoodLogsScreen> {
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
-            child: const Text('Delete'),
+            child:  Text(l10n.delete),
           ),
         ],
       ),

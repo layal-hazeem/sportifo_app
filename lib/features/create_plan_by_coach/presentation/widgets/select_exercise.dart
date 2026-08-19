@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/core/widgets/cached_static_gif.dart';
 import 'package:sportifo_app/features/workout/data/models/exercise_model.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
@@ -27,9 +28,9 @@ class ExerciseSelectableCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: isSelected
               ? AppColors.primaryBtn.withOpacity(.05)
-              : Colors.white,
+              : context.backgroundColor,
           border: Border.all(
-            color: isSelected ? AppColors.primaryBtn : Colors.grey.shade200,
+            color: isSelected ? AppColors.primaryBtn : context.backgroundColor,
             width: isSelected ? 1.4 : 1,
           ),
           borderRadius: BorderRadius.circular(18),
@@ -48,7 +49,7 @@ class ExerciseSelectableCard extends StatelessWidget {
                     child: Container(
                       height: 110,
                       width: double.infinity,
-                      color: Colors.white,
+                      color: context.backgroundColor,
                       child: CachedStaticGif(imageUrl: exercise.gifUrl ?? ''),
                     ),
                   ),
@@ -67,7 +68,10 @@ class ExerciseSelectableCard extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: AppColors.primaryBtn,
                         shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 1.5),
+                        border: Border.all(
+                          color: AppColors.hintText,
+                          width: 1.5,
+                        ),
                       ),
                       child: const Icon(
                         Icons.check_rounded,
@@ -94,8 +98,8 @@ class ExerciseSelectableCard extends StatelessWidget {
                       exercise.name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: AppColors.textDark,
+                      style: TextStyle(
+                        color: context.textColor,
                         fontSize: 13,
                         fontWeight: FontWeight.w700,
                         letterSpacing: -0.1,

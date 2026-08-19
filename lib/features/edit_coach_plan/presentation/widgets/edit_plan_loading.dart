@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class EditPlanLoadingDialog extends StatelessWidget {
@@ -9,7 +10,7 @@ class EditPlanLoadingDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Dialog(
-      backgroundColor: Colors.white,
+      backgroundColor: context.backgroundColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 25),
@@ -32,7 +33,7 @@ class EditPlanLoadingDialog extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-             Text(
+            Text(
               "${l10n.saveChanges}...",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
@@ -40,7 +41,7 @@ class EditPlanLoadingDialog extends StatelessWidget {
             Text(
               l10n.waitUpdatePlan,
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+              style: TextStyle(color: AppColors.hintText, fontSize: 14),
             ),
           ],
         ),

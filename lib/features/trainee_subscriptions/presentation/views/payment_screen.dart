@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/helpers/dialog_helper.dart';
 import '../../../../core/helpers/snack_bar_utils.dart';
@@ -55,7 +56,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         title: l10n.subscription_payment_title,
         showBackButton: true,
       ),
-      backgroundColor: const Color(0xFFF7F7F7),
+      backgroundColor: context.backgroundColor,
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         child: Column(
@@ -82,8 +83,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 const SizedBox(width: 8),
                 Text(
                   l10n.subscription_payment_paymentMethod,
-                  style: const TextStyle(
-                    color: Colors.black87,
+                  style: TextStyle(
+                    color: context.textColor,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -97,8 +98,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
             Text(
               l10n.subscription_payment_confirmTransfer,
-              style: const TextStyle(
-                color: Colors.black87,
+              style: TextStyle(
+                color: context.textColor,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
@@ -121,8 +122,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               hint: l10n.subscription_payment_transaction_hint,
               keyboardType: TextInputType.text,
               icon: Icons.confirmation_number_outlined,
-              onChanged: (value) {
-              },
+              onChanged: (value) {},
             ),
             const SizedBox(height: 35),
 
@@ -203,7 +203,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
     final l10n = AppLocalizations.of(context)!;
     String dialogMessage = message;
     if (transactionId.isNotEmpty) {
-      dialogMessage = '$message\n\n${l10n.subscription_payment_transactionId(transactionId)}';
+      dialogMessage =
+          '$message\n\n${l10n.subscription_payment_transactionId(transactionId)}';
     }
 
     DialogHelper.showCustomDialog(

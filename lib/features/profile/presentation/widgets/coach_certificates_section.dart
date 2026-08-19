@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/core/widgets/loading_shimmer.dart';
 import 'package:sportifo_app/features/profile/presentation/view/certificate_preview_page.dart';
 
@@ -73,11 +74,11 @@ class CoachCertificatesSection extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 20),
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.backgroundColor,
           borderRadius: BorderRadius.circular(18),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(.05),
+              color: context.textColor.withOpacity(.05),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),

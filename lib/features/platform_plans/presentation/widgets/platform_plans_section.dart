@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/loading_shimmer.dart';
@@ -26,17 +27,32 @@ class PlatformPlansSection extends StatelessWidget {
               itemBuilder: (context, index) => Container(
                 width: 270,
                 margin: const EdgeInsets.only(right: 14),
-                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const LoadingShimmer(width: 250, height: 135, borderRadius: 16),
+                      const LoadingShimmer(
+                        width: 250,
+                        height: 135,
+                        borderRadius: 16,
+                      ),
                       const SizedBox(height: 12),
-                      const LoadingShimmer(width: 180, height: 14, borderRadius: 6),
+                      const LoadingShimmer(
+                        width: 180,
+                        height: 14,
+                        borderRadius: 6,
+                      ),
                       const SizedBox(height: 8),
-                      const LoadingShimmer(width: 120, height: 12, borderRadius: 6),
+                      const LoadingShimmer(
+                        width: 120,
+                        height: 12,
+                        borderRadius: 6,
+                      ),
                     ],
                   ),
                 ),
@@ -58,17 +74,20 @@ class PlatformPlansSection extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                    Text(
                       'Sportifo Plans',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.textDark,
+                        color: context.textColor,
                       ),
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, AppRoutes.allPlatformPlans);
+                        Navigator.pushNamed(
+                          context,
+                          AppRoutes.allPlatformPlans,
+                        );
                       },
                       child: const Text(
                         'View All',

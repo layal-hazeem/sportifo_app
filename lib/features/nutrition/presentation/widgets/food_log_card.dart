@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../../data/models/food_log_model.dart';
 import '../../../../core/theme/app_colors.dart';
 
@@ -10,6 +11,7 @@ class FoodLogCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
@@ -47,7 +49,7 @@ class FoodLogCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            'kcal',
+                            l10n.kcal,
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.grey.shade600,
@@ -58,11 +60,11 @@ class FoodLogCard extends StatelessWidget {
                       const SizedBox(height: 4),
                       Row(
                         children: [
-                          _buildMacroTag('P: ${foodLog.protein}g'),
+                          _buildMacroTag('${l10n.p_short}: ${foodLog.protein}g'),
                           const SizedBox(width: 8),
-                          _buildMacroTag('C: ${foodLog.carbs}g'),
+                          _buildMacroTag('${l10n.c_short}: ${foodLog.carbs}g'),
                           const SizedBox(width: 8),
-                          _buildMacroTag('F: ${foodLog.fat}g'),
+                          _buildMacroTag('${l10n.f_short}: ${foodLog.fat}g'),
                         ],
                       ),
                     ],
@@ -91,7 +93,7 @@ class FoodLogCard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
-                        foodLog.isManual ? 'Manual' : 'AI',
+                        foodLog.isManual ? l10n.manual_tag : l10n.ai_tag,
                         style: TextStyle(
                           fontSize: 10,
                           fontWeight: FontWeight.bold,
@@ -125,7 +127,7 @@ class FoodLogCard extends StatelessWidget {
               child: OutlinedButton.icon(
                 onPressed: onDelete,
                 icon: const Icon(Icons.delete_outline, size: 16),
-                label: const Text('Delete'),
+                label:  Text(l10n.delete),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: Colors.red,
                   side: const BorderSide(color: Colors.red),

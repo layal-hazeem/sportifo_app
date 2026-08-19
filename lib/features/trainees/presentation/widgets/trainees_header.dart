@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class TraineesHeader extends StatelessWidget {
@@ -16,10 +17,10 @@ class TraineesHeader extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
+          gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Colors.white, Color(0xFFFFFBF5)],
+            colors: [context.backgroundColor, AppColors.primaryBtn],
           ),
           borderRadius: BorderRadius.circular(24),
           border: Border.all(
@@ -61,21 +62,21 @@ class TraineesHeader extends StatelessWidget {
                   children: [
                     Text(
                       '$count',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w900,
-                        color: Colors.white,
+                        color: context.textColor,
                       ),
                     ),
                     Text(
                       l10n.active,
                       maxLines: 1,
                       overflow: TextOverflow.clip,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 9,
                         fontWeight: FontWeight.w700,
                         letterSpacing: 0,
-                        color: Colors.white70,
+                        color: context.textColor,
                       ),
                     ),
                   ],
@@ -91,10 +92,10 @@ class TraineesHeader extends StatelessWidget {
                 children: [
                   Text(
                     l10n.yourTrainees,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w800,
-                      color: Color(0xFF0F172A),
+                      color: context.textColor,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -102,7 +103,7 @@ class TraineesHeader extends StatelessWidget {
                     l10n.traineesHint,
                     style: TextStyle(
                       fontSize: 10,
-                      color: Colors.grey.shade600,
+                      color: AppColors.hintText,
                       fontWeight: FontWeight.w500,
                       height: 1.3,
                     ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class PlanDetailsCard extends StatelessWidget {
@@ -37,7 +38,7 @@ class PlanDetailsCard extends StatelessWidget {
             offset: const Offset(0, 14),
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(.04),
+            color: AppColors.hintText,
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),
@@ -50,9 +51,9 @@ class PlanDetailsCard extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [Colors.white, Colors.grey.shade50],
+              colors: [context.backgroundColor, context.backgroundColor],
             ),
-            border: Border.all(color: Colors.white, width: 1),
+            border: Border.all(color: context.backgroundColor, width: 1),
           ),
           padding: const EdgeInsets.all(22),
           child: Column(
@@ -60,7 +61,7 @@ class PlanDetailsCard extends StatelessWidget {
             children: [
               _buildGoalSection(context),
               const SizedBox(height: 15),
-              _buildDivider(),
+              _buildDivider(context),
               const SizedBox(height: 20),
               _buildDurationSection(context),
             ],
@@ -173,6 +174,7 @@ class PlanDetailsCard extends StatelessWidget {
                     onDurationChanged(durationMonths - 1);
                   }
                 },
+                context: context,
               ),
 
               Expanded(
@@ -202,8 +204,8 @@ class PlanDetailsCard extends StatelessWidget {
                         ).createShader(bounds),
                         child: Text(
                           '$durationMonths',
-                          style: const TextStyle(
-                            color: Colors.white,
+                          style: TextStyle(
+                            color: context.textColor,
                             fontSize: 30,
                             fontWeight: FontWeight.w900,
                             height: 1,
@@ -218,7 +220,7 @@ class PlanDetailsCard extends StatelessWidget {
                             ? l10n.month.toUpperCase()
                             : l10n.months.toUpperCase(),
                         style: TextStyle(
-                          color: Colors.grey.shade600,
+                          color: context.textColor,
                           fontSize: 11,
                           fontWeight: FontWeight.w700,
                           letterSpacing: 1,
@@ -237,6 +239,7 @@ class PlanDetailsCard extends StatelessWidget {
                     onDurationChanged(durationMonths + 1);
                   }
                 },
+                context: context,
               ),
             ],
           ),
@@ -249,26 +252,41 @@ class PlanDetailsCard extends StatelessWidget {
     required IconData icon,
     required bool enabled,
     required VoidCallback onTap,
+    required BuildContext context,
   }) {
     return AnimatedOpacity(
       duration: const Duration(milliseconds: 150),
-      opacity: enabled ? 1 : .3,
+      opacity: enabled ? 1.0 : 0.45,
       child: Material(
-        color: Colors.white,
+        color: context.backgroundColor,
         borderRadius: BorderRadius.circular(16),
         elevation: enabled ? 3 : 0,
-        shadowColor: AppColors.primaryBtn.withOpacity(.25),
+        shadowColor: AppColors.primaryBtn.withOpacity(0.18),
         child: InkWell(
           onTap: enabled ? onTap : null,
           borderRadius: BorderRadius.circular(16),
+          splashColor: AppColors.primaryBtn.withOpacity(0.10),
+          highlightColor: AppColors.primaryBtn.withOpacity(0.05),
           child: Container(
             width: 50,
             height: 50,
             decoration: BoxDecoration(
+              color: enabled
+                  ? AppColors.primaryBtn.withOpacity(0.08)
+                  : context.backgroundColor,
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.grey.shade200),
+              border: Border.all(
+                color: enabled
+                    ? AppColors.primaryBtn.withOpacity(0.35)
+                    : AppColors.hintText.withOpacity(0.35),
+                width: 1.2,
+              ),
             ),
-            child: Icon(icon, size: 22, color: AppColors.primaryBtn),
+            child: Icon(
+              icon,
+              size: 22,
+              color: enabled ? AppColors.primaryBtn : AppColors.hintText,
+            ),
           ),
         ),
       ),
@@ -301,15 +319,15 @@ class PlanDetailsCard extends StatelessWidget {
     );
   }
 
-  Widget _buildDivider() {
+  Widget _buildDivider(BuildContext context) {
     return Container(
       height: 1,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Colors.grey.shade200.withOpacity(0),
-            Colors.grey.shade300,
-            Colors.grey.shade200.withOpacity(0),
+            context.textColor.withOpacity(0),
+            context.textColor,
+            context.textColor.withOpacity(0),
           ],
         ),
       ),
@@ -354,12 +372,12 @@ class _GoalCard extends StatelessWidget {
                     ],
                   )
                 : null,
-            color: selected ? null : Colors.grey.shade50,
+            color: selected ? null : context.backgroundColor,
             borderRadius: BorderRadius.circular(30),
             border: Border.all(
               color: selected
                   ? AppColors.primaryBtn.withOpacity(.55)
-                  : Colors.grey.shade200,
+                  : context.backgroundColor,
               width: selected ? 1.3 : 1,
             ),
             boxShadow: selected
@@ -389,16 +407,16 @@ class _GoalCard extends StatelessWidget {
                           ],
                         )
                       : null,
-                  color: selected ? null : Colors.white,
+                  color: selected ? null : context.backgroundColor,
                   borderRadius: BorderRadius.circular(12),
                   border: selected
                       ? null
-                      : Border.all(color: Colors.grey.shade200),
+                      : Border.all(color: AppColors.primaryBtn),
                 ),
                 child: Icon(
                   option.icon,
                   size: 18,
-                  color: selected ? Colors.white : Colors.grey.shade600,
+                  color: selected ? Colors.white : AppColors.primaryBtn,
                 ),
               ),
 
@@ -415,7 +433,9 @@ class _GoalCard extends StatelessWidget {
                         fontSize: 14,
                         fontWeight: FontWeight.w800,
                         letterSpacing: -0.1,
-                        color: selected ? AppColors.primaryBtn : Colors.black87,
+                        color: selected
+                            ? AppColors.primaryBtn
+                            : context.textColor,
                       ),
                     ),
 

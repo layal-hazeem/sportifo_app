@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/di/service_locator.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../view_model/coach_details_cubit.dart';
 import '../view_model/coach_details_state.dart';
@@ -18,9 +19,10 @@ class CoachDetailsScreen extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F7F7),
+      backgroundColor: context.backgroundColor,
       body: BlocProvider(
-        create: (context) => getIt<CoachDetailsCubit>()..fetchCoachDetails(coachId),
+        create: (context) =>
+            getIt<CoachDetailsCubit>()..fetchCoachDetails(coachId),
         child: BlocBuilder<CoachDetailsCubit, CoachDetailsState>(
           builder: (context, state) {
             if (state is CoachDetailsLoading) {
@@ -34,7 +36,11 @@ class CoachDetailsScreen extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.error_outline, color: Colors.red, size: 48),
+                    const Icon(
+                      Icons.error_outline,
+                      color: Colors.red,
+                      size: 48,
+                    ),
                     const SizedBox(height: 16),
                     Text(
                       l10n.coach_details_error(state.message),
@@ -67,10 +73,10 @@ class CoachDetailsScreen extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: Text(
                             l10n.biography,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color: Color(0xFF1A1A1A),
+                              color: context.textColor,
                               letterSpacing: 0.3,
                             ),
                           ),
@@ -91,20 +97,20 @@ class CoachDetailsScreen extends StatelessWidget {
                         ),
 
                         const SizedBox(height: 28),
-                      CoachSubscriptionsList(
-                        subscriptions: coach.subscriptions,
-                        coachId: coach.id,
-                      ),
+                        CoachSubscriptionsList(
+                          subscriptions: coach.subscriptions,
+                          coachId: coach.id,
+                        ),
                         const SizedBox(height: 28),
                         if (coach.pics.isNotEmpty) ...[
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 16),
                             child: Text(
                               l10n.qualifications_certifications,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF1A1A1A),
+                                color: context.textColor,
                                 letterSpacing: 0.5,
                               ),
                             ),
@@ -115,7 +121,6 @@ class CoachDetailsScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-
                 ],
               );
             }

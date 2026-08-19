@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/routes/app_routes.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/features/plan_details/data/models/plan_details_model.dart';
 import 'package:sportifo_app/features/plan_details/presentation/view_model/plan_details_cubit.dart';
 import 'package:sportifo_app/features/plan_details/presentation/view_model/plan_details_state.dart';
@@ -25,7 +26,7 @@ class _PlanDetailsScreenState extends State<PlanDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.backgroundColor,
       body: SafeArea(
         child: BlocBuilder<PlanDetailsCubit, PlanDetailsState>(
           builder: (context, state) {
@@ -144,13 +145,13 @@ class _TopBar extends StatelessWidget {
               width: 42,
               height: 42,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: context.backgroundColor,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.black.withOpacity(0.06)),
+                border: Border.all(color: context.backgroundColor),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.arrow_back_ios_new_rounded,
-                color: AppColors.textDark,
+                color: context.textColor,
                 size: 17,
               ),
             ),
@@ -173,8 +174,8 @@ class _TopBar extends StatelessWidget {
               const SizedBox(height: 2),
               Text(
                 '${l10n.plan} #$planId',
-                style: const TextStyle(
-                  color: AppColors.textDark,
+                style: TextStyle(
+                  color: context.textColor,
                   fontSize: 14,
                   fontWeight: FontWeight.w800,
                 ),
@@ -210,16 +211,12 @@ class _EditPlanButton extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(
-              Icons.edit_rounded,
-              color: AppColors.background,
-              size: 16,
-            ),
+            Icon(Icons.edit_rounded, color: context.textColor, size: 16),
             const SizedBox(width: 6),
             Text(
               l10n.editPlan,
-              style: const TextStyle(
-                color: AppColors.background,
+              style: TextStyle(
+                color: context.textColor,
                 fontSize: 13,
                 fontWeight: FontWeight.w800,
               ),
@@ -249,8 +246,8 @@ class _MissionHeader extends StatelessWidget {
                 day.name,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  color: AppColors.textDark,
+                style: TextStyle(
+                  color: context.textColor,
                   fontSize: 20,
                   fontWeight: FontWeight.w900,
                 ),

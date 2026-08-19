@@ -1,15 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../view_model/exercise_filter_params.dart';
+import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/features/progress/presentation/view_model/exercise_filter_params.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class FilterButton extends StatelessWidget {
   final bool hasFilters;
   final VoidCallback onTap;
 
-  const FilterButton({super.key, required this.hasFilters, required this.onTap});
+  const FilterButton({
+    super.key,
+    required this.hasFilters,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -17,7 +27,7 @@ class FilterButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: hasFilters
               ? AppColors.primaryBtn.withValues(alpha: 0.1)
-              : Colors.grey.shade100,
+              : context.backgroundColor,
           borderRadius: BorderRadius.circular(12),
           border: hasFilters
               ? Border.all(color: AppColors.primaryBtn.withValues(alpha: 0.3))
@@ -29,15 +39,15 @@ class FilterButton extends StatelessWidget {
             Icon(
               Icons.tune,
               size: 16,
-              color: hasFilters ? AppColors.primaryBtn : Colors.grey.shade600,
+              color: hasFilters ? AppColors.primaryBtn : context.textColor,
             ),
             const SizedBox(width: 4),
             Text(
-              "Filter",
+              l10n.filter,
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: hasFilters ? AppColors.primaryBtn : Colors.grey.shade600,
+                color: hasFilters ? AppColors.primaryBtn : context.textColor,
               ),
             ),
             if (hasFilters) ...[
@@ -79,18 +89,20 @@ class ActiveFilters extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Wrap(
       spacing: 8,
       runSpacing: 8,
       children: [
         if (filters.planId != null)
           CustomFilterChip(
-            label: "Plan #${filters.planId}",
+            label: l10n.plan_prefix(filters.planId!),
             onRemove: () => onRemove(filters.copyWith(planId: null)),
           ),
         if (filters.exerciseId != null)
           CustomFilterChip(
-            label: "Exercise #${filters.exerciseId}",
+            label: l10n.exercise_prefix(filters.exerciseId!),
             onRemove: () => onRemove(filters.copyWith(exerciseId: null)),
           ),
         if (filters.from != null || filters.to != null)
@@ -99,9 +111,9 @@ class ActiveFilters extends StatelessWidget {
             onRemove: () => onRemove(filters.copyWith(from: null, to: null)),
           ),
         ActionChip(
-          label: const Text(
-            "Clear All",
-            style: TextStyle(fontSize: 11, color: Colors.red),
+          label: Text(
+            l10n.clear_all,
+            style: const TextStyle(fontSize: 11, color: Colors.red),
           ),
           backgroundColor: Colors.red.shade50,
           side: BorderSide.none,
@@ -117,7 +129,11 @@ class CustomFilterChip extends StatelessWidget {
   final String label;
   final VoidCallback onRemove;
 
-  const CustomFilterChip({super.key, required this.label, required this.onRemove});
+  const CustomFilterChip({
+    super.key,
+    required this.label,
+    required this.onRemove,
+  });
 
   @override
   Widget build(BuildContext context) {

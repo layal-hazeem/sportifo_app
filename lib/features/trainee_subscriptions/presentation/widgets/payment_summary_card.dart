@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
 
@@ -24,7 +25,7 @@ class PaymentSummaryCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.backgroundColor,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -39,7 +40,11 @@ class PaymentSummaryCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.receipt_long, color: AppColors.primaryBtn, size: 22),
+              const Icon(
+                Icons.receipt_long,
+                color: AppColors.primaryBtn,
+                size: 22,
+              ),
               const SizedBox(width: 8),
               Text(
                 l10n.subscription_payment_orderSummary,
@@ -55,11 +60,14 @@ class PaymentSummaryCard extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 12),
             child: Divider(color: Colors.grey.shade200, height: 1),
           ),
-          _buildSummaryRow(l10n.subscription_payment_planLabel, subscriptionTitle),
+          _buildSummaryRow(
+            l10n.subscription_payment_planLabel,
+            subscriptionTitle,
+          ),
           const SizedBox(height: 10),
           _buildSummaryRow(
-              l10n.subscription_payment_durationLabel,
-              l10n.subscription_selectMonth_monthsLabel(months)
+            l10n.subscription_payment_durationLabel,
+            l10n.subscription_selectMonth_monthsLabel(months),
           ),
 
           Padding(
@@ -80,7 +88,10 @@ class PaymentSummaryCard extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: TextStyle(color: Colors.grey.shade600, fontSize: 14)),
+        Text(
+          label,
+          style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+        ),
         Text(
           value,
           style: TextStyle(

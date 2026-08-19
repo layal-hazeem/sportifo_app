@@ -1472,7 +1472,7 @@ abstract class AppLocalizations {
   /// No description provided for @days.
   ///
   /// In en, this message translates to:
-  /// **'DAYS'**
+  /// **'Days'**
   String get days;
 
   /// No description provided for @waitUpdatePlan.
@@ -1700,7 +1700,7 @@ abstract class AppLocalizations {
   /// No description provided for @kcal.
   ///
   /// In en, this message translates to:
-  /// **'Kcal'**
+  /// **'kcal'**
   String get kcal;
 
   /// No description provided for @protein.
@@ -2348,7 +2348,7 @@ abstract class AppLocalizations {
   /// No description provided for @plan.
   ///
   /// In en, this message translates to:
-  /// **'PLAN'**
+  /// **'Plan'**
   String get plan;
 
   /// No description provided for @createFirstWorkoutDay.
@@ -2650,6 +2650,407 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Plan Updated Successfully'**
   String get planUpdatedSuccessfully;
+
+  /// No description provided for @description.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get description;
+  /// No description provided for @stop_sending_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop Sending?'**
+  String get stop_sending_title;
+
+  /// No description provided for @stop_sending_content.
+  ///
+  /// In en, this message translates to:
+  /// **'Stopping will delete your message and it won\'t be saved.'**
+  String get stop_sending_content;
+
+  /// No description provided for @undo.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get undo;
+
+  /// No description provided for @ai_coach_ready.
+  ///
+  /// In en, this message translates to:
+  /// **'Your AI Coach is ready!'**
+  String get ai_coach_ready;
+
+  /// No description provided for @empty_chat_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask about nutrition, workouts, or calories'**
+  String get empty_chat_subtitle;
+
+  /// No description provided for @meal_saved_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal saved successfully'**
+  String get meal_saved_success;
+
+  /// No description provided for @view_meals.
+  ///
+  /// In en, this message translates to:
+  /// **'View Meals'**
+  String get view_meals;
+
+  /// No description provided for @sending_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Sending...'**
+  String get sending_hint;
+
+  /// No description provided for @ask_ai_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask AI Coach...'**
+  String get ask_ai_hint;
+
+  /// No description provided for @cal.
+  ///
+  /// In en, this message translates to:
+  /// **'Cal'**
+  String get cal;
+
+  /// No description provided for @press_again_to_exit.
+  ///
+  /// In en, this message translates to:
+  /// **'Press back again to exit the app'**
+  String get press_again_to_exit;
+
+  /// No description provided for @todays_meals.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Meals'**
+  String get todays_meals;
+
+  /// No description provided for @meal_deleted_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal deleted successfully'**
+  String get meal_deleted_success;
+
+  /// No description provided for @no_more_meals.
+  ///
+  /// In en, this message translates to:
+  /// **'No more meals for today'**
+  String get no_more_meals;
+
+  /// No description provided for @calories.
+  ///
+  /// In en, this message translates to:
+  /// **'Calories'**
+  String get calories;
+
+  /// No description provided for @no_meals_logged.
+  ///
+  /// In en, this message translates to:
+  /// **'No meals logged today'**
+  String get no_meals_logged;
+
+  /// No description provided for @ask_ai_or_add_manual.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask AI or add a meal manually'**
+  String get ask_ai_or_add_manual;
+
+  /// No description provided for @refresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get refresh;
+
+  /// No description provided for @delete_meal_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Meal'**
+  String get delete_meal_title;
+
+  /// No description provided for @delete_meal_confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this meal?'**
+  String get delete_meal_confirmation;
+
+  /// No description provided for @add_meal.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Meal'**
+  String get add_meal;
+
+  /// No description provided for @meal_added_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal added successfully'**
+  String get meal_added_success;
+
+  /// No description provided for @meal_details.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal Details'**
+  String get meal_details;
+
+  /// No description provided for @enter_nutritional_info_manually.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter nutritional information manually'**
+  String get enter_nutritional_info_manually;
+
+  /// No description provided for @meal_description_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal description (e.g. Chicken Rice)'**
+  String get meal_description_hint;
+
+  /// No description provided for @required_field.
+  ///
+  /// In en, this message translates to:
+  /// **'This field is required'**
+  String get required_field;
+
+  /// No description provided for @enter_valid_number.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid number'**
+  String get enter_valid_number;
+
+  /// No description provided for @invalid_value.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid value'**
+  String get invalid_value;
+
+  /// No description provided for @protein_g.
+  ///
+  /// In en, this message translates to:
+  /// **'Protein (g)'**
+  String get protein_g;
+
+  /// No description provided for @carbs_g.
+  ///
+  /// In en, this message translates to:
+  /// **'Carbs (g)'**
+  String get carbs_g;
+
+  /// No description provided for @fat_g.
+  ///
+  /// In en, this message translates to:
+  /// **'Fat (g)'**
+  String get fat_g;
+
+  /// No description provided for @save_meal.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Meal'**
+  String get save_meal;
+
+  /// No description provided for @p_short.
+  ///
+  /// In en, this message translates to:
+  /// **'P'**
+  String get p_short;
+
+  /// No description provided for @c_short.
+  ///
+  /// In en, this message translates to:
+  /// **'C'**
+  String get c_short;
+
+  /// No description provided for @f_short.
+  ///
+  /// In en, this message translates to:
+  /// **'F'**
+  String get f_short;
+
+  /// No description provided for @manual_tag.
+  ///
+  /// In en, this message translates to:
+  /// **'Manual'**
+  String get manual_tag;
+
+  /// No description provided for @ai_tag.
+  ///
+  /// In en, this message translates to:
+  /// **'AI'**
+  String get ai_tag;
+
+  /// No description provided for @your_progress.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Progress'**
+  String get your_progress;
+
+  /// No description provided for @exercises_count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} exercises'**
+  String exercises_count(Object count);
+
+  /// No description provided for @set_info.
+  ///
+  /// In en, this message translates to:
+  /// **'Set {setNum}: {reps} reps , Weight: {weight}kg'**
+  String set_info(Object reps, Object setNum, Object weight);
+
+  /// No description provided for @workout_activity.
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Activity'**
+  String get workout_activity;
+
+  /// No description provided for @activity_timeline.
+  ///
+  /// In en, this message translates to:
+  /// **'Activity Timeline'**
+  String get activity_timeline;
+
+  /// No description provided for @plan_prefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan {id}'**
+  String plan_prefix(Object id);
+
+  /// No description provided for @exercise_prefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise #{id}'**
+  String exercise_prefix(Object id);
+
+  /// No description provided for @exercises_per_day.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercises Per Day'**
+  String get exercises_per_day;
+
+  /// No description provided for @filter_workouts.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter Workouts'**
+  String get filter_workouts;
+
+  /// No description provided for @all_plans.
+  ///
+  /// In en, this message translates to:
+  /// **'All Plans'**
+  String get all_plans;
+
+  /// No description provided for @exercise.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise'**
+  String get exercise;
+
+  /// No description provided for @all_exercises.
+  ///
+  /// In en, this message translates to:
+  /// **'All Exercises'**
+  String get all_exercises;
+
+  /// No description provided for @date_range.
+  ///
+  /// In en, this message translates to:
+  /// **'Date Range'**
+  String get date_range;
+
+  /// No description provided for @from.
+  ///
+  /// In en, this message translates to:
+  /// **'From'**
+  String get from;
+
+  /// No description provided for @to.
+  ///
+  /// In en, this message translates to:
+  /// **'To'**
+  String get to;
+
+  /// No description provided for @apply.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get apply;
+
+  /// No description provided for @filter.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get filter;
+
+  /// No description provided for @clear_all.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear All'**
+  String get clear_all;
+
+  /// No description provided for @current_weight.
+  ///
+  /// In en, this message translates to:
+  /// **'Current'**
+  String get current_weight;
+
+  /// No description provided for @goal.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal'**
+  String get goal;
+
+  /// No description provided for @weight_history.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight History'**
+  String get weight_history;
+
+  /// No description provided for @goal_bulk.
+  ///
+  /// In en, this message translates to:
+  /// **'Bulk'**
+  String get goal_bulk;
+
+  /// No description provided for @goal_cut.
+  ///
+  /// In en, this message translates to:
+  /// **'Cut'**
+  String get goal_cut;
+
+  /// No description provided for @goal_maintain.
+  ///
+  /// In en, this message translates to:
+  /// **'Maintain'**
+  String get goal_maintain;
+
+  /// No description provided for @not_available_short.
+  ///
+  /// In en, this message translates to:
+  /// **'N/A'**
+  String get not_available_short;
+
+  /// No description provided for @available_subscriptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Available Subscriptions'**
+  String get available_subscriptions;
+
+  /// No description provided for @month_single.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Month'**
+  String month_single(Object count);
+
+  /// No description provided for @month_plural.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Months'**
+  String month_plural(Object count);
+
+  /// No description provided for @months_range.
+  ///
+  /// In en, this message translates to:
+  /// **'{min} - {max} Months'**
+  String months_range(Object max, Object min);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../l10n/app_localizations.dart';
 
 class CoachesFilterBottomSheet extends StatefulWidget {
@@ -16,7 +17,8 @@ class CoachesFilterBottomSheet extends StatefulWidget {
   });
 
   @override
-  State<CoachesFilterBottomSheet> createState() => _CoachesFilterBottomSheetState();
+  State<CoachesFilterBottomSheet> createState() =>
+      _CoachesFilterBottomSheetState();
 }
 
 class _CoachesFilterBottomSheetState extends State<CoachesFilterBottomSheet> {
@@ -52,7 +54,11 @@ class _CoachesFilterBottomSheetState extends State<CoachesFilterBottomSheet> {
             children: [
               Text(
                 l10n.filter_coaches,
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1A1A1A)),
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: context.textColor,
+                ),
               ),
               GestureDetector(
                 onTap: () => Navigator.pop(context),
@@ -61,7 +67,10 @@ class _CoachesFilterBottomSheetState extends State<CoachesFilterBottomSheet> {
             ],
           ),
           const Divider(height: 24),
-          Text(l10n.coach_gender, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+          Text(
+            l10n.coach_gender,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+          ),
           const SizedBox(height: 10),
           Row(
             children: [
@@ -85,7 +94,10 @@ class _CoachesFilterBottomSheetState extends State<CoachesFilterBottomSheet> {
             ],
           ),
           const SizedBox(height: 24),
-          Text(l10n.years_sports_exp, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+          Text(
+            l10n.years_sports_exp,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+          ),
           const SizedBox(height: 10),
           Row(
             children: [
@@ -120,9 +132,17 @@ class _CoachesFilterBottomSheetState extends State<CoachesFilterBottomSheet> {
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     side: const BorderSide(color: Color(0xFFFF6B35)),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
-                  child: Text(l10n.reset, style: const TextStyle(color: Color(0xFFFF6B35), fontWeight: FontWeight.bold)), // 🔥 إعادة تعيين
+                  child: Text(
+                    l10n.reset,
+                    style: const TextStyle(
+                      color: Color(0xFFFF6B35),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ), // 🔥 إعادة تعيين
                 ),
               ),
               const SizedBox(width: 12),
@@ -135,10 +155,18 @@ class _CoachesFilterBottomSheetState extends State<CoachesFilterBottomSheet> {
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     backgroundColor: const Color(0xFFFF6B35),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                     elevation: 0,
                   ),
-                  child: Text(l10n.apply_filters, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)), // 🔥 تطبيق الفلاتر
+                  child: Text(
+                    l10n.apply_filters,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ), // 🔥 تطبيق الفلاتر
                 ),
               ),
             ],
@@ -148,13 +176,19 @@ class _CoachesFilterBottomSheetState extends State<CoachesFilterBottomSheet> {
     );
   }
 
-  Widget _buildChipFilter({required String label, required bool isSelected, required VoidCallback onTap}) {
+  Widget _buildChipFilter({
+    required String label,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFFF6B35).withOpacity(0.12) : Colors.grey[100],
+          color: isSelected
+              ? const Color(0xFFFF6B35).withOpacity(0.12)
+              : context.backgroundColor,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
             color: isSelected ? const Color(0xFFFF6B35) : Colors.transparent,

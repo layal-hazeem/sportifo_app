@@ -50,4 +50,13 @@ String? getRole() {
 Future<void> clearRole() async {
   await _prefs.remove(_roleKey);
 }
+
+
+// أضفي هذه الدالة داخل كلاس LocalStorage
+
+Future<void> clearUserSession() async {
+  await _prefs.remove(_tokenKey);
+  await _prefs.remove(_roleKey);
+  // ملاحظة: احتفظي بـ onboarding_seen و lang حتى لا تتأثر إعدادات التطبيق العامة
+}
 }

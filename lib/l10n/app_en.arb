@@ -584,5 +584,115 @@
   "availableDays": "Available Days",
   "exercises": "Exercises",
   "addSelectedDays": "Add Selected Days",
-  "planUpdatedSuccessfully":"Plan Updated Successfully"
+  "planUpdatedSuccessfully":"Plan Updated Successfully",
+  "description":"Description",
+
+
+
+
+
+
+
+  "stop_sending_title": "Stop Sending?",
+  "stop_sending_content": "Stopping will delete your message and it won't be saved.",
+  "undo": "Undo",
+  "delete": "Delete",
+  "retry": "Retry",
+  "ai_coach_ready": "Your AI Coach is ready!",
+  "empty_chat_subtitle": "Ask about nutrition, workouts, or calories",
+  "meal_saved_success": "Meal saved successfully!",
+  "view_meals": "View Meals",
+  "saved": "Saved",
+  "save": "Save",
+  "sending_hint": "Sending...",
+  "ask_ai_hint": "Ask AI Coach...",
+  "cal": "Cal",
+  "protein": "Protein",
+  "carbs": "Carbs",
+  "fat": "Fat",
+
+
+
+  "press_again_to_exit": "Press back again to exit the app",
+
+
+
+  "todays_meals": "Today's Meals",
+  "meal_saved_success": "Meal saved successfully",
+  "meal_deleted_success": "Meal deleted successfully",
+  "retry": "Retry",
+  "no_more_meals": "No more meals for today",
+  "calories": "Calories",
+  "protein": "Protein",
+  "carbs": "Carbs",
+  "fat": "Fat",
+  "no_meals_logged": "No meals logged today",
+  "ask_ai_or_add_manual": "Ask AI or add a meal manually",
+  "refresh": "Refresh",
+  "delete_meal_title": "Delete Meal",
+  "delete_meal_confirmation": "Are you sure you want to delete this meal?",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "add_meal": "Add Meal",
+  "meal_added_success": "Meal added successfully",
+  "meal_details": "Meal Details",
+  "enter_nutritional_info_manually": "Enter nutritional information manually",
+  "meal_description_hint": "Meal description (e.g. Chicken Rice)",
+  "required_field": "This field is required",
+  "enter_valid_number": "Enter a valid number",
+  "invalid_value": "Invalid value",
+  "protein_g": "Protein (g)",
+  "carbs_g": "Carbs (g)",
+  "fat_g": "Fat (g)",
+  "save_meal": "Save Meal",
+  "kcal": "kcal",
+  "p_short": "P",
+  "c_short": "C",
+  "f_short": "F",
+  "manual_tag": "Manual",
+  "ai_tag": "AI",
+
+
+
+
+
+
+  "your_progress": "Your Progress",
+  "retry": "Retry",
+  "exercises_count": "{count} exercises",
+  "set_info": "Set {setNum}: {reps} reps , Weight: {weight}kg",
+  "workout_activity": "Workout Activity",
+  "workouts": "Workouts",
+  "sets": "Sets",
+  "days": "Days",
+  "activity_timeline": "Activity Timeline",
+  "plan_prefix": "Plan {id}",
+  "exercise_prefix": "Exercise #{id}",
+  "exercises_per_day": "Exercises Per Day",
+  "filter_workouts": "Filter Workouts",
+  "plan": "Plan",
+  "all_plans": "All Plans",
+  "exercise": "Exercise",
+  "all_exercises": "All Exercises",
+  "date_range": "Date Range",
+  "from": "From",
+  "to": "To",
+  "cancel": "Cancel",
+  "apply": "Apply",
+  "filter": "Filter",
+  "clear_all": "Clear All",
+  "current_weight": "Current",
+  "goal": "Goal",
+  "change": "Change",
+  "weight_history": "Weight History",
+  "goal_bulk": "Bulk",
+  "goal_cut": "Cut",
+  "goal_maintain": "Maintain",
+  "not_available_short": "N/A",
+
+
+  "available_subscriptions": "Available Subscriptions",
+"month_single": "{count} Month",
+"month_plural": "{count} Months",
+"months_range": "{min} - {max} Months"
 }

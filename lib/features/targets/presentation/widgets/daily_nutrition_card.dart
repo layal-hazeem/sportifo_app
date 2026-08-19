@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/features/nutrition/presentation/view/food_logs_screen.dart';
 import 'package:sportifo_app/features/nutrition/presentation/view/manual_meal_entry_screen.dart';
 import 'package:sportifo_app/features/targets/data/models/target_model.dart';
@@ -56,9 +57,10 @@ class DailyNutritionCard extends StatelessWidget {
             transitionsBuilder: (_, animation, __, child) {
               const begin = Offset(0.0, 0.25);
               const end = Offset.zero;
-              final tween = Tween(begin: begin, end: end).chain(
-                CurveTween(curve: Curves.easeOutCubic),
-              );
+              final tween = Tween(
+                begin: begin,
+                end: end,
+              ).chain(CurveTween(curve: Curves.easeOutCubic));
               return SlideTransition(
                 position: animation.drive(tween),
                 child: FadeTransition(opacity: animation, child: child),
@@ -72,11 +74,11 @@ class DailyNutritionCard extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.backgroundColor,
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.04),
+              color: AppColors.primaryBtn.withOpacity(0.5),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -88,12 +90,12 @@ class DailyNutritionCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
+                Text(
                   "Daily Nutrition Targets",
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.textDark,
+                    color: context.textColor,
                   ),
                 ),
                 Row(
@@ -124,7 +126,10 @@ class DailyNutritionCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: AppColors.primaryBtn.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(12),
@@ -157,13 +162,13 @@ class DailyNutritionCard extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.all(6),
                         decoration: BoxDecoration(
-                          color: Colors.grey.shade100,
+                          color: AppColors.primaryBtn.withOpacity(0.1),
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(
                           Icons.edit_rounded,
                           size: 14,
-                          color: Colors.grey,
+                          color: AppColors.primaryBtn,
                         ),
                       ),
                     ),
@@ -174,7 +179,6 @@ class DailyNutritionCard extends StatelessWidget {
             const SizedBox(height: 20),
             Row(
               children: [
-                // 🔥 الدائرة: نسبة حقيقية + لون تنبيهي عند التجاوز
                 Column(
                   children: [
                     Stack(
@@ -188,7 +192,9 @@ class DailyNutritionCard extends StatelessWidget {
                             strokeWidth: 8,
                             backgroundColor: Colors.grey.shade100,
                             valueColor: AlwaysStoppedAnimation<Color>(
-                              caloriesExceeded ? Colors.red : AppColors.primaryBtn,
+                              caloriesExceeded
+                                  ? Colors.red
+                                  : AppColors.primaryBtn,
                             ),
                           ),
                         ),
@@ -197,15 +203,18 @@ class DailyNutritionCard extends StatelessWidget {
                           children: [
                             Text(
                               "${consumedToday?.calories ?? 0}",
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: AppColors.textDark,
+                                color: context.textColor,
                               ),
                             ),
                             Text(
                               "Kcal",
-                              style: TextStyle(fontSize: 10, color: Colors.grey.shade500),
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.grey.shade500,
+                              ),
                             ),
                           ],
                         ),
@@ -214,7 +223,10 @@ class DailyNutritionCard extends StatelessWidget {
                     const SizedBox(height: 6),
                     // 🔥 عرض النسبة المئوية الحقيقية (قد تتجاوز 100%)
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 2,
+                      ),
                       decoration: BoxDecoration(
                         color: caloriesExceeded
                             ? Colors.red.withOpacity(0.1)
@@ -227,7 +239,9 @@ class DailyNutritionCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.bold,
-                          color: caloriesExceeded ? Colors.red : AppColors.primaryBtn,
+                          color: caloriesExceeded
+                              ? Colors.red
+                              : AppColors.primaryBtn,
                         ),
                       ),
                     ),

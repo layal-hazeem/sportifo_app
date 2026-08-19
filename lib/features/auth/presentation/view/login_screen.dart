@@ -1,6 +1,8 @@
+//login screen
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/services/notification_service.dart';
@@ -32,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.backgroundColor,
       // 2. استخدام BlocListener لمراقبة الحالة وتغيير الشاشات
       body: BlocListener<LoginCubit, LoginState>(
         // ... بداخل الـ BlocListener في LoginScreen
@@ -100,10 +102,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 80),
                     Center(
                       child: Text(l10n.welcomeBack,
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: AppSizes.titleFontSize,
                               fontWeight: FontWeight.bold,
-                              color: AppColors.textDark)),
+                              color: context.textColor)),
                     ),
                     const SizedBox(height: 80),
                     Text(l10n.emailOrPhone,
@@ -170,7 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [
                         Text(
                           l10n.dontHaveAccount,
-                          style: const TextStyle(color: AppColors.textDark, fontSize: AppSizes.hintFontSize),
+                          style: TextStyle(color: context.textColor, fontSize: AppSizes.hintFontSize),
                         ),
                         TextButton(
                           onPressed: register,

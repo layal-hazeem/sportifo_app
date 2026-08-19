@@ -1,5 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../trainee_subscriptions/data/models/subscription_model.dart';
 import '../../../trainee_subscriptions/presentation/widgets/SubscriptionDetailsBottomSheet.dart';
 
@@ -7,7 +10,11 @@ class CoachSubscriptionsList extends StatelessWidget {
   final List<SubscriptionModel> subscriptions;
   final int coachId;
 
-  const CoachSubscriptionsList({super.key,required this.coachId, required this.subscriptions});
+  const CoachSubscriptionsList({
+    super.key,
+    required this.coachId,
+    required this.subscriptions,
+  });
 
   Color _getTypeColor(String type) {
     switch (type.toLowerCase()) {
@@ -27,7 +34,6 @@ class CoachSubscriptionsList extends StatelessWidget {
     if (sub.months.length == 1) {
       return '${sub.months.first.price}';
     }
-    // إذا كان هناك أكثر من شهر، نعرض أقل وأعلى سعر
     final prices = sub.months.map((m) => m.price).toList();
     final minPrice = prices.reduce((a, b) => a < b ? a : b);
     final maxPrice = prices.reduce((a, b) => a > b ? a : b);
@@ -37,32 +43,34 @@ class CoachSubscriptionsList extends StatelessWidget {
     return '$minPrice - $maxPrice';
   }
 
-  String _getMonthRange(SubscriptionModel sub) {
+  String _getMonthRange(SubscriptionModel sub, AppLocalizations l10n) {
     if (sub.months.isEmpty) return '0';
     if (sub.months.length == 1) {
-      return '${sub.months.first.number} Month';
+      final count = sub.months.first.number;
+      return count == 1 ? l10n.month_single(count) : l10n.month_plural(count);
     }
     final numbers = sub.months.map((m) => m.number).toList();
     final minNum = numbers.reduce((a, b) => a < b ? a : b);
     final maxNum = numbers.reduce((a, b) => a > b ? a : b);
-    return '$minNum - $maxNum Months';
+    return l10n.months_range(minNum, maxNum);
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (subscriptions.isEmpty) return const SizedBox.shrink();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
-            "Available Subscriptions",
+            l10n.available_subscriptions,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF1A1A1A),
+              color: context.textColor,
               letterSpacing: 0.3,
             ),
           ),
@@ -86,8 +94,10 @@ class CoachSubscriptionsList extends StatelessWidget {
                   child: Neumorphic(
                     style: NeumorphicStyle(
                       depth: 4,
-                      boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(15)),
-                      color: const Color(0xFFF7F7F7),
+                      boxShape: NeumorphicBoxShape.roundRect(
+                        BorderRadius.circular(15),
+                      ),
+                      color: context.backgroundColor,
                       lightSource: LightSource.topLeft,
                     ),
                     child: Container(
@@ -121,7 +131,7 @@ class CoachSubscriptionsList extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            _getMonthRange(sub),
+                            _getMonthRange(sub, l10n),
                             style: const TextStyle(
                               color: Colors.grey,
                               fontSize: 12,

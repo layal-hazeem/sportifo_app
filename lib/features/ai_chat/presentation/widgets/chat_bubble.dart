@@ -2,7 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/routes/app_routes.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/features/ai_chat/presentation/widgets/nutrition_card.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/helpers/snack_bar_utils.dart';
 import '../../data/models/chat_message_model.dart';
@@ -96,7 +98,7 @@ class _ChatBubbleState extends State<ChatBubble> {
     final isUserMessage = widget.message.sender == 'user';
     final hasNutrition = _hasNutritionData();
     final displayBody = _displayedText ?? widget.message.body;
-
+final l10n = AppLocalizations.of(context)!;
     return Align(
       alignment: isUserMessage ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
@@ -113,8 +115,18 @@ class _ChatBubbleState extends State<ChatBubble> {
               decoration: BoxDecoration(
                 color: isUserMessage
                     ? AppColors.primaryBtn
-                    : Colors.grey.shade200,
+                    : context.backgroundColor,
                 borderRadius: BorderRadius.circular(15),
+                boxShadow: isUserMessage
+                    ? null
+                    : [
+                        BoxShadow(
+                          color: AppColors.primaryBtn.withValues(alpha: 0.3),
+                          blurRadius: 12,
+                          spreadRadius: 0,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
               ),
               padding: const EdgeInsets.all(12),
               child: Column(
@@ -123,7 +135,7 @@ class _ChatBubbleState extends State<ChatBubble> {
                   Text(
                     displayBody,
                     style: TextStyle(
-                      color: isUserMessage ? Colors.white : Colors.black87,
+                      color: isUserMessage ? Colors.white : context.textColor,
                       fontSize: 14,
                       height: 1.5,
                     ),
@@ -173,9 +185,9 @@ class _ChatBubbleState extends State<ChatBubble> {
                             state.messageId == widget.message.id) {
                           AppSnackBar.show(
                             context,
-                            message: 'Meal saved successfully!',
+                            message: l10n.meal_saved_success,
                             type: SnackBarType.success,
-                            actionLabel: 'View Meals',
+                            actionLabel: l10n.view_meals,
                             onActionPressed: () {
                               Navigator.pushNamed(context, AppRoutes.foodLogs);
                             },
@@ -228,7 +240,7 @@ class _ChatBubbleState extends State<ChatBubble> {
                                     size: 16,
                                   ),
                             label: Text(
-                              isSaved ? 'Saved' : 'Save',
+                              isSaved ? l10n.saved : l10n.save,
                               style: const TextStyle(fontSize: 11),
                             ),
                             style: ElevatedButton.styleFrom(

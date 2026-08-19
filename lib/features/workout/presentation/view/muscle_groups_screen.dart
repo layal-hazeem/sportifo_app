@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/widgets/loading_shimmer.dart';
@@ -29,13 +30,13 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
   // 🔥 تم التعديل هنا: استخدام int (الـ ID) كـ Key بدلاً من String (الاسم)
   // ⚠️ يرجى التأكد من مطابقة هذه الأرقام مع الـ IDs الحقيقية في الباك إند
   final Map<int, String> _muscleAssets = {
-    1: 'assets/images/muscles/chest.jpg',      // id الصدر
-    2: 'assets/images/muscles/back.jpg',       // id الظهر
-    3: 'assets/images/muscles/shoulders.jpg',       // id الأرجل
-    4: 'assets/images/muscles/legs.jpg',  // id الأكتاف
-    5: 'assets/images/muscles/biceps.jpg',     // id البايسبس
-    6: 'assets/images/muscles/triceps.jpg',    // id الترايسبس
-    7: 'assets/images/muscles/ABS.jpg'         // id المعدة
+    1: 'assets/images/muscles/chest.jpg', // id الصدر
+    2: 'assets/images/muscles/back.jpg', // id الظهر
+    3: 'assets/images/muscles/shoulders.jpg', // id الأرجل
+    4: 'assets/images/muscles/legs.jpg', // id الأكتاف
+    5: 'assets/images/muscles/biceps.jpg', // id البايسبس
+    6: 'assets/images/muscles/triceps.jpg', // id الترايسبس
+    7: 'assets/images/muscles/ABS.jpg', // id المعدة
   };
 
   @override
@@ -49,13 +50,13 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.backgroundColor,
       appBar: WaveAppBar(
         title: l10n.resistance_training,
         showBackButton: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.search, color: AppColors.background),
+            icon: Icon(Icons.search, color: context.backgroundColor),
             onPressed: () {
               Navigator.pushNamed(
                 context,
@@ -96,7 +97,11 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                     itemCount: 4,
                     itemBuilder: (context, index) => const Padding(
                       padding: EdgeInsets.only(right: 12),
-                      child: LoadingShimmer(width: 100, height: 110, borderRadius: 16),
+                      child: LoadingShimmer(
+                        width: 100,
+                        height: 110,
+                        borderRadius: 16,
+                      ),
                     ),
                   );
                 } else if (state is CategoriesSuccess) {
@@ -109,11 +114,15 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                       final isSelected = selectedMuscleId == muscle.id;
 
                       // 🔥 جلب الصورة بناءً على الـ ID الخاص بالعضلة بدلاً من اسمها المتغير
-                      final imagePath = _muscleAssets[muscle.id] ?? 'assets/images/muscles/default.jpg';
+                      final imagePath =
+                          _muscleAssets[muscle.id] ??
+                          'assets/images/muscles/default.jpg';
 
                       return HorizontalMuscleCard(
-                        name: muscle.name, // الاسم يظهر باللغة الصحيحة (عربي/إنجليزي)
-                        imagePath: imagePath, // الصورة تظهر بشكل دائم بغض النظر عن اللغة
+                        name: muscle
+                            .name, // الاسم يظهر باللغة الصحيحة (عربي/إنجليزي)
+                        imagePath:
+                            imagePath, // الصورة تظهر بشكل دائم بغض النظر عن اللغة
                         isSelected: isSelected,
                         anyMuscleSelected: selectedMuscleId != null,
                         onTap: () {
@@ -121,12 +130,17 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                             if (isSelected) {
                               selectedMuscleId = null;
                               selectedSmallestCategoryId.clear();
-                              context.read<ExercisesCubit>().fetchExercises(categoryId: 1);
+                              context.read<ExercisesCubit>().fetchExercises(
+                                categoryId: 1,
+                              );
                               context.read<PartsCubit>().emit(PartsInitial());
                             } else {
                               selectedMuscleId = muscle.id;
                               selectedSmallestCategoryId.clear();
-                              context.read<ExercisesCubit>().fetchExercises(categoryId: 1, organId: muscle.id);
+                              context.read<ExercisesCubit>().fetchExercises(
+                                categoryId: 1,
+                                organId: muscle.id,
+                              );
                               context.read<PartsCubit>().fetchParts(muscle.id);
                             }
                           });
@@ -135,7 +149,12 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                     },
                   );
                 } else if (state is CategoriesFailure) {
-                  return Center(child: Text(state.errorMessage, style: const TextStyle(color: Colors.red)));
+                  return Center(
+                    child: Text(
+                      state.errorMessage,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  );
                 }
                 return const SizedBox();
               },
@@ -154,7 +173,9 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                     itemCount: state.Parts.length,
                     itemBuilder: (context, index) {
                       final part = state.Parts[index];
-                      final isSelected = selectedSmallestCategoryId.contains(part.id);
+                      final isSelected = selectedSmallestCategoryId.contains(
+                        part.id,
+                      );
 
                       return PartFilterChip(
                         label: part.name,
@@ -166,14 +187,16 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                             } else {
                               selectedSmallestCategoryId.remove(part.id);
                             }
-                            if (selectedSmallestCategoryId.length == state.Parts.length) {
+                            if (selectedSmallestCategoryId.length ==
+                                state.Parts.length) {
                               selectedSmallestCategoryId.clear();
                             }
                           });
                           context.read<ExercisesCubit>().fetchExercises(
                             categoryId: 1,
                             organId: selectedMuscleId,
-                            smallestCategoryId: selectedSmallestCategoryId.isEmpty
+                            smallestCategoryId:
+                                selectedSmallestCategoryId.isEmpty
                                 ? null
                                 : selectedSmallestCategoryId,
                           );
@@ -198,12 +221,13 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                   return GridView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 15,
-                      mainAxisSpacing: 15,
-                      childAspectRatio: 0.85,
-                    ),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 15,
+                          mainAxisSpacing: 15,
+                          childAspectRatio: 0.85,
+                        ),
                     itemCount: 6,
                     itemBuilder: (context, index) {
                       return const LoadingShimmer(
@@ -216,7 +240,12 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                 } else if (state is ExercisesSuccess) {
                   return ExercisesGridView(exercises: state.exercises);
                 } else if (state is ExercisesFailure) {
-                  return Center(child: Text(state.errorMessage, style: const TextStyle(color: Colors.red)));
+                  return Center(
+                    child: Text(
+                      state.errorMessage,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  );
                 }
                 return const SizedBox();
               },

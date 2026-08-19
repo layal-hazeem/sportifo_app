@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/notification_model.dart';
 
@@ -6,11 +7,7 @@ class NotificationCard extends StatelessWidget {
   final NotificationModel notification;
   final VoidCallback? onTap;
 
-  const NotificationCard({
-    super.key,
-    required this.notification,
-    this.onTap,
-  });
+  const NotificationCard({super.key, required this.notification, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +20,9 @@ class NotificationCard extends StatelessWidget {
         color: isUnread ? AppColors.primaryBtn.withOpacity(0.06) : Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isUnread ? AppColors.primaryBtn.withOpacity(0.3) : Colors.grey.shade200,
+          color: isUnread
+              ? AppColors.primaryBtn.withOpacity(0.3)
+              : Colors.grey.shade200,
           width: isUnread ? 1.5 : 1.0,
         ),
         boxShadow: [
@@ -55,15 +54,18 @@ class NotificationCard extends StatelessWidget {
                         : Colors.grey.shade100,
                     shape: BoxShape.circle,
                   ),
-                  child: notification.iconUrl != null && notification.iconUrl!.isNotEmpty
+                  child:
+                      notification.iconUrl != null &&
+                          notification.iconUrl!.isNotEmpty
                       ? ClipRRect(
-                    borderRadius: BorderRadius.circular(24),
-                    child: Image.network(
-                      notification.iconUrl!,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => _buildDefaultIcon(isUnread),
-                    ),
-                  )
+                          borderRadius: BorderRadius.circular(24),
+                          child: Image.network(
+                            notification.iconUrl!,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) =>
+                                _buildDefaultIcon(isUnread),
+                          ),
+                        )
                       : _buildDefaultIcon(isUnread),
                 ),
                 const SizedBox(width: 12),
@@ -81,8 +83,10 @@ class NotificationCard extends StatelessWidget {
                               notification.title,
                               style: TextStyle(
                                 fontSize: 15,
-                                fontWeight: isUnread ? FontWeight.w800 : FontWeight.w600,
-                                color: AppColors.textDark,
+                                fontWeight: isUnread
+                                    ? FontWeight.w800
+                                    : FontWeight.w600,
+                                color: context.textColor,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -105,7 +109,9 @@ class NotificationCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 13,
                           height: 1.4,
-                          color: isUnread ? Colors.black87 : Colors.grey.shade600,
+                          color: isUnread
+                              ? Colors.black87
+                              : Colors.grey.shade600,
                         ),
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
@@ -133,7 +139,9 @@ class NotificationCard extends StatelessWidget {
   Widget _buildDefaultIcon(bool isUnread) {
     return Icon(
       Icons.notifications_active_rounded,
-      color: isUnread ? AppColors.primaryBtn : Colors.grey.shade500,
+      color: isUnread
+          ? AppColors.primaryBtn
+          : AppColors.primaryBtn.withValues(alpha: 0.3),
       size: 22,
     );
   }

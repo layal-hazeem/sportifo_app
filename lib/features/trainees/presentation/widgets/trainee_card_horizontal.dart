@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/features/trainees/data/models/coach_plan_model.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
@@ -102,12 +103,12 @@ class _TraineeCardHorizontalState extends State<TraineeCardHorizontal>
           child: Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: context.backgroundColor,
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.grey.shade100, width: 1.5),
+              border: Border.all(color: context.backgroundColor, width: 1.5),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.04),
+                  color: context.backgroundColor,
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
@@ -150,7 +151,7 @@ class _TraineeCardHorizontalState extends State<TraineeCardHorizontal>
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.white,
+                          color: context.backgroundColor,
                           border: Border.all(
                             color: AppColors.primaryBtn.withOpacity(0.4),
                           ),
@@ -174,10 +175,10 @@ class _TraineeCardHorizontalState extends State<TraineeCardHorizontal>
                         fullName,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w700,
-                          color: Color(0xFF1E293B),
+                          color: context.textColor,
                         ),
                       ),
                       const SizedBox(height: 5),

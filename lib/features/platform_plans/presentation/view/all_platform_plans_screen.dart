@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -16,7 +17,6 @@ class AllPlatformPlansScreen extends StatefulWidget {
 }
 
 class _AllPlatformPlansScreenState extends State<AllPlatformPlansScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -30,10 +30,8 @@ class _AllPlatformPlansScreenState extends State<AllPlatformPlansScreen> {
     return BlocProvider.value(
       value: getIt<PlatformPlansCubit>(),
       child: Scaffold(
-        backgroundColor: AppColors.background,
-        appBar: const WaveAppBar(
-          title: 'Sportifo Plans',
-        ),
+        backgroundColor: context.backgroundColor,
+        appBar: const WaveAppBar(title: 'Sportifo Plans'),
         body: BlocBuilder<PlatformPlansCubit, PlatformPlansState>(
           builder: (context, state) {
             if (state is PlatformPlansLoading) {
@@ -69,7 +67,10 @@ class _AllPlatformPlansScreenState extends State<AllPlatformPlansScreen> {
                   await context.read<PlatformPlansCubit>().fetchPlatformPlans();
                 },
                 child: ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 16,
+                  ),
                   itemCount: plans.length,
                   itemBuilder: (context, index) {
                     final plan = plans[index];

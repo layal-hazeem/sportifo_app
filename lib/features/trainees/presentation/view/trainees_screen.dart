@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/routes/app_routes.dart';
+import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/features/trainees/data/models/coach_plan_model.dart';
 import 'package:sportifo_app/features/trainees/presentation/view_model/trainees_cubit.dart';
 import 'package:sportifo_app/features/trainees/presentation/view_model/trainees_state.dart';
@@ -28,13 +30,14 @@ class _TraineesScreenState extends State<TraineesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFFFFCF7),
+      backgroundColor: context.backgroundColor,
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
+          color: context.backgroundColor,
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Color(0xFFFFFBF5), Color(0xFFFFFFFF), Color(0xFFFFFDF9)],
+            colors: [context.backgroundColor, context.backgroundColor],
           ),
         ),
         child: SafeArea(
@@ -76,6 +79,7 @@ class _TraineesContent extends StatelessWidget {
 
     for (final plan in plans) {
       final userId = plan.user?.id;
+
       if (userId == null) continue;
 
       if (!latestMap.containsKey(userId)) {
@@ -116,9 +120,11 @@ class _TraineesContent extends StatelessWidget {
 
   void _openPlan(BuildContext context, CoachPlanModel plan) {
     final planId = plan.id;
+
     if (planId == null) {
       return;
     }
+
     Navigator.pushNamed(context, AppRoutes.planDetails, arguments: planId);
   }
 }
@@ -131,6 +137,7 @@ class _TraineesLoading extends StatelessWidget {
     return Column(
       children: [
         const SizedBox(height: 5),
+
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Row(
@@ -139,24 +146,32 @@ class _TraineesLoading extends StatelessWidget {
                 width: 170,
                 height: 38,
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.05),
+                  color: AppColors.primaryBtn.withOpacity(0.08),
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
+
               const Spacer(),
+
               Container(
                 width: 65,
                 height: 65,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.black.withOpacity(0.05),
+                  color: AppColors.primaryBtn.withOpacity(0.08),
                 ),
               ),
             ],
           ),
         ),
+
         const SizedBox(height: 40),
-        const Expanded(child: Center(child: CircularProgressIndicator())),
+
+        Expanded(
+          child: Center(
+            child: CircularProgressIndicator(color: AppColors.primaryBtn),
+          ),
+        ),
       ],
     );
   }
@@ -171,36 +186,71 @@ class _TraineesError extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(30),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.cloud_off_rounded,
-              size: 54,
-              color: Colors.black.withOpacity(0.25),
+            Container(
+              width: 90,
+              height: 90,
+              decoration: BoxDecoration(
+                color: AppColors.primaryBtn.withOpacity(0.10),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.cloud_off_rounded,
+                size: 48,
+                color: AppColors.primaryBtn,
+              ),
             ),
-            const SizedBox(height: 16),
+
+            const SizedBox(height: 20),
+
             Text(
               l10n.couldntLoadTrainees,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: context.textColor,
+              ),
             ),
+
             const SizedBox(height: 8),
+
             Text(
               message,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 13,
-                color: Colors.black.withOpacity(0.45),
-              ),
+              style: TextStyle(fontSize: 13, color: AppColors.hintText),
             ),
+
             const SizedBox(height: 20),
+
             ElevatedButton.icon(
               onPressed: onRetry,
-              icon: const Icon(Icons.refresh_rounded),
-              label: Text(l10n.tryAgain),
+              icon: const Icon(Icons.refresh_rounded, color: Colors.white),
+              label: Text(
+                l10n.tryAgain,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primaryBtn,
+                foregroundColor: Colors.white,
+                elevation: 0,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 22,
+                  vertical: 13,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+              ),
             ),
           ],
         ),

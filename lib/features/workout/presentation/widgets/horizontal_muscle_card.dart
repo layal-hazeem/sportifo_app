@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class HorizontalMuscleCard extends StatelessWidget {
@@ -37,12 +38,12 @@ class HorizontalMuscleCard extends StatelessWidget {
               ),
               boxShadow: isSelected
                   ? [
-                BoxShadow(
-                  color: AppColors.primaryBtn.withValues(alpha: 0.3),
-                  blurRadius: 8,
-                  offset: const Offset(0, 4),
-                )
-              ]
+                      BoxShadow(
+                        color: AppColors.primaryBtn.withValues(alpha: 0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
+                    ]
                   : [],
             ),
             clipBehavior: Clip.antiAlias,
@@ -52,7 +53,8 @@ class HorizontalMuscleCard extends StatelessWidget {
                 Image.asset(
                   imagePath,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, _, _) => const Icon(Icons.fitness_center, color: Colors.grey),
+                  errorBuilder: (_, _, _) =>
+                      const Icon(Icons.fitness_center, color: Colors.grey),
                 ),
                 Container(
                   decoration: BoxDecoration(
@@ -85,7 +87,6 @@ class HorizontalMuscleCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 6),
-          // 🔥 يعرض النص بالأسفل ويختفي بأنيميشن ناعم فور اختيار أي عضلية
           AnimatedOpacity(
             duration: const Duration(milliseconds: 300),
             opacity: anyMuscleSelected ? 0.0 : 1.0,
@@ -97,10 +98,10 @@ class HorizontalMuscleCard extends StatelessWidget {
                 textAlign: TextAlign.center,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
-                  color: Colors.black87,
+                  color: context.textColor,
                 ),
               ),
             ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/features/auth/presentation/widgets/custom_neumorphic_field.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/helpers/snack_bar_utils.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -47,6 +49,7 @@ class _ManualMealEntryScreenState extends State<ManualMealEntryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocProvider.value(
       value: getIt<NutritionCubit>(),
       child: BlocConsumer<NutritionCubit, NutritionState>(
@@ -54,7 +57,7 @@ class _ManualMealEntryScreenState extends State<ManualMealEntryScreen> {
           if (state is AddMealSuccess) {
             AppSnackBar.show(
               context,
-              message: 'Meal added successfully!',
+              message: l10n.meal_added_success,
               type: SnackBarType.success,
             );
             Navigator.pop(context);
@@ -70,8 +73,8 @@ class _ManualMealEntryScreenState extends State<ManualMealEntryScreen> {
           final isLoading = state is AddMealLoading;
 
           return Scaffold(
-            backgroundColor: AppColors.background,
-            appBar: const WaveAppBar(title: 'Add Meal', showBackButton: true),
+            backgroundColor: AppColors.lightBackground,
+            appBar: WaveAppBar(title: l10n.add_meal, showBackButton: true),
             body: SingleChildScrollView(
               padding: const EdgeInsets.all(20),
               child: Form(
@@ -79,17 +82,17 @@ class _ManualMealEntryScreenState extends State<ManualMealEntryScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Meal Details',
+                     Text(
+                      l10n.meal_details,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.textDark,
+                        color: context.textColor,
                       ),
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      'Enter the nutritional information manually',
+                      l10n.enter_nutritional_info_manually,
                       style: TextStyle(
                         fontSize: 13,
                         color: Colors.grey.shade500,
@@ -98,24 +101,24 @@ class _ManualMealEntryScreenState extends State<ManualMealEntryScreen> {
                     const SizedBox(height: 24),
 
                     CustomNeumorphicField(
-                      hint: 'Meal Description (e.g. 5 eggs)',
+                      hint: l10n.meal_description_hint,
                       icon: Icons.restaurant_menu_outlined,
                       controller: _bodyCtrl,
                       keyboardType: TextInputType.text,
                       validator: (v) =>
-                          v == null || v.trim().isEmpty ? 'Required' : null,
+                          v == null || v.trim().isEmpty ? l10n.requiredField : null,
                     ),
                     const SizedBox(height: 16),
 
                     CustomNeumorphicField(
-                      hint: 'Calories',
+                      hint: l10n.calories,
                       icon: Icons.local_fire_department_outlined,
                       controller: _caloriesCtrl,
                       keyboardType: TextInputType.number,
                       validator: (v) {
-                        if (v == null || v.trim().isEmpty) return 'Required';
+                        if (v == null || v.trim().isEmpty) return l10n.requiredField;
                         if (double.tryParse(v.trim()) == null) {
-                          return 'Enter a valid number';
+                          return l10n.enter_valid_number;
                         }
                         return null;
                       },
@@ -123,14 +126,14 @@ class _ManualMealEntryScreenState extends State<ManualMealEntryScreen> {
                     const SizedBox(height: 16),
 
                     CustomNeumorphicField(
-                      hint: 'Protein (g)',
+                      hint: l10n.protein_g,
                       icon: Icons.egg_alt_outlined,
                       controller: _proteinCtrl,
                       keyboardType: TextInputType.number,
                       validator: (v) {
-                        if (v == null || v.trim().isEmpty) return 'Required';
+                        if (v == null || v.trim().isEmpty) return l10n.requiredField;
                         if (double.tryParse(v.trim()) == null) {
-                          return 'Invalid';
+                          return l10n.invalid_value;
                         }
                         return null;
                       },
@@ -138,14 +141,14 @@ class _ManualMealEntryScreenState extends State<ManualMealEntryScreen> {
                     const SizedBox(height: 16),
 
                     CustomNeumorphicField(
-                      hint: 'Carbs (g)',
+                      hint: l10n.carbs,
                       icon: Icons.grain_outlined,
                       controller: _carbsCtrl,
                       keyboardType: TextInputType.number,
                       validator: (v) {
-                        if (v == null || v.trim().isEmpty) return 'Required';
+                        if (v == null || v.trim().isEmpty) return l10n.requiredField;
                         if (double.tryParse(v.trim()) == null) {
-                          return 'Invalid';
+                          return l10n.invalid_value;
                         }
                         return null;
                       },
@@ -153,14 +156,14 @@ class _ManualMealEntryScreenState extends State<ManualMealEntryScreen> {
                     const SizedBox(height: 16),
 
                     CustomNeumorphicField(
-                      hint: 'Fat (g)',
+                      hint: l10n.fat_g,
                       icon: Icons.water_drop_outlined,
                       controller: _fatCtrl,
                       keyboardType: TextInputType.number,
                       validator: (v) {
-                        if (v == null || v.trim().isEmpty) return 'Required';
+                        if (v == null || v.trim().isEmpty) return l10n.requiredField;
                         if (double.tryParse(v.trim()) == null) {
-                          return 'Invalid';
+                          return l10n.invalid_value;
                         }
                         return null;
                       },
@@ -190,8 +193,8 @@ class _ManualMealEntryScreenState extends State<ManualMealEntryScreen> {
                                   color: Colors.white,
                                 ),
                               )
-                            : const Text(
-                                'Save Meal',
+                            :  Text(
+                                l10n.save_meal,
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,

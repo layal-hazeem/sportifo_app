@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/loading_shimmer.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -14,7 +15,12 @@ class SearchExercisesScreen extends StatefulWidget {
   final int? organId;
   final List<int>? smallestCategoryId;
 
-  const SearchExercisesScreen({super.key, this.categoryId, this.organId, this.smallestCategoryId});
+  const SearchExercisesScreen({
+    super.key,
+    this.categoryId,
+    this.organId,
+    this.smallestCategoryId,
+  });
   @override
   State<SearchExercisesScreen> createState() => _SearchExercisesScreenState();
 }
@@ -58,12 +64,16 @@ class _SearchExercisesScreenState extends State<SearchExercisesScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.backgroundColor,
       appBar: AppBar(
-        backgroundColor: AppColors.background,
+        backgroundColor: context.backgroundColor,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: AppColors.textDark, size: 20),
+          icon: Icon(
+            Icons.arrow_back_ios_new,
+            color: context.textColor,
+            size: 20,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         titleSpacing: 0,
@@ -77,12 +87,16 @@ class _SearchExercisesScreenState extends State<SearchExercisesScreen> {
           child: TextField(
             controller: _controller,
             autofocus: true,
-            style: const TextStyle(fontSize: 16, color: AppColors.textDark),
+            style: TextStyle(fontSize: 16, color: context.textColor),
             decoration: InputDecoration(
               hintText: l10n.searchForExercises, // 🔥 ترجمة
               hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 14),
               border: InputBorder.none,
-              prefixIcon: Icon(CupertinoIcons.search, color: Colors.grey.shade500, size: 20),
+              prefixIcon: Icon(
+                CupertinoIcons.search,
+                color: Colors.grey.shade500,
+                size: 20,
+              ),
               suffixIcon: IconButton(
                 icon: Icon(Icons.cancel, color: Colors.grey.shade400, size: 20),
                 onPressed: () {
@@ -148,7 +162,9 @@ class _SearchExercisesScreenState extends State<SearchExercisesScreen> {
       l10n.search_cycling,
     ];
 
-    final List<String> popularSearches = isCardio ? cardioSearches : resistanceSearches;
+    final List<String> popularSearches = isCardio
+        ? cardioSearches
+        : resistanceSearches;
 
     return Padding(
       padding: const EdgeInsets.all(20),
@@ -157,10 +173,10 @@ class _SearchExercisesScreenState extends State<SearchExercisesScreen> {
         children: [
           Text(
             l10n.popularSearches,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: AppColors.textDark,
+              color: context.textColor,
             ),
           ),
           const SizedBox(height: 15),
@@ -170,7 +186,10 @@ class _SearchExercisesScreenState extends State<SearchExercisesScreen> {
             children: popularSearches.map((keyword) {
               return ActionChip(
                 label: Text(keyword),
-                labelStyle: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.w600),
+                labelStyle: TextStyle(
+                  color: context.textColor,
+                  fontWeight: FontWeight.w600,
+                ),
                 backgroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -191,11 +210,19 @@ class _SearchExercisesScreenState extends State<SearchExercisesScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(CupertinoIcons.search_circle_fill, size: 100, color: Colors.grey.shade300),
+          Icon(
+            CupertinoIcons.search_circle_fill,
+            size: 100,
+            color: Colors.grey.shade300,
+          ),
           const SizedBox(height: 20),
           Text(
             l10n.no_exercises_found,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey.shade700),
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey.shade700,
+            ),
           ),
           const SizedBox(height: 10),
           Text(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/features/profile/data/models/get_profile_response.dart';
 import 'package:sportifo_app/features/profile/presentation/widgets/coach_certificates_section.dart';
 import 'package:sportifo_app/features/profile/presentation/widgets/coach_info_section.dart';
@@ -72,7 +73,7 @@ class _CoachTabsSectionState extends State<CoachTabsSection> {
           duration: const Duration(milliseconds: 250),
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
-            color: isSelected ? AppColors.primaryBtn : Colors.transparent,
+            color: isSelected ? AppColors.primaryBtn : context.backgroundColor,
             borderRadius: BorderRadius.circular(25),
           ),
           child: Center(
@@ -89,26 +90,15 @@ class _CoachTabsSectionState extends State<CoachTabsSection> {
     );
   }
 
-  BoxDecoration _cardDecoration() {
-    return BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(18),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(.05),
-          blurRadius: 10,
-          offset: const Offset(0, 4),
-        ),
-      ],
-    );
-  }
-
   BoxDecoration _tabDecoration() {
     return BoxDecoration(
-      color: Colors.white,
+      color: context.backgroundColor,
       borderRadius: BorderRadius.circular(30),
       boxShadow: [
-        BoxShadow(color: Colors.black.withOpacity(.05), blurRadius: 10),
+        BoxShadow(
+          color: AppColors.primaryBtn.withValues(alpha: 0.2),
+          blurRadius: 10,
+        ),
       ],
     );
   }
