@@ -48,14 +48,12 @@ ConversationModel copyWith({
   ParticipantModel? otherParticipant,
   MessageModel? lastMessage,
   DateTime? lastMessageAt,
-  String? subscriptionType,
 }) {
   return ConversationModel(
     id: id ?? this.id,
     otherParticipant: otherParticipant ?? this.otherParticipant,
     lastMessage: lastMessage ?? this.lastMessage,
     lastMessageAt: lastMessageAt ?? this.lastMessageAt,
-    subscriptionType: subscriptionType ?? this.subscriptionType,
   );
 }
   Map<String, dynamic> toJson() {
