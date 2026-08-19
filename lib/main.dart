@@ -7,12 +7,15 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/core/theme/theme_cubit.dart';
+
 import 'features/notifications/presentation/view_model/notifications_cubit.dart';
 import 'firebase_options.dart';
 import 'core/services/notification_service.dart';
+
 // ⚠️ [جديد] استدعاء الـ Background Handler هون بالـ main
 import 'core/services/notification_service.dart'
     show firebaseMessagingBackgroundHandler;
+
 import 'core/di/service_locator.dart';
 import 'core/localization/locale_cubit.dart';
 import 'core/routes/app_routes.dart';

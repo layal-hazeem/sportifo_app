@@ -1325,4 +1325,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get planUpdatedSuccessfully => 'Plan Updated Successfully';
+
+  @override
+  String get description => 'Description';
 }

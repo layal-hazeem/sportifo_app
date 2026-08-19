@@ -117,15 +117,24 @@ class DeleteAccountScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 16),
 
-                        _buildInfoTile(Icons.person_outline, l10n.yourProfile),
+                        _buildInfoTile(
+                          Icons.person_outline,
+                          l10n.yourProfile,
+                          context,
+                        ),
                         const SizedBox(height: 12),
 
-                        _buildInfoTile(Icons.fitness_center, l10n.workoutPlans),
+                        _buildInfoTile(
+                          Icons.fitness_center,
+                          l10n.workoutPlans,
+                          context,
+                        ),
                         const SizedBox(height: 12),
 
                         _buildInfoTile(
                           Icons.bookmark_outline,
                           l10n.saved_exercises,
+                          context,
                         ),
                         const SizedBox(height: 20),
                       ],
@@ -232,15 +241,15 @@ class DeleteAccountScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoTile(IconData icon, String title) {
+  Widget _buildInfoTile(IconData icon, String title, BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.backgroundColor,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.red.withValues(alpha: 0.4),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),

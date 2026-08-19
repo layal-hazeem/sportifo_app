@@ -29,8 +29,8 @@ class CustomBottomNavBar {
       duration: const Duration(milliseconds: 200),
       child: Neumorphic(
         style: NeumorphicStyle(
-          depth: isSelected ? 6 : -4,
-          intensity: 0.8,
+          depth: isSelected ? 2 : -2,
+          intensity: 0.4,
           shape: NeumorphicShape.flat,
           boxShape: const NeumorphicBoxShape.circle(),
           color: isSelected ? AppColors.primaryBtn : context.backgroundColor,
@@ -50,7 +50,9 @@ class CustomBottomNavBar {
               : Icon(
                   icon,
                   size: 22,
-                  color: isSelected ? context.textColor : AppColors.primaryBtn,
+                  color: isSelected
+                      ? context.backgroundColor
+                      : AppColors.primaryBtn,
                 ),
         ),
       ),

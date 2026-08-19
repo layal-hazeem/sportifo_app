@@ -143,7 +143,7 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
               ),
               height: 56,
               decoration: BoxDecoration(
-                color: const Color(0xFFE0E0E0),
+                color: context.backgroundColor,
                 borderRadius: BorderRadius.circular(16.0),
               ),
               padding: const EdgeInsets.all(6),
@@ -185,7 +185,7 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 250),
           decoration: BoxDecoration(
-            color: isSelected ? AppColors.primaryBtn : Colors.transparent,
+            color: isSelected ? AppColors.primaryBtn : context.backgroundColor,
             borderRadius: BorderRadius.circular(16.0),
           ),
           alignment: Alignment.center,

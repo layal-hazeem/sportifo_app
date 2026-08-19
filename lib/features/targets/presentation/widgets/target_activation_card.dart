@@ -17,11 +17,11 @@ class TargetActivationCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.backgroundColor,
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: AppColors.primaryBtn.withOpacity(0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -31,10 +31,14 @@ class TargetActivationCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              const CircleAvatar(
+              CircleAvatar(
                 radius: 25,
-                backgroundColor: Color(0xFFFFF5EC),
-                child: Icon(Icons.bolt, color: AppColors.primaryBtn, size: 30),
+                backgroundColor: context.backgroundColor,
+                child: const Icon(
+                  Icons.bolt,
+                  color: AppColors.primaryBtn,
+                  size: 30,
+                ),
               ),
               const SizedBox(width: 15),
               Expanded(

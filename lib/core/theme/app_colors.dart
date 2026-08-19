@@ -11,6 +11,8 @@ class AppColors {
   static const Color linkColor = Colors.cyan;
   static const Color hintText = Color(0xFF9E9E9E);
 
+  static get black => null;
+
 }
 class AppSizes {
   static const double borderRadius = 25.0;

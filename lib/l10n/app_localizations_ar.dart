@@ -1325,4 +1325,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get planUpdatedSuccessfully => 'تم تحديث الخطة بنجاح';
+
+  @override
+  String get description => 'الوصف';
 }

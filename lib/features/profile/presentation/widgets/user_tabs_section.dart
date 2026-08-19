@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/features/profile/data/models/get_profile_response.dart';
 import 'package:sportifo_app/features/profile/presentation/widgets/basic_info_section.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
@@ -150,7 +151,7 @@ class _UserTabsSectionState extends State<UserTabsSection> {
           duration: const Duration(milliseconds: 250),
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
-            color: isSelected ? AppColors.primaryBtn : Colors.transparent,
+            color: isSelected ? AppColors.primaryBtn : context.backgroundColor,
             borderRadius: BorderRadius.circular(25),
           ),
           child: Center(
@@ -191,11 +192,11 @@ class _UserTabsSectionState extends State<UserTabsSection> {
 
   BoxDecoration _cardDecoration() {
     return BoxDecoration(
-      color: Colors.white,
+      color: context.backgroundColor,
       borderRadius: BorderRadius.circular(18),
       boxShadow: [
         BoxShadow(
-          color: Colors.black.withOpacity(.05),
+          color: AppColors.primaryBtn.withOpacity(.05),
           blurRadius: 10,
           offset: const Offset(0, 4),
         ),
@@ -205,7 +206,7 @@ class _UserTabsSectionState extends State<UserTabsSection> {
 
   BoxDecoration _tabDecoration() {
     return BoxDecoration(
-      color: Colors.white,
+     color: context.backgroundColor,
       borderRadius: BorderRadius.circular(30),
       boxShadow: [
         BoxShadow(color: Colors.black.withOpacity(.05), blurRadius: 10),

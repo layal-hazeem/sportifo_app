@@ -90,11 +90,28 @@ class _EditProfilePageState extends State<EditProfilePage>
     return Scaffold(
       backgroundColor: context.backgroundColor,
       appBar: NeumorphicAppBar(
+        color: AppColors.primaryBtn,
         title: Text(
           l10n.editProfile,
-          style: TextStyle(color: context.textColor),
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+          ),
         ),
-        color: context.backgroundColor,
+        leading: Padding(
+          padding: const EdgeInsets.all(8),
+          child: NeumorphicButton(
+            onPressed: () => Navigator.pop(context),
+            style: NeumorphicStyle(
+              color: AppColors.primaryBtn,
+              depth: -2,
+              intensity: 0.4,
+              boxShape: const NeumorphicBoxShape.circle(),
+            ),
+            padding: EdgeInsets.zero,
+            child: const Icon(Icons.arrow_back, color: Colors.white, size: 22),
+          ),
+        ),
       ),
       body: BlocConsumer<ProfileCubit, ProfileState>(
         listener: (context, state) {
@@ -124,9 +141,53 @@ class _EditProfilePageState extends State<EditProfilePage>
               _buildPageContent(context, state),
 
               if (isLoading)
-                Container(
-                  color: Colors.black.withOpacity(0.2),
-                  child: const Center(child: CircularProgressIndicator()),
+                Positioned.fill(
+                  child: AbsorbPointer(
+                    absorbing: true,
+                    child: Container(
+                      color: Colors.black.withOpacity(0.25),
+                      child: Center(
+                        child: Neumorphic(
+                          style: NeumorphicStyle(
+                            color: context.backgroundColor,
+                            depth: 4,
+                            intensity: 0.5,
+                            boxShape: NeumorphicBoxShape.roundRect(
+                              BorderRadius.circular(20),
+                            ),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 28,
+                            vertical: 22,
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const SizedBox(
+                                width: 38,
+                                height: 38,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 3.5,
+                                  color: AppColors.primaryBtn,
+                                ),
+                              ),
+
+                              const SizedBox(height: 16),
+
+                              Text(
+                                l10n.saving,
+                                style: TextStyle(
+                                  color: context.textColor,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
             ],
           );
@@ -220,6 +281,46 @@ class _EditProfilePageState extends State<EditProfilePage>
                           initialDate: widget.profile.dateOfBirth,
                           firstDate: DateTime(1950),
                           lastDate: DateTime.now(),
+
+                          builder: (context, child) {
+                            final isDark =
+                                Theme.of(context).brightness == Brightness.dark;
+
+                            return Theme(
+                              data: Theme.of(context).copyWith(
+                                colorScheme: isDark
+                                    ? ColorScheme.dark(
+                                        primary: AppColors.primaryBtn,
+
+                                        onPrimary: Colors.white,
+
+                                        surface: context.backgroundColor,
+
+                                        onSurface: context.textColor,
+                                      )
+                                    : ColorScheme.light(
+                                        primary: AppColors.primaryBtn,
+
+                                        onPrimary: Colors.white,
+
+                                        surface: context.backgroundColor,
+
+                                        onSurface: context.textColor,
+                                      ),
+
+                                textButtonTheme: TextButtonThemeData(
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: AppColors.primaryBtn,
+                                  ),
+                                ),
+
+                                iconTheme: IconThemeData(
+                                  color: AppColors.primaryBtn,
+                                ),
+                              ),
+                              child: child!,
+                            );
+                          },
                         );
 
                         if (pickedDate != null) {
@@ -228,6 +329,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                           ).format(pickedDate);
                         }
                       },
+
                       child: AbsorbPointer(
                         child: buildField(
                           "Date of Birth",

@@ -139,7 +139,9 @@ class NotificationCard extends StatelessWidget {
   Widget _buildDefaultIcon(bool isUnread) {
     return Icon(
       Icons.notifications_active_rounded,
-      color: isUnread ? AppColors.primaryBtn : Colors.grey.shade500,
+      color: isUnread
+          ? AppColors.primaryBtn
+          : AppColors.primaryBtn.withValues(alpha: 0.3),
       size: 22,
     );
   }

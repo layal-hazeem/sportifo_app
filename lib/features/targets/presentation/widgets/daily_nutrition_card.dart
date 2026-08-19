@@ -74,11 +74,11 @@ class DailyNutritionCard extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.backgroundColor,
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.04),
+              color: AppColors.primaryBtn.withOpacity(0.5),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -162,13 +162,13 @@ class DailyNutritionCard extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.all(6),
                         decoration: BoxDecoration(
-                          color: Colors.grey.shade100,
+                          color: AppColors.primaryBtn.withOpacity(0.1),
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(
                           Icons.edit_rounded,
                           size: 14,
-                          color: Colors.grey,
+                          color: AppColors.primaryBtn,
                         ),
                       ),
                     ),
@@ -179,7 +179,6 @@ class DailyNutritionCard extends StatelessWidget {
             const SizedBox(height: 20),
             Row(
               children: [
-                // 🔥 الدائرة: نسبة حقيقية + لون تنبيهي عند التجاوز
                 Column(
                   children: [
                     Stack(

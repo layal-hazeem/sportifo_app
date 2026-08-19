@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/features/progress/presentation/view_model/exercise_filter_params.dart';
 import 'package:sportifo_app/features/progress/presentation/widgets/day_card.dart';
 import 'package:sportifo_app/features/progress/presentation/widgets/exercise_chart.dart';
@@ -6,7 +7,6 @@ import 'package:sportifo_app/features/progress/presentation/widgets/filter_widge
 import 'package:sportifo_app/features/progress/presentation/widgets/stat_card.dart';
 import '../../data/models/exercise_activity_model.dart';
 import 'filter_bottom_sheet.dart';
-
 
 class ExerciseActivitySection extends StatefulWidget {
   final List<DayActivity> days;
@@ -30,8 +30,10 @@ class ExerciseActivitySection extends StatefulWidget {
 class _ExerciseActivitySectionState extends State<ExerciseActivitySection> {
   @override
   Widget build(BuildContext context) {
-    final totalWorkouts =
-        widget.days.fold<int>(0, (sum, d) => sum + d.totalExercises);
+    final totalWorkouts = widget.days.fold<int>(
+      0,
+      (sum, d) => sum + d.totalExercises,
+    );
     final totalSets = widget.days.fold<int>(
       0,
       (sum, d) => sum + d.logs.fold<int>(0, (s, l) => s + l.sets.length),
@@ -42,12 +44,12 @@ class _ExerciseActivitySectionState extends State<ExerciseActivitySection> {
       children: [
         Row(
           children: [
-            const Text(
+            Text(
               "Workout Activity",
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Colors.black54,
+                color: context.textColor,
               ),
             ),
             const Spacer(),
@@ -70,11 +72,19 @@ class _ExerciseActivitySectionState extends State<ExerciseActivitySection> {
 
         Row(
           children: [
-            StatCard("Workouts", totalWorkouts.toString(), Icons.fitness_center),
+            StatCard(
+              "Workouts",
+              totalWorkouts.toString(),
+              Icons.fitness_center,
+            ),
             const SizedBox(width: 12),
             StatCard("Sets", totalSets.toString(), Icons.format_list_numbered),
             const SizedBox(width: 12),
-            StatCard("Days", widget.days.length.toString(), Icons.calendar_today),
+            StatCard(
+              "Days",
+              widget.days.length.toString(),
+              Icons.calendar_today,
+            ),
           ],
         ),
         const SizedBox(height: 20),
@@ -82,12 +92,12 @@ class _ExerciseActivitySectionState extends State<ExerciseActivitySection> {
         ExerciseChart(days: widget.days),
         const SizedBox(height: 25),
 
-        const Text(
+        Text(
           "Activity Timeline",
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Colors.black54,
+            color: context.textColor,
           ),
         ),
         const SizedBox(height: 12),

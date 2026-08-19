@@ -2650,6 +2650,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Plan Updated Successfully'**
   String get planUpdatedSuccessfully;
+
+  /// No description provided for @description.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get description;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

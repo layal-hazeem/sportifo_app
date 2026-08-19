@@ -54,7 +54,7 @@ class _NotificationsViewState extends State<_NotificationsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: context.backgroundColor,
       appBar: AppBar(
         title: Text(
           'Notifications',
@@ -65,7 +65,7 @@ class _NotificationsViewState extends State<_NotificationsView> {
           ),
         ),
         centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.primaryBtn,
         elevation: 0.5,
         leading: IconButton(
           icon: Icon(

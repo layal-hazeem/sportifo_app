@@ -237,8 +237,8 @@ class CustomDrawer extends StatelessWidget {
         },
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
         style: NeumorphicStyle(
-          depth: isSelected ? 5 : 3,
-          intensity: .9,
+          depth: isSelected ? 2 : -2,
+          intensity: 0.4,
           boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(18)),
           color: backgroundColor,
         ),

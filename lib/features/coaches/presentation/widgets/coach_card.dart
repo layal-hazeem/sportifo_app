@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../data/models/coach_model.dart';
 import '../../../../core/widgets/loading_shimmer.dart';
 
@@ -18,7 +20,7 @@ class CoachCard extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 10),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.backgroundColor,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(80),
             topRight: Radius.circular(80),
@@ -27,7 +29,7 @@ class CoachCard extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
+              color: AppColors.primaryBtn.withValues(alpha: 0.4),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -75,10 +77,10 @@ class CoachCard extends StatelessWidget {
             const SizedBox(height: 6),
             Text(
               coach.fullName,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF1A1A1A),
+                color: context.textColor,
                 letterSpacing: 0.2,
               ),
               maxLines: 1,

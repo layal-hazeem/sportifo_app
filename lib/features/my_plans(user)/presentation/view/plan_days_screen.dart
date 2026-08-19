@@ -16,7 +16,7 @@ class PlanDaysScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
+      backgroundColor: context.backgroundColor,
       body: BlocBuilder<PlanDaysCubit, PlanDaysState>(
         builder: (context, state) {
           if (state is PlanDaysLoading) {
@@ -47,7 +47,9 @@ class PlanDaysScreen extends StatelessWidget {
               slivers: [
                 _buildPremiumAppBar(context),
 
-                SliverToBoxAdapter(child: _buildWeekProgressBar(state,context,)),
+                SliverToBoxAdapter(
+                  child: _buildWeekProgressBar(state, context),
+                ),
 
                 SliverPadding(
                   padding: const EdgeInsets.only(
@@ -139,7 +141,7 @@ class PlanDaysScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildWeekProgressBar(PlanDaysSuccess state, dynamic context) {
+  Widget _buildWeekProgressBar(PlanDaysSuccess state, BuildContext context) {
     int totalWeeks = state.totalWeeks > 0 ? state.totalWeeks : 1;
 
     // 🔥 الباك إند ما بيوقف المستخدم من الاستمرار باللعب حتى بعد ما يخلص

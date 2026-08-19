@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/helpers/snack_bar_utils.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/wave_app_bar.dart';
@@ -39,7 +40,7 @@ class _SelectMonthScreenState extends State<SelectMonthScreen> {
     final currency = widget.subscription.currency;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: context.backgroundColor,
       body: Column(
         children: [
           WaveAppBar(
@@ -55,13 +56,16 @@ class _SelectMonthScreenState extends State<SelectMonthScreen> {
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(20),
-                    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 10,
+                    ),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: context.backgroundColor,
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.03),
+                          color: AppColors.primaryBtn.withValues(alpha: 0.03),
                           blurRadius: 15,
                           offset: const Offset(0, 5),
                         ),
@@ -74,17 +78,22 @@ class _SelectMonthScreenState extends State<SelectMonthScreen> {
                           children: [
                             Text(
                               widget.subscription.title,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF1A1A1A),
+                                color: context.textColor,
                               ),
                             ),
                             const Spacer(),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 14,
+                                vertical: 6,
+                              ),
                               decoration: BoxDecoration(
-                                color: AppColors.primaryBtn.withValues(alpha: 0.1),
+                                color: AppColors.primaryBtn.withValues(
+                                  alpha: 0.1,
+                                ),
                                 borderRadius: BorderRadius.circular(30),
                               ),
                               child: Text(
@@ -99,18 +108,22 @@ class _SelectMonthScreenState extends State<SelectMonthScreen> {
                             ),
                           ],
                         ),
-
                       ],
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(right: 24, left: 24, top: 12, bottom: 8),
+                    padding: const EdgeInsets.only(
+                      right: 24,
+                      left: 24,
+                      top: 12,
+                      bottom: 8,
+                    ),
                     child: Text(
                       l10n.subscription_selectMonth_availablePlans,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF2D2D2D),
+                        color: context.textColor,
                       ),
                     ),
                   ),
@@ -122,7 +135,12 @@ class _SelectMonthScreenState extends State<SelectMonthScreen> {
                     itemBuilder: (context, index) {
                       final month = months[index];
                       final isSelected = _selectedMonth?.id == month.id;
-                      return _buildProfessionalMonthCard(month, isSelected, currency, l10n);
+                      return _buildProfessionalMonthCard(
+                        month,
+                        isSelected,
+                        currency,
+                        l10n,
+                      );
                     },
                   ),
                 ],
@@ -130,16 +148,21 @@ class _SelectMonthScreenState extends State<SelectMonthScreen> {
             ),
           ),
           Container(
-            padding: const EdgeInsets.only(left: 20, right: 20, bottom: 30, top: 15),
+            padding: const EdgeInsets.only(
+              left: 20,
+              right: 20,
+              bottom: 30,
+              top: 15,
+            ),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: context.backgroundColor,
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(24),
                 topRight: Radius.circular(24),
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.04),
+                  color: AppColors.primaryBtn.withValues(alpha: 0.04),
                   blurRadius: 20,
                   offset: const Offset(0, -5),
                 ),
@@ -151,17 +174,17 @@ class _SelectMonthScreenState extends State<SelectMonthScreen> {
               child: ElevatedButton(
                 onPressed: _selectedMonth != null
                     ? () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => PaymentScreen(
-                        coachId: widget.coachId,
-                        subscription: widget.subscription,
-                        selectedMonth: _selectedMonth!,
-                      ),
-                    ),
-                  );
-                }
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => PaymentScreen(
+                              coachId: widget.coachId,
+                              subscription: widget.subscription,
+                              selectedMonth: _selectedMonth!,
+                            ),
+                          ),
+                        );
+                      }
                     : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primaryBtn,
@@ -196,11 +219,11 @@ class _SelectMonthScreenState extends State<SelectMonthScreen> {
   }
 
   Widget _buildProfessionalMonthCard(
-      SubscriptionMonthModel month,
-      bool isSelected,
-      String currency,
-      AppLocalizations l10n,
-      ) {
+    SubscriptionMonthModel month,
+    bool isSelected,
+    String currency,
+    AppLocalizations l10n,
+  ) {
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -208,7 +231,9 @@ class _SelectMonthScreenState extends State<SelectMonthScreen> {
         });
         AppSnackBar.show(
           context,
-          message: l10n.subscription_selectMonth_selectionConfirmed(month.number.toString()),
+          message: l10n.subscription_selectMonth_selectionConfirmed(
+            month.number.toString(),
+          ),
           type: SnackBarType.info,
         );
       },
@@ -217,7 +242,7 @@ class _SelectMonthScreenState extends State<SelectMonthScreen> {
         margin: const EdgeInsets.only(bottom: 14),
         padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.white : const Color(0xFFFDFDFD),
+          color: context.backgroundColor,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isSelected ? AppColors.primaryBtn : Colors.grey.shade200,
@@ -241,7 +266,9 @@ class _SelectMonthScreenState extends State<SelectMonthScreen> {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: isSelected ? AppColors.primaryBtn : Colors.grey.shade400,
+                  color: isSelected
+                      ? AppColors.primaryBtn
+                      : Colors.grey.shade400,
                   width: isSelected ? 7 : 2,
                 ),
               ),
@@ -252,11 +279,13 @@ class _SelectMonthScreenState extends State<SelectMonthScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    l10n.subscription_selectMonth_durationLabel(month.number.toString()),
-                    style: const TextStyle(
+                    l10n.subscription_selectMonth_durationLabel(
+                      month.number.toString(),
+                    ),
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF1A1A1A),
+                      color: context.textColor,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -265,10 +294,7 @@ class _SelectMonthScreenState extends State<SelectMonthScreen> {
                       (month.price / month.number).toStringAsFixed(1),
                       currency,
                     ),
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey.shade500,
-                    ),
+                    style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
                   ),
                 ],
               ),
@@ -281,7 +307,9 @@ class _SelectMonthScreenState extends State<SelectMonthScreen> {
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.w900,
-                    color: isSelected ? AppColors.primaryBtn : const Color(0xFF1A1A1A),
+                    color: isSelected
+                        ? AppColors.primaryBtn
+                        : context.textColor,
                   ),
                 ),
                 Text(

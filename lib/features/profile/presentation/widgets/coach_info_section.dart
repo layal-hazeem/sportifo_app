@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/features/profile/data/models/get_profile_response.dart';
 import 'package:sportifo_app/features/profile/presentation/widgets/basic_info_section.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class CoachInfoSection extends StatelessWidget {
   final ProfileResponseModel profile;
@@ -12,15 +13,16 @@ class CoachInfoSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.backgroundColor,
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(.05),
+            color: context.textColor.withOpacity(.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -41,8 +43,8 @@ class CoachInfoSection extends StatelessWidget {
 
           const SizedBox(height: 18),
 
-          const Text(
-            "Description",
+           Text(
+            l10n.description,
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
           ),
 

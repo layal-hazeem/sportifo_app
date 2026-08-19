@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/exercise_activity_model.dart';
 
@@ -24,11 +25,11 @@ class ExerciseChart extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.backgroundColor,
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
+            color: AppColors.primaryBtn.withValues(alpha: 0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -37,12 +38,12 @@ class ExerciseChart extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             "Exercises Per Day",
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: Colors.black54,
+              color: context.textColor,
             ),
           ),
           const SizedBox(height: 20),
@@ -56,10 +57,8 @@ class ExerciseChart extends StatelessWidget {
                   show: true,
                   drawVerticalLine: false,
                   horizontalInterval: 1,
-                  getDrawingHorizontalLine: (value) => FlLine(
-                    color: Colors.grey.shade200,
-                    strokeWidth: 1,
-                  ),
+                  getDrawingHorizontalLine: (value) =>
+                      FlLine(color: Colors.grey.shade200, strokeWidth: 1),
                 ),
                 titlesData: FlTitlesData(
                   leftTitles: AxisTitles(
@@ -89,8 +88,9 @@ class ExerciseChart extends StatelessWidget {
                           return const SizedBox.shrink();
                         }
                         final parts = sortedDays[index].dateLabel.split(' ');
-                        final day =
-                            parts.isNotEmpty ? parts.first.replaceAll(',', '') : '';
+                        final day = parts.isNotEmpty
+                            ? parts.first.replaceAll(',', '')
+                            : '';
                         return Padding(
                           padding: const EdgeInsets.only(top: 8),
                           child: Text(

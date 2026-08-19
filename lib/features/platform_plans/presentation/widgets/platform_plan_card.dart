@@ -117,11 +117,11 @@ class _PlatformPlanCardState extends State<PlatformPlanCard> {
         width: 270,
         margin: const EdgeInsets.only(right: 14, top: 4, bottom: 8),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.backgroundColor,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.06),
+              color: AppColors.primaryBtn.withOpacity(0.06),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),

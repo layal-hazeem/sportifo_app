@@ -1,4 +1,5 @@
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../trainee_subscriptions/data/models/subscription_model.dart';
 import '../../../trainee_subscriptions/presentation/widgets/SubscriptionDetailsBottomSheet.dart';
@@ -7,7 +8,11 @@ class CoachSubscriptionsList extends StatelessWidget {
   final List<SubscriptionModel> subscriptions;
   final int coachId;
 
-  const CoachSubscriptionsList({super.key,required this.coachId, required this.subscriptions});
+  const CoachSubscriptionsList({
+    super.key,
+    required this.coachId,
+    required this.subscriptions,
+  });
 
   Color _getTypeColor(String type) {
     switch (type.toLowerCase()) {
@@ -55,14 +60,14 @@ class CoachSubscriptionsList extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
             "Available Subscriptions",
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF1A1A1A),
+              color: context.textColor,
               letterSpacing: 0.3,
             ),
           ),
@@ -86,8 +91,10 @@ class CoachSubscriptionsList extends StatelessWidget {
                   child: Neumorphic(
                     style: NeumorphicStyle(
                       depth: 4,
-                      boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(15)),
-                      color: const Color(0xFFF7F7F7),
+                      boxShape: NeumorphicBoxShape.roundRect(
+                        BorderRadius.circular(15),
+                      ),
+                      color: context.backgroundColor,
                       lightSource: LightSource.topLeft,
                     ),
                     child: Container(

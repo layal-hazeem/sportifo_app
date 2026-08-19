@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/di/service_locator.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../view_model/all_coaches_cubit.dart';
 import '../view_model/all_coaches_state.dart';
 import '../widgets/coaches_header.dart';
 import 'coach_details_screen.dart';
- import '../widgets/coach_grid_card.dart';
+import '../widgets/coach_grid_card.dart';
 
 class AllCoachesScreen extends StatefulWidget {
   const AllCoachesScreen({super.key});
@@ -30,14 +31,18 @@ class _AllCoachesScreenState extends State<AllCoachesScreen> {
       _maxExp = maxExp;
     });
   }
+
   void _fetchCoaches(BuildContext blocContext) {
     blocContext.read<AllCoachesCubit>().fetchAllCoaches(
-      search: _searchController.text.trim().isEmpty ? null : _searchController.text.trim(),
+      search: _searchController.text.trim().isEmpty
+          ? null
+          : _searchController.text.trim(),
       gender: _selectedGender,
       minExp: _minExp,
       maxExp: _maxExp,
     );
   }
+
   @override
   void dispose() {
     _searchController.dispose();
@@ -53,7 +58,7 @@ class _AllCoachesScreenState extends State<AllCoachesScreen> {
       child: Builder(
         builder: (blocContext) {
           return Scaffold(
-            backgroundColor: const Color(0xFFF7F7F7),
+            backgroundColor: context.backgroundColor,
             body: Column(
               children: [
                 CoachesHeader(
@@ -81,7 +86,9 @@ class _AllCoachesScreenState extends State<AllCoachesScreen> {
                   },
                   onFiltersApplied: (gender, minExp, maxExp) {
                     _updateFilters(
-                      search: _searchController.text.isEmpty ? null : _searchController.text,
+                      search: _searchController.text.isEmpty
+                          ? null
+                          : _searchController.text,
                       gender: gender,
                       minExp: minExp,
                       maxExp: maxExp,
@@ -98,12 +105,16 @@ class _AllCoachesScreenState extends State<AllCoachesScreen> {
                       if (state is AllCoachesLoading) {
                         return const Center(
                           child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFFF6B35)),
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Color(0xFFFF6B35),
+                            ),
                           ),
                         );
                       } else if (state is AllCoachesError) {
                         return Center(
-                          child: Text(l10n.coaches_error_loading(state.message)),
+                          child: Text(
+                            l10n.coaches_error_loading(state.message),
+                          ),
                         );
                       } else if (state is AllCoachesLoaded) {
                         final coaches = state.coaches;
@@ -112,7 +123,11 @@ class _AllCoachesScreenState extends State<AllCoachesScreen> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.search_off_rounded, size: 64, color: Colors.grey[400]),
+                                Icon(
+                                  Icons.search_off_rounded,
+                                  size: 64,
+                                  color: Colors.grey[400],
+                                ),
                                 const SizedBox(height: 12),
                                 Text(
                                   l10n.no_coaches_found,
@@ -128,12 +143,13 @@ class _AllCoachesScreenState extends State<AllCoachesScreen> {
                         }
                         return GridView.builder(
                           padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            childAspectRatio: 0.72,
-                            crossAxisSpacing: 14,
-                            mainAxisSpacing: 14,
-                          ),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                childAspectRatio: 0.72,
+                                crossAxisSpacing: 14,
+                                mainAxisSpacing: 14,
+                              ),
                           itemCount: coaches.length,
                           itemBuilder: (context, index) {
                             final coach = coaches[index];
@@ -143,7 +159,8 @@ class _AllCoachesScreenState extends State<AllCoachesScreen> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (_) => CoachDetailsScreen(coachId: coach.id),
+                                    builder: (_) =>
+                                        CoachDetailsScreen(coachId: coach.id),
                                   ),
                                 );
                               },

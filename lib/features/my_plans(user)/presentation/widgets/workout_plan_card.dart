@@ -49,11 +49,11 @@ class WorkoutPlanCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 24),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.backgroundColor,
         borderRadius: BorderRadius.circular(25),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: AppColors.primaryBtn.withOpacity(0.04),
             blurRadius: 16,
             offset: const Offset(0, 8),
           ),

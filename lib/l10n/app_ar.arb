@@ -557,5 +557,6 @@
   "availableDays": "أيام متاحة",
   "exercises": "تمارين",
   "addSelectedDays": "إضافة الأيام المحددة",
-  "planUpdatedSuccessfully":"تم تحديث الخطة بنجاح"
+  "planUpdatedSuccessfully":"تم تحديث الخطة بنجاح",
+  "description":"الوصف"
 }
