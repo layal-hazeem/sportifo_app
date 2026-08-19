@@ -19,7 +19,7 @@ import 'core/localization/locale_cubit.dart';
 import 'core/routes/app_routes.dart';
 import 'core/routes/app_router.dart';
 import 'l10n/app_localizations.dart';
-
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -56,6 +56,7 @@ class MyApp extends StatelessWidget {
       child: BlocBuilder<LocaleCubit, Locale>(
         builder: (context, locale) {
           return NeumorphicApp(
+            navigatorKey: navigatorKey,
             debugShowCheckedModeBanner: false,
             title: 'Sportifo',
             initialRoute: AppRoutes.splash,

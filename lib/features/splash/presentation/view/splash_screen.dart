@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 
 import '../../../../core/di/service_locator.dart';
+import '../../../../core/services/notification_service.dart';
 import '../../../../core/storage/local_storage.dart';
 import '../../../../core/routes/app_routes.dart';
 
@@ -47,13 +48,25 @@ class _SplashScreenState extends State<SplashScreen>
 
     if (token != null && token.isNotEmpty) {
       Navigator.pushReplacementNamed(context, AppRoutes.home);
+      _handlePendingNotification(); // ✅ بعد ما توصل عالهوم، شيكي فيه إشعار مؤجل
+
     } else if (isOnboardingSeen) {
       Navigator.pushReplacementNamed(context, AppRoutes.login);
     } else {
       Navigator.pushReplacementNamed(context, AppRoutes.onboarding);
     }
   }
+  void _handlePendingNotification() {
+    final pendingData = NotificationService().pendingNotificationData;
+    if (pendingData == null) return;
 
+    NotificationService().pendingNotificationData = null;
+
+    // مهلة بسيطة كافية عشان أنيميشن الانتقال للهوم يخلص قبل ما نضيف push فوقها
+    Future.delayed(const Duration(milliseconds: 300), () {
+      NotificationService().handleNotificationNavigation(pendingData);
+    });
+  }
   @override
   void dispose() {
     controller.dispose();
