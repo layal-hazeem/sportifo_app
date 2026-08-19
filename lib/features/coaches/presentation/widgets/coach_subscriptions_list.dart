@@ -67,7 +67,7 @@ class CoachSubscriptionsList extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
             l10n.available_subscriptions,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
               color: context.textColor,

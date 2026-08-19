@@ -98,7 +98,7 @@ class _ProgressContentState extends State<_ProgressContent> {
                 children: [
                   Text(
                     l10n.your_progress,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
                       color: context.textColor,

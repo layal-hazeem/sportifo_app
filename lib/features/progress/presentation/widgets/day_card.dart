@@ -114,8 +114,8 @@ class _DayHeader extends StatelessWidget {
               fontWeight: FontWeight.bold,
               fontSize: 12,
             ),
-          ),
-          title: Row(
+          ),),
+           Row(
             children: [
               Container(
                 padding: const EdgeInsets.all(10),
@@ -149,7 +149,6 @@ class _DayHeader extends StatelessWidget {
                   ),
                 ],
               ),
-            ),
             Text(
               l10n.exercises_count(day.totalExercises),
               style: TextStyle(

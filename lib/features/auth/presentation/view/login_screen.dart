@@ -67,6 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
             );
           } else if (state is LoginNeedsOtp) {
             Navigator.pop(context); // إغلاق الـ Loading Dialog
+            
               // 🔥 حفظ التوكن
               await getIt<LocalStorage>().saveToken(token);
               await getIt<LocalStorage>().saveRole(role);

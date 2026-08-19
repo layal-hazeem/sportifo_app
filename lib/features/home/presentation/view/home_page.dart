@@ -230,7 +230,7 @@ class _HomePageState extends State<HomePage> {
                               },
                               type: BottomNavigationBarType.fixed,
                               showSelectedLabels: false,
-                              backgroundColor: AppColors.background,
+                              backgroundColor: AppColors.lightBackground,
                               elevation: 0,
                               selectedItemColor: AppColors.primaryBtn,
                               unselectedItemColor: AppColors.hintText,
