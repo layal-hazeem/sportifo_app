@@ -35,10 +35,16 @@ class AppRoutes {
   static const String foodLogs = '/food-logs';
   static const String myPlans = "/myPlans";
   static const String planDays = "/planDays";
-// ضيفه مع باقي الثوابت
+
   static const String allPlatformPlans = "/allPlatformPlans";
 static const String trainees = "/plans/coach";
 static const String planDetails = "/planDetails";
+  static const String notifications = "/notifications";
+  static const String editCoachPlan = "/plans";
+
+  static const String createSelfPlan = "/plans/create/self";
+  static const String editSelfPlan = "/plans/update/self";
+  static const String chatDetail = '/chat_detail';
 
 
 static const String conversationsList = '/conversations_list';

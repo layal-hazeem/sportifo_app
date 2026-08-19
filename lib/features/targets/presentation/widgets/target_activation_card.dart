@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../view_model/target_cubit/target_cubit.dart';
 import 'goal_selector_bottom_sheet.dart';
+// 🔥 أضفنا استدعاءات البروفايل هنا لحتى نقدر نقرأ الوزن
+import '../../../profile/presentation/view_model/profile_cubit.dart';
+import '../../../profile/presentation/view_model/profile_state.dart';
 
 class TargetActivationCard extends StatelessWidget {
   const TargetActivationCard({super.key});
@@ -62,8 +65,19 @@ class TargetActivationCard extends StatelessWidget {
                 elevation: 0,
               ),
               onPressed: () {
-                // Invokes the premium glassmorphic goal selector panel sheet directly over dashboard
-                GoalSelectorBottomSheet.show(context, context.read<TargetCubit>());              },
+                // 🔥 التعديل السحري هنا: جلبنا الوزن من البروفايل قبل فتح الشيت
+                final profileState = context.read<ProfileCubit>().state;
+                double? userWeight;
+                if (profileState is ProfileSuccess) {
+                  userWeight = profileState.profileModel.weight; // تأكد من اسم المتغير في موديلك
+                }
+
+                GoalSelectorBottomSheet.show(
+                  context,
+                  context.read<TargetCubit>(),
+                  currentWeight: userWeight, // 🔥 مررنا الوزن هنا!
+                );
+              },
               child: const Text(
                 "Set My Goal Now",
                 style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),

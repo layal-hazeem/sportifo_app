@@ -15,13 +15,16 @@ class AiChatCubit extends Cubit<AiChatState> {
   AiChatCubit(this._repository) : super(AiChatInitial());
 
   List<ChatMessageModel> get messages => List.unmodifiable(_messages);
+
+  // 🔥 التعديل الأول: إجبار التحديث من السيرفر فور فتح الشاشة
   Future<void> initialize() async {
-    await fetchHistory();
+    await fetchHistory(forceRefresh: true);
   }
 
   Future<void> fetchHistory({bool forceRefresh = false}) async {
     if (_messages.isNotEmpty && !forceRefresh && !isClosed) {
       emit(AiChatSuccess(List.from(_messages)));
+      return;
     }
 
     emit(AiChatLoading(List.from(_messages)));
@@ -35,10 +38,27 @@ class AiChatCubit extends Cubit<AiChatState> {
       _messages.addAll(result.data);
       emit(AiChatSuccess(List.from(_messages)));
     } else if (result is Failure) {
-      if (_messages.isNotEmpty) {
-        emit(AiChatSuccess(List.from(_messages)));
+      final errorMsg = (result as Failure).message;
+      print("❌ [AiChatCubit] API Error: $errorMsg");
+
+      // 🔥 السحر الهندسي هنا (مثل التارغيت تماماً):
+      // إذا كان الخطأ من السيرفر معناه "لا يوجد محادثة سابقة"
+      final lowerError = errorMsg.toLowerCase();
+      if (lowerError.contains("not found") ||
+          lowerError.contains("no messages") ||
+          lowerError.contains("empty")) {
+
+        // نعتبره نجاح ولكن بقائمة فارغة، لتظهر واجهة الترحيب بدلاً من رسالة الخطأ!
+        _messages.clear();
+        emit(AiChatSuccess(const []));
+
       } else {
-        emit(AiChatError((result as Failure).message, const []));
+        // إذا كان خطأ حقيقي (فصل نت أو سيرفر واقع)
+        if (_messages.isNotEmpty) {
+          emit(AiChatSuccess(List.from(_messages)));
+        } else {
+          emit(AiChatError(errorMsg, const []));
+        }
       }
     }
   }
@@ -126,6 +146,15 @@ class AiChatCubit extends Cubit<AiChatState> {
     }
   }
 
+  Future<void> reset() async {
+    cancelRequest();
+    _messages.clear();
+    _pendingMessage = null;
+    _currentCancelToken = null;
+    await _repository.clearCache();
+    emit(AiChatInitial());
+  }
+
   String _formatDate(DateTime dt) {
     return "${dt.year}-${dt.month.toString().padLeft(2, '0')}-${dt.day.toString().padLeft(2, '0')}";
   }
@@ -133,6 +162,6 @@ class AiChatCubit extends Cubit<AiChatState> {
   String _formatTime(DateTime dt) {
     final hour = dt.hour > 12 ? dt.hour - 12 : (dt.hour == 0 ? 12 : dt.hour);
     final period = dt.hour >= 12 ? 'PM' : 'AM';
-    return "${hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')} $period";
+    return "${hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}$period";
   }
 }

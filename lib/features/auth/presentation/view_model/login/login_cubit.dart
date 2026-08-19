@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/di/service_locator.dart';      // 🔥 أضف هذا الاستيراد
 import 'package:sportifo_app/core/storage/local_storage.dart';    // 🔥 أضف هذا الاستيراد
 import '../../../../../core/network/api_result.dart';
+import '../../../../../core/services/notification_service.dart';
 import '../../../data/models/login/login_request.dart';
 import '../../../data/models/login/login_response.dart';
 import '../../../data/models/login/otp_response.dart';
@@ -40,6 +41,7 @@ class LoginCubit extends Cubit<LoginState> {
       if (response.isNotVerified) {
         emit(LoginNeedsOtp(loginRequestBody.login));
       } else {
+
         emit(LoginSuccess(response));
       }
     } else if (result is Failure<LoginResponse>) {

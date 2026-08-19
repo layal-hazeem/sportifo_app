@@ -144,7 +144,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get skip => 'Skip';
 
   @override
-  String get kg => 'kg';
+  String get kg => 'Kg';
+
+  @override
+  String get g => 'g';
 
   @override
   String get cm => 'cm';
@@ -452,7 +455,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pendingApproval => 'Pending Approval';
 
   @override
-  String get actionRequired => 'ACTION REQUIRED';
+  String get actionRequired => 'Action Required';
 
   @override
   String get noPendingSubscriptions => 'No pending subscriptions';
@@ -768,4 +771,622 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cannotSend => 'You cannot send';
+  String get editPlan => 'Edit Plan';
+
+  @override
+  String get createNewDay => 'Create New Day';
+
+  @override
+  String get creatDaySubtitle => 'Build a custom workout day';
+
+  @override
+  String get addExistingDay => 'Add Existing Day';
+
+  @override
+  String get addExistingDaySubtitle => 'Reuse a saved day';
+
+  @override
+  String get workoutDays => 'WORKOUT DAYS';
+
+  @override
+  String get day => 'DAY';
+
+  @override
+  String get days => 'DAYS';
+
+  @override
+  String get waitUpdatePlan => 'Please wait while the plan is updated';
+
+  @override
+  String get noWorkoutDaysYet => 'No workout days yet';
+
+  @override
+  String get hintForCreateDay => 'Create a new workout day or reuse one from your saved workouts';
+
+  @override
+  String get tapPlus => 'Tap + to get started';
+
+  @override
+  String get stepOne => 'Step 1: Goal & Duration';
+
+  @override
+  String get stepTwo => 'Step 2: Days & Exercises';
+
+  @override
+  String get chooseGoalForTrainingPlan => 'Choose a goal for this training plan';
+
+  @override
+  String get addAtLeastOneWorkoutDay => 'Add at least one workout day';
+
+  @override
+  String get everyWorkoutDayNeedsExercise => 'Every workout day needs at least one exercise';
+
+  @override
+  String get createPlan => 'Create Plan';
+
+  @override
+  String get addedToSaved => 'Added to saved';
+
+  @override
+  String get removedFromSaved => 'Removed from saved';
+
+  @override
+  String get tapToHideInstructions => 'Tap to hide instructions';
+
+  @override
+  String get tapToViewInstructions => 'Tap to view instructions';
+
+  @override
+  String get photos => 'Photos';
+
+  @override
+  String get bodyPart => 'Body Part';
+
+  @override
+  String get searchForExercises => 'Search for exercises...';
+
+  @override
+  String get noSavedExercisesYet => 'No saved exercises yet';
+
+  @override
+  String get savedExercisesHint => 'Exercises you save will appear here for quick access';
+
+  @override
+  String get pullDownToRefresh => 'Pull down to refresh';
+
+  @override
+  String get popularSearches => 'Popular Searches';
+
+  @override
+  String get trySearchingForSomethingElse => 'Try searching for something else, like \'Shoulders\' or \'Yoga\'.';
+
+  @override
+  String get chooseYourWorkoutType => 'Choose Your\nWorkout Type';
+
+  @override
+  String get search_chest => 'Chest';
+
+  @override
+  String get search_abs => 'Abs';
+
+  @override
+  String get search_legs => 'Legs';
+
+  @override
+  String get search_back => 'Back';
+
+  @override
+  String get search_biceps => 'Biceps';
+
+  @override
+  String get search_shoulders => 'Shoulders';
+
+  @override
+  String get search_running => 'Running';
+
+  @override
+  String get search_jump_rope => 'Jump Rope';
+
+  @override
+  String get search_burpees => 'Burpees';
+
+  @override
+  String get search_cycling => 'Cycling';
+
+  @override
+  String get details => 'Details';
+
+  @override
+  String get shopNow => 'Shop Now';
+
+  @override
+  String get learnMore => 'Learn More';
+
+  @override
+  String get dailyNutritionTargets => 'Daily Nutrition Targets';
+
+  @override
+  String get kcal => 'Kcal';
+
+  @override
+  String get protein => 'Protein';
+
+  @override
+  String get carbs => 'Carbs';
+
+  @override
+  String get fat => 'Fat';
+
+  @override
+  String get currentWeight => 'Current Weight:';
+
+  @override
+  String get notSet => 'Not Set';
+
+  @override
+  String get change => 'Change';
+
+  @override
+  String get selectFitnessGoal => 'Select Your Fitness Goal ⚡';
+
+  @override
+  String get goalSubtitle => 'The system will automatically compute your tailored daily metrics';
+
+  @override
+  String get bulkTitle => 'Bulk / Gain Muscle';
+
+  @override
+  String get bulkSubtitle => 'Increase calorie targets systematically to optimize lean muscle growth';
+
+  @override
+  String get cutTitle => 'Cut / Lose Fat';
+
+  @override
+  String get cutSubtitle => 'Decrease calorie targets to accelerate smart fat burn and increase definition';
+
+  @override
+  String get maintainTitle => 'Maintain / Stay Fit';
+
+  @override
+  String get maintainSubtitle => 'Stabilize current weight while steadily optimizing athletic stamina and recovery';
+
+  @override
+  String get confirmAndComputePlan => 'Confirm & Compute Plan';
+
+  @override
+  String get pleaseEnterWeightSnackBar => 'Please enter your current weight in your profile so the system can compute your calories.';
+
+  @override
+  String get updateWeight => 'Update Weight';
+
+  @override
+  String get activateSmartPlan => 'Activate Your Smart Plan ⚡';
+
+  @override
+  String get activateSmartPlanDesc => 'Set your main physical target now to dynamically evaluate your necessary daily calories and macronutrients.';
+
+  @override
+  String get setMyGoalNow => 'Set My Goal Now';
+
+  @override
+  String get bulkGoal => 'Bulk';
+
+  @override
+  String get cutGoal => 'Cut';
+
+  @override
+  String get maintainGoal => 'Maintain';
+
+  @override
+  String get exercisesList => 'Exercises List';
+
+  @override
+  String get total => 'Total';
+
+  @override
+  String get completedUppercase => 'COMPLETED';
+
+  @override
+  String get noDaysCreated => 'No days created yet.';
+
+  @override
+  String get workoutSummary => 'WORKOUT SUMMARY';
+
+  @override
+  String get workoutCompleted => 'Workout Completed';
+
+  @override
+  String get sessionSummaryFor => 'Session summary for';
+
+  @override
+  String get duration => 'Duration';
+
+  @override
+  String get exercises => 'Exercises';
+
+  @override
+  String get performanceSummary => 'PERFORMANCE SUMMARY';
+
+  @override
+  String get set => 'Set';
+
+  @override
+  String get skipped => 'Skipped';
+
+  @override
+  String get min => 'min';
+
+  @override
+  String get reps => 'Reps';
+
+  @override
+  String get noSetsLogged => 'No sets logged';
+
+  @override
+  String get done => 'Done';
+
+  @override
+  String get of_word => 'OF';
+
+  @override
+  String get completeSet => 'Complete Set';
+
+  @override
+  String get remaining => 'REMAINING';
+
+  @override
+  String get logCompletedSet => 'Log Completed Set';
+
+  @override
+  String get new_word => 'New';
+
+  @override
+  String get yourPersonalCoach => 'Your Personal Coach';
+
+  @override
+  String get openDuration => 'Open Duration';
+
+  @override
+  String get months => 'months';
+
+  @override
+  String get daysPerWeek => 'Days / Week';
+
+  @override
+  String get wks => 'Wks';
+
+  @override
+  String get viewDays => 'View Days';
+
+  @override
+  String get coachPlan => 'Coach Plan';
+
+  @override
+  String get noCoachPlanFound => 'No Coach Plan Found';
+
+  @override
+  String get noCoachPlanSub => 'Get a personalized workout routine from our expert coaches.';
+
+  @override
+  String get exploreCoaches => 'Explore Coaches';
+
+  @override
+  String get noCustomPlans => 'No Custom Plans Yet';
+
+  @override
+  String get noCustomPlansSub => 'Build your own custom plan and train on your schedule.';
+
+  @override
+  String get createCustomPlan => 'Create Custom Plan';
+
+  @override
+  String get saved => 'Saved';
+
+  @override
+  String get noSavedPlans => 'No Saved Plans Yet';
+
+  @override
+  String get noSavedPlansSub => 'Plans you save from the platform library will show up here.';
+
+  @override
+  String get exploreFreePlans => 'Explore Sportifo Plans';
+
+  @override
+  String get createYourOwnPlan => 'Create Your Own Plan';
+
+  @override
+  String get buildWorkoutPlanThatFitsYou => 'Build Workout Plan That Fits You';
+
+  @override
+  String get tryAgain => 'Try Again';
+
+  @override
+  String get yourTrainees => 'Your Trainees';
+
+  @override
+  String get noTraineesYet => 'No Trainees Yet';
+
+  @override
+  String get needs_a_plan => 'Needs A Plan';
+
+  @override
+  String get hasAnActivePlan => 'has an active plan';
+
+  @override
+  String get coach => 'Coach';
+
+  @override
+  String get goodMorning => 'Good Morning';
+
+  @override
+  String get goodAfternoon => 'Good Afternoon';
+
+  @override
+  String get goodEvening => 'Good Evening';
+
+  @override
+  String get activeTrainees => 'Active Trainees';
+
+  @override
+  String get totalTrainees => 'Total Trainees';
+
+  @override
+  String get personalWorkout => 'PERSONAL WORKOUT';
+
+  @override
+  String get seeWhoNeedsANewTrainingPlan => 'See who needs a new training plan';
+
+  @override
+  String get hintForCreatePlan => 'Build a new training plan';
+
+  @override
+  String get waitANewTrainee => 'wait a new trainee';
+
+  @override
+  String get quickActions => 'Quick Actions';
+
+  @override
+  String get couldntLoadTrainees => 'Couldn\'t Load Trainees';
+
+  @override
+  String get planActive => 'Plan active';
+
+  @override
+  String get oneMonthPlan => '1 month plan';
+
+  @override
+  String monthsPlan(int count) {
+    return '$count months plan';
+  }
+
+  @override
+  String get trainee => 'Trainee';
+
+  @override
+  String get activePlan => 'Active Plan';
+
+  @override
+  String get oneMonthProgram => '1M Program';
+
+  @override
+  String monthsProgram(int count) {
+    return '${count}M Program';
+  }
+
+  @override
+  String get noTraineesFound => 'No trainees found';
+
+  @override
+  String get active => 'ACTIVE';
+
+  @override
+  String get traineesHint => 'Manage active training programs and monitor athlete progress seamlessly';
+
+  @override
+  String get history => 'History';
+
+  @override
+  String get noRecentExpiredPlansHistoryFound => 'No recent expired plans history found';
+
+  @override
+  String subscribersNeedPlan(int count) {
+    return 'You have $count active subscribers who don\'t have a training plan yet.';
+  }
+
+  @override
+  String get createTrainingPlan => 'Create Training Plan';
+
+  @override
+  String get defaultPlan => 'Default Plan';
+
+  @override
+  String get startDate => 'Start Date';
+
+  @override
+  String get endDate => 'End Date';
+
+  @override
+  String get expired => 'Expired';
+
+  @override
+  String get month => 'month';
+
+  @override
+  String get unknownAthlete => 'Unknown Athlete';
+
+  @override
+  String get athlete => 'ATHLETE';
+
+  @override
+  String get sets => 'Sets';
+
+  @override
+  String get strength => 'STRENGTH';
+
+  @override
+  String get cardio => 'Cardio';
+
+  @override
+  String get technicalNotes => 'TECHNICAL NOTES';
+
+  @override
+  String get noExercisesAssigned => 'No exercises assigned';
+
+  @override
+  String get blueprint => 'BLUEPRINT';
+
+  @override
+  String get plan => 'PLAN';
+
+  @override
+  String get createFirstWorkoutDay => 'Create your first workout day and start building your personal plan.';
+
+  @override
+  String get tapPlusToGetStarted => 'Tap + to get started';
+
+  @override
+  String get createSelfPlan => 'Create Self Plan';
+
+  @override
+  String get creatingYourPlan => 'Creating your plan...';
+
+  @override
+  String get pleaseWaitWhileSavingWorkout => 'Please wait while we save your workout';
+
+  @override
+  String get planCreatedSuccessfully => 'Plan created successfully';
+
+  @override
+  String get createWorkoutDay => 'Create Workout Day';
+
+  @override
+  String get giveTrainingDayName => 'Give your training day a name';
+
+  @override
+  String get exampleChestDay => 'Example: Chest Day';
+
+  @override
+  String get createDayButton => 'Create Day';
+
+  @override
+  String get noExercisesAddedYet => 'No exercises added yet';
+
+  @override
+  String get showLess => 'Show Less';
+
+  @override
+  String get more => 'More';
+
+  @override
+  String get addExercise => 'Add Exercise';
+
+  @override
+  String get workoutDaySettings => 'Workout Day Settings';
+
+  @override
+  String get workoutDaySettingsHint => 'These values will apply to all exercises unless customized.';
+
+  @override
+  String get defaultSets => 'Default Sets';
+
+  @override
+  String get exampleSets => 'Example: 4';
+
+  @override
+  String get defaultReps => 'Default Reps';
+
+  @override
+  String get exampleReps => 'Example: 12';
+
+  @override
+  String get saveSettings => 'Save Settings';
+
+  @override
+  String get daySettingsDescription => 'These values will be used for resistance exercises without custom settings';
+
+  @override
+  String get applyToAllResistanceExercises => 'Apply to all resistance exercises';
+
+  @override
+  String get applyToAllResistanceExercisesDescription => 'Update sets and reps for every resistance exercise in this day';
+
+  @override
+  String get exerciseDefaultsInfo => 'Leave Sets and Reps empty to use the workout day defaults.';
+
+  @override
+  String get customValues => 'CUSTOM VALUES';
+
+  @override
+  String get customSets => 'Custom Sets';
+
+  @override
+  String get customReps => 'Custom Reps';
+
+  @override
+  String get useDayDefaults => 'Use Day Defaults';
+
+  @override
+  String get exampleDuration => 'Example: 30 sec';
+
+  @override
+  String get order => 'Order';
+
+  @override
+  String get exerciseOrder => 'Exercise order';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get customizeExerciseSettings => 'Customize this exercise settings';
+
+  @override
+  String get saveExerciseSettings => 'Save Exercise Settings';
+
+  @override
+  String get sec => 'sec';
+
+  @override
+  String get selectExercises => 'Select Exercises';
+
+  @override
+  String get resistance => 'Resistance';
+
+  @override
+  String addExercises(int count) {
+    return 'Add ($count)';
+  }
+
+  @override
+  String get selectAll => 'Select All';
+
+  @override
+  String get clear => 'Clear';
+
+  @override
+  String get mainGoalQuestion => 'What\'s the main goal?';
+
+  @override
+  String get cutGoalSubtitle => 'Lose fat';
+
+  @override
+  String get bulkGoalSubtitle => 'Build muscle';
+
+  @override
+  String get maintainGoalSubtitle => 'Stay balanced';
+
+  @override
+  String get noExistingDaysFound => 'No existing days found.';
+
+  @override
+  String get addExistingDays => 'Add Existing Days';
+
+  @override
+  String get availableDays => 'Available Days';
+
+  @override
+  String get addSelectedDays => 'Add Selected Days';
+
+  @override
+  String get planUpdatedSuccessfully => 'Plan Updated Successfully';
 }

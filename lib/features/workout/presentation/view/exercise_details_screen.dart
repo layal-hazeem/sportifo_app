@@ -67,7 +67,7 @@ class ExerciseDetailsScreen extends StatelessWidget {
                         if (partName != null)
                           Expanded(
                             child: InfoStatCard(
-                              title: "Body Part",
+                              title: l10n.bodyPart, // 🔥 ترجمة
                               value: partName,
                               icon: Icons.line_weight_rounded,
                               accentColor: const Color(0xFF0EA5E9),
@@ -86,7 +86,7 @@ class ExerciseDetailsScreen extends StatelessWidget {
                   GallerySection(
                     imageUrls: galleryUrls,
                     title: l10n.gallery,
-                    photosLabel: "Photos",
+                    photosLabel: l10n.photos, // 🔥 ترجمة
                   ),
                 ],
               ),
@@ -123,7 +123,7 @@ class ExerciseDetailsScreen extends StatelessWidget {
                 if (state is SavedExercisesToggleSuccess && state.exerciseId == exercise.id) {
                   AppSnackBar.show(
                     context,
-                    message: state.isSaved ? "Added to saved" : "Removed from saved",
+                    message: state.isSaved ? l10n.addedToSaved : l10n.removedFromSaved,
                     type: SnackBarType.success,
                     onActionPressed: () {
                       if (!context.mounted) return;

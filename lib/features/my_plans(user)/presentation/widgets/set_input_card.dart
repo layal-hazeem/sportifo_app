@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../l10n/app_localizations.dart';
 
 class SetInputCard extends StatelessWidget {
   final int currentSet;
@@ -20,13 +21,14 @@ class SetInputCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(24), border: Border.all(color: Colors.grey.shade200)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("SET $currentSet OF $totalSets", style: const TextStyle(color: AppColors.primaryBtn, fontWeight: FontWeight.w900, fontSize: 12, letterSpacing: 1)),
+          Text("${l10n.set.toUpperCase()} $currentSet ${l10n.of_word} $totalSets", style: const TextStyle(color: AppColors.primaryBtn, fontWeight: FontWeight.w900, fontSize: 12, letterSpacing: 1)),
           const SizedBox(height: 16),
           Row(
             children: [
@@ -35,7 +37,7 @@ class SetInputCard extends StatelessWidget {
                   height: 52, decoration: BoxDecoration(color: const Color(0xFFF8F9FC), borderRadius: BorderRadius.circular(12)),
                   child: Row(
                     children: [
-                      const Padding(padding: EdgeInsets.symmetric(horizontal: 12), child: Text("KG", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey))),
+                      Padding(padding: const EdgeInsets.symmetric(horizontal: 12), child: Text(l10n.kg.toUpperCase(), style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey))),
                       Expanded(
                         child: TextField(
                           controller: weightController, enabled: !isPaused,
@@ -54,7 +56,7 @@ class SetInputCard extends StatelessWidget {
                   height: 52, decoration: BoxDecoration(color: const Color(0xFFF8F9FC), borderRadius: BorderRadius.circular(12)),
                   child: Row(
                     children: [
-                      const Padding(padding: EdgeInsets.symmetric(horizontal: 12), child: Text("REPS", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey))),
+                      Padding(padding: const EdgeInsets.symmetric(horizontal: 12), child: Text(l10n.reps.toUpperCase(), style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey))),
                       Expanded(
                         child: TextField(
                           controller: repsController, enabled: !isPaused,
@@ -80,7 +82,7 @@ class SetInputCard extends StatelessWidget {
                     onPressed: (isPaused || isLoading) ? null : onLogSet,
                     style: ElevatedButton.styleFrom(backgroundColor: AppColors.primaryBtn, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)), elevation: 0),
                     child: isLoading ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                        : const Text("Complete Set ", style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w900)),
+                        : Text(l10n.completeSet, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w900)),
                   ),
                 ),
               ),
@@ -93,7 +95,7 @@ class SetInputCard extends StatelessWidget {
                     onPressed: isPaused ? null : onSkipSet,
                     style: OutlinedButton.styleFrom(side: BorderSide(color: Colors.grey.shade300), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))),
                     // 👇 التعديل صار هون
-                    child: const Text("Skip", style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 13)),
+                    child: Text(l10n.skip, style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 13)),
                   ),
                 ),
               ),

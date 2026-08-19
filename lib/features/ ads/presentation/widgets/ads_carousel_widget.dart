@@ -24,22 +24,27 @@ class _AdsCarouselWidgetState extends State<AdsCarouselWidget> {
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     context.read<AdsCubit>().fetchAds();
   }
-// 🔥 دالة سحرية تقوم بتحميل كل صور الإعلانات المتبقية مسبقاً في كاش الموبايل
+
   void _precacheAllAdImages(List<AdModel> ads) {
     for (var ad in ads) {
       if (ad.images.length > 1) {
-        // نبدأ من الاندكس 1 لأن الصورة الأولى تم تكييشها تلقائياً بالـ Home
         for (int i = 1; i < ad.images.length; i++) {
           precacheImage(
-            CachedNetworkImageProvider(ad.images[i]), // سحب الصورة وحقنها بكاش الجهاز بالخلفية
+            CachedNetworkImageProvider(ad.images[i]),
             context,
           );
         }
       }
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AdsCubit, AdsState>(

@@ -86,8 +86,7 @@ class _ProfilePageState extends State<ProfilePage> {
               return RefreshIndicator(
                 color: AppColors.primaryBtn,
                 onRefresh: () async {
-                  await context.read<ProfileCubit>().getProfile();
-                },
+                  await context.read<ProfileCubit>().getProfile(forceRefresh: true);                },
                 child: SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
                   child: Column(

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/network/api_result.dart';
+import '../../../../../core/services/notification_service.dart';
 import '../../../data/models/register/register_request_model.dart';
 import '../../../data/repository/auth_repository.dart';
 import 'register_state.dart';
@@ -44,7 +45,7 @@ class RegisterCubit extends Cubit<RegisterState> {
       // 🔥 سحر الـ Pattern Matching في Dart (للتعامل مع الـ sealed class)
       switch (result) {
         case Success():
-        // إذا كان الرد Success، نطلق حالة النجاح
+          await NotificationService().registerDeviceToBackend();
           emit(const RegisterSuccess());
           break;
 

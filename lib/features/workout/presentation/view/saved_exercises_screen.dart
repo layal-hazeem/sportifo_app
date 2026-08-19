@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/routes/app_routes.dart';
-import '../../../../core/widgets/loading_shimmer.dart'; 
+import '../../../../core/widgets/loading_shimmer.dart';
 import '../../../../core/widgets/wave_app_bar.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../view_model/saved_exercises/saved_exercises_cubit.dart';
@@ -38,7 +38,7 @@ class _SavedExercisesScreenState extends State<SavedExercisesScreen> {
       ),
       body: BlocBuilder<SavedExercisesCubit, SavedExercisesState>(
         buildWhen: (previous, current) =>
-            current is SavedExercisesSuccess ||
+        current is SavedExercisesSuccess ||
             current is SavedExercisesLoading ||
             current is SavedExercisesError,
         builder: (context, state) {
@@ -106,7 +106,7 @@ class _SavedExercisesScreenState extends State<SavedExercisesScreen> {
                   Text(state.message),
                   TextButton(
                     onPressed: _onRefresh,
-                    child: const Text("Retry", style: TextStyle(color: AppColors.primaryBtn)),
+                    child: Text(l10n.retry, style: const TextStyle(color: AppColors.primaryBtn)),
                   )
                 ],
               ),
@@ -118,7 +118,7 @@ class _SavedExercisesScreenState extends State<SavedExercisesScreen> {
     );
   }
 
-  Widget _buildEmptyState(BuildContext context, var l10n) {
+  Widget _buildEmptyState(BuildContext context, AppLocalizations l10n) {
     return LayoutBuilder(
       builder: (context, constraints) {
         return RefreshIndicator(
@@ -136,14 +136,14 @@ class _SavedExercisesScreenState extends State<SavedExercisesScreen> {
                     Icon(Icons.bookmark_border, size: 80, color: AppColors.primaryBtn.withValues(alpha:0.2)),
                     const SizedBox(height: 16),
                     Text(
-                      "No saved exercises yet",
+                      l10n.noSavedExercisesYet, // 🔥 ترجمة
                       style: TextStyle(fontSize: 18, color: Colors.grey.shade600, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 8),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 40),
                       child: Text(
-                        "Exercises you save will appear here for quick access",
+                        l10n.savedExercisesHint, // 🔥 ترجمة
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 14, color: Colors.grey.shade400),
                       ),
@@ -155,7 +155,7 @@ class _SavedExercisesScreenState extends State<SavedExercisesScreen> {
                         Icon(Icons.arrow_downward, size: 14, color: Colors.grey.shade400),
                         const SizedBox(width: 6),
                         Text(
-                          "Pull down to refresh",
+                          l10n.pullDownToRefresh, // 🔥 ترجمة
                           style: TextStyle(fontSize: 12, color: Colors.grey.shade400),
                         ),
                       ],

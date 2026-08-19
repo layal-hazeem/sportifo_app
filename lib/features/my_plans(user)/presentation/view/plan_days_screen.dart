@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/loading_shimmer.dart';
 import '../../data/models/my_plan_model.dart';
 import '../view_model/plan_days_cubit.dart';
 import '../view_model/plan_days_state.dart';
@@ -18,7 +19,7 @@ class PlanDaysScreen extends StatelessWidget {
       body: BlocBuilder<PlanDaysCubit, PlanDaysState>(
         builder: (context, state) {
           if (state is PlanDaysLoading) {
-            return const Center(child: CircularProgressIndicator(color: AppColors.primaryBtn));
+            return _buildDaysShimmerLoading();
           }
 
           if (state is PlanDaysFailure) {
@@ -357,6 +358,27 @@ class PlanDaysScreen extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  // 🔥 هيكل شيمير قريب من شكل كرت "Weekly Progress" فوق + كروت الأيام تحته
+  Widget _buildDaysShimmerLoading() {
+    return SafeArea(
+      child: ListView(
+        physics: const NeverScrollableScrollPhysics(),
+        padding: const EdgeInsets.all(20),
+        children: [
+          const LoadingShimmer(width: double.infinity, height: 90, borderRadius: 24),
+          const SizedBox(height: 20),
+          ...List.generate(
+            4,
+                (index) => Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: LoadingShimmer(width: double.infinity, height: 96, borderRadius: 24),
+            ),
+          ),
+        ],
       ),
     );
   }

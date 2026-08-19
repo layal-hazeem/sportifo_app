@@ -4,6 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/widgets/custom_cached_image.dart';
+import '../../../../../l10n/app_localizations.dart'; // 🔥 استيراد الترجمة
 import '../../data/models/ad_model.dart';
 
 class AdDetailsBottomSheet extends StatefulWidget {
@@ -17,7 +18,6 @@ class AdDetailsBottomSheet extends StatefulWidget {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       barrierColor: Colors.black.withOpacity(0.1),
-
       builder: (context) {
         return BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
@@ -36,6 +36,7 @@ class _AdDetailsBottomSheetState extends State<AdDetailsBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final screenHeight = MediaQuery.of(context).size.height;
 
     return DraggableScrollableSheet(
@@ -50,7 +51,6 @@ class _AdDetailsBottomSheetState extends State<AdDetailsBottomSheet> {
           ),
           child: Stack(
             children: [
-              // 🛑 1. الحاوية العلوية الضبابية الشفافة (تأثير الزجاج)
               Positioned.fill(
                 child: ClipRRect(
                   borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
@@ -63,13 +63,11 @@ class _AdDetailsBottomSheetState extends State<AdDetailsBottomSheet> {
                 ),
               ),
 
-              // 📜 2. محتوى الشيت بالكامل داخل قائمة مدمجة بـ scrollController
               ListView(
                 controller: scrollController,
                 physics: const BouncingScrollPhysics(),
                 padding: EdgeInsets.zero,
                 children: [
-                  // مؤشر السحب الصغير في الأعلى
                   const SizedBox(height: 12),
                   Center(
                     child: Container(
@@ -83,7 +81,6 @@ class _AdDetailsBottomSheetState extends State<AdDetailsBottomSheet> {
                   ),
                   const SizedBox(height: 20),
 
-                  // 🖼️ 3. قسم صور الـ Carousel (تم تقليل حواف الصورة بالزبط هنا)
                   CarouselSlider.builder(
                     itemCount: widget.ad.images.length,
                     options: CarouselOptions(
@@ -99,12 +96,12 @@ class _AdDetailsBottomSheetState extends State<AdDetailsBottomSheet> {
                     ),
                     itemBuilder: (context, index, realIndex) {
                       return ClipRRect(
-                        borderRadius: BorderRadius.circular(6), // 🔥 تم تقليل الانحناء هنا لتصبح الحواف مستقيمة وأقل دائرية بشكل أنيق
+                        borderRadius: BorderRadius.circular(6),
                         child: Center(
                           child: CustomCachedImage(
                             imageUrl: widget.ad.images[index],
                             fit: BoxFit.contain,
-                            borderRadius: BorderRadius.circular(11)
+                            borderRadius: BorderRadius.circular(11),
                           ),
                         ),
                       );
@@ -112,9 +109,8 @@ class _AdDetailsBottomSheetState extends State<AdDetailsBottomSheet> {
                   ),
                   const SizedBox(height: 12),
 
-                  // الـ Dots Indicator
                   Row(
-                   mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: widget.ad.images.asMap().entries.map((entry) {
                       bool isActive = _currentImageIndex == entry.key;
                       return AnimatedContainer(
@@ -132,7 +128,6 @@ class _AdDetailsBottomSheetState extends State<AdDetailsBottomSheet> {
 
                   const SizedBox(height: 17),
 
-                  // ⬜ 4. الحاوية البيضاء السفلية
                   Container(
                     width: double.infinity,
                     constraints: BoxConstraints(minHeight: screenHeight * 0.5),
@@ -180,9 +175,9 @@ class _AdDetailsBottomSheetState extends State<AdDetailsBottomSheet> {
                         ],
 
                         const SizedBox(height: 30),
-                        const Text(
-                          "Details",
-                          style: TextStyle(
+                        Text(
+                          l10n.details,
+                          style: const TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.bold,
                             color: AppColors.textDark,
@@ -205,7 +200,6 @@ class _AdDetailsBottomSheetState extends State<AdDetailsBottomSheet> {
                 ],
               ),
 
-              // 🔗 5. زر الأكشن المثبت في الأسفل
               Positioned(
                 bottom: 0,
                 left: 0,
@@ -225,7 +219,7 @@ class _AdDetailsBottomSheetState extends State<AdDetailsBottomSheet> {
                       ),
                     ),
                     child: Text(
-                      widget.ad.type == 'product' ? "Shop Now" : "Learn More",
+                      widget.ad.type == 'product' ? l10n.shopNow : l10n.learnMore, // 🔥 ترجمة نص الزر
                       style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),

@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/loading_shimmer.dart';
+import '../../../../l10n/app_localizations.dart';
+import '../../../coaches/presentation/views/all_coaches_screen.dart';
+import '../../../platform_plans/presentation/widgets/platform_plan_card.dart';
 import '../../data/models/my_plan_model.dart';
 import '../../data/repository/my_plans_repository.dart';
 import '../view_model/my_plans_cubit.dart';
 import '../view_model/my_plans_state.dart';
 import '../widgets/workout_plan_card.dart';
 
-/// 🔥 إعدادات تاب واحد - كل شي خاص فيه (عنوان، رسائل الحالة الفاضية، وزر
-/// الـ CTA) محطوط هون. الشاشة بتلف عليها بمصفوفة واحدة (List<_PlanTabConfig>)
-/// فما في تكرار لواجهة/كود لكل تاب - نفس الفكرة يلي طلبتيها بالضبط.
 class _PlanTabConfig {
   final PlanTabType type;
   final String label;
@@ -29,62 +31,100 @@ class _PlanTabConfig {
   });
 }
 
-final List<_PlanTabConfig> _kTabConfigs = [
-  _PlanTabConfig(
-    type: PlanTabType.coach,
-    label: 'Coach Plan',
-    emptyTitle: 'No Coach Plan Found',
-    emptySubtitle: 'Get a personalized workout routine from our expert coaches.',
-    emptyButtonText: 'Explore Coaches',
-    onEmptyButtonTap: (context) => Navigator.pushNamed(context, AppRoutes.coach),
-  ),
-  _PlanTabConfig(
-    type: PlanTabType.custom,
-    label: 'My Plans',
-    emptyTitle: 'No Custom Plans Yet',
-    emptySubtitle: 'Build your own custom plan and train on your schedule.',
-    emptyButtonText: 'Create Custom Plan',
-    // ⚠️ TODO: ما في لسا شاشة "أنشئ خطة شخصية" جاهزة بالتطبيق (اللي موجودة
-    // بروت createPlan حالياً خاصة بالكوتش بينشئ خطة لعميل، مش لنفس المستخدم).
-    // لما تجهز هاي الشاشة، بس ضيفي هون: Navigator.pushNamed(context, AppRoutes.createSelfPlan)
-    onEmptyButtonTap: null,
-  ),
-  _PlanTabConfig(
-    type: PlanTabType.saved,
-    label: 'Saved',
-    emptyTitle: 'No Saved Plans Yet',
-    emptySubtitle: 'Plans you save from the platform library will show up here.',
-    emptyButtonText: null,
-  ),
-];
-
 class MyPlansScreen extends StatefulWidget {
   const MyPlansScreen({super.key});
+
+  // 🔥 متغير ساكن لمراقبة التاب المطلوب من خارج الشاشة (السناك بار)
+  static final ValueNotifier<int> activeTabNotifier = ValueNotifier<int>(0);
 
   @override
   State<MyPlansScreen> createState() => _MyPlansScreenState();
 }
 
 class _MyPlansScreenState extends State<MyPlansScreen> {
-  int _activeTabIndex = 0;
+  late int _activeTabIndex;
+
+  // 🔥 مصفوفة الأنواع ثابتة هنا لنستخدمها في الـ initState بدون الحاجة للـ Context
+  final List<PlanTabType> _tabTypes = [
+    PlanTabType.coach,
+    PlanTabType.custom,
+    PlanTabType.saved,
+  ];
+
+  // 🔥 قمنا بتحويل مصفوفة الإعدادات لدالة تأخذ Context لكي نتمكن من قراءة ملفات الترجمة
+  List<_PlanTabConfig> _getTabConfigs(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return [
+      _PlanTabConfig(
+        type: PlanTabType.coach,
+        label: l10n.coachPlan,
+        emptyTitle: l10n.noCoachPlanFound,
+        emptySubtitle: l10n.noCoachPlanSub,
+        emptyButtonText: l10n.exploreCoaches,
+        onEmptyButtonTap: (context) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const AllCoachesScreen()),
+          );
+        },
+      ),
+      _PlanTabConfig(
+        type: PlanTabType.custom,
+        label: l10n.myPlans,
+        emptyTitle: l10n.noCustomPlans,
+        emptySubtitle: l10n.noCustomPlansSub,
+        emptyButtonText: l10n.createCustomPlan,
+        onEmptyButtonTap: null, // إضافة زر الإنشاء مستقبلاً إن أردت
+      ),
+      _PlanTabConfig(
+        type: PlanTabType.saved,
+        label: l10n.saved,
+        emptyTitle: l10n.noSavedPlans,
+        emptySubtitle: l10n.noSavedPlansSub,
+        emptyButtonText: l10n.exploreFreePlans, // تم تفعيل الكلمة اللي ترجمتها بالـ JSON
+        onEmptyButtonTap: (context) {
+          Navigator.pushNamed(context, AppRoutes.allPlatformPlans);
+        },
+      ),
+    ];
+  }
 
   @override
   void initState() {
     super.initState();
-    // 🔥 منحمّل بس التاب الأول أول ما تفتح الشاشة (lazy) - باقي التابات
-    // بتنحمّل بس أول ما المستخدم يفتحها فعلياً (شوف _onTabTap)
-    context.read<MyPlansCubit>().fetchTab(_kTabConfigs[0].type);
+    // أخذ القيمة الابتدائية من النوتيفاير
+    _activeTabIndex = MyPlansScreen.activeTabNotifier.value;
+    context.read<MyPlansCubit>().fetchTab(_tabTypes[_activeTabIndex]);
+
+    // الاستماع لأي تغيير يأتي من خارج الشاشة
+    MyPlansScreen.activeTabNotifier.addListener(_onExternalTabChange);
+  }
+
+  void _onExternalTabChange() {
+    final newIndex = MyPlansScreen.activeTabNotifier.value;
+    if (mounted) {
+      setState(() => _activeTabIndex = newIndex);
+      context.read<MyPlansCubit>().fetchTab(_tabTypes[newIndex]);
+    }
+  }
+
+  @override
+  void dispose() {
+    MyPlansScreen.activeTabNotifier.removeListener(_onExternalTabChange);
+    super.dispose();
   }
 
   void _onTabTap(int index) {
     setState(() => _activeTabIndex = index);
-    // 🔥 بتحمّل مرة وحدة بس (fetchTab أصلاً بتتفادى إعادة الطلب لو الداتا موجودة)
-    context.read<MyPlansCubit>().fetchTab(_kTabConfigs[index].type);
+    MyPlansScreen.activeTabNotifier.value = index; // تحديث النوتيفاير
+    context.read<MyPlansCubit>().fetchTab(_tabTypes[index]);
   }
 
   @override
   Widget build(BuildContext context) {
-    final activeConfig = _kTabConfigs[_activeTabIndex];
+    // 🚀 جلبنا الإعدادات بعد الترجمة هنا داخل الـ Build
+    final tabConfigs = _getTabConfigs(context);
+    final activeConfig = tabConfigs[_activeTabIndex];
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -102,7 +142,8 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
               padding: const EdgeInsets.all(6),
               child: Row(
                 children: [
-                  for (int i = 0; i < _kTabConfigs.length; i++) _buildToggleButton(_kTabConfigs[i].label, i),
+                  for (int i = 0; i < tabConfigs.length; i++)
+                    _buildToggleButton(tabConfigs[i].label, i),
                 ],
               ),
             ),
@@ -111,7 +152,7 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
                 builder: (context, state) {
                   final status = state.statusFor(activeConfig.type);
                   return switch (status) {
-                    TabLoading() || TabInitial() => const Center(child: CircularProgressIndicator(color: AppColors.primaryBtn)),
+                    TabLoading() || TabInitial() => _buildShimmerLoading(),
                     TabFailure() => Center(child: Text(status.message, style: const TextStyle(color: AppColors.hintText))),
                     TabSuccess() => _buildPlansList(activeConfig, status.plans),
                   };
@@ -121,8 +162,6 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
           ],
         ),
       ),
-      // 👈 شلنا الـ FloatingActionButton القديم (كان زر "+" بدون أي action
-      // فعلي، ومكرر مع زر "Create Custom Plan" الموجود بالحالة الفاضية).
     );
   }
 
@@ -152,8 +191,6 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
     );
   }
 
-  // 🔥 دالة واحدة بترسم لائحة أي تاب (فاضية أو فيها خطط) - نفس الكود
-  // لكل التلاتة تابات، بس بتاخد config مختلف.
   Widget _buildPlansList(_PlanTabConfig config, List<PlanModel> plans) {
     if (plans.isEmpty) {
       return RefreshIndicator(
@@ -198,7 +235,60 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
         physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
         itemCount: plans.length,
-        itemBuilder: (context, index) => WorkoutPlanCard(plan: plans[index]),
+        itemBuilder: (context, index) {
+          // 🔥 التعديل الجوهري هنا: إذا كنا بتاب الـ Saved بنرسم كارد المنصة اللي زر السيف فيه شغال!
+          if (config.type == PlanTabType.saved) {
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 16.0),
+              child: Align(
+                alignment: Alignment.center,
+                child: PlatformPlanCard(
+                  plan: plans[index],
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      AppRoutes.planDays,
+                      arguments: plans[index],
+                    );
+                  },
+                ),
+              ),
+            );
+          }
+
+          // أما إذا كنا بتاب الكوتش أو الخطط المخصصة بنرسم الكارد العادي
+          return WorkoutPlanCard(plan: plans[index]);
+        },
+      ),
+    );
+  }
+
+  // 🔥 هيكل شيمير قريب من شكل WorkoutPlanCard (صورة فوق + سطرين نص)
+  Widget _buildShimmerLoading() {
+    return ListView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+      itemCount: 3,
+      itemBuilder: (context, index) => Container(
+        margin: const EdgeInsets.only(bottom: 20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(25),
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 12, offset: const Offset(0, 4))],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const LoadingShimmer(width: double.infinity, height: 140, borderRadius: 18),
+              const SizedBox(height: 14),
+              LoadingShimmer(width: MediaQuery.of(context).size.width * 0.5, height: 16, borderRadius: 6),
+              const SizedBox(height: 10),
+              LoadingShimmer(width: MediaQuery.of(context).size.width * 0.35, height: 12, borderRadius: 6),
+            ],
+          ),
+        ),
       ),
     );
   }

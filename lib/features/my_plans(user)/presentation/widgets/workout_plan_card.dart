@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/custom_cached_image.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../data/models/my_plan_model.dart';
 
 class WorkoutPlanCard extends StatelessWidget {
@@ -12,8 +13,13 @@ class WorkoutPlanCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const String defaultCoverImage =
+    final l10n = AppLocalizations.of(context)!;
+    const String coachDefaultCoverImage =
         'https://img.freepik.com/free-photo/dumbbells-floor-gym-ai-generative_123827-23744.jpg';
+
+    const String selfMadeDefaultCoverImage =
+        'https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=1471&q=80';
+    final String defaultCoverImage = plan.isSelfMade ? selfMadeDefaultCoverImage : coachDefaultCoverImage;
 
     // 🔥 حسابات شريط التقدم والأسابيع
     int durationMonths = plan.durationMonths ?? 1;
@@ -116,7 +122,7 @@ class WorkoutPlanCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
-                      plan.createdAt ?? 'New',
+                      plan.createdAt ?? l10n.new_word,
                       style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -126,7 +132,7 @@ class WorkoutPlanCard extends StatelessWidget {
                   bottom: 16,
                   left: 20,
                   child: Text(
-                    plan.goal?.toUpperCase() ?? 'WORKOUT PLAN',
+                    plan.goal?.toUpperCase() ?? l10n.workoutSummary,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 20,
@@ -162,9 +168,9 @@ class WorkoutPlanCard extends StatelessWidget {
                             plan.coach!.fullName,
                             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.textDark),
                           ),
-                          const Text(
-                            'Your Personal Coach',
-                            style: TextStyle(color: AppColors.hintText, fontSize: 12, fontWeight: FontWeight.w500),
+                          Text(
+                            l10n.yourPersonalCoach,
+                            style: const TextStyle(color: AppColors.hintText, fontSize: 12, fontWeight: FontWeight.w500),
                           ),
                         ],
                       ),
@@ -184,12 +190,12 @@ class WorkoutPlanCard extends StatelessWidget {
                       children: [
                         _buildCompactStat(
                             Icons.timer_outlined,
-                            plan.durationMonths != null ? '${plan.durationMonths} Months' : 'Open Duration'
-                        ),
+
+                            plan.durationMonths != null ? '${plan.durationMonths} ${l10n.months}' : l10n.openDuration                        ),
                         const SizedBox(height: 14),
                         _buildCompactStat(
                             Icons.view_day_outlined,
-                            '${plan.daysCount ?? 0} Days / Week'
+                            '${plan.daysCount ?? 0} ${l10n.daysPerWeek}'
                         ),
                       ],
                     ),
@@ -231,7 +237,7 @@ class WorkoutPlanCard extends StatelessWidget {
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: Text(
-                              '$currentWeek / $totalWeeks Wks',
+                              '$currentWeek / $totalWeeks ${l10n.wks}',
                               style: const TextStyle(
                                 color: AppColors.primaryBtn,
                                 fontSize: 11,
@@ -263,9 +269,9 @@ class WorkoutPlanCard extends StatelessWidget {
                       elevation: 0,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                     ),
-                    child: const Text(
-                      'View Days',
-                      style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                    child: Text(
+                      l10n.viewDays,
+                      style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
