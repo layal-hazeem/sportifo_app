@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class NutritionCard extends StatelessWidget {
   final double? calories;
@@ -16,6 +17,7 @@ class NutritionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.only(top: 8),
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
@@ -31,28 +33,28 @@ class NutritionCard extends StatelessWidget {
           if (calories != null)
             _Item(
               Icons.local_fire_department,
-              "Cal",
+              l10n.cal,
               calories!,
               const Color(0xFFFF9800),
             ),
           if (protein != null)
             _Item(
               Icons.egg_alt_outlined,
-              "Protein",
+              l10n.protein,
               protein!,
               const Color(0xFFEF5350),
             ),
           if (carbs != null)
             _Item(
               Icons.grain_outlined,
-              "Carbs",
+              l10n.carbs,
               carbs!,
               const Color(0xFFFFB300),
             ),
           if (fat != null)
             _Item(
               Icons.water_drop_outlined,
-              "Fat",
+              l10n.fat,
               fat!,
               const Color(0xFF42A5F5),
             ),

@@ -6,10 +6,11 @@ import '../view_model/all_coaches_cubit.dart';
 import '../view_model/all_coaches_state.dart';
 import '../widgets/coaches_header.dart';
 import 'coach_details_screen.dart';
- import '../widgets/coach_grid_card.dart';
+import '../widgets/coach_grid_card.dart';
 
 class AllCoachesScreen extends StatefulWidget {
   const AllCoachesScreen({super.key});
+
   @override
   State<AllCoachesScreen> createState() => _AllCoachesScreenState();
 }
@@ -30,6 +31,7 @@ class _AllCoachesScreenState extends State<AllCoachesScreen> {
       _maxExp = maxExp;
     });
   }
+
   void _fetchCoaches(BuildContext blocContext) {
     blocContext.read<AllCoachesCubit>().fetchAllCoaches(
       search: _searchController.text.trim().isEmpty ? null : _searchController.text.trim(),
@@ -38,6 +40,7 @@ class _AllCoachesScreenState extends State<AllCoachesScreen> {
       maxExp: _maxExp,
     );
   }
+
   @override
   void dispose() {
     _searchController.dispose();
