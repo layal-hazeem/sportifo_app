@@ -1327,6 +1327,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get planUpdatedSuccessfully => 'تم تحديث الخطة بنجاح';
 
   @override
+  String get description => 'الوصف';
   String get stop_sending_title => 'إيقاف الإرسال؟';
 
   @override

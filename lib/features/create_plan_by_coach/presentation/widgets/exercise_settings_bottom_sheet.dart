@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/features/workout/data/models/exercise_model.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
@@ -86,30 +87,27 @@ class _ExerciseSettingsBottomSheetState
       child: TextField(
         controller: controller,
 
-        // Reps لازم تكون String، لذلك text وليس number
-        keyboardType: TextInputType.text,
-
         style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
 
         decoration: InputDecoration(
           labelText: label,
 
           labelStyle: TextStyle(
-            color: Colors.grey.shade600,
+            color: AppColors.primaryBtn,
             fontWeight: FontWeight.w600,
           ),
 
           filled: true,
-          fillColor: Colors.grey.shade50,
+          fillColor: context.backgroundColor,
 
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
-            borderSide: BorderSide(color: Colors.grey.shade200),
+            borderSide: BorderSide(color: AppColors.hintText),
           ),
 
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
-            borderSide: BorderSide(color: Colors.grey.shade200),
+            borderSide: BorderSide(color: AppColors.hintText),
           ),
 
           focusedBorder: OutlineInputBorder(
@@ -133,9 +131,9 @@ class _ExerciseSettingsBottomSheetState
       child: Container(
         padding: const EdgeInsets.fromLTRB(24, 14, 24, 24),
 
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+        decoration: BoxDecoration(
+          color: context.backgroundColor,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
         ),
 
         child: Column(

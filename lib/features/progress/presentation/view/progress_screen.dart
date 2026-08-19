@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/features/progress/presentation/view_model/exercise_filter_params.dart';
 import 'package:sportifo_app/features/progress/presentation/widgets/exercise_activity_section.dart';
 import 'package:sportifo_app/features/progress/presentation/widgets/weight_progress_section.dart';
@@ -18,7 +19,7 @@ class ProgressScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: context.backgroundColor,
       body: SafeArea(
         child: MultiBlocProvider(
           providers: [
@@ -26,7 +27,8 @@ class ProgressScreen extends StatelessWidget {
               create: (_) => getIt<ExerciseActivityCubit>()..fetchActivity(),
             ),
             BlocProvider(
-              create: (_) => getIt<WeightProgressCubit>()..fetchWeightProgress(),
+              create: (_) =>
+                  getIt<WeightProgressCubit>()..fetchWeightProgress(),
             ),
           ],
           child: const _ProgressContent(),
@@ -67,11 +69,11 @@ class _ProgressContentState extends State<_ProgressContent> {
   void _applyFilters(ExerciseFilterParams filters) {
     setState(() => _filters = filters);
     context.read<ExerciseActivityCubit>().fetchActivity(
-          planId: filters.planId,
-          exerciseId: filters.exerciseId,
-          from: filters.from,
-          to: filters.to,
-        );
+      planId: filters.planId,
+      exerciseId: filters.exerciseId,
+      from: filters.from,
+      to: filters.to,
+    );
   }
 
   void _clearFilters() => _applyFilters(const ExerciseFilterParams());
@@ -82,7 +84,7 @@ class _ProgressContentState extends State<_ProgressContent> {
 
     return RefreshIndicator(
       color: AppColors.primaryBtn,
-      backgroundColor: Colors.white,
+      backgroundColor: context.backgroundColor,
       displacement: 40,
       onRefresh: _onRefresh,
       child: CustomScrollView(
@@ -99,7 +101,7 @@ class _ProgressContentState extends State<_ProgressContent> {
                     style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: context.textColor,
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -125,8 +127,9 @@ class _ProgressContentState extends State<_ProgressContent> {
                 } else if (state is WeightProgressError) {
                   return _ErrorWidget(
                     message: state.message,
-                    onRetry: () =>
-                        context.read<WeightProgressCubit>().fetchWeightProgress(),
+                    onRetry: () => context
+                        .read<WeightProgressCubit>()
+                        .fetchWeightProgress(),
                   );
                 }
                 return const SizedBox.shrink();
@@ -193,7 +196,7 @@ class _ErrorWidget extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.backgroundColor,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
@@ -201,7 +204,13 @@ class _ErrorWidget extends StatelessWidget {
           Icon(Icons.error_outline, color: Colors.grey.shade400, size: 40),
           const SizedBox(height: 8),
           Text(message, textAlign: TextAlign.center),
-          TextButton(onPressed: onRetry, child: Text(l10n.retry)),
+          TextButton(
+            onPressed: onRetry,
+            child: Text(
+              l10n.retry,
+              style: TextStyle(color: AppColors.primaryBtn),
+            ),
+          ),
         ],
       ),
     );

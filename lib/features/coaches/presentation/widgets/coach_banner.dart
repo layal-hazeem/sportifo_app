@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/widgets/loading_shimmer.dart';
 
@@ -26,14 +28,14 @@ class CoachBanner extends StatelessWidget {
               width: double.infinity,
               height: 320,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: context.backgroundColor,
                 borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(32),
                   bottomRight: Radius.circular(32),
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.08),
+                    color: AppColors.primaryBtn.withValues(alpha: 0.08),
                     blurRadius: 15,
                     offset: const Offset(0, 8),
                   ),
@@ -89,7 +91,7 @@ class CoachBanner extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.85),
+                    color: context.backgroundColor.withValues(alpha: 0.85),
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
@@ -99,9 +101,9 @@ class CoachBanner extends StatelessWidget {
                       ),
                     ],
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.arrow_back_ios_new_rounded,
-                    color: Color(0xFF1A1A1A),
+                    color: context.textColor,
                     size: 18,
                   ),
                 ),
@@ -116,17 +118,17 @@ class CoachBanner extends StatelessWidget {
             children: [
               Text(
                 fullName,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 26,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF1A1A1A),
+                  color: context.textColor,
                   letterSpacing: 0.3,
                 ),
               ),
               const SizedBox(width: 8),
               const Icon(
                 Icons.verified_rounded,
-                color: Color(0xFFFF6B35),
+                color: AppColors.primaryBtn,
                 size: 24,
               ),
             ],

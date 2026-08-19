@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/features/auth/presentation/widgets/custom_button.dart';
 import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/select_exercise.dart';
 import 'package:sportifo_app/features/workout/data/models/exercise_model.dart';
@@ -67,9 +68,9 @@ class _ExerciseMultiPickerBottomSheetState
     return DefaultTabController(
       length: 2,
       child: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        decoration: BoxDecoration(
+          color: context.backgroundColor,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         ),
         child: Column(
           children: [
@@ -100,16 +101,30 @@ class _ExerciseMultiPickerBottomSheetState
 
             TabBar(
               labelColor: AppColors.primaryBtn,
+              unselectedLabelColor: AppColors.hintText.withOpacity(0.85),
               indicatorColor: AppColors.primaryBtn,
+              indicatorWeight: 2.5,
+              dividerColor: AppColors.hintText.withOpacity(0.15),
+              labelStyle: const TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 13,
+              ),
+              unselectedLabelStyle: const TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 13,
+              ),
               tabs: [
                 Tab(
-                  icon: const Icon(Icons.fitness_center),
+                  icon: Icon(Icons.fitness_center, size: 22),
                   text: l10n.resistance,
                 ),
-                Tab(icon: const Icon(Icons.directions_run), text: l10n.cardio),
+                Tab(
+                  icon: Icon(Icons.directions_run, size: 22),
+                  text: l10n.cardio,
+                ),
               ],
             ),
-
+            
             Expanded(
               child: TabBarView(
                 children: [buildResistanceTab(), buildCardioTab()],
@@ -181,7 +196,7 @@ class _ExerciseMultiPickerBottomSheetState
               l10n.target_muscle,
               style: TextStyle(
                 fontWeight: FontWeight.w600,
-                color: Colors.grey.shade700,
+                color: AppColors.hintText,
               ),
             ),
           ),

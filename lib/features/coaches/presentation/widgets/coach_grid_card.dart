@@ -1,18 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../data/models/coach_model.dart';
-import '../../../../core/widgets/loading_shimmer.dart'; 
+import '../../../../core/widgets/loading_shimmer.dart';
 
 class CoachGridCard extends StatelessWidget {
   final CoachModel coach;
   final VoidCallback onTap;
 
-  const CoachGridCard({
-    super.key,
-    required this.coach,
-    required this.onTap,
-  });
+  const CoachGridCard({super.key, required this.coach, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -21,11 +18,11 @@ class CoachGridCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.backgroundColor,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha:0.03),
+              color: Colors.black.withValues(alpha: 0.03),
               blurRadius: 12,
               offset: const Offset(0, 6),
             ),
@@ -51,7 +48,11 @@ class CoachGridCard extends StatelessWidget {
                   ),
                   errorWidget: (context, url, error) => Container(
                     color: Colors.grey[100],
-                    child: const Icon(Icons.person, color: Colors.grey, size: 40),
+                    child: const Icon(
+                      Icons.person,
+                      color: Colors.grey,
+                      size: 40,
+                    ),
                   ),
                 ),
               ),
@@ -59,7 +60,10 @@ class CoachGridCard extends StatelessWidget {
             Expanded(
               flex: 2,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 10,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -69,10 +73,10 @@ class CoachGridCard extends StatelessWidget {
                       children: [
                         Text(
                           coach.fullName,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF1A1A1A),
+                            color: context.textColor,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -91,9 +95,12 @@ class CoachGridCard extends StatelessWidget {
                       ],
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFFF6B35).withValues(alpha:0.1),
+                        color: const Color(0xFFFF6B35).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(

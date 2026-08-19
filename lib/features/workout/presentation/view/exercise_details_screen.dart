@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/features/workout/presentation/widgets/gallery_section.dart';
 import 'package:sportifo_app/features/workout/presentation/widgets/how_to_perform_card.dart';
 import 'package:sportifo_app/features/workout/presentation/widgets/info_stat_card.dart';
@@ -28,7 +29,7 @@ class ExerciseDetailsScreen extends StatelessWidget {
         : <String>[];
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: context.backgroundColor,
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
@@ -41,10 +42,10 @@ class ExerciseDetailsScreen extends StatelessWidget {
                 children: [
                   Text(
                     exercise.name,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 26,
                       fontWeight: FontWeight.w900,
-                      color: Color(0xFF1E293B),
+                      color: context.textColor,
                       letterSpacing: -0.5,
                     ),
                   ),
@@ -106,9 +107,13 @@ class ExerciseDetailsScreen extends StatelessWidget {
       leading: Padding(
         padding: const EdgeInsets.all(8.0),
         child: CircleAvatar(
-          backgroundColor: Colors.white.withValues(alpha:0.9),
+          backgroundColor: context.backgroundColor.withValues(alpha: 0.9),
           child: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black87, size: 18),
+            icon: Icon(
+              Icons.arrow_back_ios_new,
+              color: context.textColor,
+              size: 18,
+            ),
             onPressed: () => Navigator.pop(context),
           ),
         ),
@@ -117,17 +122,22 @@ class ExerciseDetailsScreen extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: CircleAvatar(
-            backgroundColor: Colors.white.withValues(alpha:0.9),
+            backgroundColor: context.backgroundColor.withValues(alpha: 0.9),
             child: BlocConsumer<SavedExercisesCubit, SavedExercisesState>(
               listener: (context, state) {
-                if (state is SavedExercisesToggleSuccess && state.exerciseId == exercise.id) {
+                if (state is SavedExercisesToggleSuccess &&
+                    state.exerciseId == exercise.id) {
                   AppSnackBar.show(
                     context,
-                    message: state.isSaved ? l10n.addedToSaved : l10n.removedFromSaved,
+                    message: state.isSaved
+                        ? l10n.addedToSaved
+                        : l10n.removedFromSaved,
                     type: SnackBarType.success,
                     onActionPressed: () {
                       if (!context.mounted) return;
-                      final currentRoute = ModalRoute.of(context)?.settings.name;
+                      final currentRoute = ModalRoute.of(
+                        context,
+                      )?.settings.name;
                       if (currentRoute == AppRoutes.savedExercises) {
                         Navigator.of(context).pop();
                         return;
@@ -143,8 +153,12 @@ class ExerciseDetailsScreen extends StatelessWidget {
 
                 return IconButton(
                   icon: Icon(
-                    isCurrentlySaved ? Icons.bookmark_rounded : Icons.bookmark_outline_rounded,
-                    color: isCurrentlySaved ? AppColors.primaryBtn : Colors.black87,
+                    isCurrentlySaved
+                        ? Icons.bookmark_rounded
+                        : Icons.bookmark_outline_rounded,
+                    color: isCurrentlySaved
+                        ? AppColors.primaryBtn
+                        : context.textColor,
                     size: 22,
                   ),
                   onPressed: () => cubit.toggleSave(exercise),
@@ -152,7 +166,7 @@ class ExerciseDetailsScreen extends StatelessWidget {
               },
             ),
           ),
-        )
+        ),
       ],
       flexibleSpace: FlexibleSpaceBar(
         background: Stack(
@@ -177,7 +191,7 @@ class ExerciseDetailsScreen extends StatelessWidget {
                     colors: [
                       Colors.black.withValues(alpha: 0.3),
                       Colors.transparent,
-                      Colors.black.withValues(alpha:0.4),
+                      Colors.black.withValues(alpha: 0.4),
                     ],
                     stops: const [0.0, 0.5, 1.0],
                   ),

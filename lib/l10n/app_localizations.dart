@@ -2651,6 +2651,11 @@ abstract class AppLocalizations {
   /// **'Plan Updated Successfully'**
   String get planUpdatedSuccessfully;
 
+  /// No description provided for @description.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get description;
   /// No description provided for @stop_sending_title.
   ///
   /// In en, this message translates to:

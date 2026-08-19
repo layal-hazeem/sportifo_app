@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../view_model/target_cubit/target_cubit.dart';
@@ -10,10 +11,19 @@ class GoalSelectorBottomSheet extends StatefulWidget {
   // 🔥 أضفنا متغير لاستقبال الوزن الحالي الديناميكي من صفحة الهوم أو البروفايل
   final double? currentWeight;
 
-  const GoalSelectorBottomSheet({super.key, this.initialGoal, this.currentWeight});
+  const GoalSelectorBottomSheet({
+    super.key,
+    this.initialGoal,
+    this.currentWeight,
+  });
 
   // 🔥 حدثنا دالة الـ show لتستقبل الـ currentWeight وتمرره للـ Widget بأمان
-  static void show(BuildContext context, TargetCubit targetCubit, {String? initialGoal, double? currentWeight}) {
+  static void show(
+    BuildContext context,
+    TargetCubit targetCubit, {
+    String? initialGoal,
+    double? currentWeight,
+  }) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -25,7 +35,10 @@ class GoalSelectorBottomSheet extends StatefulWidget {
           child: BlocProvider.value(
             value: targetCubit,
             // تمرير الهدف الحالي + الوزن الحالي هنا
-            child: GoalSelectorBottomSheet(initialGoal: initialGoal, currentWeight: currentWeight),
+            child: GoalSelectorBottomSheet(
+              initialGoal: initialGoal,
+              currentWeight: currentWeight,
+            ),
           ),
         );
       },
@@ -33,7 +46,8 @@ class GoalSelectorBottomSheet extends StatefulWidget {
   }
 
   @override
-  State<GoalSelectorBottomSheet> createState() => _GoalSelectorBottomSheetState();
+  State<GoalSelectorBottomSheet> createState() =>
+      _GoalSelectorBottomSheetState();
 }
 
 class _ProfilePageState extends State<GoalSelectorBottomSheet> {
@@ -71,12 +85,12 @@ class _GoalSelectorBottomSheetState extends State<GoalSelectorBottomSheet> {
               // 🌌 1. الحاوية الضبابية الخلفية
               Positioned.fill(
                 child: ClipRRect(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(30),
+                  ),
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 17, sigmaY: 17),
-                    child: Container(
-                      color: Colors.black.withOpacity(0.13),
-                    ),
+                    child: Container(color: Colors.black.withOpacity(0.13)),
                   ),
                 ),
               ),
@@ -104,7 +118,11 @@ class _GoalSelectorBottomSheetState extends State<GoalSelectorBottomSheet> {
                     child: CircleAvatar(
                       radius: 35,
                       backgroundColor: Colors.white24,
-                      child: Icon(Icons.bolt, color: AppColors.primaryBtn, size: 40),
+                      child: Icon(
+                        Icons.bolt,
+                        color: AppColors.primaryBtn,
+                        size: 40,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 25),
@@ -115,7 +133,9 @@ class _GoalSelectorBottomSheetState extends State<GoalSelectorBottomSheet> {
                     constraints: BoxConstraints(minHeight: screenHeight * 0.5),
                     decoration: const BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(35)),
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(35),
+                      ),
                     ),
                     padding: const EdgeInsets.fromLTRB(24, 30, 24, 120),
                     child: Column(
@@ -127,16 +147,27 @@ class _GoalSelectorBottomSheetState extends State<GoalSelectorBottomSheet> {
                           children: [
                             Text(
                               "Current Weight: ${widget.currentWeight ?? 0.0} kg",
-                              style: const TextStyle(fontSize: 13, color: Colors.grey, fontWeight: FontWeight.w600),
+                              style: const TextStyle(
+                                fontSize: 13,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                             TextButton(
                               onPressed: () {
                                 Navigator.pop(context); // نغلق الشيت أولاً
-                                Navigator.pushNamed(context, AppRoutes.getProfile);
+                                Navigator.pushNamed(
+                                  context,
+                                  AppRoutes.getProfile,
+                                );
                               },
                               child: const Text(
                                 "Change",
-                                style: TextStyle(color: AppColors.primaryBtn, fontSize: 13, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                  color: AppColors.primaryBtn,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ],
@@ -144,17 +175,25 @@ class _GoalSelectorBottomSheetState extends State<GoalSelectorBottomSheet> {
                         const Divider(height: 10, thickness: 0.5),
                         const SizedBox(height: 15),
 
-                        const Center(
+                        Center(
                           child: Text(
                             "Select Your Fitness Goal ⚡",
-                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textDark),
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: context.textColor,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 8),
                         Center(
                           child: Text(
                             "The system will automatically compute your tailored daily metrics",
-                            style: TextStyle(fontSize: 13, color: Colors.grey.shade500, fontWeight: FontWeight.w500),
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.grey.shade500,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 25),
@@ -162,7 +201,8 @@ class _GoalSelectorBottomSheetState extends State<GoalSelectorBottomSheet> {
                         // 🔥 كرت التضخيم
                         _buildGoalCard(
                           title: "Bulk / Gain Muscle",
-                          subtitle: "Increase calorie targets systematically to optimize lean muscle growth",
+                          subtitle:
+                              "Increase calorie targets systematically to optimize lean muscle growth",
                           icon: Icons.fitness_center,
                           goalValue: "bulk",
                         ),
@@ -170,7 +210,8 @@ class _GoalSelectorBottomSheetState extends State<GoalSelectorBottomSheet> {
                         // 🔥 كرت التنشيف
                         _buildGoalCard(
                           title: "Cut / Lose Fat",
-                          subtitle: "Decrease calorie targets to accelerate smart fat burn and increase definition",
+                          subtitle:
+                              "Decrease calorie targets to accelerate smart fat burn and increase definition",
                           icon: Icons.local_fire_department,
                           goalValue: "cut",
                         ),
@@ -178,7 +219,8 @@ class _GoalSelectorBottomSheetState extends State<GoalSelectorBottomSheet> {
                         // 🔥 كرت المحافظة
                         _buildGoalCard(
                           title: "Maintain / Stay Fit",
-                          subtitle: "Stabilize current weight while steadily optimizing athletic stamina and recovery",
+                          subtitle:
+                              "Stabilize current weight while steadily optimizing athletic stamina and recovery",
                           icon: Icons.scale,
                           goalValue: "maintain",
                         ),
@@ -198,7 +240,9 @@ class _GoalSelectorBottomSheetState extends State<GoalSelectorBottomSheet> {
                   color: Colors.white,
                   child: ElevatedButton(
                     onPressed: () {
-                      context.read<TargetCubit>().updateTargetGoal(_selectedGoal);
+                      context.read<TargetCubit>().updateTargetGoal(
+                        _selectedGoal,
+                      );
                       Navigator.pop(context);
                     },
                     style: ElevatedButton.styleFrom(
@@ -212,7 +256,10 @@ class _GoalSelectorBottomSheetState extends State<GoalSelectorBottomSheet> {
                     ),
                     child: const Text(
                       "Confirm & Compute Plan",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
@@ -243,7 +290,9 @@ class _GoalSelectorBottomSheetState extends State<GoalSelectorBottomSheet> {
         margin: const EdgeInsets.symmetric(vertical: 6),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primaryBtn.withOpacity(0.05) : Colors.white,
+          color: isSelected
+              ? AppColors.primaryBtn.withOpacity(0.05)
+              : Colors.white,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isSelected ? AppColors.primaryBtn : Colors.grey.shade200,
@@ -252,7 +301,11 @@ class _GoalSelectorBottomSheetState extends State<GoalSelectorBottomSheet> {
         ),
         child: Row(
           children: [
-            Icon(icon, color: isSelected ? AppColors.primaryBtn : Colors.grey.shade400, size: 28),
+            Icon(
+              icon,
+              color: isSelected ? AppColors.primaryBtn : Colors.grey.shade400,
+              size: 28,
+            ),
             const SizedBox(width: 15),
             Expanded(
               child: Column(
@@ -263,13 +316,19 @@ class _GoalSelectorBottomSheetState extends State<GoalSelectorBottomSheet> {
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 14,
-                      color: isSelected ? AppColors.primaryBtn : AppColors.textDark,
+                      color: isSelected
+                          ? AppColors.primaryBtn
+                          : context.textColor,
                     ),
                   ),
                   const SizedBox(height: 3),
                   Text(
                     subtitle,
-                    style: TextStyle(color: Colors.grey.shade500, fontSize: 11, height: 1.3),
+                    style: TextStyle(
+                      color: Colors.grey.shade500,
+                      fontSize: 11,
+                      height: 1.3,
+                    ),
                   ),
                 ],
               ),

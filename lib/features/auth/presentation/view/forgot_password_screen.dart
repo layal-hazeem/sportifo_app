@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/routes/app_routes.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/helpers/snack_bar_utils.dart'; // تأكدي من استيراد ملف السناك بار الخاص بكِ
 import '../../../../l10n/app_localizations.dart';
 import '../view_model/login/forgot_password_cubit.dart';
@@ -26,11 +26,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.backgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        iconTheme: const IconThemeData(color: AppColors.textDark),
+        iconTheme: IconThemeData(color: context.textColor),
       ),
       body: BlocListener<ForgotPasswordCubit, LoginState>(
         listener: (context, state) {
@@ -49,8 +49,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 'isFromForgotPassword': true,
               },
             );
-          }
-          else if (state is ForgotPasswordOtpError) {
+          } else if (state is ForgotPasswordOtpError) {
             AppSnackBar.show(
               context,
               message: state.message,
@@ -73,7 +72,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   const SizedBox(height: 50),
                   Text(
                     l10n.emailOrPhone,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                   ),
                   const SizedBox(height: 15),
                   CustomNeumorphicField(
@@ -81,7 +83,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     hint: l10n.emailHint,
                     icon: Icons.email_outlined,
                     validator: (value) {
-                      if (value == null || value.isEmpty) return l10n.fieldRequired;
+                      if (value == null || value.isEmpty)
+                        return l10n.fieldRequired;
                       return null;
                     },
                   ),
@@ -94,9 +97,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         isLoading: state is LoginLoading,
                         onPressed: () {
                           if (formKey.currentState!.validate()) {
-                            context.read<ForgotPasswordCubit>().emitForgotPasswordStates(
-                              emailController.text.trim(),
-                            );
+                            context
+                                .read<ForgotPasswordCubit>()
+                                .emitForgotPasswordStates(
+                                  emailController.text.trim(),
+                                );
                           }
                         },
                       );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../trainee_subscriptions/data/models/subscription_model.dart';
@@ -69,7 +70,7 @@ class CoachSubscriptionsList extends StatelessWidget {
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF1A1A1A),
+              color: context.textColor,
               letterSpacing: 0.3,
             ),
           ),
@@ -93,8 +94,10 @@ class CoachSubscriptionsList extends StatelessWidget {
                   child: Neumorphic(
                     style: NeumorphicStyle(
                       depth: 4,
-                      boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(15)),
-                      color: const Color(0xFFF7F7F7),
+                      boxShape: NeumorphicBoxShape.roundRect(
+                        BorderRadius.circular(15),
+                      ),
+                      color: context.backgroundColor,
                       lightSource: LightSource.topLeft,
                     ),
                     child: Container(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/features/progress/presentation/view_model/exercise_filter_params.dart';
 import 'package:sportifo_app/features/progress/presentation/widgets/day_card.dart';
 import 'package:sportifo_app/features/progress/presentation/widgets/exercise_chart.dart';
@@ -30,6 +31,10 @@ class ExerciseActivitySection extends StatefulWidget {
 class _ExerciseActivitySectionState extends State<ExerciseActivitySection> {
   @override
   Widget build(BuildContext context) {
+    final totalWorkouts = widget.days.fold<int>(
+      0,
+      (sum, d) => sum + d.totalExercises,
+    );
     final l10n = AppLocalizations.of(context)!;
 
     final totalWorkouts =
@@ -51,7 +56,7 @@ class _ExerciseActivitySectionState extends State<ExerciseActivitySection> {
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Colors.black54,
+                color: context.textColor,
               ),
             ),
             const Spacer(),
@@ -91,7 +96,7 @@ class _ExerciseActivitySectionState extends State<ExerciseActivitySection> {
           style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Colors.black54,
+            color: context.textColor,
           ),
         ),
         const SizedBox(height: 12),

@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../data/models/subscription_model.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
@@ -14,16 +15,23 @@ class SubscriptionDetailsBottomSheet extends StatelessWidget {
     required this.coachId,
   });
 
-  static void show(BuildContext context, SubscriptionModel subscription, int coachId) {
+  static void show(
+    BuildContext context,
+    SubscriptionModel subscription,
+    int coachId,
+  ) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: context.backgroundColor,
       barrierColor: Colors.black.withOpacity(0.15),
       builder: (context) {
         return BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-          child: SubscriptionDetailsBottomSheet(subscription: subscription, coachId: coachId),
+          child: SubscriptionDetailsBottomSheet(
+            subscription: subscription,
+            coachId: coachId,
+          ),
         );
       },
     );
@@ -76,12 +84,12 @@ class SubscriptionDetailsBottomSheet extends StatelessWidget {
             children: [
               Positioned.fill(
                 child: ClipRRect(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(30),
+                  ),
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-                    child: Container(
-                      color: Colors.black.withOpacity(0.08),
-                    ),
+                    child: Container(color: Colors.black.withOpacity(0.08)),
                   ),
                 ),
               ),
@@ -106,7 +114,10 @@ class SubscriptionDetailsBottomSheet extends StatelessWidget {
 
                   Center(
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 7),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 18,
+                        vertical: 7,
+                      ),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(colors: planColors),
                         borderRadius: BorderRadius.circular(50),
@@ -121,7 +132,11 @@ class SubscriptionDetailsBottomSheet extends StatelessWidget {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(Icons.workspace_premium, color: Colors.white, size: 16),
+                          const Icon(
+                            Icons.workspace_premium,
+                            color: Colors.white,
+                            size: 16,
+                          ),
                           const SizedBox(width: 6),
                           Text(
                             subscription.type.toUpperCase(),
@@ -141,9 +156,11 @@ class SubscriptionDetailsBottomSheet extends StatelessWidget {
                   Container(
                     width: double.infinity,
                     constraints: BoxConstraints(minHeight: screenHeight * 0.35),
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFF9FAFC),
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(35)),
+                    decoration: BoxDecoration(
+                      color: context.backgroundColor,
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(35),
+                      ),
                     ),
                     padding: const EdgeInsets.fromLTRB(24, 30, 24, 120),
                     child: Column(
@@ -153,10 +170,10 @@ class SubscriptionDetailsBottomSheet extends StatelessWidget {
                           child: Text(
                             subscription.title,
                             textAlign: TextAlign.center,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 26,
                               fontWeight: FontWeight.bold,
-                              color: Color(0xFF1A1A1A),
+                              color: context.textColor,
                             ),
                           ),
                         ),
@@ -165,14 +182,18 @@ class SubscriptionDetailsBottomSheet extends StatelessWidget {
                         if (features.isNotEmpty) ...[
                           Row(
                             children: [
-                              const Icon(Icons.stars, color: mainAppColor, size: 18),
+                              const Icon(
+                                Icons.stars,
+                                color: mainAppColor,
+                                size: 18,
+                              ),
                               const SizedBox(width: 8),
                               Text(
                                 l10n.subscription_details_featuresTitle,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
-                                  color: Color(0xFF1A1A1A),
+                                  color: context.textColor,
                                 ),
                               ),
                             ],
@@ -197,9 +218,9 @@ class SubscriptionDetailsBottomSheet extends StatelessWidget {
                                   Expanded(
                                     child: Text(
                                       feature,
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         fontSize: 14,
-                                        color: Color(0xFF3A3A3A),
+                                        color: context.textColor,
                                         height: 1.4,
                                       ),
                                     ),
@@ -234,7 +255,7 @@ class SubscriptionDetailsBottomSheet extends StatelessWidget {
                 right: 0,
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(24, 15, 24, 30),
-                  color: const Color(0xFFF9FAFC),
+                  color: context.backgroundColor,
                   child: Container(
                     width: double.infinity,
                     height: 54,

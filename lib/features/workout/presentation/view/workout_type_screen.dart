@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/widgets/loading_shimmer.dart';
@@ -77,7 +78,7 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
     };
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.backgroundColor,
       body: SafeArea(
         child: BlocConsumer<CategoriesCubit, CategoriesState>(
           listener: (context, state) {
@@ -139,11 +140,12 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
                             const SizedBox(height: 5),
                             // 🔥 ترجمة النص الثابت فوق الكروت
                             Text(
-                              l10n.chooseYourWorkoutType ?? "Choose Your\nWorkout Type",
-                              style: const TextStyle(
+                              l10n.chooseYourWorkoutType ??
+                                  "Choose Your\nWorkout Type",
+                              style: TextStyle(
                                 fontSize: 32,
                                 fontWeight: FontWeight.bold,
-                                color: AppColors.textDark,
+                                color: context.textColor,
                                 height: 1.2,
                               ),
                             ),
@@ -163,38 +165,38 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
                         final category = categories[index];
                         final uiInfo =
                             categoryUIInfo[category.id] ??
-                                {
-                                  'subtitle': l10n.start_training, // 🔥 تمت الترجمة
-                                  'image': 'assets/images/default_workout.png',
-                                };
+                            {
+                              'subtitle': l10n.start_training, // 🔥 تمت الترجمة
+                              'image': 'assets/images/default_workout.png',
+                            };
 
                         final delay = 0.2 + (index * 0.2);
                         final slideAnim =
-                        Tween<Offset>(
-                          begin: const Offset(0.5, 0.0),
-                          end: Offset.zero,
-                        ).animate(
-                          CurvedAnimation(
-                            parent: _controller,
-                            curve: Interval(
-                              delay,
-                              1.0,
-                              curve: Curves.easeOutQuart,
-                            ),
-                          ),
-                        );
+                            Tween<Offset>(
+                              begin: const Offset(0.5, 0.0),
+                              end: Offset.zero,
+                            ).animate(
+                              CurvedAnimation(
+                                parent: _controller,
+                                curve: Interval(
+                                  delay,
+                                  1.0,
+                                  curve: Curves.easeOutQuart,
+                                ),
+                              ),
+                            );
 
                         final fadeAnim = Tween<double>(begin: 0.0, end: 1.0)
                             .animate(
-                          CurvedAnimation(
-                            parent: _controller,
-                            curve: Interval(
-                              delay,
-                              1.0,
-                              curve: Curves.easeIn,
-                            ),
-                          ),
-                        );
+                              CurvedAnimation(
+                                parent: _controller,
+                                curve: Interval(
+                                  delay,
+                                  1.0,
+                                  curve: Curves.easeIn,
+                                ),
+                              ),
+                            );
 
                         return SlideTransition(
                           position: slideAnim,

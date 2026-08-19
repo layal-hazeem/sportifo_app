@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -81,7 +82,8 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
         label: l10n.saved,
         emptyTitle: l10n.noSavedPlans,
         emptySubtitle: l10n.noSavedPlansSub,
-        emptyButtonText: l10n.exploreFreePlans, // تم تفعيل الكلمة اللي ترجمتها بالـ JSON
+        emptyButtonText:
+            l10n.exploreFreePlans, // تم تفعيل الكلمة اللي ترجمتها بالـ JSON
         onEmptyButtonTap: (context) {
           Navigator.pushNamed(context, AppRoutes.allPlatformPlans);
         },
@@ -127,16 +129,21 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
     final activeConfig = tabConfigs[_activeTabIndex];
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.backgroundColor,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              margin: const EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 4),
+              margin: const EdgeInsets.only(
+                left: 16,
+                right: 16,
+                top: 10,
+                bottom: 4,
+              ),
               height: 56,
               decoration: BoxDecoration(
-                color: const Color(0xFFE0E0E0),
+                color: context.backgroundColor,
                 borderRadius: BorderRadius.circular(16.0),
               ),
               padding: const EdgeInsets.all(6),
@@ -153,7 +160,12 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
                   final status = state.statusFor(activeConfig.type);
                   return switch (status) {
                     TabLoading() || TabInitial() => _buildShimmerLoading(),
-                    TabFailure() => Center(child: Text(status.message, style: const TextStyle(color: AppColors.hintText))),
+                    TabFailure() => Center(
+                      child: Text(
+                        status.message,
+                        style: const TextStyle(color: AppColors.hintText),
+                      ),
+                    ),
                     TabSuccess() => _buildPlansList(activeConfig, status.plans),
                   };
                 },
@@ -173,7 +185,7 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 250),
           decoration: BoxDecoration(
-            color: isSelected ? AppColors.primaryBtn : Colors.transparent,
+            color: isSelected ? AppColors.primaryBtn : context.backgroundColor,
             borderRadius: BorderRadius.circular(16.0),
           ),
           alignment: Alignment.center,
@@ -195,7 +207,10 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
     if (plans.isEmpty) {
       return RefreshIndicator(
         color: AppColors.primaryBtn,
-        onRefresh: () async => await context.read<MyPlansCubit>().fetchTab(config.type, isRefresh: true),
+        onRefresh: () async => await context.read<MyPlansCubit>().fetchTab(
+          config.type,
+          isRefresh: true,
+        ),
         child: ListView(
           physics: const AlwaysScrollableScrollPhysics(),
           children: [
@@ -205,18 +220,48 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(config.emptyTitle, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: AppColors.textDark)),
+                  Text(
+                    config.emptyTitle,
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w900,
+                      color: context.textColor,
+                    ),
+                  ),
                   const SizedBox(height: 12),
-                  Text(config.emptySubtitle, textAlign: TextAlign.center, style: const TextStyle(color: AppColors.hintText, fontSize: 14.0, height: 1.5)),
+                  Text(
+                    config.emptySubtitle,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: AppColors.hintText,
+                      fontSize: 14.0,
+                      height: 1.5,
+                    ),
+                  ),
                   if (config.emptyButtonText != null) ...[
                     const SizedBox(height: 32),
                     SizedBox(
                       width: double.infinity,
                       height: 52,
                       child: ElevatedButton(
-                        onPressed: config.onEmptyButtonTap != null ? () => config.onEmptyButtonTap!(context) : null,
-                        style: ElevatedButton.styleFrom(backgroundColor: AppColors.primaryBtn, elevation: 0, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0))),
-                        child: Text(config.emptyButtonText!, style: const TextStyle(color: Colors.white, fontSize: 16.0, fontWeight: FontWeight.bold)),
+                        onPressed: config.onEmptyButtonTap != null
+                            ? () => config.onEmptyButtonTap!(context)
+                            : null,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primaryBtn,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16.0),
+                          ),
+                        ),
+                        child: Text(
+                          config.emptyButtonText!,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
                   ],
@@ -230,7 +275,10 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
 
     return RefreshIndicator(
       color: AppColors.primaryBtn,
-      onRefresh: () async => await context.read<MyPlansCubit>().fetchTab(config.type, isRefresh: true),
+      onRefresh: () async => await context.read<MyPlansCubit>().fetchTab(
+        config.type,
+        isRefresh: true,
+      ),
       child: ListView.builder(
         physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
@@ -274,18 +322,36 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(25),
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 12, offset: const Offset(0, 4))],
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const LoadingShimmer(width: double.infinity, height: 140, borderRadius: 18),
+              const LoadingShimmer(
+                width: double.infinity,
+                height: 140,
+                borderRadius: 18,
+              ),
               const SizedBox(height: 14),
-              LoadingShimmer(width: MediaQuery.of(context).size.width * 0.5, height: 16, borderRadius: 6),
+              LoadingShimmer(
+                width: MediaQuery.of(context).size.width * 0.5,
+                height: 16,
+                borderRadius: 6,
+              ),
               const SizedBox(height: 10),
-              LoadingShimmer(width: MediaQuery.of(context).size.width * 0.35, height: 12, borderRadius: 6),
+              LoadingShimmer(
+                width: MediaQuery.of(context).size.width * 0.35,
+                height: 12,
+                borderRadius: 6,
+              ),
             ],
           ),
         ),

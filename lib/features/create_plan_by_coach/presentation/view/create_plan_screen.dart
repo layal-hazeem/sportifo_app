@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/di/service_locator.dart';
 import 'package:sportifo_app/core/network/api_result.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/core/widgets/custom_glass_bottom_sheet.dart';
 import 'package:sportifo_app/core/widgets/wave_app_bar.dart';
 import 'package:sportifo_app/features/existing_days/data/model/existing_days_model.dart';
@@ -220,7 +221,7 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
                             width: 45,
                             height: 5,
                             decoration: BoxDecoration(
-                              color: Colors.grey.shade400,
+                              color: context.backgroundColor,
                               borderRadius: BorderRadius.circular(20),
                             ),
                           ),
@@ -323,7 +324,7 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
                     child: Icon(
                       isFabOpen ? Icons.close : Icons.add,
                       key: ValueKey(isFabOpen),
-                      color: Colors.white,
+                      color: context.backgroundColor,
                     ),
                   ),
                 ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/routes/app_routes.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/features/auth/presentation/widgets/custom_button.dart';
 import 'package:sportifo_app/features/subscriptions/data/models/users_subscribed_model.dart';
 import 'package:sportifo_app/features/subscriptions/presentation/widgets/subscription_card.dart';
@@ -23,7 +24,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: context.backgroundColor,
       body: BlocBuilder<SubscriptionCubit, SubscriptionState>(
         builder: (context, state) {
           if (state is SubscriptionLoading) {
@@ -54,17 +55,17 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                     const SizedBox(height: 16),
                     Text(
                       l10n.noInternet,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF1E293B),
+                        color: context.textColor,
                       ),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       l10n.checkYourNetwork,
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.grey.shade600),
+                      style: TextStyle(color: AppColors.hintText),
                     ),
                     const SizedBox(height: 24),
                     CustomAuthButton(
@@ -97,7 +98,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
 
             return RefreshIndicator(
               color: AppColors.primaryBtn,
-              backgroundColor: Colors.white,
+              backgroundColor: context.backgroundColor,
               onRefresh: () async {
                 await context.read<SubscriptionCubit>().getSubscriptions();
               },
@@ -159,7 +160,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                                         Text(
                                           l10n.actionRequired,
                                           style: TextStyle(
-                                            color: Color(0xFF0F172A),
+                                            color: context.textColor,
                                             fontWeight: FontWeight.w800,
                                             fontSize: 14,
                                           ),
@@ -170,7 +171,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                                             needsPlanCount,
                                           ),
                                           style: TextStyle(
-                                            color: Colors.grey.shade700,
+                                            color: AppColors.hintText,
                                             fontSize: 12.5,
                                             fontWeight: FontWeight.w500,
                                           ),
@@ -187,7 +188,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                           Container(
                             padding: const EdgeInsets.all(4),
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: context.backgroundColor,
                               borderRadius: BorderRadius.circular(30),
                               border: Border.all(color: Colors.grey.shade200),
                               boxShadow: [
@@ -258,7 +259,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
         padding: const EdgeInsets.symmetric(vertical: 8),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primaryBtn : Colors.transparent,
+          color: isSelected ? AppColors.primaryBtn : context.backgroundColor,
           borderRadius: BorderRadius.circular(30),
           boxShadow: isSelected
               ? [
@@ -276,7 +277,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
             Text(
               title,
               style: TextStyle(
-                color: isSelected ? Colors.white : Colors.grey.shade600,
+                color: isSelected ? context.textColor : AppColors.hintText,
                 fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
                 fontSize: 14,
               ),
@@ -288,7 +289,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                 decoration: BoxDecoration(
                   color: isSelected
                       ? Colors.white.withOpacity(0.25)
-                      : Colors.grey.shade100,
+                      : context.backgroundColor.withOpacity(0.25),
                   borderRadius: BorderRadius.circular(30),
                   border: isSelected
                       ? null
@@ -297,7 +298,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                 child: Text(
                   count.toString(),
                   style: TextStyle(
-                    color: isSelected ? Colors.white : Colors.grey.shade500,
+                    color: isSelected ? context.textColor : AppColors.hintText,
                     fontWeight: FontWeight.bold,
                     fontSize: 12,
                   ),

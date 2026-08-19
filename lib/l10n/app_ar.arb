@@ -558,6 +558,7 @@
   "exercises": "تمارين",
   "addSelectedDays": "إضافة الأيام المحددة",
   "planUpdatedSuccessfully":"تم تحديث الخطة بنجاح",
+  "description":"الوصف",
 
   "stop_sending_title": "إيقاف الإرسال؟",
   "stop_sending_content": "سيؤدي الإيقاف إلى حذف رسالتك ولن يتم حفظها.",

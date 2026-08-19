@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:sportifo_app/core/helpers/app_image_picker.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/core/widgets/wave_app_bar.dart';
 import 'package:sportifo_app/features/auth/presentation/view/complete_body_measurements.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/complete_profile/complete_profile_cubit.dart';
@@ -54,7 +55,7 @@ class CompleteProfileInfoView extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 80,
-                        backgroundColor: AppColors.background,
+                        backgroundColor: context.backgroundColor,
                         backgroundImage: state.imagePath != null
                             ? FileImage(File(state.imagePath!))
                             : const AssetImage(
@@ -68,9 +69,9 @@ class CompleteProfileInfoView extends StatelessWidget {
                         child: CircleAvatar(
                           backgroundColor: AppColors.primaryBtn,
                           child: IconButton(
-                            icon: const Icon(
+                            icon: Icon(
                               Icons.camera_alt,
-                              color: AppColors.background,
+                              color: context.backgroundColor,
                             ),
                             onPressed: () async {
                               final File? image =
@@ -126,12 +127,57 @@ class CompleteProfileInfoView extends StatelessWidget {
 
                 GestureDetector(
                   onTap: () async {
-                    DateTime? picked = await showDatePicker(
+                    final picked = await showDatePicker(
                       context: context,
                       initialDate: DateTime(2000),
                       firstDate: DateTime(1950),
                       lastDate: DateTime.now(),
+
+                      builder: (context, child) {
+                        final isDark =
+                            Theme.of(context).brightness == Brightness.dark;
+
+                        return Theme(
+                          data: Theme.of(context).copyWith(
+                            colorScheme: isDark
+                                ? ColorScheme.dark(
+                                    // لون اليوم المحدد والهيدر
+                                    primary: AppColors.primaryBtn,
+
+                                    // لون النص فوق اللون الأساسي
+                                    onPrimary: Colors.white,
+
+                                    // خلفية الـ DatePicker
+                                    surface: context.backgroundColor,
+
+                                    // لون الأرقام والنصوص
+                                    onSurface: context.textColor,
+                                  )
+                                : ColorScheme.light(
+                                    primary: AppColors.primaryBtn,
+
+                                    onPrimary: Colors.white,
+
+                                    surface: context.backgroundColor,
+
+                                    onSurface: context.textColor,
+                                  ),
+
+                            textButtonTheme: TextButtonThemeData(
+                              style: TextButton.styleFrom(
+                                foregroundColor: AppColors.primaryBtn,
+                              ),
+                            ),
+
+                            iconTheme: IconThemeData(
+                              color: AppColors.primaryBtn,
+                            ),
+                          ),
+                          child: child!,
+                        );
+                      },
                     );
+
                     if (picked != null) {
                       context.read<CompleteProfileCubit>().setBirthDate(
                         "${picked.year}-${picked.month}-${picked.day}",
@@ -144,7 +190,7 @@ class CompleteProfileInfoView extends StatelessWidget {
                       boxShape: NeumorphicBoxShape.roundRect(
                         BorderRadius.circular(AppSizes.borderRadius),
                       ),
-                      color: AppColors.background,
+                      color: context.backgroundColor,
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -161,7 +207,7 @@ class CompleteProfileInfoView extends StatelessWidget {
                             style: TextStyle(
                               color: state.birthDate == null
                                   ? AppColors.hintText
-                                  : AppColors.textDark,
+                                  : context.textColor,
                             ),
                           ),
                           const Icon(
@@ -184,6 +230,7 @@ class CompleteProfileInfoView extends StatelessWidget {
                       isSelected: state.gender == true,
                       onTap: () =>
                           context.read<CompleteProfileCubit>().setGender(true),
+                      context: context,
                     ),
                     const SizedBox(width: 15),
                     _buildGenderCard(
@@ -192,6 +239,7 @@ class CompleteProfileInfoView extends StatelessWidget {
                       isSelected: state.gender == false,
                       onTap: () =>
                           context.read<CompleteProfileCubit>().setGender(false),
+                      context: context,
                     ),
                   ],
                 ),
@@ -213,7 +261,7 @@ class CompleteProfileInfoView extends StatelessWidget {
                   ),
                   child: Text(
                     l10n.next,
-                    style: TextStyle(color: AppColors.background),
+                    style: TextStyle(color: context.backgroundColor),
                   ),
                 ),
               ],
@@ -229,6 +277,7 @@ class CompleteProfileInfoView extends StatelessWidget {
     required IconData icon,
     required bool isSelected,
     required VoidCallback onTap,
+    required BuildContext context,
   }) {
     return Expanded(
       child: GestureDetector(
@@ -238,7 +287,7 @@ class CompleteProfileInfoView extends StatelessWidget {
             depth: isSelected ? -10 : 5,
             color: isSelected
                 ? AppColors.primaryBtn.withOpacity(0.1)
-                : AppColors.background,
+                : context.backgroundColor,
             boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(12)),
           ),
           child: Container(

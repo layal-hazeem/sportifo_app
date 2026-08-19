@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:sportifo_app/core/helpers/app_image_picker.dart';
 import 'package:sportifo_app/core/routes/app_routes.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/logout/logout_cubit.dart';
 import 'package:sportifo_app/features/profile/presentation/view/profile_image_view.dart';
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_cubit.dart';
@@ -35,12 +36,12 @@ class _ProfilePageState extends State<ProfilePage> {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.backgroundColor,
       appBar: NeumorphicAppBar(
         title: Text(
           l10n.profile,
           style: TextStyle(
-            color: AppColors.textDark,
+            color: context.textColor,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -53,7 +54,7 @@ class _ProfilePageState extends State<ProfilePage> {
           onPressed: () {
             Navigator.pushReplacementNamed(context, AppRoutes.home);
           },
-          child: const Icon(Icons.arrow_back, color: AppColors.textDark),
+          child: Icon(Icons.arrow_back, color: context.textColor),
         ),
         color: AppColors.primaryBtn,
       ),
@@ -132,10 +133,10 @@ class _ProfilePageState extends State<ProfilePage> {
                       Center(
                         child: Text(
                           "${user.firstName} ${user.lastName}",
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: AppColors.textDark,
+                            color: context.textColor,
                           ),
                         ),
                       ),
@@ -169,7 +170,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       borderRadius: BorderRadius.circular(
                         AppSizes.borderRadius,
                       ),
-                      
                     ),
                   ),
                   onPressed: () async {

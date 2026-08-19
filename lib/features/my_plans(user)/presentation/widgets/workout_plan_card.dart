@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/custom_cached_image.dart';
@@ -19,7 +20,9 @@ class WorkoutPlanCard extends StatelessWidget {
 
     const String selfMadeDefaultCoverImage =
         'https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=1471&q=80';
-    final String defaultCoverImage = plan.isSelfMade ? selfMadeDefaultCoverImage : coachDefaultCoverImage;
+    final String defaultCoverImage = plan.isSelfMade
+        ? selfMadeDefaultCoverImage
+        : coachDefaultCoverImage;
 
     // 🔥 حسابات شريط التقدم والأسابيع
     int durationMonths = plan.durationMonths ?? 1;
@@ -46,14 +49,14 @@ class WorkoutPlanCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 24),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.backgroundColor,
         borderRadius: BorderRadius.circular(25),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: AppColors.primaryBtn.withOpacity(0.04),
             blurRadius: 16,
             offset: const Offset(0, 8),
-          )
+          ),
         ],
       ),
       child: Column(
@@ -96,7 +99,10 @@ class WorkoutPlanCard extends StatelessWidget {
                     top: 16,
                     left: 20,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: AppColors.primaryBtn, // لون برتقالي مميز
                         borderRadius: BorderRadius.circular(8),
@@ -116,14 +122,21 @@ class WorkoutPlanCard extends StatelessWidget {
                   top: 16,
                   right: 20,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.black.withOpacity(0.4),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
                       plan.createdAt ?? l10n.new_word,
-                      style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
@@ -157,8 +170,10 @@ class WorkoutPlanCard extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 20,
-                        backgroundColor: AppColors.background,
-                        backgroundImage: CachedNetworkImageProvider(plan.coach!.profilePic), // 🔥 كاش عالـ disk بدل NetworkImage
+                        backgroundColor: context.backgroundColor,
+                        backgroundImage: CachedNetworkImageProvider(
+                          plan.coach!.profilePic,
+                        ), // 🔥 كاش عالـ disk بدل NetworkImage
                       ),
                       const SizedBox(width: 12),
                       Column(
@@ -166,17 +181,25 @@ class WorkoutPlanCard extends StatelessWidget {
                         children: [
                           Text(
                             plan.coach!.fullName,
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.textDark),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: context.textColor,
+                            ),
                           ),
                           Text(
                             l10n.yourPersonalCoach,
-                            style: const TextStyle(color: AppColors.hintText, fontSize: 12, fontWeight: FontWeight.w500),
+                            style: const TextStyle(
+                              color: AppColors.hintText,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ],
                       ),
                     ],
                   ),
-                  const Divider(height: 24, color: AppColors.background),
+                  Divider(height: 24, color: context.backgroundColor),
                 ],
 
                 // 📊 3️⃣ الإحصائيات والدائرة
@@ -189,13 +212,18 @@ class WorkoutPlanCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         _buildCompactStat(
-                            Icons.timer_outlined,
+                          Icons.timer_outlined,
 
-                            plan.durationMonths != null ? '${plan.durationMonths} ${l10n.months}' : l10n.openDuration                        ),
+                          plan.durationMonths != null
+                              ? '${plan.durationMonths} ${l10n.months}'
+                              : l10n.openDuration,
+                          context,
+                        ),
                         const SizedBox(height: 14),
                         _buildCompactStat(
-                            Icons.view_day_outlined,
-                            '${plan.daysCount ?? 0} ${l10n.daysPerWeek}'
+                          Icons.view_day_outlined,
+                          '${plan.daysCount ?? 0} ${l10n.daysPerWeek}',
+                          context,
                         ),
                       ],
                     ),
@@ -219,8 +247,8 @@ class WorkoutPlanCard extends StatelessWidget {
                                 Center(
                                   child: Text(
                                     '${(progress * 100).toInt()}%',
-                                    style: const TextStyle(
-                                      color: AppColors.textDark,
+                                    style: TextStyle(
+                                      color: context.textColor,
                                       fontSize: 13,
                                       fontWeight: FontWeight.w900,
                                     ),
@@ -231,7 +259,10 @@ class WorkoutPlanCard extends StatelessWidget {
                           ),
                           const SizedBox(height: 8),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
                             decoration: BoxDecoration(
                               color: AppColors.primaryBtn.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(6),
@@ -267,11 +298,17 @@ class WorkoutPlanCard extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primaryBtn,
                       elevation: 0,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
                     ),
                     child: Text(
                       l10n.viewDays,
-                      style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
@@ -283,7 +320,7 @@ class WorkoutPlanCard extends StatelessWidget {
     );
   }
 
-  Widget _buildCompactStat(IconData icon, String value) {
+  Widget _buildCompactStat(IconData icon, String value, BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -291,7 +328,11 @@ class WorkoutPlanCard extends StatelessWidget {
         const SizedBox(width: 8),
         Text(
           value,
-          style: const TextStyle(color: AppColors.textDark, fontSize: 14, fontWeight: FontWeight.w800),
+          style: TextStyle(
+            color: context.textColor,
+            fontSize: 14,
+            fontWeight: FontWeight.w800,
+          ),
         ),
       ],
     );

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../view_model/exercise_filter_params.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/features/progress/presentation/view_model/exercise_filter_params.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
@@ -7,7 +10,11 @@ class FilterButton extends StatelessWidget {
   final bool hasFilters;
   final VoidCallback onTap;
 
-  const FilterButton({super.key, required this.hasFilters, required this.onTap});
+  const FilterButton({
+    super.key,
+    required this.hasFilters,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +27,7 @@ class FilterButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: hasFilters
               ? AppColors.primaryBtn.withValues(alpha: 0.1)
-              : Colors.grey.shade100,
+              : context.backgroundColor,
           borderRadius: BorderRadius.circular(12),
           border: hasFilters
               ? Border.all(color: AppColors.primaryBtn.withValues(alpha: 0.3))
@@ -32,7 +39,7 @@ class FilterButton extends StatelessWidget {
             Icon(
               Icons.tune,
               size: 16,
-              color: hasFilters ? AppColors.primaryBtn : Colors.grey.shade600,
+              color: hasFilters ? AppColors.primaryBtn : context.textColor,
             ),
             const SizedBox(width: 4),
             Text(
@@ -40,7 +47,7 @@ class FilterButton extends StatelessWidget {
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: hasFilters ? AppColors.primaryBtn : Colors.grey.shade600,
+                color: hasFilters ? AppColors.primaryBtn : context.textColor,
               ),
             ),
             if (hasFilters) ...[
@@ -122,7 +129,11 @@ class CustomFilterChip extends StatelessWidget {
   final String label;
   final VoidCallback onRemove;
 
-  const CustomFilterChip({super.key, required this.label, required this.onRemove});
+  const CustomFilterChip({
+    super.key,
+    required this.label,
+    required this.onRemove,
+  });
 
   @override
   Widget build(BuildContext context) {

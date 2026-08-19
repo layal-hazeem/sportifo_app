@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/loading_shimmer.dart';
 import '../../data/models/my_plan_model.dart';
@@ -15,7 +16,7 @@ class PlanDaysScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
+      backgroundColor: context.backgroundColor,
       body: BlocBuilder<PlanDaysCubit, PlanDaysState>(
         builder: (context, state) {
           if (state is PlanDaysLoading) {
@@ -26,7 +27,10 @@ class PlanDaysScreen extends StatelessWidget {
             return Center(
               child: Text(
                 state.message,
-                style: const TextStyle(color: AppColors.hintText, fontWeight: FontWeight.w600),
+                style: const TextStyle(
+                  color: AppColors.hintText,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             );
           }
@@ -44,7 +48,7 @@ class PlanDaysScreen extends StatelessWidget {
                 _buildPremiumAppBar(context),
 
                 SliverToBoxAdapter(
-                  child: _buildWeekProgressBar(state),
+                  child: _buildWeekProgressBar(state, context),
                 ),
 
                 SliverPadding(
@@ -55,18 +59,21 @@ class PlanDaysScreen extends StatelessWidget {
                     bottom: 40,
                   ),
                   sliver: SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                        final day = detailedPlan.days[index];
-                        // 🔥 فحص ذكي: هل هذا اليوم منجز بناءً على planDayId الخاص به؟
-                        final isDoneThisWeek = state.isDayCompleted(day.id);
-                        return _AnimatedDayCard(
-                          index: index,
-                          child: _buildPremiumDayCard(context, day, index, detailedPlan.id, isDoneThisWeek),
-                        );
-                      },
-                      childCount: detailedPlan.days.length,
-                    ),
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                      final day = detailedPlan.days[index];
+                      // 🔥 فحص ذكي: هل هذا اليوم منجز بناءً على planDayId الخاص به؟
+                      final isDoneThisWeek = state.isDayCompleted(day.id);
+                      return _AnimatedDayCard(
+                        index: index,
+                        child: _buildPremiumDayCard(
+                          context,
+                          day,
+                          index,
+                          detailedPlan.id,
+                          isDoneThisWeek,
+                        ),
+                      );
+                    }, childCount: detailedPlan.days.length),
                   ),
                 ),
               ],
@@ -134,7 +141,7 @@ class PlanDaysScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildWeekProgressBar(PlanDaysSuccess state) {
+  Widget _buildWeekProgressBar(PlanDaysSuccess state, BuildContext context) {
     int totalWeeks = state.totalWeeks > 0 ? state.totalWeeks : 1;
 
     // 🔥 الباك إند ما بيوقف المستخدم من الاستمرار باللعب حتى بعد ما يخلص
@@ -149,7 +156,9 @@ class PlanDaysScreen extends StatelessWidget {
     int completedDaysThisWeek = state.completedPlanDayIds.length;
 
     // نحسب كم يوم خلص من هاد الأسبوع (مثلاً خلص يوم من أصل 3)
-    double weekProgress = totalDaysInWeek > 0 ? (completedDaysThisWeek / totalDaysInWeek) : 0.0;
+    double weekProgress = totalDaysInWeek > 0
+        ? (completedDaysThisWeek / totalDaysInWeek)
+        : 0.0;
 
     // نحسب التقدم الكلي: (الأسابيع السابقة اللي خلصت + تقدم الأسبوع الحالي) تقسيم كل الأسابيع
     double progress = ((currentWeek - 1) + weekProgress) / totalWeeks;
@@ -162,7 +171,11 @@ class PlanDaysScreen extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 15, offset: const Offset(0, 5))
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 15,
+            offset: const Offset(0, 5),
+          ),
         ],
       ),
       child: Column(
@@ -176,25 +189,41 @@ class PlanDaysScreen extends StatelessWidget {
                 children: [
                   const Text(
                     "WEEKLY PROGRESS",
-                    style: TextStyle(color: Colors.grey, fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 1.5),
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.5,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     "Week $currentWeek of $totalWeeks",
-                    style: const TextStyle(color: AppColors.textDark, fontSize: 17, fontWeight: FontWeight.w900),
+                    style: TextStyle(
+                      color: context.textColor,
+                      fontSize: 17,
+                      fontWeight: FontWeight.w900,
+                    ),
                   ),
                 ],
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
-                  color: progress == 1.0 ? Colors.green.shade50 : AppColors.primaryBtn.withOpacity(0.1),
+                  color: progress == 1.0
+                      ? Colors.green.shade50
+                      : AppColors.primaryBtn.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
                   "${(progress * 100).toInt()}%",
                   style: TextStyle(
-                    color: progress == 1.0 ? Colors.green.shade700 : AppColors.primaryBtn,
+                    color: progress == 1.0
+                        ? Colors.green.shade700
+                        : AppColors.primaryBtn,
                     fontWeight: FontWeight.w900,
                     fontSize: 16,
                   ),
@@ -220,15 +249,21 @@ class PlanDaysScreen extends StatelessWidget {
   }
 
   Widget _buildPremiumDayCard(
-      BuildContext context,
-      PlanDayModel day,
-      int index,
-      int planId,
-      bool isDoneThisWeek,
-      ) {
-    final Color mainColor = isDoneThisWeek ? const Color(0xFF10B981) : AppColors.primaryBtn;
-    final Color bgColor = isDoneThisWeek ? const Color(0xFF10B981).withOpacity(0.06) : Colors.white;
-    final Color borderColor = isDoneThisWeek ? Colors.green.shade300 : Colors.transparent;
+    BuildContext context,
+    PlanDayModel day,
+    int index,
+    int planId,
+    bool isDoneThisWeek,
+  ) {
+    final Color mainColor = isDoneThisWeek
+        ? const Color(0xFF10B981)
+        : AppColors.primaryBtn;
+    final Color bgColor = isDoneThisWeek
+        ? const Color(0xFF10B981).withOpacity(0.06)
+        : Colors.white;
+    final Color borderColor = isDoneThisWeek
+        ? Colors.green.shade300
+        : Colors.transparent;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -241,7 +276,7 @@ class PlanDaysScreen extends StatelessWidget {
             color: Colors.black.withOpacity(0.04),
             blurRadius: 16,
             offset: const Offset(0, 6),
-          )
+          ),
         ],
       ),
       child: ClipRRect(
@@ -262,7 +297,8 @@ class PlanDaysScreen extends StatelessWidget {
                   ),
                 ),
               );
-              if (context.mounted) context.read<PlanDaysCubit>().refreshProgress();
+              if (context.mounted)
+                context.read<PlanDaysCubit>().refreshProgress();
             },
             child: Stack(
               children: [
@@ -270,10 +306,7 @@ class PlanDaysScreen extends StatelessWidget {
                   left: 0,
                   top: 0,
                   bottom: 0,
-                  child: Container(
-                    width: 6,
-                    color: mainColor,
-                  ),
+                  child: Container(width: 6, color: mainColor),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(20.0),
@@ -283,18 +316,39 @@ class PlanDaysScreen extends StatelessWidget {
                         height: 56,
                         width: 56,
                         decoration: BoxDecoration(
-                          color: isDoneThisWeek ? Colors.green.shade100 : const Color(0xFF12141C),
+                          color: isDoneThisWeek
+                              ? Colors.green.shade100
+                              : const Color(0xFF12141C),
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: isDoneThisWeek
-                            ? const Icon(Icons.check_circle_rounded, color: Colors.green, size: 32)
+                            ? const Icon(
+                                Icons.check_circle_rounded,
+                                color: Colors.green,
+                                size: 32,
+                              )
                             : Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text('DAY', style: TextStyle(color: Colors.white70, fontSize: 10, fontWeight: FontWeight.bold)),
-                            Text('${index + 1}', style: TextStyle(color: mainColor, fontSize: 22, height: 1.1, fontWeight: FontWeight.w900)),
-                          ],
-                        ),
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                    'DAY',
+                                    style: TextStyle(
+                                      color: Colors.white70,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${index + 1}',
+                                    style: TextStyle(
+                                      color: mainColor,
+                                      fontSize: 22,
+                                      height: 1.1,
+                                      fontWeight: FontWeight.w900,
+                                    ),
+                                  ),
+                                ],
+                              ),
                       ),
                       const SizedBox(width: 18),
                       Expanded(
@@ -303,46 +357,68 @@ class PlanDaysScreen extends StatelessWidget {
                           children: [
                             Text(
                               day.name.toUpperCase(),
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontWeight: FontWeight.w900,
                                 fontSize: 17,
-                                color: AppColors.textDark,
+                                color: context.textColor,
                                 letterSpacing: -0.3,
                               ),
                             ),
                             const SizedBox(height: 6),
-                            Wrap( // 👈 استبدلناه بـ Wrap
+                            Wrap(
+                              // 👈 استبدلناه بـ Wrap
                               spacing: 8,
                               runSpacing: 8,
                               children: [
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
+                                  ),
                                   decoration: BoxDecoration(
-                                    color: isDoneThisWeek ? Colors.white : Colors.grey.shade100,
+                                    color: isDoneThisWeek
+                                        ? Colors.white
+                                        : Colors.grey.shade100,
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: Row(
-                                    mainAxisSize: MainAxisSize.min, // 👈 ضفنا هي
+                                    mainAxisSize:
+                                        MainAxisSize.min, // 👈 ضفنا هي
                                     children: [
-                                      Icon(Icons.fitness_center_rounded, size: 14, color: Colors.grey.shade500),
+                                      Icon(
+                                        Icons.fitness_center_rounded,
+                                        size: 14,
+                                        color: Colors.grey.shade500,
+                                      ),
                                       const SizedBox(width: 4),
                                       Text(
                                         '${day.exercises.length} Exercises',
-                                        style: TextStyle(color: Colors.grey.shade700, fontSize: 13, fontWeight: FontWeight.w700),
+                                        style: TextStyle(
+                                          color: Colors.grey.shade700,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w700,
+                                        ),
                                       ),
                                     ],
                                   ),
                                 ),
                                 if (isDoneThisWeek)
                                   Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 4,
+                                    ),
                                     decoration: BoxDecoration(
                                       color: Colors.green.shade50,
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: const Text(
                                       'COMPLETED',
-                                      style: TextStyle(color: Colors.green, fontSize: 10, fontWeight: FontWeight.w900),
+                                      style: TextStyle(
+                                        color: Colors.green,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w900,
+                                      ),
                                     ),
                                   ),
                               ],
@@ -350,7 +426,11 @@ class PlanDaysScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Icon(Icons.arrow_forward_ios_rounded, size: 16, color: mainColor.withOpacity(0.6)),
+                      Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        size: 16,
+                        color: mainColor.withOpacity(0.6),
+                      ),
                     ],
                   ),
                 ),
@@ -369,13 +449,21 @@ class PlanDaysScreen extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         padding: const EdgeInsets.all(20),
         children: [
-          const LoadingShimmer(width: double.infinity, height: 90, borderRadius: 24),
+          const LoadingShimmer(
+            width: double.infinity,
+            height: 90,
+            borderRadius: 24,
+          ),
           const SizedBox(height: 20),
           ...List.generate(
             4,
-                (index) => Padding(
+            (index) => Padding(
               padding: const EdgeInsets.only(bottom: 16),
-              child: LoadingShimmer(width: double.infinity, height: 96, borderRadius: 24),
+              child: LoadingShimmer(
+                width: double.infinity,
+                height: 96,
+                borderRadius: 24,
+              ),
             ),
           ),
         ],
@@ -390,11 +478,19 @@ class PlanDaysScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.event_busy_rounded, size: 64, color: Colors.grey.shade300),
+            Icon(
+              Icons.event_busy_rounded,
+              size: 64,
+              color: Colors.grey.shade300,
+            ),
             const SizedBox(height: 16),
             const Text(
               "No days created yet.",
-              style: TextStyle(color: AppColors.hintText, fontSize: 16, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                color: AppColors.hintText,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ],
         ),
@@ -411,7 +507,8 @@ class _AnimatedDayCard extends StatefulWidget {
   State<_AnimatedDayCard> createState() => _AnimatedDayCardState();
 }
 
-class _AnimatedDayCardState extends State<_AnimatedDayCard> with SingleTickerProviderStateMixin {
+class _AnimatedDayCardState extends State<_AnimatedDayCard>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
@@ -423,8 +520,14 @@ class _AnimatedDayCardState extends State<_AnimatedDayCard> with SingleTickerPro
       vsync: this,
       duration: const Duration(milliseconds: 600),
     );
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
-    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.5), end: Offset.zero).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.5),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
 
     Future.delayed(Duration(milliseconds: 100 * widget.index), () {
       if (mounted) _controller.forward();
@@ -439,6 +542,9 @@ class _AnimatedDayCardState extends State<_AnimatedDayCard> with SingleTickerPro
 
   @override
   Widget build(BuildContext context) {
-    return FadeTransition(opacity: _fadeAnimation, child: SlideTransition(position: _slideAnimation, child: widget.child));
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: SlideTransition(position: _slideAnimation, child: widget.child),
+    );
   }
 }

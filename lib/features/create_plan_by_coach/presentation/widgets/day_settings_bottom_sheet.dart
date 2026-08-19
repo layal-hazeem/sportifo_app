@@ -1,24 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/features/create_plan_by_coach/data/models/plan_day_ui_model.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class DaySettingsBottomSheet extends StatefulWidget {
   final PlanDayUiModel day;
 
-  const DaySettingsBottomSheet({
-    super.key,
-    required this.day,
-  });
+  const DaySettingsBottomSheet({super.key, required this.day});
 
-  static Future<bool?> show(
-    BuildContext context,
-    PlanDayUiModel day,
-  ) async {
+  static Future<bool?> show(BuildContext context, PlanDayUiModel day) async {
     return await showModalBottomSheet<bool>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: context.backgroundColor,
       builder: (_) {
         return DaySettingsBottomSheet(day: day);
       },
@@ -26,12 +21,10 @@ class DaySettingsBottomSheet extends StatefulWidget {
   }
 
   @override
-  State<DaySettingsBottomSheet> createState() =>
-      _DaySettingsBottomSheetState();
+  State<DaySettingsBottomSheet> createState() => _DaySettingsBottomSheetState();
 }
 
-class _DaySettingsBottomSheetState
-    extends State<DaySettingsBottomSheet> {
+class _DaySettingsBottomSheetState extends State<DaySettingsBottomSheet> {
   late TextEditingController setsController;
   late TextEditingController repsController;
 
@@ -61,33 +54,64 @@ class _DaySettingsBottomSheetState
   }
 
   void save() {
-    widget.day.defaultSets = int.tryParse(
-      setsController.text.trim(),
-    );
+    widget.day.defaultSets = int.tryParse(setsController.text.trim());
 
-    widget.day.defaultReps = int.tryParse(
-      repsController.text.trim(),
-    );
+    widget.day.defaultReps = int.tryParse(repsController.text.trim());
 
     Navigator.pop(context, applyToAll);
   }
 
-  Widget inputField(
-    String label,
-    TextEditingController controller,
-  ) {
+  Widget inputField(String label, TextEditingController controller) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: TextField(
         controller: controller,
-        keyboardType: TextInputType.text,
+        keyboardType: TextInputType.number,
+        style: TextStyle(
+          color: context.textColor,
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+        ),
+        cursorColor: AppColors.primaryBtn,
         decoration: InputDecoration(
           labelText: label,
+
+          labelStyle: TextStyle(
+            color: AppColors.hintText,
+            fontWeight: FontWeight.w500,
+          ),
+
+          floatingLabelStyle: TextStyle(
+            color: AppColors.primaryBtn,
+            fontWeight: FontWeight.w600,
+          ),
+
           filled: true,
-          fillColor: Colors.grey.shade100,
-          border: OutlineInputBorder(
+
+          // لون مختلف وواضح عن خلفية الـ BottomSheet
+          fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+
+          enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide.none,
+            borderSide: BorderSide(
+              color: AppColors.hintText.withOpacity(0.25),
+              width: 1,
+            ),
+          ),
+
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(
+              color: AppColors.primaryBtn,
+              width: 1.8,
+            ),
+          ),
+
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 18,
+            vertical: 17,
           ),
         ),
       ),
@@ -104,11 +128,9 @@ class _DaySettingsBottomSheetState
       ),
       child: Container(
         padding: const EdgeInsets.all(24),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(30),
-          ),
+        decoration: BoxDecoration(
+          color: context.backgroundColor,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -145,10 +167,7 @@ class _DaySettingsBottomSheetState
             // Title
             Text(
               '${widget.day.name} ${l10n.settings}',
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
 
@@ -158,24 +177,16 @@ class _DaySettingsBottomSheetState
             Text(
               l10n.daySettingsDescription,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.grey.shade600,
-              ),
+              style: TextStyle(color: Colors.grey.shade600),
             ),
 
             const SizedBox(height: 25),
 
             // Default Sets
-            inputField(
-              l10n.defaultSets,
-              setsController,
-            ),
+            inputField(l10n.defaultSets, setsController),
 
             // Default Reps
-            inputField(
-              l10n.defaultReps,
-              repsController,
-            ),
+            inputField(l10n.defaultReps, repsController),
 
             // Apply to all
             CheckboxListTile(
@@ -188,13 +199,9 @@ class _DaySettingsBottomSheetState
               },
               title: Text(
                 l10n.applyToAllResistanceExercises,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w600,
-                ),
+                style: const TextStyle(fontWeight: FontWeight.w600),
               ),
-              subtitle: Text(
-                l10n.applyToAllResistanceExercisesDescription,
-              ),
+              subtitle: Text(l10n.applyToAllResistanceExercisesDescription),
               contentPadding: EdgeInsets.zero,
             ),
 
@@ -207,17 +214,15 @@ class _DaySettingsBottomSheetState
                 onPressed: save,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primaryBtn,
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 16,
-                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18),
                   ),
                 ),
                 child: Text(
                   l10n.saveSettings,
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: context.textColor,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

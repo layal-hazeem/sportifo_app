@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 
 class ProfileTopSection extends StatelessWidget {
   final String? imageUrl;
@@ -59,15 +60,15 @@ class ProfileTopSection extends StatelessWidget {
                 clipBehavior: Clip.none,
                 children: [
                   Hero(
-  tag: "profile-image",
-  child: GestureDetector(
-    onTap: onOpenImage,
-    child: CircleAvatar(
-      radius: 60,
-      backgroundImage: imageProvider,
-    ),
-  ),
-),
+                    tag: "profile-image",
+                    child: GestureDetector(
+                      onTap: onOpenImage,
+                      child: CircleAvatar(
+                        radius: 60,
+                        backgroundImage: imageProvider,
+                      ),
+                    ),
+                  ),
 
                   Positioned(
                     bottom: 0,
@@ -76,8 +77,8 @@ class ProfileTopSection extends StatelessWidget {
                       onTap: onEditImage,
                       child: Container(
                         padding: const EdgeInsets.all(6),
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
+                        decoration: BoxDecoration(
+                          color: context.backgroundColor,
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/core/widgets/cached_static_gif.dart';
 import 'package:sportifo_app/features/workout/data/models/exercise_model.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
@@ -121,7 +122,7 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: context.backgroundColor,
 
       appBar: AppBar(
         title: Text(
@@ -131,8 +132,8 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
         centerTitle: false,
         elevation: 0,
         scrolledUnderElevation: 0.5,
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black87,
+        backgroundColor: context.backgroundColor,
+        foregroundColor: context.textColor,
       ),
 
       body: SafeArea(
@@ -182,7 +183,7 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
             Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: Colors.grey.shade50,
+                color: context.backgroundColor,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: Colors.grey.shade200),
               ),

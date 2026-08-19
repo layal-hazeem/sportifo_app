@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/helpers/snack_bar_utils.dart';
 import '../../../../l10n/app_localizations.dart';
 
 class PaymentUploadSection extends StatefulWidget {
   final Function(String, String) onFilePicked;
 
-  const PaymentUploadSection({
-    super.key,
-    required this.onFilePicked,
-  });
+  const PaymentUploadSection({super.key, required this.onFilePicked});
 
   @override
   State<PaymentUploadSection> createState() => _PaymentUploadSectionState();
@@ -74,7 +72,9 @@ class _PaymentUploadSectionState extends State<PaymentUploadSection> {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          color: _isFileUploaded ? Colors.green.withOpacity(0.08) : Colors.white,
+          color: _isFileUploaded
+              ? Colors.green.withOpacity(0.08)
+              : context.backgroundColor,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: _isFileUploaded ? Colors.green : Colors.grey.shade300,
@@ -84,7 +84,9 @@ class _PaymentUploadSectionState extends State<PaymentUploadSection> {
         child: Column(
           children: [
             Icon(
-              _isFileUploaded ? Icons.verified_user : Icons.cloud_upload_outlined,
+              _isFileUploaded
+                  ? Icons.verified_user
+                  : Icons.cloud_upload_outlined,
               color: _isFileUploaded ? Colors.green : Colors.grey.shade400,
               size: 28,
             ),

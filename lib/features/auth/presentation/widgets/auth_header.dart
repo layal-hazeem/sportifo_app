@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class AuthHeader extends StatelessWidget {
@@ -16,7 +17,9 @@ class AuthHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: isCentered ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+      crossAxisAlignment: isCentered
+          ? CrossAxisAlignment.center
+          : CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 20),
         SizedBox(
@@ -24,10 +27,10 @@ class AuthHeader extends StatelessWidget {
           child: Text(
             title,
             textAlign: isCentered ? TextAlign.center : TextAlign.start,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: AppSizes.titleFontSize,
               fontWeight: FontWeight.bold,
-              color: AppColors.textDark,
+              color: context.textColor,
             ),
           ),
         ),
@@ -38,7 +41,7 @@ class AuthHeader extends StatelessWidget {
             child: Text(
               subtitle!,
               textAlign: isCentered ? TextAlign.center : TextAlign.start,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: AppSizes.hintFontSize,
                 color: AppColors.hintText,
                 height: 1.5, // ليعطي أريحية في القراءة

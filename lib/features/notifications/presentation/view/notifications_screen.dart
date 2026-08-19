@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../view_model/notifications_cubit.dart';
@@ -13,7 +14,8 @@ class NotificationsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => getIt<NotificationsCubit>()..getNotifications(isRefresh: true),
+      create: (context) =>
+          getIt<NotificationsCubit>()..getNotifications(isRefresh: true),
       child: const _NotificationsView(),
     );
   }
@@ -37,7 +39,8 @@ class _NotificationsViewState extends State<_NotificationsView> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
       context.read<NotificationsCubit>().getNotifications();
     }
   }
@@ -51,21 +54,25 @@ class _NotificationsViewState extends State<_NotificationsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: context.backgroundColor,
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Notifications',
           style: TextStyle(
-            color: AppColors.textDark,
+            color: context.textColor,
             fontWeight: FontWeight.bold,
             fontSize: 18,
           ),
         ),
         centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.primaryBtn,
         elevation: 0.5,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: AppColors.textDark, size: 20),
+          icon: Icon(
+            Icons.arrow_back_ios_new,
+            color: context.textColor,
+            size: 20,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -73,7 +80,8 @@ class _NotificationsViewState extends State<_NotificationsView> {
         builder: (context, state) {
           final cubit = context.read<NotificationsCubit>();
 
-          if (state is NotificationsLoading && cubit.notificationsList.isEmpty) {
+          if (state is NotificationsLoading &&
+              cubit.notificationsList.isEmpty) {
             return const NotificationsShimmerLoading();
           }
 
@@ -82,7 +90,11 @@ class _NotificationsViewState extends State<_NotificationsView> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.error_outline_rounded, size: 64, color: Colors.grey.shade400),
+                  Icon(
+                    Icons.error_outline_rounded,
+                    size: 64,
+                    color: Colors.grey.shade400,
+                  ),
                   const SizedBox(height: 12),
                   Text(
                     state.message,
@@ -94,9 +106,14 @@ class _NotificationsViewState extends State<_NotificationsView> {
                     onPressed: () => cubit.getNotifications(isRefresh: true),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primaryBtn,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
-                    child: const Text('Try Again', style: TextStyle(color: Colors.white)),
+                    child: const Text(
+                      'Try Again',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ],
               ),
@@ -128,18 +145,21 @@ class _NotificationsViewState extends State<_NotificationsView> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        const Text(
+                        Text(
                           'No Notifications Yet',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: AppColors.textDark,
+                            color: context.textColor,
                           ),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           'We will notify you when something important arrives.',
-                          style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.grey.shade600,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -156,13 +176,17 @@ class _NotificationsViewState extends State<_NotificationsView> {
             child: ListView.builder(
               controller: _scrollController,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-              itemCount: cubit.notificationsList.length + (state is NotificationsPaginationLoading ? 1 : 0),
+              itemCount:
+                  cubit.notificationsList.length +
+                  (state is NotificationsPaginationLoading ? 1 : 0),
               itemBuilder: (context, index) {
                 if (index == cubit.notificationsList.length) {
                   return const Padding(
                     padding: EdgeInsets.symmetric(vertical: 16.0),
                     child: Center(
-                      child: CircularProgressIndicator(color: AppColors.primaryBtn),
+                      child: CircularProgressIndicator(
+                        color: AppColors.primaryBtn,
+                      ),
                     ),
                   );
                 }
@@ -173,7 +197,8 @@ class _NotificationsViewState extends State<_NotificationsView> {
                   notification: notification,
                   onTap: () {
                     // فتح الـ Deep Link إن وجد عند الكبس على الإشعار
-                    if (notification.deepLink != null && notification.deepLink!.isNotEmpty) {
+                    if (notification.deepLink != null &&
+                        notification.deepLink!.isNotEmpty) {
                       // يمكنك استخدام دالة _handleDeepLink هنا
                     }
                   },
