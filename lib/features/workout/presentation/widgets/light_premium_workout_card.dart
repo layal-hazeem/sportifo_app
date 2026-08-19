@@ -47,9 +47,9 @@ class LightPremiumWorkoutCard extends StatelessWidget {
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        Colors.white.withValues(alpha: 0.0),
-                        Colors.white.withValues(alpha: 0.2),
-                        Colors.white.withValues(alpha: 0.9),
+                        context.backgroundColor.withValues(alpha: 0.0),
+                        context.backgroundColor.withValues(alpha: 0.2),
+                        context.backgroundColor.withValues(alpha: 0.9),
                       ],
                     ),
                   ),

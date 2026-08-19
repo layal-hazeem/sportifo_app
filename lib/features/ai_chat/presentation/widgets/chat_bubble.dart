@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/routes/app_routes.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/features/ai_chat/presentation/widgets/nutrition_card.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/helpers/snack_bar_utils.dart';
@@ -113,8 +114,18 @@ class _ChatBubbleState extends State<ChatBubble> {
               decoration: BoxDecoration(
                 color: isUserMessage
                     ? AppColors.primaryBtn
-                    : Colors.grey.shade200,
+                    : context.backgroundColor,
                 borderRadius: BorderRadius.circular(15),
+                boxShadow: isUserMessage
+                    ? null
+                    : [
+                        BoxShadow(
+                          color: AppColors.primaryBtn.withValues(alpha: 0.3),
+                          blurRadius: 12,
+                          spreadRadius: 0,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
               ),
               padding: const EdgeInsets.all(12),
               child: Column(
@@ -123,7 +134,7 @@ class _ChatBubbleState extends State<ChatBubble> {
                   Text(
                     displayBody,
                     style: TextStyle(
-                      color: isUserMessage ? Colors.white : Colors.black87,
+                      color: isUserMessage ? Colors.white : context.textColor,
                       fontSize: 14,
                       height: 1.5,
                     ),

@@ -16,10 +16,7 @@ class StatCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: context.backgroundColor,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: AppColors.primaryBtn.withOpacity(0.08),
-          width: 1,
-        ),
+        border: Border.all(color: AppColors.primaryBtn, width: 1),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.04),

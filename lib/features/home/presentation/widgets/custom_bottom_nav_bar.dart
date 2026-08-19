@@ -4,7 +4,6 @@ import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/core/theme/app_theme_extensions.dart'; // 👈 لا تنسَ الـ import
 
 class CustomBottomNavBar {
-  // أضفنا context هنا
   static BottomNavigationBarItem build(
     BuildContext context, {
     required IconData icon,
@@ -19,7 +18,6 @@ class CustomBottomNavBar {
     );
   }
 
-  // أضفنا context هنا أيضاً
   static Widget _buildNeumorphicIcon(
     BuildContext context,
     IconData icon,
@@ -31,12 +29,13 @@ class CustomBottomNavBar {
       duration: const Duration(milliseconds: 200),
       child: Neumorphic(
         style: NeumorphicStyle(
-          depth: isSelected ? 6 : -4,
-          intensity: 0.8,
+          depth: 0,
+          intensity: 0,
           shape: NeumorphicShape.flat,
           boxShape: const NeumorphicBoxShape.circle(),
-          // استخدام context.backgroundColor بدلاً من AppColors.background
           color: isSelected ? AppColors.primaryBtn : context.backgroundColor,
+          shadowLightColor: Colors.transparent,
+          shadowDarkColor: Colors.transparent,
         ),
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -53,9 +52,7 @@ class CustomBottomNavBar {
               : Icon(
                   icon,
                   size: 22,
-                  color: isSelected
-                      ? context.backgroundColor
-                      : AppColors.primaryBtn,
+                  color: isSelected ? context.textColor : AppColors.primaryBtn,
                 ),
         ),
       ),

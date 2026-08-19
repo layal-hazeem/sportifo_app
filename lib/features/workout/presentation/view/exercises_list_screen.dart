@@ -30,7 +30,7 @@ class ExercisesListScreen extends StatelessWidget {
         showBackButton: true,
         actions: [
           IconButton(
-            icon: Icon(Icons.search, color: context.backgroundColor),
+            icon: Icon(Icons.search, color: context.textColor),
             onPressed: () {
               Navigator.pushNamed(
                 context,

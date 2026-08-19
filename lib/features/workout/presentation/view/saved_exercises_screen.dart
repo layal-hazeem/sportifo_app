@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/widgets/loading_shimmer.dart';
@@ -23,7 +24,9 @@ class _SavedExercisesScreenState extends State<SavedExercisesScreen> {
   }
 
   Future<void> _onRefresh() async {
-    await context.read<SavedExercisesCubit>().fetchSavedExercises(forceRefresh: true);
+    await context.read<SavedExercisesCubit>().fetchSavedExercises(
+      forceRefresh: true,
+    );
   }
 
   @override
@@ -31,18 +34,16 @@ class _SavedExercisesScreenState extends State<SavedExercisesScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
-      appBar: WaveAppBar(
-        title: l10n.saved_exercises,
-        showBackButton: true,
-      ),
+      backgroundColor: context.backgroundColor,
+      appBar: WaveAppBar(title: l10n.saved_exercises, showBackButton: true),
       body: BlocBuilder<SavedExercisesCubit, SavedExercisesState>(
         buildWhen: (previous, current) =>
-        current is SavedExercisesSuccess ||
+            current is SavedExercisesSuccess ||
             current is SavedExercisesLoading ||
             current is SavedExercisesError,
         builder: (context, state) {
-          if (state is SavedExercisesLoading && state is! SavedExercisesSuccess) {
+          if (state is SavedExercisesLoading &&
+              state is! SavedExercisesSuccess) {
             return GridView.builder(
               padding: const EdgeInsets.all(16),
               physics: const NeverScrollableScrollPhysics(),
@@ -69,7 +70,7 @@ class _SavedExercisesScreenState extends State<SavedExercisesScreen> {
             return RefreshIndicator(
               onRefresh: _onRefresh,
               color: AppColors.primaryBtn,
-              backgroundColor: Colors.white,
+              backgroundColor: context.backgroundColor,
               displacement: 40,
               child: GridView.builder(
                 padding: const EdgeInsets.all(16),
@@ -106,8 +107,11 @@ class _SavedExercisesScreenState extends State<SavedExercisesScreen> {
                   Text(state.message),
                   TextButton(
                     onPressed: _onRefresh,
-                    child: Text(l10n.retry, style: const TextStyle(color: AppColors.primaryBtn)),
-                  )
+                    child: Text(
+                      l10n.retry,
+                      style: const TextStyle(color: AppColors.primaryBtn),
+                    ),
+                  ),
                 ],
               ),
             );
@@ -124,7 +128,7 @@ class _SavedExercisesScreenState extends State<SavedExercisesScreen> {
         return RefreshIndicator(
           onRefresh: _onRefresh,
           color: AppColors.primaryBtn,
-          backgroundColor: Colors.white,
+          backgroundColor: context.backgroundColor,
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             child: SizedBox(
@@ -133,11 +137,19 @@ class _SavedExercisesScreenState extends State<SavedExercisesScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.bookmark_border, size: 80, color: AppColors.primaryBtn.withValues(alpha:0.2)),
+                    Icon(
+                      Icons.bookmark_border,
+                      size: 80,
+                      color: AppColors.primaryBtn.withValues(alpha: 0.2),
+                    ),
                     const SizedBox(height: 16),
                     Text(
                       l10n.noSavedExercisesYet, // 🔥 ترجمة
-                      style: TextStyle(fontSize: 18, color: Colors.grey.shade600, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.grey.shade600,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     Padding(
@@ -145,18 +157,28 @@ class _SavedExercisesScreenState extends State<SavedExercisesScreen> {
                       child: Text(
                         l10n.savedExercisesHint, // 🔥 ترجمة
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 14, color: Colors.grey.shade400),
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey.shade400,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 40),
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.arrow_downward, size: 14, color: Colors.grey.shade400),
+                        Icon(
+                          Icons.arrow_downward,
+                          size: 14,
+                          color: Colors.grey.shade400,
+                        ),
                         const SizedBox(width: 6),
                         Text(
                           l10n.pullDownToRefresh, // 🔥 ترجمة
-                          style: TextStyle(fontSize: 12, color: Colors.grey.shade400),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey.shade400,
+                          ),
                         ),
                       ],
                     ),
