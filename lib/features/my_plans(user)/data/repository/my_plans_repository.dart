@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+import 'package:get_it/get_it.dart';
 import '../../../../core/network/api_constants.dart';
 import '../../../../core/network/api_error_handler.dart';
 import '../../../../core/network/api_result.dart';
@@ -43,7 +44,7 @@ class MyPlansRepository {
       //   استهلاك للسيرفر بالتنقل العادي بين التابات.
       final needsFreshData = isRefresh || type == PlanTabType.saved;
 
-      final cacheOptions = await DioFactory.getCacheOptions();
+      final cacheOptions = await GetIt.instance<DioFactory>().getCacheOptions();
       final dioOptions = cacheOptions.copyWith(
         policy: needsFreshData ? CachePolicy.refresh : CachePolicy.request,
         hitCacheOnNetworkFailure: true,
@@ -62,7 +63,7 @@ class MyPlansRepository {
   Future<ApiResult<List<PlanModel>>> fetchMyPlans() async {
     try {
       // 1. جلب إعدادات الكاش
-      final cacheOptions = await DioFactory.getCacheOptions();
+      final cacheOptions = await GetIt.instance<DioFactory>().getCacheOptions();
 
       // 2. إجبار التطبيق على القراءة من الكاش (التعويذة)
       final dioOptions = cacheOptions.copyWith(
@@ -84,7 +85,7 @@ class MyPlansRepository {
   // 🔥 الدالة الجديدة لجلب تفاصيل الخطة (الأيام والتمارين)
   Future<ApiResult<PlanModel>> fetchPlanDays(int planId) async {
     try {
-      final cacheOptions = await DioFactory.getCacheOptions();
+      final cacheOptions = await GetIt.instance<DioFactory>().getCacheOptions();
       final dioOptions = cacheOptions.copyWith(
         policy: CachePolicy.refreshForceCache, // عشان يجيب أحدث التعديلات دايماً
       ).toOptions();
@@ -139,7 +140,7 @@ class MyPlansRepository {
   Future<ApiResult<PlanProgressModel>> fetchPlanProgress(int planId) async {
     try {
       // 1. إعداد خيارات الكاش لإجباره على جلب بيانات جديدة من السيرفر
-      final cacheOptions = await DioFactory.getCacheOptions();
+      final cacheOptions = await GetIt.instance<DioFactory>().getCacheOptions();
       final dioOptions = cacheOptions.copyWith(
         policy: CachePolicy.refreshForceCache, // 👈 السحر هنا: تجاهل الكاش القديم!
       ).toOptions();

@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/models/food_log_model.dart';
 import '../../data/repository/nutrition_repository.dart';
 import '../../../ai_chat/data/models/chat_message_model.dart';
@@ -10,14 +8,13 @@ import '../../../../core/services/home_widget_service.dart';
 import '../../../targets/presentation/view_model/target_cubit/target_cubit.dart';
 import '../../../targets/presentation/view_model/target_cubit/target_state.dart';
 import '../../../../core/di/service_locator.dart';
+
 class NutritionCubit extends Cubit<NutritionState> {
   final NutritionRepository _repository;
-
-  final Map<int, int> _messageToMealMap = {};
-  TodayFoodLogsResponse? _lastSuccessfulResponse;
   bool _isInitialized = false;
 
   NutritionCubit(this._repository) : super(NutritionInitial());
+
   void _updateHomeWidget(TodayFoodLogsResponse data) {
     try {
       final targetCubit = getIt<TargetCubit>();
@@ -49,99 +46,14 @@ class NutritionCubit extends Cubit<NutritionState> {
       print("Error updating home widget from NutritionCubit: $e");
     }
   }
+
   Future<void> initialize() async {
     if (_isInitialized) return;
-
-    await _loadMessageToMealMap();
-
-    final result = await _repository.getTodayFoodLogs(forceRefresh: false);
-
-    if (!isClosed) {
-      if (result is Success<TodayFoodLogsResponse>) {
-        final logs = result.data.logs;
-        final validMealIds = logs.map((l) => l.id).toSet();
-
-        _messageToMealMap.removeWhere((msgId, mealId) => !validMealIds.contains(mealId));
-        await _saveMessageToMealMap();
-
-        _lastSuccessfulResponse = result.data;
-        await _saveFoodLogsToCache(result.data);
-        _updateHomeWidget(result.data);
-        emit(NutritionSuccess(foodLogs: result.data));
-      } else if (result is Failure) {
-        final cached = await _loadFoodLogsFromCache();
-        if (cached != null) {
-          _lastSuccessfulResponse = cached;
-          _updateHomeWidget(cached);
-          emit(NutritionSuccess(foodLogs: cached));
-        } else {
-          emit(NutritionError((result as Failure).message));
-        }
-      }
-    }
-
+    await fetchTodayFoodLogs(forceRefresh: false);
     _isInitialized = true;
   }
 
-  Future<void> _loadMessageToMealMap() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final mapString = prefs.getString('nutrition_message_meal_map') ?? '{}';
-      _messageToMealMap.clear();
-
-      if (mapString.isNotEmpty && mapString != '{}') {
-        final pairs = mapString.split(',');
-        for (final pair in pairs) {
-          final parts = pair.split(':');
-          if (parts.length == 2) {
-            _messageToMealMap[int.parse(parts[0])] = int.parse(parts[1]);
-          }
-        }
-      }
-    } catch (e) {}
-  }
-
-  Future<void> _saveMessageToMealMap() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      if (_messageToMealMap.isEmpty) {
-        await prefs.setString('nutrition_message_meal_map', '{}');
-      } else {
-        final mapString = _messageToMealMap.entries
-            .map((e) => '${e.key}:${e.value}')
-            .join(',');
-        await prefs.setString('nutrition_message_meal_map', mapString);
-      }
-    } catch (e) {}
-  }
-
-  Future<void> _saveFoodLogsToCache(TodayFoodLogsResponse data) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final jsonString = jsonEncode(data.toJson());
-      await prefs.setString('nutrition_food_logs_cache', jsonString);
-    } catch (e) {}
-  }
-
-  Future<TodayFoodLogsResponse?> _loadFoodLogsFromCache() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final jsonString = prefs.getString('nutrition_food_logs_cache');
-      if (jsonString == null || jsonString.isEmpty) return null;
-
-      final jsonMap = jsonDecode(jsonString) as Map<String, dynamic>;
-      return TodayFoodLogsResponse.fromJson(jsonMap);
-    } catch (e) {
-      return null;
-    }
-  }
-
   Future<void> fetchTodayFoodLogs({bool forceRefresh = false}) async {
-    if (!forceRefresh && _lastSuccessfulResponse != null && !isClosed) {
-      emit(NutritionSuccess(foodLogs: _lastSuccessfulResponse!));
-      return;
-    }
-
     emit(NutritionLoading());
 
     final result = await _repository.getTodayFoodLogs(forceRefresh: forceRefresh);
@@ -149,45 +61,45 @@ class NutritionCubit extends Cubit<NutritionState> {
     if (isClosed) return;
 
     if (result is Success<TodayFoodLogsResponse>) {
-      _lastSuccessfulResponse = result.data;
-      await _saveFoodLogsToCache(result.data);
       _updateHomeWidget(result.data);
       emit(NutritionSuccess(foodLogs: result.data));
     } else if (result is Failure) {
-      final cached = await _loadFoodLogsFromCache();
-      if (cached != null) {
-        _lastSuccessfulResponse = cached;
-        emit(NutritionSuccess(foodLogs: cached));
-      } else if (_lastSuccessfulResponse != null) {
-        emit(NutritionSuccess(foodLogs: _lastSuccessfulResponse!));
-      } else {
-        emit(NutritionError((result as Failure).message));
-      }
+      emit(NutritionError((result as Failure).message));
     }
   }
 
-  bool isMealLogged(int messageId) {
-    return _messageToMealMap.containsKey(messageId);
+  // دالة التحقق من تسجيل الوجبة
+  Future<bool> isMealLogged(int messageId) async {
+    final mealId = await _repository.getMealIdForMessage(messageId);
+    return mealId != null;
   }
 
-  bool isMessageSaved(ChatMessageModel message) {
+  // دالة التحقق من أن رسالة AI محفوظة كوجبة (تعتمد على الخريطة أو مقارنة النص)
+  Future<bool> isMessageSaved(ChatMessageModel message) async {
     if (message.sender != 'ai' || !message.hasNutritionData()) return false;
 
-    if (_messageToMealMap.containsKey(message.id)) return true;
+    // أولاً نتحقق من الخريطة
+    final mealId = await _repository.getMealIdForMessage(message.id);
+    if (mealId != null) return true;
 
-    final logs = _lastSuccessfulResponse?.logs ?? [];
-    final normalizedMsgBody = _normalizeBody(message.body);
-
-    return logs.any((log) {
-      if (log.isManual) return false;
-      return _normalizeBody(log.body) == normalizedMsgBody;
-    });
+    // ثم نتحقق من الوجبات الحالية (نحتاج لجلبها)
+    final result = await _repository.getTodayFoodLogs(forceRefresh: false);
+    if (result is Success<TodayFoodLogsResponse>) {
+      final logs = result.data.logs;
+      final normalizedMsgBody = _normalizeBody(message.body);
+      return logs.any((log) {
+        if (log.isManual) return false;
+        return _normalizeBody(log.body) == normalizedMsgBody;
+      });
+    }
+    return false;
   }
 
   String _normalizeBody(String body) {
     return body.replaceAll('\r\n', '\n').replaceAll('\r', '\n').trim();
   }
 
+  // إضافة وجبة من AI
   Future<void> addMealFromAi(int messageId) async {
     emit(AddMealLoading(messageId));
 
@@ -198,12 +110,11 @@ class NutritionCubit extends Cubit<NutritionState> {
     if (result is Success<AddMealResponse>) {
       if (result.data.logs.isNotEmpty) {
         final mealId = result.data.logs.first.id;
-        _messageToMealMap[messageId] = mealId;
-        await _saveMessageToMealMap();
+        await _repository.addMessageMealMapping(messageId, mealId);
       }
 
+      // تحديث البيانات (سيجلب الكاش الجديد)
       await fetchTodayFoodLogs(forceRefresh: true);
-      _updateHomeWidget(_lastSuccessfulResponse!);
       emit(AddMealSuccess(
         messageId: messageId,
         mealResponse: result.data,
@@ -216,6 +127,7 @@ class NutritionCubit extends Cubit<NutritionState> {
     }
   }
 
+  // إضافة وجبة يدوية
   Future<void> addManualMeal({
     required String body,
     required double calories,
@@ -237,15 +149,8 @@ class NutritionCubit extends Cubit<NutritionState> {
       if (isClosed) return;
 
       if (result is Success<AddMealResponse>) {
-        _lastSuccessfulResponse = TodayFoodLogsResponse(
-          logs: result.data.logs,
-          total: result.data.total,
-        );
-        await _saveFoodLogsToCache(_lastSuccessfulResponse!);
-        _updateHomeWidget(_lastSuccessfulResponse!);
-        emit(AddMealSuccess(mealResponse: result.data));
-
         await fetchTodayFoodLogs(forceRefresh: true);
+        emit(AddMealSuccess(mealResponse: result.data));
       } else if (result is Failure) {
         emit(AddMealError(message: (result as Failure).message));
       }
@@ -256,6 +161,7 @@ class NutritionCubit extends Cubit<NutritionState> {
     }
   }
 
+  // حذف وجبة
   Future<void> deleteMeal(int mealId) async {
     emit(DeleteMealLoading(mealId));
 
@@ -264,16 +170,8 @@ class NutritionCubit extends Cubit<NutritionState> {
     if (isClosed) return;
 
     if (result is Success<AddMealResponse>) {
-      _messageToMealMap.removeWhere((key, value) => value == mealId);
-      await _saveMessageToMealMap();
-
-      _lastSuccessfulResponse = TodayFoodLogsResponse(
-        logs: result.data.logs,
-        total: result.data.total,
-      );
-      await _saveFoodLogsToCache(_lastSuccessfulResponse!);
-      _updateHomeWidget(_lastSuccessfulResponse!);
-      emit(NutritionSuccess(foodLogs: _lastSuccessfulResponse!));
+      await _repository.removeMealMapping(mealId);
+      await fetchTodayFoodLogs(forceRefresh: true);
       emit(DeleteMealSuccess(
         mealId: mealId,
         mealResponse: result.data,
@@ -285,4 +183,11 @@ class NutritionCubit extends Cubit<NutritionState> {
       ));
     }
   }
+
+  // دالة reset (عند تسجيل الخروج) - نمسح كل شيء
+void reset() {
+  _repository.clearAllMappings(); // أو _repository.clearFoodLogs() إذا أردت مسح الكاش أيضاً
+  _isInitialized = false;
+  if (!isClosed) emit(NutritionInitial());
+}
 }

@@ -1,4 +1,5 @@
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+import 'package:get_it/get_it.dart';
 import '../../../../core/network/api_error_handler.dart';
 import '../../../../core/network/api_result.dart';
 import '../../../../core/network/dio_factory.dart';
@@ -18,7 +19,7 @@ class CoachRepository {
     int? maxExp,
   }) async {
     try {
-      final cacheOptions = await DioFactory.getCacheOptions();
+      final cacheOptions = await GetIt.instance<DioFactory>().getCacheOptions();
       final dioOptions = cacheOptions.copyWith(
         policy: CachePolicy.forceCache,
       ).toOptions();
@@ -45,7 +46,7 @@ class CoachRepository {
 
   Future<ApiResult<CoachDetailsModel>> getCoachDetails(int coachId) async {
     try {
-      final cacheOptions = await DioFactory.getCacheOptions();
+      final cacheOptions = await GetIt.instance<DioFactory>().getCacheOptions();
       final dioOptions = cacheOptions.copyWith(
         policy: CachePolicy.forceCache,
       ).toOptions();

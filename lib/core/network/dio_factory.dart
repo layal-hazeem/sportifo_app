@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:http_cache_hive_store/http_cache_hive_store.dart';
@@ -95,31 +97,50 @@ class DioFactory {
   }
 
   // دالة جلب إعدادات الكاش الذكية والمحدثة
-  static Future<CacheOptions> getCacheOptions() async {
-    if (_cacheOptions == null) {
-      final docDir = await getApplicationDocumentsDirectory();
-      final cachePath = '${docDir.path}/sportifo_http_cache';
+ // 🔥 صارت instance method بدل static مشان توصل للـ _localStorage
+Future<CacheOptions> getCacheOptions() async {
+  if (_cacheOptions == null) {
+    final docDir = await getApplicationDocumentsDirectory();
+    // ✅ غيّرنا الاسم لـ v2 مشان نتخلص من الكاش القديم يلي انحفظ بمفاتيح غلط
+    final cachePath = '${docDir.path}/sportifo_http_cache_v2';
 
-      _cacheOptions = CacheOptions(
-        store: HiveCacheStore(cachePath),
-        // 🔥 رجعناها لـ request بدل refresh: request بيرجع الكاش مباشرة لو
-        // موجود وسليم (وهاد يلي بيخلي فتح التطبيق أوفلاين سريع وموثوق)،
-        // ويتحقق من السيرفر بس لما يلزم. الشاشات يلي بدها بيانات "طازة"
-        // مضمونة (متل my_plans) عندها أصلاً override خاص فيها (refreshForceCache).
-        policy: CachePolicy.request,
-        hitCacheOnNetworkFailure: true,
-        maxStale: const Duration(days: 7),
-        priority: CachePriority.high,
-        allowPostMethod: false,
-
-        keyBuilder: ({required Uri url, Map<String, String>? headers, Object? body}) {
-          final lang = headers?['Accept-Language'] ?? headers?['accept-language'] ?? 'en';
-          return '$lang::${url.toString()}';
-        },
-      );
-    }
-    return _cacheOptions!;
+    _cacheOptions = CacheOptions(
+      store: HiveCacheStore(cachePath),
+      policy: CachePolicy.request,
+      hitCacheOnNetworkFailure: true,
+      maxStale: const Duration(days: 7),
+      priority: CachePriority.high,
+      allowPostMethod: false,
+      keyBuilder: ({required Uri url, Map<String, String>? headers, Object? body}) {
+        final lang = headers?['Accept-Language'] ?? 'en';
+        // ✅ الـ userId المحفوظ بـ SharedPreferences — بيتغير فعلياً مع كل حساب
+        final uid = _localStorage.getUserId() ?? 'guest';
+        return '$uid::$lang::$url';
+      },
+    );
   }
+  return _cacheOptions!;
+}
+
+  // في dio_factory.dart - أضف هذه الدوال في آخر الـ class
+
+/// ✅ حذف كل الـ Cache الخاص بمستخدم معين
+Future<void> clearUserCache(String? userId) async {
+  if (userId == null) return;
+  
+  try {
+    final docDir = await getApplicationDocumentsDirectory();
+    final cachePath = '${docDir.path}/sportifo_http_cache';
+    final cacheDir = Directory(cachePath);
+    
+    if (await cacheDir.exists()) {
+      await cacheDir.delete(recursive: true);
+      print('✅ User cache cleared successfully');
+    }
+  } catch (e) {
+    print('❌ Error clearing cache: $e');
+  }
+}
 
   Dio get dio => _dio;
 }

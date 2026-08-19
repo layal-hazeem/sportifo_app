@@ -1,4 +1,5 @@
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+import 'package:get_it/get_it.dart';
 import '../../../../core/network/api_error_handler.dart';
 import '../../../../core/network/api_result.dart';
 import '../../../../core/network/dio_factory.dart';
@@ -11,7 +12,7 @@ class WorkoutRepository {
   WorkoutRepository(this._webService);
   Future<ApiResult<List<FilterItemModel>>> getCategories(int id) async {
     try {
-      final cacheOptions = await DioFactory.getCacheOptions();
+      final cacheOptions = await GetIt.instance<DioFactory>().getCacheOptions();
       final dioOptions = cacheOptions.copyWith(
         policy: CachePolicy.forceCache,
       ).toOptions();
@@ -25,7 +26,7 @@ class WorkoutRepository {
   }
   Future<ApiResult<List<FilterItemModel>>> getSubCategories(int organId) async {
     try {
-      final cacheOptions = await DioFactory.getCacheOptions();
+      final cacheOptions = await GetIt.instance<DioFactory>().getCacheOptions();
       final dioOptions = cacheOptions.copyWith(
         policy: CachePolicy.forceCache,
       ).toOptions();
@@ -45,7 +46,7 @@ class WorkoutRepository {
     String? searchQuery,
   }) async {
     try {
-      final cacheOptions = await DioFactory.getCacheOptions();
+      final cacheOptions = await GetIt.instance<DioFactory>().getCacheOptions();
       final dioOptions = cacheOptions.copyWith(
         policy: CachePolicy.forceCache,
       ).toOptions();
@@ -82,7 +83,7 @@ Future<ApiResult<List<ExerciseModel>>> getSavedExercises({
   bool forceRefresh = false,
 }) async {
   try {
-    final cacheOptions = await DioFactory.getCacheOptions();
+    final cacheOptions = await GetIt.instance<DioFactory>().getCacheOptions();
     final policy = forceRefresh 
         ? CachePolicy.refresh  
         : CachePolicy.forceCache; 

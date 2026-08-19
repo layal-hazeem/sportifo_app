@@ -1,4 +1,5 @@
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart'; // تأكدي من هذا الاستيراد
+import 'package:get_it/get_it.dart';
 import '../../../../core/network/api_error_handler.dart';
 import '../../../../core/network/api_result.dart';
 import '../../../../core/network/dio_factory.dart'; // لاستدعاء DioFactory
@@ -23,7 +24,7 @@ class TargetRepository {
   Future<ApiResult<TargetModel>> getLatestTarget() async {
     try {
       // 🔥 تفعيل الكاش الذكي لجلب الأهداف
-      final cacheOptions = await DioFactory.getCacheOptions();
+      final cacheOptions = await GetIt.instance<DioFactory>().getCacheOptions();
       final dioOptions = cacheOptions.copyWith(
         policy: CachePolicy.forceCache,
       ).toOptions();

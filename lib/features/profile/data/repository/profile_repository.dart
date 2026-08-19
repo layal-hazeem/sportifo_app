@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+import 'package:get_it/get_it.dart';
 import 'package:sportifo_app/core/network/api_error_handler.dart';
 import 'package:sportifo_app/core/network/api_result.dart';
 import 'package:sportifo_app/features/profile/data/models/edit_coach_profile_request_model.dart';
@@ -17,7 +18,7 @@ class ProfileRepository {
 
   Future<ApiResult<ProfileResponseModel>> getProfile() async {
     try {
-      final cacheOptions = await DioFactory.getCacheOptions();
+      final cacheOptions = await GetIt.instance<DioFactory>().getCacheOptions();
       final dioOptions = cacheOptions
           .copyWith(policy: CachePolicy.refresh)
           .toOptions();

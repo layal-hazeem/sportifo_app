@@ -1,3 +1,5 @@
+import 'package:get_it/get_it.dart';
+
 import '../../../../core/network/api_error_handler.dart';
 import '../../../../core/network/api_result.dart';
 import '../models/ad_model.dart';
@@ -13,7 +15,7 @@ class AdsRepository {
   Future<ApiResult<List<AdModel>>> getAds() async {
     try {
 
-      final cacheOptions = await DioFactory.getCacheOptions();
+      final cacheOptions = await GetIt.instance<DioFactory>().getCacheOptions();
 
       final dioOptions = cacheOptions.copyWith(
         policy: CachePolicy.forceCache,

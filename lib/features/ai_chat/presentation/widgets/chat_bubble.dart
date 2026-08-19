@@ -97,7 +97,8 @@ class _ChatBubbleState extends State<ChatBubble> {
     final isUserMessage = widget.message.sender == 'user';
     final hasNutrition = _hasNutritionData();
     final displayBody = _displayedText ?? widget.message.body;
-final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context)!;
+
     return Align(
       alignment: isUserMessage ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
@@ -192,9 +193,6 @@ final l10n = AppLocalizations.of(context)!;
                       },
                       builder: (context, state) {
                         final nutritionCubit = context.read<NutritionCubit>();
-                        final isSaved = nutritionCubit.isMessageSaved(
-                          widget.message,
-                        );
                         final isLoading =
                             state is AddMealLoading &&
                             state.messageId == widget.message.id;
@@ -204,51 +202,61 @@ final l10n = AppLocalizations.of(context)!;
                           return const SizedBox.shrink();
                         }
 
-                        return AnimatedOpacity(
-                          opacity: isLoading ? 0.6 : 1.0,
-                          duration: const Duration(milliseconds: 200),
-                          child: ElevatedButton.icon(
-                            onPressed: isSaved || isLoading ? null : _saveMeal,
-                            icon: isLoading
-                                ? SizedBox(
-                                    width: 16,
-                                    height: 16,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      valueColor: AlwaysStoppedAnimation<Color>(
+                        return FutureBuilder<bool>(
+                          future: nutritionCubit.isMessageSaved(widget.message),
+                          initialData: false,
+                          builder: (context, snapshot) {
+                            final isSaved = snapshot.data ?? false;
+
+                            return AnimatedOpacity(
+                              opacity: isLoading ? 0.6 : 1.0,
+                              duration: const Duration(milliseconds: 200),
+                              child: ElevatedButton.icon(
+                                onPressed:
+                                    isSaved || isLoading ? null : _saveMeal,
+                                icon: isLoading
+                                    ? SizedBox(
+                                        width: 16,
+                                        height: 16,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                isSaved
+                                                    ? Colors.grey.shade400
+                                                    : Colors.white,
+                                              ),
+                                        ),
+                                      )
+                                    : Icon(
                                         isSaved
-                                            ? Colors.grey.shade400
-                                            : Colors.white,
+                                            ? Icons.check_circle
+                                            : Icons.bookmark_border,
+                                        size: 16,
                                       ),
-                                    ),
-                                  )
-                                : Icon(
-                                    isSaved
-                                        ? Icons.check_circle
-                                        : Icons.bookmark_border,
-                                    size: 16,
+                                label: Text(
+                                  isSaved ? l10n.saved : l10n.save,
+                                  style: const TextStyle(fontSize: 11),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: isSaved
+                                      ? Colors.grey.shade400
+                                      : AppColors.primaryBtn,
+                                  disabledBackgroundColor: Colors.grey.shade400,
+                                  foregroundColor: Colors.white,
+                                  disabledForegroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 10,
                                   ),
-                            label: Text(
-                              isSaved ? l10n.saved : l10n.save,
-                              style: const TextStyle(fontSize: 11),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: isSaved
-                                  ? Colors.grey.shade400
-                                  : AppColors.primaryBtn,
-                              disabledBackgroundColor: Colors.grey.shade400,
-                              foregroundColor: Colors.white,
-                              disabledForegroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 10,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  minimumSize: const Size(0, 44),
+                                ),
                               ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              minimumSize: const Size(0, 44),
-                            ),
-                          ),
+                            );
+                          },
                         );
                       },
                     ),

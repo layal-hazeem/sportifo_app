@@ -161,7 +161,11 @@ class _OTPScreenState extends State<OTPScreen> {
 
                 // Save token
                 await localStorage.saveToken(state.response.token!);
-
+  // ✅ حفظ User ID
+  final userId = state.response.user?.user.id.toString();
+  if (userId != null) {
+    await localStorage.saveUserId(userId);
+  }
                 // Get and save user role
                 final role = state.response.user?.user.role;
 

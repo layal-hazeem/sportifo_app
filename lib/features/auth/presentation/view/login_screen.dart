@@ -50,10 +50,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
               final token = state.response.data!.token;
               final role = state.response.data!.user.role;
+              final userId = state.response.data!.user.id.toString();
               print("Current Role = $role");
 
               // 🔥 حفظ التوكن
               await getIt<LocalStorage>().saveToken(token);
+              await getIt<LocalStorage>().saveUserId(userId);
               await getIt<LocalStorage>().saveRole(role);
               await NotificationService().registerDeviceToBackend();
               AppSnackBar.show(

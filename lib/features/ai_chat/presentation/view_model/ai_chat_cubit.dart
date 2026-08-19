@@ -126,6 +126,13 @@ class AiChatCubit extends Cubit<AiChatState> {
     }
   }
 
+void reset() {
+  _currentCancelToken?.cancel();
+  _currentCancelToken = null;
+  _pendingMessage = null;
+  _messages.clear();
+  if (!isClosed) emit(AiChatInitial());
+}
   String _formatDate(DateTime dt) {
     return "${dt.year}-${dt.month.toString().padLeft(2, '0')}-${dt.day.toString().padLeft(2, '0')}";
   }

@@ -1,4 +1,5 @@
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+import 'package:get_it/get_it.dart';
 import '../../../../core/network/api_error_handler.dart';
 import '../../../../core/network/api_result.dart';
 import '../../../../core/network/dio_factory.dart';
@@ -17,7 +18,7 @@ class ExerciseActivityRepository {
     bool forceRefresh = false,
   }) async {
     try {
-      final cacheOptions = await DioFactory.getCacheOptions();
+      final cacheOptions = await GetIt.instance<DioFactory>().getCacheOptions();
       final policy = forceRefresh
           ? CachePolicy.refresh
           : CachePolicy.forceCache;

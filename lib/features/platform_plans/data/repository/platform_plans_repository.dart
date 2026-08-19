@@ -1,4 +1,5 @@
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart'; // 👈 إياكي تنسيها
+import 'package:get_it/get_it.dart';
 import '../../../../core/network/dio_factory.dart'; // 👈 إياكي تنسيها
 import '../../../../core/network/api_result.dart';
 import '../../../../core/network/api_error_handler.dart';
@@ -13,7 +14,7 @@ class PlatformPlansRepository {
   Future<ApiResult<List<PlanModel>>> getPlatformPlans() async {
     try {
       // 🔥 التعويذة السحرية لكسر كاش الباك إند اللي مدته 7 أيام!
-      final cacheOptions = await DioFactory.getCacheOptions();
+      final cacheOptions = await GetIt.instance<DioFactory>().getCacheOptions();
       final dioOptions = cacheOptions.copyWith(
         policy: CachePolicy.refreshForceCache, // إجبار التحديث
       ).toOptions();

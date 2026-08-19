@@ -250,7 +250,7 @@ Future<void> setupServiceLocator() async {
 
 
   getIt.registerLazySingleton<AiChatWebService>(() => AiChatWebService(getIt<Dio>()));
-getIt.registerLazySingleton<AiChatRepository>(() => AiChatRepository(getIt<AiChatWebService>()));
+getIt.registerLazySingleton<AiChatRepository>(() => AiChatRepository(getIt<AiChatWebService>(), getIt<LocalStorage>()));
 getIt.registerFactory<AiChatCubit>(() => AiChatCubit(getIt<AiChatRepository>()));
 
 
@@ -260,12 +260,12 @@ getIt.registerSingleton<NutritionWebService>(
 );
 
 getIt.registerSingleton<NutritionRepository>(
-  NutritionRepository(getIt<NutritionWebService>()),
+  NutritionRepository(getIt<NutritionWebService>(), getIt<LocalStorage>()),
 );
 
-getIt.registerSingleton<NutritionCubit>(
-  NutritionCubit(getIt<NutritionRepository>()),
-);
+getIt.registerLazySingleton<NutritionCubit>(() => NutritionCubit(
+  getIt<NutritionRepository>(),
+));
 
   // 🔥 تسجيل My Plans Feature
   getIt.registerLazySingleton<MyPlansService>(

@@ -5,6 +5,7 @@ class LocalStorage {
   static const String _tokenKey = "token";
   static const String _onboardingKey = "onboarding_seen";
   static const String _roleKey = "role";
+  static const String _userIdKey = "user_id";
 
   // حقن الـ SharedPreferences من خلال الـ Constructor
   LocalStorage(this._prefs);
@@ -16,6 +17,16 @@ class LocalStorage {
 
   String? getToken() {
     return _prefs.getString(_tokenKey);
+  }
+
+ // ✅ جلب User ID
+  String? getUserId() {
+    return _prefs.getString(_userIdKey);
+  }
+
+  // ✅ حفظ User ID
+  Future<void> saveUserId(String userId) async {
+    await _prefs.setString(_userIdKey, userId);
   }
 
   Future<void> clearToken() async {
@@ -57,6 +68,7 @@ Future<void> clearRole() async {
 Future<void> clearUserSession() async {
   await _prefs.remove(_tokenKey);
   await _prefs.remove(_roleKey);
+  await _prefs.remove(_userIdKey);
   // ملاحظة: احتفظي بـ onboarding_seen و lang حتى لا تتأثر إعدادات التطبيق العامة
 }
 }
