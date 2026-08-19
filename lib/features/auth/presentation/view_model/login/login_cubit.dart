@@ -25,7 +25,6 @@ class LoginCubit extends Cubit<LoginState> {
       if (response.isNotVerified) {
         emit(LoginNeedsOtp(loginRequestBody.login));
       } else {
-        await NotificationService().registerDeviceToBackend();
 
         emit(LoginSuccess(response));
       }
