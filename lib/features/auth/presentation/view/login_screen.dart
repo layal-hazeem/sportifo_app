@@ -1,3 +1,4 @@
+//login screen
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
@@ -37,37 +38,22 @@ class _LoginScreenState extends State<LoginScreen> {
       // 2. استخدام BlocListener لمراقبة الحالة وتغيير الشاشات
       body: BlocListener<LoginCubit, LoginState>(
         // ... بداخل الـ BlocListener في LoginScreen
-        listener: (context, state) async {
-          if (state is LoginLoading) {
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (_) => const Center(child: CircularProgressIndicator()),
-            );
-          } else if (state is LoginSuccess) {
-            Navigator.pop(context);
+          listener: (context, state) async {
+            if (state is LoginLoading) {
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (_) => const Center(child: CircularProgressIndicator()),
+              );
+            }
 
-            final token = state.response.data!.token;
-            final role = state.response.data!.user.role;
-            print("Current Role = $role");
+            else if (state is LoginSuccess) {
+              Navigator.pop(context);
 
-            // 🔥 حفظ التوكن
-            await getIt<LocalStorage>().saveToken(token);
-            await getIt<LocalStorage>().saveRole(role);
+              final token = state.response.data!.token;
+              final role = state.response.data!.user.role;
+              print("Current Role = $role");
 
-            AppSnackBar.show(
-              context,
-              message: l10n.loginSuccess,
-              type: SnackBarType.success,
-            );
-
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => const HomePage()),
-            );
-          } else if (state is LoginNeedsOtp) {
-            Navigator.pop(context); // إغلاق الـ Loading Dialog
-            
               // 🔥 حفظ التوكن
               await getIt<LocalStorage>().saveToken(token);
               await getIt<LocalStorage>().saveRole(role);
@@ -78,27 +64,36 @@ class _LoginScreenState extends State<LoginScreen> {
                 type: SnackBarType.success,
               );
 
-            Navigator.pushNamed(
-              context,
-              AppRoutes.otpScreen,
-              arguments: state.login, // نرسل الإيميل كـ argument
-            );
-          } else if (state is LoginError) {
-            Navigator.pop(context);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (_) => const HomePage()),
+              );
+            }
 
-            AppSnackBar.show(
-              context,
-              message: state.message,
-              type: SnackBarType.error,
-            );
-          }
-        },
+            else if (state is LoginNeedsOtp) {
+              Navigator.pop(context); // إغلاق الـ Loading Dialog
+
+              Navigator.pushNamed(
+                context,
+                AppRoutes.otpScreen,
+                arguments: state.login, // نرسل الإيميل كـ argument
+              );
+            }
+
+            else if (state is LoginError) {
+              Navigator.pop(context);
+
+              AppSnackBar.show(
+                context,
+                message: state.message,
+                type: SnackBarType.error,
+              );
+            }
+          },
         child: SafeArea(
           child: SizedBox.expand(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSizes.mainPadding,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.mainPadding),
               child: Form(
                 key: formKey, // 3. ربط الفورم
                 child: Column(
@@ -106,53 +101,41 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     const SizedBox(height: 80),
                     Center(
-                      child: Text(
-                        l10n.welcomeBack,
-                        style: TextStyle(
-                          fontSize: AppSizes.titleFontSize,
-                          fontWeight: FontWeight.bold,
-                          color: context.textColor,
-                        ),
-                      ),
+                      child: Text(l10n.welcomeBack,
+                          style: TextStyle(
+                              fontSize: AppSizes.titleFontSize,
+                              fontWeight: FontWeight.bold,
+                              color: context.textColor)),
                     ),
                     const SizedBox(height: 80),
-                    Text(
-                      l10n.emailOrPhone,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: AppSizes.labelFontSize,
-                      ),
-                    ),
+                    Text(l10n.emailOrPhone,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: AppSizes.labelFontSize)),
                     const SizedBox(height: 15),
                     CustomNeumorphicField(
                       controller: loginController,
                       hint: l10n.emailHint,
                       icon: Icons.email_outlined,
                       validator: (value) {
-                        if (value == null || value.isEmpty)
-                          return l10n.fieldRequired;
+                        if (value == null || value.isEmpty) return l10n.fieldRequired;
                         return null;
                       },
                     ),
                     const SizedBox(height: 35),
-                    Text(
-                      l10n.password,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: AppSizes.labelFontSize,
-                      ),
-                    ),
+                    Text(l10n.password,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: AppSizes.labelFontSize)),
                     const SizedBox(height: 15),
                     // حقل كلمة السر في LoginScreen
                     CustomNeumorphicField(
                       controller: passwordController,
                       hint: l10n.passwordHint,
-                      icon: Icons
-                          .lock_outline, // أيقونة القفل كأيقونة أساسية (Prefix)
-                      isPassword: true, // هذا سيفعل زر العين تلقائياً (Suffix)
+                      icon: Icons.lock_outline, // أيقونة القفل كأيقونة أساسية (Prefix)
+                      isPassword: true,        // هذا سيفعل زر العين تلقائياً (Suffix)
                       validator: (value) {
-                        if (value == null || value.isEmpty)
-                          return l10n.fieldRequired;
+                        if (value == null || value.isEmpty) return l10n.fieldRequired;
                         if (value.length < 8) return l10n.passwordTooShort;
                         return null;
                       },
@@ -162,18 +145,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: TextButton(
                         onPressed: () {
                           // ✅ التعديل هنا: نستخدم pushNamed بدلاً من push العادي
-                          Navigator.pushNamed(
-                            context,
-                            AppRoutes.forgotPasswordScreen,
-                          );
+                          Navigator.pushNamed(context, AppRoutes.forgotPasswordScreen);
                         },
-                        child: Text(
-                          l10n.forgotPassword,
-                          style: const TextStyle(
-                            color: AppColors.linkColor,
-                            fontSize: AppSizes.mediumFontSize,
-                          ),
-                        ),
+                        child: Text(l10n.forgotPassword,
+                            style: const TextStyle(color: AppColors.linkColor, fontSize: AppSizes.mediumFontSize)),
                       ),
                     ),
                     const SizedBox(height: 35),
@@ -197,10 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [
                         Text(
                           l10n.dontHaveAccount,
-                          style: TextStyle(
-                            color: context.textColor,
-                            fontSize: AppSizes.hintFontSize,
-                          ),
+                          style: TextStyle(color: context.textColor, fontSize: AppSizes.hintFontSize),
                         ),
                         TextButton(
                           onPressed: register,
@@ -214,8 +186,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ],
-                    ),
-                  ],
+                    ),                  ],
                 ),
               ),
             ),
@@ -224,11 +195,9 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-
   void register() {
     Navigator.pushReplacementNamed(context, AppRoutes.register);
   }
-
   @override
   void dispose() {
     loginController.dispose();
