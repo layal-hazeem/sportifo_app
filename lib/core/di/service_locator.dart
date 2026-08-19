@@ -1,6 +1,8 @@
 import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sportifo_app/core/services/chat_websocket_service.dart';
+import 'package:sportifo_app/core/services/pending_messages_service.dart';
 import 'package:sportifo_app/features/%20ads/presentation/view_model/ads_cubit.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/complete_profile/complete_profile_cubit.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/logout/logout_cubit.dart';
@@ -13,6 +15,10 @@ import 'package:sportifo_app/features/edit_coach_plan/presentation/view_model/ed
 import 'package:sportifo_app/features/edit_self_plan/data/repository/edit_self_plan_repository.dart';
 import 'package:sportifo_app/features/edit_self_plan/data/web_services/edit_self_plan_service.dart';
 import 'package:sportifo_app/features/edit_self_plan/presentation/view_model/edit_self_plan_cubit.dart';
+import 'package:sportifo_app/features/chat/data/repository/chat_repository.dart';
+import 'package:sportifo_app/features/chat/data/web_services/chat_web_service.dart';
+import 'package:sportifo_app/features/chat/presentation/view_model/chat_detail_cubit.dart';
+import 'package:sportifo_app/features/chat/presentation/view_model/conversations_cubit.dart';
 import 'package:sportifo_app/features/existing_days/data/repository/existing_days_repository.dart';
 import 'package:sportifo_app/features/existing_days/data/web_services/existing_days_web_services.dart';
 import 'package:sportifo_app/features/existing_days/presentation/view_model/existing_days_cubit.dart';
@@ -323,7 +329,14 @@ getIt.registerLazySingleton<PlanDetailsRepository>(
 getIt.registerFactory<PlanDetailsCubit>(
 () => PlanDetailsCubit(getIt<PlanDetailsRepository>()),
 );
+// Chat Services
+getIt.registerLazySingleton<ChatWebService>(
+  () => ChatWebService(getIt<Dio>()),
+);
 
+getIt.registerLazySingleton<ChatRepository>(
+  () => ChatRepository(getIt<ChatWebService>()),
+);
 
 getIt.registerLazySingleton<EditSelfPlanService>(
   () => EditSelfPlanService(getIt<Dio>()),
@@ -365,4 +378,25 @@ getIt.registerFactory<EditSelfPlanCubit>(
   getIt.registerFactory<CreateSelfPlanCubit>(
     () => CreateSelfPlanCubit(getIt<CreateSelfPlanRepository>()),
   );
+getIt.registerFactory<ConversationsCubit>(
+  () => ConversationsCubit(getIt<ChatRepository>()),
+);
+
+getIt.registerLazySingleton<ChatWebSocketService>(
+  () => ChatWebSocketService(),
+);
+
+// 🔥 أضف هذا السطر (التسجيل المفقود)
+getIt.registerLazySingleton<PendingMessagesService>(
+  () => PendingMessagesService(),
+);
+
+// Chat Detail Cubit مع التبعيات
+getIt.registerFactory<ChatDetailCubit>(
+  () => ChatDetailCubit(
+    chatRepository: getIt<ChatRepository>(),
+    webSocketService: getIt<ChatWebSocketService>(),
+    pendingService: getIt<PendingMessagesService>(), // الآن سيكون موجوداً
+  ),
+);
 }

@@ -585,4 +585,40 @@
   "exercises": "Exercises",
   "addSelectedDays": "Add Selected Days",
   "planUpdatedSuccessfully":"Plan Updated Successfully"
+
+
+
+
+
+
+
+
+
+
+  "today": "Today",
+  "yesterday": "Yesterday",
+  "messageDetails": "Message Details",
+  "sentAt": "Sent at",
+  "deliveredAt": "Delivered at",
+  "readAt": "Read at",
+  "deleteMessageTitle": "Delete Message",
+  "deleteMessageConfirmation": "Are you sure you want to delete this message? This action cannot be undone.",
+  "delete": "Delete",
+  "ok": "OK",
+  "noDetails": "No details available",
+  "max5Images": "You can select up to 5 images",
+  "errorUserNotFound": "Error: Current user not identified",
+  "noMessagesYet": "No messages yet",
+  "startConversation": "Start the conversation now",
+  "retry": "Retry",
+  "trainerOnlyCanSend": "Only the coach can send messages in this subscription",
+  "you": "You",
+
+
+"chats": "Chats",
+"noConversations": "No conversations",
+"messageDeleted": "This message has been deleted",
+"sendingMessage": "Sending...",
+"typeMessage": "Type a message...",
+"cannotSend": "You cannot send"
 }
