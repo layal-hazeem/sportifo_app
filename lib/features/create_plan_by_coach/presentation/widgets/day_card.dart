@@ -670,7 +670,7 @@ class _PlanDayCardState extends State<PlanDayCard> {
                     hintStyle: const TextStyle(color: AppColors.hintText),
                     labelStyle: const TextStyle(color: AppColors.hintText),
                     filled: true,
-                    fillColor: AppColors.lightBackground,
+                    fillColor: context.backgroundColor,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16),
                       borderSide: BorderSide(

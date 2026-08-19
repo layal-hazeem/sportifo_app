@@ -1,41 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:sportifo_app/core/di/service_locator.dart';
 import 'package:sportifo_app/core/network/api_result.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/core/widgets/custom_glass_bottom_sheet.dart';
 import 'package:sportifo_app/core/widgets/wave_app_bar.dart';
-
 import 'package:sportifo_app/features/create_plan_by_coach/data/models/plan_day_ui_model.dart';
 import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/create_day_bottom_sheet.dart';
 import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/day_settings_bottom_sheet.dart';
 import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/exercises_picker.dart';
 import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/day_card.dart';
 import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/plan_details_card.dart';
-
 import 'package:sportifo_app/features/edit_coach_plan/presentation/widgets/edit_plan_loading.dart';
-
 import 'package:sportifo_app/features/existing_days/data/model/existing_days_model.dart';
 import 'package:sportifo_app/features/existing_days/presentation/view/existing_days_screen.dart';
 import 'package:sportifo_app/features/existing_days/presentation/view_model/existing_days_cubit.dart';
-
 import 'package:sportifo_app/features/plan_details/data/models/plan_details_model.dart';
-
 import 'package:sportifo_app/features/workout/data/models/exercise_model.dart';
 import 'package:sportifo_app/features/workout/data/repository/workout_repository.dart';
-
 import 'package:sportifo_app/features/edit_coach_plan/data/models/edit_coach_plan_model.dart';
 import 'package:sportifo_app/features/edit_coach_plan/data/models/edit_coach_plan_request.dart';
 import 'package:sportifo_app/features/edit_coach_plan/presentation/view_model/edit_coach_plan_cubit.dart';
 import 'package:sportifo_app/features/edit_coach_plan/presentation/view_model/edit_coach_plan_state.dart';
-
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class EditCoachPlanScreen extends StatefulWidget {
   final PlanDetailsModel plan;
-
   const EditCoachPlanScreen({super.key, required this.plan});
 
   @override
@@ -44,29 +35,18 @@ class EditCoachPlanScreen extends StatefulWidget {
 
 class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
   final PageController _pageController = PageController();
-
   int _currentStep = 0;
-
   late final List<PlanDayUiModel> days;
-
-  /// Original backend day ID for every UI day.
   final Map<PlanDayUiModel, int> _dayIds = {};
-
-  /// Exercise IDs that existed when the screen was opened.
   final Map<PlanDayUiModel, Set<int>> _originalExerciseIds = {};
-
-  /// IDs of days deleted by the coach.
   final List<int> _deletedDayIds = [];
-
   bool isFabOpen = false;
-
   String? selectedGoal;
   int durationMonths = 1;
 
   @override
   void initState() {
     super.initState();
-
     selectedGoal = widget.plan.goal;
     durationMonths = widget.plan.durationMonths ?? 1;
 
@@ -92,20 +72,14 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
     super.dispose();
   }
 
-  // ============================================================
-  // STEP NAVIGATION
-  // ============================================================
-
   void _goToNextStep() {
     if (_currentStep != 0) return;
-
     if (selectedGoal == null) {
       _showValidationMessage(
         AppLocalizations.of(context)!.chooseGoalForTrainingPlan,
       );
       return;
     }
-
     _pageController
         .animateToPage(
           1,
@@ -139,10 +113,6 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
         });
   }
 
-  // ============================================================
-  // ADD DAY
-  // ============================================================
-
   void addDay() {
     CreateDayBottomSheet.show(context, (value) {
       setState(() {
@@ -150,10 +120,6 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
       });
     });
   }
-
-  // ============================================================
-  // ADD EXISTING DAY
-  // ============================================================
 
   Future<void> addExistingDays() async {
     final selectedDays =
@@ -208,10 +174,6 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
     });
   }
 
-  // ============================================================
-  // ADD EXERCISE
-  // ============================================================
-
   Future<void> addExercise(int dayIndex) async {
     final workoutRepository = getIt<WorkoutRepository>();
 
@@ -247,19 +209,11 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
     });
   }
 
-  // ============================================================
-  // DELETE EXERCISE
-  // ============================================================
-
   void _onDeleteExercise(int dayIndex, int exerciseIndex) {
     setState(() {
       days[dayIndex].exercises.removeAt(exerciseIndex);
     });
   }
-
-  // ============================================================
-  // DELETE DAY
-  // ============================================================
 
   void _onDeleteDay(int index) {
     final day = days[index];
@@ -274,10 +228,6 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
       }
     });
   }
-
-  // ============================================================
-  // DAY SETTINGS
-  // ============================================================
 
   Future<void> _onDaySettings(PlanDayUiModel day) async {
     final applyAll = await DaySettingsBottomSheet.show(context, day);
@@ -298,10 +248,6 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
       setState(() {});
     }
   }
-
-  // ============================================================
-  // BUILD REQUEST
-  // ============================================================
 
   EditCoachPlanRequest _buildRequest() {
     final dayPayloads = <PlanDay>[];
@@ -340,7 +286,6 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
       );
     }
 
-    // Deleted backend days
     for (final deletedDayId in _deletedDayIds) {
       dayPayloads.add(PlanDay(id: deletedDayId, name: '', delete: true));
     }
@@ -351,10 +296,6 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
       days: dayPayloads,
     );
   }
-
-  // ============================================================
-  // SAVE
-  // ============================================================
 
   void saveChanges() {
     final l10n = AppLocalizations.of(context)!;
@@ -386,10 +327,6 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
     );
   }
 
-  // ============================================================
-  // VALIDATION
-  // ============================================================
-
   void _showValidationMessage(String message) {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
@@ -404,10 +341,6 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
         ),
       );
   }
-
-  // ============================================================
-  // BUILD
-  // ============================================================
 
   @override
   Widget build(BuildContext context) {
@@ -456,10 +389,6 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
       },
     );
   }
-
-  // ============================================================
-  // STEP HEADER
-  // ============================================================
 
   Widget _buildStepHeader() {
     final l10n = AppLocalizations.of(context)!;
@@ -518,10 +447,6 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
     );
   }
 
-  // ============================================================
-  // GOAL + DURATION
-  // ============================================================
-
   Widget _buildGoalAndDurationStep() {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
@@ -541,10 +466,6 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
       ),
     );
   }
-
-  // ============================================================
-  // DAYS + EXERCISES
-  // ============================================================
 
   Widget _buildDaysAndExercisesStep() {
     final l10n = AppLocalizations.of(context)!;
@@ -625,10 +546,6 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
     );
   }
 
-  // ============================================================
-  // BOTTOM NAVIGATION
-  // ============================================================
-
   Widget _buildBottomNavigationBar() {
     final l10n = AppLocalizations.of(context)!;
 
@@ -675,7 +592,7 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
               child: Text(
                 _currentStep == 0 ? l10n.next : l10n.saveChanges,
                 style: TextStyle(
-                  color: context.backgroundColor,
+                  color: context.textColor,
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
@@ -686,10 +603,6 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
       ),
     );
   }
-
-  // ============================================================
-  // ADD DAY FAB
-  // ============================================================
 
   Widget _buildAddDayFab() {
     final l10n = AppLocalizations.of(context)!;
@@ -726,9 +639,6 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
 
                 const SizedBox(height: 20),
 
-                // =========================
-                // CREATE NEW DAY
-                // =========================
                 _buildActionTile(
                   icon: Icons.add_circle_outline,
                   color: AppColors.primaryBtn,
@@ -742,9 +652,6 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
 
                 const SizedBox(height: 12),
 
-                // =========================
-                // ADD EXISTING DAY
-                // =========================
                 _buildActionTile(
                   icon: Icons.copy_outlined,
                   color: Colors.blue,
@@ -787,7 +694,7 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
         decoration: BoxDecoration(
           color: context.backgroundColor,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: AppColors.hintText),
+          border: Border.all(color: context.backgroundColor),
         ),
         child: Row(
           children: [
@@ -822,16 +729,12 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
               ),
             ),
 
-            const Icon(Icons.arrow_forward_ios, size: 16),
+            Icon(Icons.arrow_forward_ios, color: context.textColor, size: 16),
           ],
         ),
       ),
     );
   }
-
-  // ============================================================
-  // EMPTY DAYS
-  // ============================================================
 
   Widget _buildEmptyDaysState() {
     final l10n = AppLocalizations.of(context)!;
@@ -840,7 +743,7 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
       margin: const EdgeInsets.fromLTRB(20, 8, 20, 20),
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
       decoration: BoxDecoration(
-        color: Colors.grey.shade50,
+        color: context.backgroundColor,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: Colors.grey.shade200),
       ),

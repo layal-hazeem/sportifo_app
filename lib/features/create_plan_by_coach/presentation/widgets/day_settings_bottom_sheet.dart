@@ -66,14 +66,52 @@ class _DaySettingsBottomSheetState extends State<DaySettingsBottomSheet> {
       padding: const EdgeInsets.only(bottom: 16),
       child: TextField(
         controller: controller,
-        keyboardType: TextInputType.text,
+        keyboardType: TextInputType.number,
+        style: TextStyle(
+          color: context.textColor,
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+        ),
+        cursorColor: AppColors.primaryBtn,
         decoration: InputDecoration(
           labelText: label,
+
+          labelStyle: TextStyle(
+            color: AppColors.hintText,
+            fontWeight: FontWeight.w500,
+          ),
+
+          floatingLabelStyle: TextStyle(
+            color: AppColors.primaryBtn,
+            fontWeight: FontWeight.w600,
+          ),
+
           filled: true,
-          fillColor: context.backgroundColor,
-          border: OutlineInputBorder(
+
+          // لون مختلف وواضح عن خلفية الـ BottomSheet
+          fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+
+          enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide.none,
+            borderSide: BorderSide(
+              color: AppColors.hintText.withOpacity(0.25),
+              width: 1,
+            ),
+          ),
+
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(
+              color: AppColors.primaryBtn,
+              width: 1.8,
+            ),
+          ),
+
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 18,
+            vertical: 17,
           ),
         ),
       ),

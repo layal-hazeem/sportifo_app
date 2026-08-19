@@ -28,9 +28,9 @@ class ExerciseSelectableCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: isSelected
               ? AppColors.primaryBtn.withOpacity(.05)
-              : Colors.white,
+              : context.backgroundColor,
           border: Border.all(
-            color: isSelected ? AppColors.primaryBtn : Colors.grey.shade200,
+            color: isSelected ? AppColors.primaryBtn : context.backgroundColor,
             width: isSelected ? 1.4 : 1,
           ),
           borderRadius: BorderRadius.circular(18),
@@ -49,7 +49,7 @@ class ExerciseSelectableCard extends StatelessWidget {
                     child: Container(
                       height: 110,
                       width: double.infinity,
-                      color: Colors.white,
+                      color: context.backgroundColor,
                       child: CachedStaticGif(imageUrl: exercise.gifUrl ?? ''),
                     ),
                   ),
@@ -68,7 +68,10 @@ class ExerciseSelectableCard extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: AppColors.primaryBtn,
                         shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 1.5),
+                        border: Border.all(
+                          color: AppColors.hintText,
+                          width: 1.5,
+                        ),
                       ),
                       child: const Icon(
                         Icons.check_rounded,
