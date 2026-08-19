@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
 import '../../../../core/widgets/wave_app_bar.dart';
+import '../../../../core/routes/app_routes.dart';
 import '../../../notifications/presentation/widgets/notification_icon_button.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -41,7 +42,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         actions = [
           IconButton(
             icon: const Icon(Icons.chat, color: Colors.white),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, AppRoutes.conversationsList);
+            },
           ),
           const NotificationIconButton(
             iconColor: Colors.white,

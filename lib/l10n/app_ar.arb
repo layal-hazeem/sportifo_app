@@ -305,6 +305,37 @@
   "checkYourNetwork":"يرجى التحقق من إعدادات الشبكة الخاصة بك والمحاولة مرة أخرى",
     "recentlyEnded":"المنتهية مؤخراً",
 "endedLastMonth":"الاشتراكات التي انتهت خلال الشهر الماضي",
+"termsText": "بالتسجيل، فإنك توافق على شروط الاستخدام و سياسة الخصوصية",
+
+
+
+  "today": "اليوم",
+  "yesterday": "أمس",
+  "messageDetails": "تفاصيل الرسالة",
+  "sentAt": "وقت الإرسال",
+  "deliveredAt": "وقت التوصيل",
+  "readAt": "وقت القراءة",
+  "deleteMessageTitle": "حذف الرسالة",
+  "deleteMessageConfirmation": "هل أنت متأكد من حذف هذه الرسالة؟ لا يمكن التراجع عن هذا الإجراء.",
+  "delete": "حذف",
+  "ok": "حسناً",
+  "noDetails": "لا توجد تفاصيل",
+  "max5Images": "يمكنك اختيار 5 صور كحد أقصى",
+  "errorUserNotFound": "خطأ: لم يتم تحديد المستخدم الحالي",
+  "noMessagesYet": "لا توجد رسائل حتى الآن",
+  "startConversation": "ابدأ المحادثة الآن",
+  "retry": "إعادة محاولة",
+  "trainerOnlyCanSend": "يمكن للمدرب فقط إرسال رسائل في هذا الاشتراك",
+  "you": "أنت",
+
+
+  "chats": "المحادثات",
+"noConversations": "لا توجد محادثات",
+"messageDeleted": "تم حذف هذه الرسالة",
+"sendingMessage": "جاري الإرسال...",
+"typeMessage": "اكتب رسالة...",
+"cannotSend": "لا يمكنك الإرسال"
+
 "editPlan":"تعديل الخطة",
 "createNewDay":"إنشاء يوم جديد",
 "creatDaySubtitle":"صمم برنامج تمارين رياضية مخصص",
