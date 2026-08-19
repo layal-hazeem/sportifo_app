@@ -1,9 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'features/notifications/presentation/view_model/notifications_cubit.dart';
@@ -14,6 +14,8 @@ import 'core/services/notification_service.dart';
 import 'core/services/notification_service.dart'
     show firebaseMessagingBackgroundHandler;
 
+import 'package:sportifo_app/core/models/local_message.dart';
+import 'package:sportifo_app/core/services/pending_messages_service.dart';
 import 'core/di/service_locator.dart';
 import 'core/localization/locale_cubit.dart';
 import 'core/routes/app_routes.dart';
@@ -34,11 +36,19 @@ void main() async {
 
   // باقي الخدمات
   await Hive.initFlutter();
+  
+  // 🔥 سجّل الـ Adapter قبل أي استخدام لـ Hive
+  Hive.registerAdapter(LocalMessageAdapter());
+
   await setupServiceLocator();
 
 
   // 🔥 3. تشغيل خدمة الإشعارات
   await NotificationService().init();
+  
+  // 🔥 init بعد ما نكون سجلنا الـ Adapter
+  await getIt<PendingMessagesService>().init();
+
   runApp(const MyApp());
 }
 class MyApp extends StatelessWidget {
@@ -83,3 +93,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+}
+//وقت نضيف اي كلمة بملفات الترجمة مننفذ هاد الامر بالتيرمينال مشان يتعرف عالنصوص الجديدة اللي ترجمناها
+//flutter gen-l10n
