@@ -66,7 +66,7 @@ class _DayNode extends StatelessWidget {
       height: 56,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: isSelected ? AppColors.primaryBtn : Colors.white,
+        color: isSelected ? AppColors.primaryBtn : context.backgroundColor,
         border: Border.all(
           color: isSelected
               ? AppColors.primaryBtn
@@ -83,7 +83,7 @@ class _DayNode extends StatelessWidget {
               ]
             : [
                 BoxShadow(
-                  color: context.textColor.withOpacity(.06),
+                  color: AppColors.hintText,
                   blurRadius: 8,
                   offset: const Offset(0, 3),
                 ),

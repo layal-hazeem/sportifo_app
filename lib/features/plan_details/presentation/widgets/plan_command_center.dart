@@ -20,12 +20,12 @@ class PlanCommandCenter extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.backgroundColor,
           borderRadius: BorderRadius.circular(24),
           border: Border.all(color: context.textColor.withOpacity(.06)),
           boxShadow: [
             BoxShadow(
-              color: context.textColor.withOpacity(.06),
+              color: AppColors.hintText,
               blurRadius: 24,
               offset: const Offset(0, 10),
             ),

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/di/service_locator.dart';
 import 'package:sportifo_app/core/network/api_result.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/core/widgets/custom_glass_bottom_sheet.dart';
 import 'package:sportifo_app/core/widgets/wave_app_bar.dart';
 
@@ -502,7 +503,7 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
                         decoration: BoxDecoration(
                           color: _currentStep == 1
                               ? AppColors.primaryBtn
-                              : Colors.grey.shade300,
+                              : AppColors.hintText,
                           borderRadius: BorderRadius.circular(2),
                         ),
                       ),
@@ -582,7 +583,7 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
                   '${days.length == 1 ? l10n.day : l10n.days}',
                   style: TextStyle(
                     fontSize: 12,
-                    color: Colors.grey.shade600,
+                    color: AppColors.hintText,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -673,8 +674,8 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
               ),
               child: Text(
                 _currentStep == 0 ? l10n.next : l10n.saveChanges,
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: context.backgroundColor,
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
@@ -718,7 +719,7 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
                   width: 45,
                   height: 5,
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade400,
+                    color: AppColors.hintText,
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
@@ -784,9 +785,9 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.grey.shade50,
+          color: context.backgroundColor,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: Colors.grey.shade200),
+          border: Border.all(color: AppColors.hintText),
         ),
         child: Row(
           children: [
@@ -816,7 +817,7 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
 
                   const SizedBox(height: 4),
 
-                  Text(subtitle, style: TextStyle(color: Colors.grey.shade600)),
+                  Text(subtitle, style: TextStyle(color: AppColors.hintText)),
                 ],
               ),
             ),

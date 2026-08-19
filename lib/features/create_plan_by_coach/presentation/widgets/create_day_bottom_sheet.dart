@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class CreateDayBottomSheet extends StatefulWidget {
@@ -11,7 +12,7 @@ class CreateDayBottomSheet extends StatefulWidget {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: context.backgroundColor,
       builder: (_) => CreateDayBottomSheet(onCreate: onCreate),
     );
   }
@@ -65,9 +66,9 @@ class _CreateDayBottomSheetState extends State<CreateDayBottomSheet> {
       ),
       child: Container(
         padding: const EdgeInsets.fromLTRB(24, 14, 24, 24),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+        decoration: BoxDecoration(
+          color: context.backgroundColor,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -139,7 +140,7 @@ class _CreateDayBottomSheetState extends State<CreateDayBottomSheet> {
                   fontWeight: FontWeight.w500,
                 ),
                 filled: true,
-                fillColor: Colors.grey.shade50,
+                fillColor: context.backgroundColor,
                 prefixIcon: const Icon(
                   Icons.fitness_center_rounded,
                   color: AppColors.primaryBtn,
@@ -182,8 +183,8 @@ class _CreateDayBottomSheetState extends State<CreateDayBottomSheet> {
                 ),
                 child: Text(
                   l10n.createDayButton,
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: context.textColor,
                     fontWeight: FontWeight.w800,
                     fontSize: 15,
                   ),

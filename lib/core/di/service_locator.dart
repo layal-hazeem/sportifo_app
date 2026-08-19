@@ -44,7 +44,8 @@ import '../../features/auth/presentation/view_model/login/forgot_password_cubit.
 import '../../features/auth/presentation/view_model/login/login_cubit.dart';
 import '../../features/auth/presentation/view_model/register/register_cubit.dart';
 import '../../features/coaches/data/repositories/coach_repository.dart';
-import '../../features/coaches/data/web_services/coach_web_service.dart';import '../../features/coaches/presentation/view_model/all_coaches_cubit.dart';
+import '../../features/coaches/data/web_services/coach_web_service.dart';
+import '../../features/coaches/presentation/view_model/all_coaches_cubit.dart';
 import '../../features/coaches/presentation/view_model/coach_details_cubit.dart';
 import '../../features/coaches/presentation/view_model/coaches_cubit.dart';
 import '../../features/my_plans(user)/data/repository/my_plans_repository.dart';
@@ -113,7 +114,8 @@ Future<void> setupServiceLocator() async {
 
   getIt.registerFactory<RegisterCubit>(
     () => RegisterCubit(getIt<AuthRepository>()),
-  );getIt.registerFactory<CompleteProfileCubit>(
+  );
+  getIt.registerFactory<CompleteProfileCubit>(
     () => CompleteProfileCubit(getIt<AuthRepository>()),
   );
 
@@ -124,36 +126,36 @@ Future<void> setupServiceLocator() async {
     () => WorkoutRepository(getIt<WorkoutWebService>()),
   );
   getIt.registerLazySingleton<WeightProgressWebService>(
-        () => WeightProgressWebService(getIt<Dio>()),
+    () => WeightProgressWebService(getIt<Dio>()),
   );
   getIt.registerLazySingleton<WeightProgressRepository>(
-        () => WeightProgressRepository(getIt<WeightProgressWebService>()),
+    () => WeightProgressRepository(getIt<WeightProgressWebService>()),
   );
   getIt.registerFactory<WeightProgressCubit>(
-        () => WeightProgressCubit(getIt<WeightProgressRepository>()),
+    () => WeightProgressCubit(getIt<WeightProgressRepository>()),
   );
 
   getIt.registerLazySingleton<ExerciseActivityWebService>(
-        () => ExerciseActivityWebService(getIt<Dio>()),
+    () => ExerciseActivityWebService(getIt<Dio>()),
   );
   getIt.registerLazySingleton<ExerciseActivityRepository>(
-        () => ExerciseActivityRepository(getIt<ExerciseActivityWebService>()),
+    () => ExerciseActivityRepository(getIt<ExerciseActivityWebService>()),
   );
   getIt.registerFactory<ExerciseActivityCubit>(
-        () => ExerciseActivityCubit(getIt<ExerciseActivityRepository>()),
+    () => ExerciseActivityCubit(getIt<ExerciseActivityRepository>()),
   );
 
   getIt.registerLazySingleton<ExercisesCubit>(
-        () => ExercisesCubit(getIt<WorkoutRepository>()),
+    () => ExercisesCubit(getIt<WorkoutRepository>()),
   );
   getIt.registerFactory<CategoriesCubit>(
     () => CategoriesCubit(getIt<WorkoutRepository>()),
   );
 
   getIt.registerLazySingleton<PartsCubit>(
-        () => PartsCubit(getIt<WorkoutRepository>()),
+    () => PartsCubit(getIt<WorkoutRepository>()),
   );
- final savedExercisesCubit = SavedExercisesCubit(getIt<WorkoutRepository>());
+  final savedExercisesCubit = SavedExercisesCubit(getIt<WorkoutRepository>());
   getIt.registerSingleton<SavedExercisesCubit>(savedExercisesCubit);
   await savedExercisesCubit.initialize();
 
@@ -196,15 +198,15 @@ Future<void> setupServiceLocator() async {
   );
 
   getIt.registerLazySingleton<SubscriptionWebService>(
-        () => SubscriptionWebService(getIt<Dio>()),
+    () => SubscriptionWebService(getIt<Dio>()),
   );
 
   getIt.registerLazySingleton<SubscriptionRepository>(
-        () => SubscriptionRepository(getIt<SubscriptionWebService>()),
+    () => SubscriptionRepository(getIt<SubscriptionWebService>()),
   );
 
   getIt.registerFactory<SubscriptionCubit>(
-        () => SubscriptionCubit(getIt<SubscriptionRepository>()),
+    () => SubscriptionCubit(getIt<SubscriptionRepository>()),
   );
 
   // 🔥 🎯 تسجيل ميزة الأهداف والاحتياجات الغذائية الجديدة هنا
@@ -219,11 +221,11 @@ Future<void> setupServiceLocator() async {
   );
 
   getIt.registerLazySingleton<TraineeSubscriptionWebService>(
-        () => TraineeSubscriptionWebService(getIt<Dio>()),
+    () => TraineeSubscriptionWebService(getIt<Dio>()),
   );
   getIt.registerLazySingleton<TraineeSubscriptionRepository>(
-        () => TraineeSubscriptionRepository(getIt<TraineeSubscriptionWebService>()),
-  );// تسجيل WebService و Repository الخاص بالخطط (بما فيها الأيام)
+    () => TraineeSubscriptionRepository(getIt<TraineeSubscriptionWebService>()),
+  ); // تسجيل WebService و Repository الخاص بالخطط (بما فيها الأيام)
   getIt.registerLazySingleton<ExistingDaysWebService>(
     () => ExistingDaysWebService(getIt<Dio>()),
   );
@@ -250,112 +252,113 @@ Future<void> setupServiceLocator() async {
     () => CreatePlanCubit(getIt<CreatePlanRepository>()),
   );
 
+  getIt.registerLazySingleton<AiChatWebService>(
+    () => AiChatWebService(getIt<Dio>()),
+  );
+  getIt.registerLazySingleton<AiChatRepository>(
+    () => AiChatRepository(getIt<AiChatWebService>()),
+  );
+  getIt.registerFactory<AiChatCubit>(
+    () => AiChatCubit(getIt<AiChatRepository>()),
+  );
 
-  getIt.registerLazySingleton<AiChatWebService>(() => AiChatWebService(getIt<Dio>()));
-getIt.registerLazySingleton<AiChatRepository>(() => AiChatRepository(getIt<AiChatWebService>()));
-getIt.registerFactory<AiChatCubit>(() => AiChatCubit(getIt<AiChatRepository>()));
+  // Nutrition
+  getIt.registerSingleton<NutritionWebService>(
+    NutritionWebService(getIt<Dio>()),
+  );
 
+  getIt.registerSingleton<NutritionRepository>(
+    NutritionRepository(getIt<NutritionWebService>()),
+  );
 
-// Nutrition
-getIt.registerSingleton<NutritionWebService>(
-  NutritionWebService(getIt<Dio>()),
-);
-
-getIt.registerSingleton<NutritionRepository>(
-  NutritionRepository(getIt<NutritionWebService>()),
-);
-
-getIt.registerSingleton<NutritionCubit>(
-  NutritionCubit(getIt<NutritionRepository>()),
-);
+  getIt.registerSingleton<NutritionCubit>(
+    NutritionCubit(getIt<NutritionRepository>()),
+  );
 
   // 🔥 تسجيل My Plans Feature
   getIt.registerLazySingleton<MyPlansService>(
-        () => MyPlansService(getIt<Dio>()),
+    () => MyPlansService(getIt<Dio>()),
   );
 
   getIt.registerLazySingleton<MyPlansRepository>(
-        () => MyPlansRepository(getIt<MyPlansService>()),
+    () => MyPlansRepository(getIt<MyPlansService>()),
   );
 
   getIt.registerLazySingleton<MyPlansCubit>(
-        () => MyPlansCubit(getIt<MyPlansRepository>()),
+    () => MyPlansCubit(getIt<MyPlansRepository>()),
   );
   getIt.registerFactory<PlanDaysCubit>(
-        () => PlanDaysCubit(getIt<MyPlansRepository>()),
+    () => PlanDaysCubit(getIt<MyPlansRepository>()),
   );
   getIt.registerFactory<ActiveWorkoutCubit>(
-        () => ActiveWorkoutCubit(getIt<MyPlansRepository>()),
+    () => ActiveWorkoutCubit(getIt<MyPlansRepository>()),
   );
 
   getIt.registerLazySingleton<PlatformPlansWebService>(
-        () => PlatformPlansWebService(getIt<Dio>()),
+    () => PlatformPlansWebService(getIt<Dio>()),
   );
 
   getIt.registerLazySingleton<PlatformPlansRepository>(
-        () => PlatformPlansRepository(getIt<PlatformPlansWebService>()),
+    () => PlatformPlansRepository(getIt<PlatformPlansWebService>()),
   );
 
   getIt.registerLazySingleton<PlatformPlansCubit>(
-        () => PlatformPlansCubit(getIt<PlatformPlansRepository>()),
+    () => PlatformPlansCubit(getIt<PlatformPlansRepository>()),
   );
   // Trainees feature
 
   getIt.registerLazySingleton<TraineesWebService>(
-  () => TraineesWebService(getIt<Dio>()),
-);
+    () => TraineesWebService(getIt<Dio>()),
+  );
 
-getIt.registerLazySingleton<TraineesRepository>(
-  () => TraineesRepository(getIt<TraineesWebService>()),
-);
+  getIt.registerLazySingleton<TraineesRepository>(
+    () => TraineesRepository(getIt<TraineesWebService>()),
+  );
 
-getIt.registerFactory<TraineesCubit>(
-  () => TraineesCubit(getIt<TraineesRepository>()),
-);
+  getIt.registerFactory<TraineesCubit>(
+    () => TraineesCubit(getIt<TraineesRepository>()),
+  );
 
-// Plan Details
+  // Plan Details
 
-getIt.registerLazySingleton<PlanDetailsWebService>(
-() => PlanDetailsWebService(getIt<Dio>()),
-);
+  getIt.registerLazySingleton<PlanDetailsWebService>(
+    () => PlanDetailsWebService(getIt<Dio>()),
+  );
 
-getIt.registerLazySingleton<PlanDetailsRepository>(
-() => PlanDetailsRepository(getIt<PlanDetailsWebService>()),
-);
+  getIt.registerLazySingleton<PlanDetailsRepository>(
+    () => PlanDetailsRepository(getIt<PlanDetailsWebService>()),
+  );
 
-getIt.registerFactory<PlanDetailsCubit>(
-() => PlanDetailsCubit(getIt<PlanDetailsRepository>()),
-);
+  getIt.registerFactory<PlanDetailsCubit>(
+    () => PlanDetailsCubit(getIt<PlanDetailsRepository>()),
+  );
 
+  getIt.registerLazySingleton<EditSelfPlanService>(
+    () => EditSelfPlanService(getIt<Dio>()),
+  );
 
-getIt.registerLazySingleton<EditSelfPlanService>(
-  () => EditSelfPlanService(getIt<Dio>()),
-);
+  getIt.registerLazySingleton<EditSelfPlanRepository>(
+    () => EditSelfPlanRepository(getIt<EditSelfPlanService>()),
+  );
 
-getIt.registerLazySingleton<EditSelfPlanRepository>(
-  () => EditSelfPlanRepository(
-    getIt<EditSelfPlanService>(),
-  ),
-);
-
-getIt.registerFactory<EditSelfPlanCubit>(
-  () => EditSelfPlanCubit(
-    getIt<EditSelfPlanRepository>(),
-  ),
-);
-// تسجيل الـ Web Service
+  getIt.registerFactory<EditSelfPlanCubit>(
+    () => EditSelfPlanCubit(getIt<EditSelfPlanRepository>()),
+  );
+  // تسجيل الـ Web Service
   getIt.registerLazySingleton<NotificationsWebService>(
-          () => NotificationsWebService(getIt<Dio>()));
+    () => NotificationsWebService(getIt<Dio>()),
+  );
 
-// تسجيل الـ Repository
+  // تسجيل الـ Repository
   getIt.registerLazySingleton<NotificationsRepository>(
-          () => NotificationsRepository(getIt<NotificationsWebService>()));
-// تسجيل الكيوبيت
+    () => NotificationsRepository(getIt<NotificationsWebService>()),
+  );
+  // تسجيل الكيوبيت
   getIt.registerFactory<NotificationsCubit>(
-          () => NotificationsCubit(getIt<NotificationsRepository>()));
+    () => NotificationsCubit(getIt<NotificationsRepository>()),
+  );
 
-
-          // Create Self Plan Feature
+  // Create Self Plan Feature
   getIt.registerLazySingleton<CreateSelfPlanService>(
     () => CreateSelfPlanService(getIt<Dio>()),
   );
@@ -370,15 +373,27 @@ getIt.registerFactory<EditSelfPlanCubit>(
   );
 
   getIt.registerLazySingleton<CoachHomeRepository>(
-  () => CoachHomeRepositoryImpl(
-    getIt<ProfileRepository>(),
-    getIt<SubscriptionRepository>(),
-  ),
-);
+    () => CoachHomeRepositoryImpl(
+      getIt<ProfileRepository>(),
+      getIt<SubscriptionRepository>(),
+    ),
+  );
 
-getIt.registerFactory<CoachHomeCubit>(
-  () => CoachHomeCubit(
-    getIt<CoachHomeRepository>(),
-  ),
-);
+  getIt.registerFactory<CoachHomeCubit>(
+    () => CoachHomeCubit(getIt<CoachHomeRepository>()),
+  );
+
+  // Edit Coach Plan Feature
+
+  getIt.registerLazySingleton<EditCoachPlanService>(
+    () => EditCoachPlanService(getIt<Dio>()),
+  );
+
+  getIt.registerLazySingleton<EditCoachPlanRepository>(
+    () => EditCoachPlanRepository(getIt<EditCoachPlanService>()),
+  );
+
+  getIt.registerFactory<EditCoachPlanCubit>(
+    () => EditCoachPlanCubit(getIt<EditCoachPlanRepository>()),
+  );
 }

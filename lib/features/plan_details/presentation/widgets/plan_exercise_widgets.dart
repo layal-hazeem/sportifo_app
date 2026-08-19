@@ -44,7 +44,7 @@ class PlanExerciseCard extends StatelessWidget {
       onTap: () {
         showModalBottomSheet(
           context: context,
-          backgroundColor: Colors.transparent,
+          backgroundColor: context.backgroundColor,
           isScrollControlled: true,
           builder: (_) => _InstructionSheet(exercise: exercise),
         );
@@ -52,12 +52,12 @@ class PlanExerciseCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.backgroundColor,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: Colors.black.withOpacity(0.05)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.03),
+              color: AppColors.hintText,
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -263,9 +263,9 @@ class _InstructionSheet extends StatelessWidget {
     return Container(
       constraints: const BoxConstraints(maxHeight: 500),
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      decoration: BoxDecoration(
+        color: context.backgroundColor,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: SafeArea(
         child: SingleChildScrollView(

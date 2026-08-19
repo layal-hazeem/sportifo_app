@@ -145,9 +145,9 @@ class _TopBar extends StatelessWidget {
               width: 42,
               height: 42,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: context.backgroundColor,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.black.withOpacity(0.06)),
+                border: Border.all(color: context.backgroundColor),
               ),
               child: Icon(
                 Icons.arrow_back_ios_new_rounded,
@@ -211,16 +211,12 @@ class _EditPlanButton extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.edit_rounded,
-              color: context.backgroundColor,
-              size: 16,
-            ),
+            Icon(Icons.edit_rounded, color: context.textColor, size: 16),
             const SizedBox(width: 6),
             Text(
               l10n.editPlan,
               style: TextStyle(
-                color: context.backgroundColor,
+                color: context.textColor,
                 fontSize: 13,
                 fontWeight: FontWeight.w800,
               ),
