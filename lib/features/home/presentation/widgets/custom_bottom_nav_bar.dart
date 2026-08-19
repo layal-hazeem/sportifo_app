@@ -29,13 +29,11 @@ class CustomBottomNavBar {
       duration: const Duration(milliseconds: 200),
       child: Neumorphic(
         style: NeumorphicStyle(
-          depth: 0,
-          intensity: 0,
+          depth: isSelected ? 6 : -4,
+          intensity: 0.8,
           shape: NeumorphicShape.flat,
           boxShape: const NeumorphicBoxShape.circle(),
           color: isSelected ? AppColors.primaryBtn : context.backgroundColor,
-          shadowLightColor: Colors.transparent,
-          shadowDarkColor: Colors.transparent,
         ),
         child: Padding(
           padding: const EdgeInsets.all(16),

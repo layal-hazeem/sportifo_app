@@ -78,7 +78,7 @@ class _AdDetailsBottomSheetState extends State<AdDetailsBottomSheet> {
                       width: 45,
                       height: 5,
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.5),
+                        color: context.backgroundColor.withOpacity(0.5),
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
@@ -140,9 +140,9 @@ class _AdDetailsBottomSheetState extends State<AdDetailsBottomSheet> {
                   Container(
                     width: double.infinity,
                     constraints: BoxConstraints(minHeight: screenHeight * 0.5),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.vertical(
+                    decoration: BoxDecoration(
+                      color: context.backgroundColor,
+                      borderRadius: const BorderRadius.vertical(
                         top: Radius.circular(35),
                       ),
                     ),
@@ -219,7 +219,7 @@ class _AdDetailsBottomSheetState extends State<AdDetailsBottomSheet> {
                 right: 0,
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(24, 15, 24, 30),
-                  color: Colors.white,
+                  color: context.backgroundColor,
                   child: ElevatedButton(
                     onPressed: () => _launchURL(widget.ad.url),
                     style: ElevatedButton.styleFrom(
