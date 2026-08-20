@@ -9,6 +9,7 @@ import '../../data/models/my_plan_model.dart';
 import '../view_model/active_workout_cubit.dart';
 import '../widgets/workout_confirm_dialog.dart';
 import 'exercise_preview_screen.dart';
+
 class DayOverviewScreen extends StatelessWidget {
   final PlanDayModel day;
   final int dayNumber;
@@ -21,7 +22,7 @@ class DayOverviewScreen extends StatelessWidget {
     required this.planId,
   });
 
-  // 🔥 دالة سحرية للتعامل مع بدء التمرين من أي مكان
+  // Handles starting the workout from any state
   void _startWorkoutFlow(BuildContext context, int targetIndex) async {
     final l10n = AppLocalizations.of(context)!;
     if (day.exercises.isEmpty) {
@@ -49,11 +50,11 @@ class DayOverviewScreen extends StatelessWidget {
         context: context,
         icon: Icons.history_toggle_off_rounded,
         iconColor: AppColors.primaryBtn,
-        title: "Unfinished Exercise",
+        title: l10n.unfinishedExerciseTitle,
         message:
-            "You still have an unfinished exercise in this day: \"${unfinishedExercise.name}\".\n\n"
-            "Would you like to go finish it, or discard it and start \"${tappedExercise.name}\" instead?",
-        primaryText: "Go Finish It",
+        "${l10n.unfinishedExerciseMsgPart1} \"${unfinishedExercise.name}\".\n\n"
+            "${l10n.unfinishedExerciseMsgPart2} \"${tappedExercise.name}\" ${l10n.unfinishedExerciseMsgPart3}",
+        primaryText: l10n.goFinishIt,
         primaryColor: AppColors.primaryBtn,
         onPrimary: () async {
           await activeWorkoutCubit.restoreSessionData();
@@ -77,7 +78,7 @@ class DayOverviewScreen extends StatelessWidget {
             ),
           );
         },
-        secondaryText: "Discard & Start \"${tappedExercise.name}\"",
+        secondaryText: "${l10n.discardAndStart} \"${tappedExercise.name}\"",
         onSecondary: () {
           activeWorkoutCubit.clearSessionLocally();
           activeWorkoutCubit.startWorkout(
@@ -127,7 +128,7 @@ class DayOverviewScreen extends StatelessWidget {
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
-          _buildPremiumHeader(context),
+          _buildPremiumHeader(context, l10n),
 
           SliverToBoxAdapter(
             child: Padding(
@@ -177,7 +178,7 @@ class DayOverviewScreen extends StatelessWidget {
               delegate: SliverChildBuilderDelegate((context, index) {
                 final exercise = day.exercises[index];
 
-                // 🔥 التعديل الذكي: البحث عن صورة ثابتة وتجنب الـ GIF كما فعلنا مسبقاً
+                // Smart modification: Search for a static image and avoid GIFs as done previously
                 String imageUrl = '';
                 if (exercise.images.isNotEmpty) {
                   final imageObj = exercise.images.firstWhere(
@@ -190,25 +191,24 @@ class DayOverviewScreen extends StatelessWidget {
                   );
                   imageUrl = imageObj.url ?? '';
                 }
-                // 🔥 فحص نوع التمرين بناءً على الكاتيجوري أو وجود الـ Duration
+
+                // Check exercise type based on category or duration
                 bool isCardio =
                     (exercise.category != null &&
                         exercise.category!.name.toLowerCase() == 'cardio') ||
-                    (exercise.duration != null &&
-                        exercise.duration.toString().isNotEmpty &&
-                        exercise.duration.toString() != "0");
+                        (exercise.duration != null &&
+                            exercise.duration.toString().isNotEmpty &&
+                            exercise.duration.toString() != "0");
 
                 String displaySets = '${exercise.sets ?? 0} ${l10n.set}s';
                 String displayDetailInfo = '';
                 IconData detailIcon = Icons.repeat_rounded;
 
                 if (isCardio) {
-                  // إذا كارديو: اعرض أيقونة ساعة والوقت المطلوب
                   displayDetailInfo =
-                      '${l10n.duration} ${exercise.duration ?? "N/A"}';
+                  '${l10n.duration} ${exercise.duration ?? "N/A"}';
                   detailIcon = Icons.timer_outlined;
                 } else {
-                  // إذا حديد: اعرض أيقونة إعادة والعدّات
                   final String repsStr = exercise.reps ?? '';
                   displayDetailInfo = repsStr.contains(':')
                       ? repsStr
@@ -239,7 +239,7 @@ class DayOverviewScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPremiumHeader(BuildContext context) {
+  Widget _buildPremiumHeader(BuildContext context, AppLocalizations l10n) {
     return SliverAppBar(
       expandedHeight: 200.0,
       floating: false,
@@ -258,7 +258,7 @@ class DayOverviewScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'DAY $dayNumber',
+              '${l10n.dayLabel} $dayNumber',
               style: TextStyle(
                 color: AppColors.primaryBtn,
                 fontWeight: FontWeight.w900,
@@ -334,14 +334,14 @@ class DayOverviewScreen extends StatelessWidget {
   }
 
   Widget _buildExerciseCard(
-    String imageUrl,
-    dynamic exercise,
-    String displaySets,
-    String displayDetailInfo,
-    IconData detailIcon,
-    int index,
-    BuildContext context,
-  ) {
+      String imageUrl,
+      dynamic exercise,
+      String displaySets,
+      String displayDetailInfo,
+      IconData detailIcon,
+      int index,
+      BuildContext context,
+      ) {
     final String exerciseNumber = (index + 1) < 10
         ? '0${index + 1}'
         : '${index + 1}';
@@ -433,7 +433,7 @@ class DayOverviewScreen extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 12),
-                  // 🔥 تعديل مكان الأيقونات وعرض المعلومات
+                  // Updated icons positioning and displaying info
                   Wrap(
                     spacing: 8,
                     runSpacing: 8,
@@ -458,7 +458,7 @@ class DayOverviewScreen extends StatelessWidget {
     );
   }
 
-  // 📐 ودجت رقاقات المعلومات المحدث ليستقبل Icon
+  // Updated info chip widget to accept Icon
   Widget _buildInfoChip(IconData icon, String text, {bool isPrimary = false}) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
