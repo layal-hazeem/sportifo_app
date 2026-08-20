@@ -1,5 +1,5 @@
 class ApiConstants {
-  static const String domainUrl = "http://192.168.1.106:8000";
+  static const String domainUrl = "https://sportifo.moayadismail.com";
   static const String baseUrl = "$domainUrl/api/app/";
 
   static const String register = "register";
@@ -63,7 +63,6 @@ static String conversationMessages(int conversationId) => "chat/conversations/$c
 static String sendMessage(int conversationId) => "chat/conversations/$conversationId/messages";
 static String deleteMessage(int conversationId, int messageId) => 
     "chat/conversations/$conversationId/messages/$messageId";
-  static const String planDetails = "plans";
   static const String editCoachPlan = "plans";
   static const String createSelfPlan = "plans/create/self";
   static const String editSelfPlan = "plans/update/self";
