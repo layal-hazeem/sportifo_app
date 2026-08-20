@@ -38,8 +38,8 @@ class ChatWebSocketService {
   Stream<String> get connectionState => _connectionController.stream;
 
   static const String appKey = 'xciiem3ixu10pjwb6pbr';
-  static const String host = '192.168.1.106';
-  static const int wsPort = 8080;
+  static const String host = 'sportifo.moayadismail.com';  // ← بدّل IP
+  static const int wsPort = 443;  // ← WSS بيشتغل ع 443 مش 8080
 
   bool get isConnected => _isConnected;
 
@@ -48,7 +48,7 @@ class ChatWebSocketService {
     _isInitialized = true;
 
     final options = PusherChannelsOptions.fromHost(
-      scheme: 'ws',
+      scheme: 'wss',
       host: host,
       key: appKey,
       port: wsPort,
@@ -97,7 +97,7 @@ class ChatWebSocketService {
             EndpointAuthorizableChannelTokenAuthorizationDelegate
                 .forPresenceChannel(
           authorizationEndpoint:
-              Uri.parse('http://$host:8000/broadcasting/auth'),
+              Uri.parse('https://$host/broadcasting/auth'),
           headers: {
             'Authorization': 'Bearer $token',
             'Accept': 'application/json',

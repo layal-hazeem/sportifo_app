@@ -334,7 +334,7 @@
 "messageDeleted": "تم حذف هذه الرسالة",
 "sendingMessage": "جاري الإرسال...",
 "typeMessage": "اكتب رسالة...",
-"cannotSend": "لا يمكنك الإرسال"
+"cannotSend": "لا يمكنك الإرسال",
 "editPlan":"تعديل الخطة",
 "createNewDay":"إنشاء يوم جديد",
 "creatDaySubtitle":"صمم برنامج تمارين رياضية مخصص",

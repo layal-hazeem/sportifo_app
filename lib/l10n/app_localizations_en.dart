@@ -771,6 +771,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cannotSend => 'You cannot send';
+
+  @override
   String get editPlan => 'Edit Plan';
 
   @override

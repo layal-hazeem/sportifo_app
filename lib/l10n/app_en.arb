@@ -366,7 +366,7 @@
 "messageDeleted": "This message has been deleted",
 "sendingMessage": "Sending...",
 "typeMessage": "Type a message...",
-"cannotSend": "You cannot send"
+"cannotSend": "You cannot send",
     "editPlan":"Edit Plan",
     "createNewDay":"Create New Day",
     "creatDaySubtitle":"Build a custom workout day",

@@ -449,7 +449,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get subscriptions => 'الاشتراكات';
 
   @override
-  String get retry => 'إعادة محاولة';
   String get retry => 'إعادة المحاولة';
 
   @override
@@ -772,6 +771,8 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get cannotSend => 'لا يمكنك الإرسال';
+
+  @override
   String get editPlan => 'تعديل الخطة';
 
   @override

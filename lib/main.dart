@@ -29,32 +29,22 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Hive.initFlutter();
-  
-  // 🔥 سجّل الـ Adapter قبل أي استخدام لـ Hive
-  Hive.registerAdapter(LocalMessageAdapter());
-
-  await setupServiceLocator();
-  
-  // 🔥 init بعد ما نكون سجلنا الـ Adapter
-  await getIt<PendingMessagesService>().init();
-
-  // 🔥 1. تهيئة Firebase
+  // 🔥 1. تهيئة Firebase وتسجيل الـ Background Handler أولاً
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
-  // 🔥 2. تسجيل Background Handler قبل أي شي
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
-  // باقي الخدمات
+  // 2. تهيئة Hive للرسائل والإعدادات
   await Hive.initFlutter();
-
-  // 🔥 فتح صندوق الإعدادات
+  Hive.registerAdapter(LocalMessageAdapter());
   await Hive.openBox('settings_box');
 
+  // 3. تهيئة الـ Service Locator والـ Pending Messages
   await setupServiceLocator();
+  await getIt<PendingMessagesService>().init();
 
-  // 🔥 3. تشغيل خدمة الإشعارات
+  // 🔥 4. تشغيل خدمة الإشعارات بعد الجاهزية الكاملة
   await NotificationService().init();
+
   runApp(const MyApp());
 }
 
@@ -71,41 +61,11 @@ class MyApp extends StatelessWidget {
       ],
       child: BlocBuilder<LocaleCubit, Locale>(
         builder: (context, locale) {
-          return NeumorphicApp(
-            debugShowCheckedModeBanner: false,
-            title: 'Sportifo',
-            initialRoute: AppRoutes.splash,
-            onGenerateRoute: AppRouter.generateRoute,
-            localizationsDelegates: const [
-              AppLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            supportedLocales: const [
-              Locale('en'),
-              Locale('ar'),
-            ],
-            locale: locale,
-            themeMode: ThemeMode.light,
-            theme: const NeumorphicThemeData(
-              baseColor: Color(0xFFF2F2F2),
-              lightSource: LightSource.topLeft,
-              depth: 10,
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
-//وقت نضيف اي كلمة بملفات الترجمة مننفذ هاد الامر بالتيرمينال مشان يتعرف عالنصوص الجديدة اللي ترجمناها
-// flutter gen-l10n
-          // 🔥 استخدام BlocBuilder للـ ThemeCubit لتوفير متغير themeMode والتبديل ديناميكياً
           return BlocBuilder<ThemeCubit, ThemeMode>(
             builder: (context, themeMode) {
               return NeumorphicApp(
-                navigatorKey: navigatorKey, // 🔥 تم الحفاظ عليه هنا (هام جداً للتنقل من الإشعارات)
+                navigatorKey:
+                    navigatorKey, // 🔥 تم الحفاظ عليه هنا (هام جداً للتنقل من الإشعارات)
                 debugShowCheckedModeBanner: false,
                 title: 'Sportifo',
                 initialRoute: AppRoutes.splash,
@@ -116,17 +76,15 @@ class MyApp extends StatelessWidget {
                   GlobalWidgetsLocalizations.delegate,
                   GlobalCupertinoLocalizations.delegate,
                 ],
-                supportedLocales: const [
-                  Locale('en'),
-                  Locale('ar'),
-                ],
+                supportedLocales: const [Locale('en'), Locale('ar')],
                 locale: locale,
                 themeMode: themeMode, // 👈 تم ربط الثيم بنجاح
                 theme: NeumorphicThemeData(
                   baseColor: AppColors.lightBackground,
                   defaultTextColor: AppColors.lightText,
                   accentColor: AppColors.primaryBtn,
-                  lightSource: LightSource.topLeft, // من الكود الأصلي للحفاظ على الشكل
+                  lightSource:
+                      LightSource.topLeft, // من الكود الأصلي للحفاظ على الشكل
                   depth: 10,
                 ),
                 darkTheme: NeumorphicThemeData(
@@ -144,3 +102,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+//وقت نضيف اي كلمة بملفات الترجمة مننفذ هاد الامر بالتيرمينال مشان يتعرف عالنصوص الجديدة اللي ترجمناها
+// flutter gen-l10n

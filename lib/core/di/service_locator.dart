@@ -371,10 +371,7 @@ getIt.registerFactory<ChatDetailCubit>(
     pendingService: getIt<PendingMessagesService>(), // الآن سيكون موجوداً
   ),
 );
-}
-  getIt.registerFactory<PlanDetailsCubit>(
-    () => PlanDetailsCubit(getIt<PlanDetailsRepository>()),
-  );
+
 
   getIt.registerLazySingleton<EditSelfPlanService>(
     () => EditSelfPlanService(getIt<Dio>()),

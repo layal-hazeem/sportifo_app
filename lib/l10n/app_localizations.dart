@@ -1558,6 +1558,7 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You cannot send'**
   String get cannotSend;
+
   /// No description provided for @editPlan.
   ///
   /// In en, this message translates to:
