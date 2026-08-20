@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/routes/app_routes.dart';
-import '../../../../core/widgets/loading_shimmer.dart'; 
+import '../../../../core/widgets/loading_shimmer.dart';
 import '../../../../core/widgets/wave_app_bar.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../view_model/saved_exercises/saved_exercises_cubit.dart';
@@ -23,7 +24,9 @@ class _SavedExercisesScreenState extends State<SavedExercisesScreen> {
   }
 
   Future<void> _onRefresh() async {
-    await context.read<SavedExercisesCubit>().fetchSavedExercises(forceRefresh: true);
+    await context.read<SavedExercisesCubit>().fetchSavedExercises(
+      forceRefresh: true,
+    );
   }
 
   @override
@@ -31,18 +34,16 @@ class _SavedExercisesScreenState extends State<SavedExercisesScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
-      appBar: WaveAppBar(
-        title: l10n.saved_exercises,
-        showBackButton: true,
-      ),
+      backgroundColor: context.backgroundColor,
+      appBar: WaveAppBar(title: l10n.saved_exercises, showBackButton: true),
       body: BlocBuilder<SavedExercisesCubit, SavedExercisesState>(
         buildWhen: (previous, current) =>
             current is SavedExercisesSuccess ||
             current is SavedExercisesLoading ||
             current is SavedExercisesError,
         builder: (context, state) {
-          if (state is SavedExercisesLoading && state is! SavedExercisesSuccess) {
+          if (state is SavedExercisesLoading &&
+              state is! SavedExercisesSuccess) {
             return GridView.builder(
               padding: const EdgeInsets.all(16),
               physics: const NeverScrollableScrollPhysics(),
@@ -69,7 +70,7 @@ class _SavedExercisesScreenState extends State<SavedExercisesScreen> {
             return RefreshIndicator(
               onRefresh: _onRefresh,
               color: AppColors.primaryBtn,
-              backgroundColor: Colors.white,
+              backgroundColor: context.backgroundColor,
               displacement: 40,
               child: GridView.builder(
                 padding: const EdgeInsets.all(16),
@@ -106,8 +107,11 @@ class _SavedExercisesScreenState extends State<SavedExercisesScreen> {
                   Text(state.message),
                   TextButton(
                     onPressed: _onRefresh,
-                    child: const Text("Retry", style: TextStyle(color: AppColors.primaryBtn)),
-                  )
+                    child: Text(
+                      l10n.retry,
+                      style: const TextStyle(color: AppColors.primaryBtn),
+                    ),
+                  ),
                 ],
               ),
             );
@@ -118,13 +122,13 @@ class _SavedExercisesScreenState extends State<SavedExercisesScreen> {
     );
   }
 
-  Widget _buildEmptyState(BuildContext context, var l10n) {
+  Widget _buildEmptyState(BuildContext context, AppLocalizations l10n) {
     return LayoutBuilder(
       builder: (context, constraints) {
         return RefreshIndicator(
           onRefresh: _onRefresh,
           color: AppColors.primaryBtn,
-          backgroundColor: Colors.white,
+          backgroundColor: context.backgroundColor,
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             child: SizedBox(
@@ -133,30 +137,48 @@ class _SavedExercisesScreenState extends State<SavedExercisesScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.bookmark_border, size: 80, color: AppColors.primaryBtn.withValues(alpha:0.2)),
+                    Icon(
+                      Icons.bookmark_border,
+                      size: 80,
+                      color: AppColors.primaryBtn.withValues(alpha: 0.2),
+                    ),
                     const SizedBox(height: 16),
                     Text(
-                      "No saved exercises yet",
-                      style: TextStyle(fontSize: 18, color: Colors.grey.shade600, fontWeight: FontWeight.bold),
+                      l10n.noSavedExercisesYet, // 🔥 ترجمة
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.grey.shade600,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 40),
                       child: Text(
-                        "Exercises you save will appear here for quick access",
+                        l10n.savedExercisesHint, // 🔥 ترجمة
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 14, color: Colors.grey.shade400),
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey.shade400,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 40),
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.arrow_downward, size: 14, color: Colors.grey.shade400),
+                        Icon(
+                          Icons.arrow_downward,
+                          size: 14,
+                          color: Colors.grey.shade400,
+                        ),
                         const SizedBox(width: 6),
                         Text(
-                          "Pull down to refresh",
-                          style: TextStyle(fontSize: 12, color: Colors.grey.shade400),
+                          l10n.pullDownToRefresh, // 🔥 ترجمة
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey.shade400,
+                          ),
                         ),
                       ],
                     ),

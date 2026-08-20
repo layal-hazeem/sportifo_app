@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../l10n/app_localizations.dart';
 
 class TimedSetInputCard extends StatefulWidget {
   final int currentSet;
@@ -12,7 +14,8 @@ class TimedSetInputCard extends StatefulWidget {
   final bool isLoading;
   final VoidCallback onLogSet;
   final VoidCallback onSkipSet;
-  final ValueChanged<bool>? onTimerStateChanged; // 🔥 إخبار الشاشة بحالة المؤقت لتجميد الـ GIF
+  final ValueChanged<bool>?
+  onTimerStateChanged; // 🔥 إخبار الشاشة بحالة المؤقت لتجميد الـ GIF
   final bool autoStart; // 🔥 تشغيل تلقائي بعد العد التنازلي
 
   const TimedSetInputCard({
@@ -107,7 +110,9 @@ class _TimedSetInputCardState extends State<TimedSetInputCard> {
         setState(() {
           _remainingSeconds--;
           int actualPlayed = _targetSeconds - _remainingSeconds;
-          widget.durationController.text = _formatTime(actualPlayed > 0 ? actualPlayed : _targetSeconds);
+          widget.durationController.text = _formatTime(
+            actualPlayed > 0 ? actualPlayed : _targetSeconds,
+          );
         });
       } else {
         _stopTimer();
@@ -120,7 +125,8 @@ class _TimedSetInputCardState extends State<TimedSetInputCard> {
     _timer?.cancel();
     if (mounted) {
       setState(() => _isRunning = false);
-      if (widget.onTimerStateChanged != null) widget.onTimerStateChanged!(false);
+      if (widget.onTimerStateChanged != null)
+        widget.onTimerStateChanged!(false);
     }
   }
 
@@ -148,7 +154,10 @@ class _TimedSetInputCardState extends State<TimedSetInputCard> {
 
   @override
   Widget build(BuildContext context) {
-    double progress = _targetSeconds > 0 ? (_remainingSeconds / _targetSeconds) : 0;
+    final l10n = AppLocalizations.of(context)!;
+    double progress = _targetSeconds > 0
+        ? (_remainingSeconds / _targetSeconds)
+        : 0;
 
     return Container(
       width: double.infinity,
@@ -156,7 +165,11 @@ class _TimedSetInputCardState extends State<TimedSetInputCard> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 12, offset: const Offset(0, 4))
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
         ],
       ),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -167,20 +180,33 @@ class _TimedSetInputCardState extends State<TimedSetInputCard> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.primaryBtn.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
-                  "SET ${widget.currentSet} /${widget.totalSets}",
-                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w900, color: AppColors.primaryBtn),
+                  "${l10n.set.toUpperCase()} ${widget.currentSet} /${widget.totalSets}",
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.primaryBtn,
+                  ),
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.skip_next_rounded, color: AppColors.hintText, size: 22),
-                onPressed: widget.isPaused || widget.isLoading ? null : widget.onSkipSet,
-                tooltip: "Skip Set",
+                icon: const Icon(
+                  Icons.skip_next_rounded,
+                  color: AppColors.hintText,
+                  size: 22,
+                ),
+                onPressed: widget.isPaused || widget.isLoading
+                    ? null
+                    : widget.onSkipSet,
+                tooltip: l10n.skip,
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
               ),
@@ -208,21 +234,26 @@ class _TimedSetInputCardState extends State<TimedSetInputCard> {
                 children: [
                   Text(
                     _formatTime(_remainingSeconds),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.w900,
-                      color: AppColors.textDark,
+                      color: context.textColor,
                       height: 1.0,
-                      fontFeatures: [FontFeature.tabularFigures()],
+                      fontFeatures: const [FontFeature.tabularFigures()],
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    "REMAINING",
-                    style: TextStyle(color: Colors.grey.shade400, fontSize: 9, fontWeight: FontWeight.w800, letterSpacing: 1.0),
+                    l10n.remaining,
+                    style: TextStyle(
+                      color: Colors.grey.shade400,
+                      fontSize: 9,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 1.0,
+                    ),
                   ),
                 ],
-              )
+              ),
             ],
           ),
 
@@ -250,21 +281,38 @@ class _TimedSetInputCardState extends State<TimedSetInputCard> {
               onPressed: widget.isLoading
                   ? null
                   : () {
-                _stopTimer();
-                // 🔥 حساب الوقت الفعلي اللي لعبه المتدرب بدقة تامة!
-                int actualPlayed = _targetSeconds - _remainingSeconds;
-                widget.durationController.text = _formatTime(actualPlayed);
-                widget.onLogSet();
-              },
+                      _stopTimer();
+                      // 🔥 حساب الوقت الفعلي اللي لعبه المتدرب بدقة تامة!
+                      int actualPlayed = _targetSeconds - _remainingSeconds;
+                      widget.durationController.text = _formatTime(
+                        actualPlayed,
+                      );
+                      widget.onLogSet();
+                    },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primaryBtn.withOpacity(0.12),
                 foregroundColor: AppColors.primaryBtn,
                 elevation: 0,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
               ),
               child: widget.isLoading
-                  ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(color: AppColors.primaryBtn, strokeWidth: 2))
-                  : const Text("Log Completed Set", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900)),
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(
+                        color: AppColors.primaryBtn,
+                        strokeWidth: 2,
+                      ),
+                    )
+                  : Text(
+                      l10n.logCompletedSet,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
             ),
           ),
         ],
@@ -283,7 +331,11 @@ class _TimedSetInputCardState extends State<TimedSetInputCard> {
         ),
         child: Text(
           label,
-          style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.w800, fontSize: 13),
+          style: TextStyle(
+            color: context.textColor,
+            fontWeight: FontWeight.w800,
+            fontSize: 13,
+          ),
         ),
       ),
     );

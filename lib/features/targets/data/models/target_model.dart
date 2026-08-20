@@ -22,7 +22,6 @@ class TargetModel {
       id: json['id'] ?? 0,
       userId: json['user_id'] ?? 0,
       goal: json['goal'] ?? '',
-      // حطينا num تحسباً لرجوع الأرقام من السيرفر بفاصلة عشريّة أحياناً
       calories: (json['calories'] as num?)?.toInt() ?? 0,
       protein: (json['protein'] as num?)?.toInt() ?? 0,
       carbs: (json['carbs'] as num?)?.toInt() ?? 0,
@@ -31,7 +30,6 @@ class TargetModel {
   }
 }
 
-// موديل مخصص لاستقبال الغلاف الخارجي للـ Response (الرسالة والداتا)
 class TargetResponseModel {
   final String message;
   final TargetModel data;

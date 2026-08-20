@@ -22,13 +22,11 @@ class TargetRepository {
 
   Future<ApiResult<TargetModel>> getLatestTarget() async {
     try {
-      // 🔥 تفعيل الكاش الذكي لجلب الأهداف
       final cacheOptions = await DioFactory.getCacheOptions();
       final dioOptions = cacheOptions.copyWith(
         policy: CachePolicy.forceCache,
       ).toOptions();
 
-      // تمرير الـ dioOptions للـ WebService
       final response = await _webService.getLatestTarget(options: dioOptions);
       final responseModel = TargetResponseModel.fromJson(response.data);
       return Success(responseModel.data);

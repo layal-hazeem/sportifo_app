@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/helpers/snack_bar_utils.dart';
@@ -19,15 +20,29 @@ class ExerciseCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final String displayImageUrl = (exercise.images != null && exercise.images!.isNotEmpty)
-        ? exercise.images!.first.url ?? ''
-        : '';
+
+    // 🔥 التعديل الذكي: البحث عن أول صورة ليست GIF (بغض النظر عن حالة الأحرف)
+    String displayImageUrl = '';
+    if (exercise.images != null && exercise.images!.isNotEmpty) {
+      final selectedImage = exercise.images!.firstWhere(
+            (img) {
+          final type = (img.type ?? '').toLowerCase();
+          final url = (img.url ?? '').toLowerCase();
+
+          // نختار الصورة إذا كان نوعها لا يحتوي على gif والرابط لا يحتوي على .gif
+          return !type.contains('gif') && !url.contains('.gif');
+        },
+        // إذا كان كل المرفقات من الباك إند هي gif حصراً، نأخذ أول عنصر كحل أخير
+        orElse: () => exercise.images!.first,
+      );
+      displayImageUrl = selectedImage.url ?? '';
+    }
 
     return GestureDetector(
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.backgroundColor,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
@@ -45,23 +60,31 @@ class ExerciseCard extends StatelessWidget {
                 Hero(
                   tag: 'exercise_${exercise.id}',
                   child: ClipRRect(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
                     child: Container(
-                      height: 110,
+                      height: 90, // 🔥 التعديل الثاني: تصغير الارتفاع من 110 إلى 90
                       width: double.infinity,
                       color: Colors.white,
                       child: displayImageUrl.isNotEmpty
                           ? CachedNetworkImage(
-                              imageUrl: displayImageUrl,
-                              fit: BoxFit.cover,
-                              placeholder: (context, url) => LoadingShimmer(
-                                width: double.infinity,
-                                height: 110,
-                                borderRadius: 20,
-                              ),
-                              errorWidget: (context, url, error) => const Icon(Icons.fitness_center, color: Colors.grey),
-                            )
-                          : const Icon(Icons.image_not_supported, color: Colors.grey),
+                        imageUrl: displayImageUrl,
+                        fit: BoxFit.contain, // 🔥 لضمان ظهور التمرين كاملاً بدون قص
+                        placeholder: (context, url) => const LoadingShimmer(
+                          width: double.infinity,
+                          height: 90,
+                          borderRadius: 20,
+                        ),
+                        errorWidget: (context, url, error) => const Icon(
+                          Icons.fitness_center,
+                          color: Colors.grey,
+                        ),
+                      )
+                          : const Icon(
+                        Icons.image_not_supported,
+                        color: Colors.grey,
+                      ),
                     ),
                   ),
                 ),
@@ -71,21 +94,30 @@ class ExerciseCard extends StatelessWidget {
                   child: CircleAvatar(
                     backgroundColor: Colors.white.withValues(alpha: 0.8),
                     radius: 16,
-                    child: BlocConsumer<SavedExercisesCubit, SavedExercisesState>(
+                    child:
+                    BlocConsumer<SavedExercisesCubit, SavedExercisesState>(
                       listener: (context, state) {
-                        if (state is SavedExercisesToggleSuccess && state.exerciseId == exercise.id) {
+                        if (state is SavedExercisesToggleSuccess &&
+                            state.exerciseId == exercise.id) {
                           AppSnackBar.show(
                             context,
-                            message: state.isSaved ? "Added to saved" : "Removed from saved",
+                            message: state.isSaved
+                                ? "Added to saved"
+                                : "Removed from saved",
                             type: SnackBarType.success,
                             onActionPressed: () {
                               if (!context.mounted) return;
-                              final currentRoute = ModalRoute.of(context)?.settings.name;
-                              if (currentRoute == AppRoutes.savedExercises) {
+                              final currentRoute = ModalRoute.of(
+                                context,
+                              )?.settings.name;
+                              if (currentRoute ==
+                                  AppRoutes.savedExercises) {
                                 Navigator.of(context).pop();
                                 return;
                               }
-                              Navigator.of(context).pushNamed(AppRoutes.savedExercises);
+                              Navigator.of(
+                                context,
+                              ).pushNamed(AppRoutes.savedExercises);
                             },
                           );
                         }
@@ -98,7 +130,9 @@ class ExerciseCard extends StatelessWidget {
                           onTap: () => cubit.toggleSave(exercise),
                           child: Center(
                             child: Icon(
-                              isCurrentlySaved ? Icons.bookmark : Icons.bookmark_border,
+                              isCurrentlySaved
+                                  ? Icons.bookmark
+                                  : Icons.bookmark_border,
                               color: AppColors.primaryBtn,
                               size: 20,
                             ),
@@ -112,7 +146,10 @@ class ExerciseCard extends StatelessWidget {
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 6, // 🔥 تعديل مسافات النصوص لتتناسب مع الارتفاع الجديد
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -121,8 +158,8 @@ class ExerciseCard extends StatelessWidget {
                       exercise.name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: AppColors.textDark,
+                      style: TextStyle(
+                        color: context.textColor,
                         fontSize: 13,
                         fontWeight: FontWeight.bold,
                       ),

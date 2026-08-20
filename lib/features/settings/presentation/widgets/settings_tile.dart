@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 
 class SettingsTile extends StatelessWidget {
   final IconData icon;
@@ -28,24 +29,16 @@ class SettingsTile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: NeumorphicButton(
         onPressed: onTap,
-        padding: const EdgeInsets.symmetric(
-          horizontal: 18,
-          vertical: 16,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
         style: NeumorphicStyle(
-          depth: 3,
-          intensity: .9,
-          boxShape: NeumorphicBoxShape.roundRect(
-            BorderRadius.circular(18),
-          ),
-          color: Colors.white,
+          depth: 2,
+          intensity: 0.4,
+          boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(18)),
+          color: context.backgroundColor,
         ),
         child: Row(
           children: [
-            Icon(
-              icon,
-              color: iconColor ?? color,
-            ),
+            Icon(icon, color: iconColor ?? color),
             const SizedBox(width: 16),
 
             Expanded(
@@ -54,7 +47,8 @@ class SettingsTile extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: textColor ?? (isDanger ? Colors.red : Colors.black87),
+                  color:
+                      textColor ?? (isDanger ? Colors.red : context.textColor),
                 ),
               ),
             ),
@@ -63,7 +57,7 @@ class SettingsTile extends StatelessWidget {
               Icons.arrow_forward_ios,
               size: 17,
               color: isDanger ? Colors.red : Colors.grey,
-            )
+            ),
           ],
         ),
       ),

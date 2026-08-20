@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/routes/app_routes.dart';
-import '../../../../core/widgets/loading_shimmer.dart'; 
+import '../../../../core/widgets/loading_shimmer.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../view_model/categories_cubit/categories_cubit.dart';
 import '../view_model/categories_cubit/categories_state.dart';
@@ -42,6 +43,13 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
       CurvedAnimation(parent: _controller, curve: const Interval(0.0, 0.5)),
     );
 
+    // ❌ تم إزالة استدعاء الـ Fetch من هنا لكي يتحدث الكيوبيت عند تغيير اللغة
+  }
+
+  // ✅ تمت إضافة هذه الدالة لتحديث البيانات من السيرفر (والكاش) فوراً عند تغيير اللغة أو فتح الشاشة
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     context.read<CategoriesCubit>().fetchCategories(1);
   }
 
@@ -51,25 +59,26 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
     super.dispose();
   }
 
-  final Map<int, Map<String, String>> _categoryUIInfo = {
-    1: {
-      'subtitle': 'Build Muscle & Strength',
-      'image': 'assets/images/strength.jpg',
-    },
-    2: {
-      'subtitle': 'Burn Fat & Improve Endurance',
-      'image': 'assets/images/cardio.jpg',
-    },
-  };
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final screenWidth = MediaQuery.of(context).size.width;
     final cardWidth = screenWidth * 0.75;
 
+    // 🔥 نقلنا الـ Map إلى داخل دالة build لكي تستطيع قراءة الترجمة المتغيرة (l10n)
+    final Map<int, Map<String, String>> categoryUIInfo = {
+      1: {
+        'subtitle': l10n.build_muscle, // 🔥 تمت الترجمة
+        'image': 'assets/images/strength.jpg',
+      },
+      2: {
+        'subtitle': l10n.burn_fat, // 🔥 تمت الترجمة
+        'image': 'assets/images/cardio.jpg',
+      },
+    };
+
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.backgroundColor,
       body: SafeArea(
         child: BlocConsumer<CategoriesCubit, CategoriesState>(
           listener: (context, state) {
@@ -129,12 +138,14 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const SizedBox(height: 5),
-                            const Text(
-                              "Choose Your\nWorkout Type",
+                            // 🔥 ترجمة النص الثابت فوق الكروت
+                            Text(
+                              l10n.chooseYourWorkoutType ??
+                                  "Choose Your\nWorkout Type",
                               style: TextStyle(
                                 fontSize: 32,
                                 fontWeight: FontWeight.bold,
-                                color: AppColors.textDark,
+                                color: context.textColor,
                                 height: 1.2,
                               ),
                             ),
@@ -153,9 +164,9 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
                       itemBuilder: (context, index) {
                         final category = categories[index];
                         final uiInfo =
-                            _categoryUIInfo[category.id] ??
+                            categoryUIInfo[category.id] ??
                             {
-                              'subtitle': 'Start Training',
+                              'subtitle': l10n.start_training, // 🔥 تمت الترجمة
                               'image': 'assets/images/default_workout.png',
                             };
 
@@ -196,7 +207,8 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
                               child: SizedBox(
                                 width: cardWidth,
                                 child: LightPremiumWorkoutCard(
-                                  title: category.name.toUpperCase(),
+                                  // 🔥 إزالة toUpperCase() لتجنب أخطاء الخطوط العربية
+                                  title: category.name,
                                   subtitle: uiInfo['subtitle']!,
                                   imagePath: uiInfo['image']!,
                                   onTap: () {

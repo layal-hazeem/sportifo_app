@@ -6,7 +6,10 @@ import '../../data/repository/nutrition_repository.dart';
 import '../../../ai_chat/data/models/chat_message_model.dart';
 import '../../../../core/network/api_result.dart';
 import 'nutrition_state.dart';
-
+import '../../../../core/services/home_widget_service.dart';
+import '../../../targets/presentation/view_model/target_cubit/target_cubit.dart';
+import '../../../targets/presentation/view_model/target_cubit/target_state.dart';
+import '../../../../core/di/service_locator.dart';
 class NutritionCubit extends Cubit<NutritionState> {
   final NutritionRepository _repository;
 
@@ -15,7 +18,37 @@ class NutritionCubit extends Cubit<NutritionState> {
   bool _isInitialized = false;
 
   NutritionCubit(this._repository) : super(NutritionInitial());
+  void _updateHomeWidget(TodayFoodLogsResponse data) {
+    try {
+      final targetCubit = getIt<TargetCubit>();
+      final targetState = targetCubit.state;
 
+      num targetCalories = 2000;
+      num targetProtein = 120;
+      num targetCarbs = 150;
+      num targetFat = 60;
+
+      if (targetState is TargetSuccess) {
+        targetCalories = targetState.targetData.calories;
+        targetProtein = targetState.targetData.protein;
+        targetCarbs = targetState.targetData.carbs;
+        targetFat = targetState.targetData.fat;
+      }
+
+      HomeWidgetService.updateCaloriesWidget(
+        currentCalories: data.total.calories.toInt(),
+        targetCalories: targetCalories.toInt(),
+        currentProtein: data.total.protein.toInt(),
+        targetProtein: targetProtein.toInt(),
+        currentCarbs: data.total.carbs.toInt(),
+        targetCarbs: targetCarbs.toInt(),
+        currentFat: data.total.fat.toInt(),
+        targetFat: targetFat.toInt(),
+      );
+    } catch (e) {
+      print("Error updating home widget from NutritionCubit: $e");
+    }
+  }
   Future<void> initialize() async {
     if (_isInitialized) return;
 
@@ -33,11 +66,13 @@ class NutritionCubit extends Cubit<NutritionState> {
 
         _lastSuccessfulResponse = result.data;
         await _saveFoodLogsToCache(result.data);
+        _updateHomeWidget(result.data);
         emit(NutritionSuccess(foodLogs: result.data));
       } else if (result is Failure) {
         final cached = await _loadFoodLogsFromCache();
         if (cached != null) {
           _lastSuccessfulResponse = cached;
+          _updateHomeWidget(cached);
           emit(NutritionSuccess(foodLogs: cached));
         } else {
           emit(NutritionError((result as Failure).message));
@@ -116,6 +151,7 @@ class NutritionCubit extends Cubit<NutritionState> {
     if (result is Success<TodayFoodLogsResponse>) {
       _lastSuccessfulResponse = result.data;
       await _saveFoodLogsToCache(result.data);
+      _updateHomeWidget(result.data);
       emit(NutritionSuccess(foodLogs: result.data));
     } else if (result is Failure) {
       final cached = await _loadFoodLogsFromCache();
@@ -167,7 +203,7 @@ class NutritionCubit extends Cubit<NutritionState> {
       }
 
       await fetchTodayFoodLogs(forceRefresh: true);
-
+      _updateHomeWidget(_lastSuccessfulResponse!);
       emit(AddMealSuccess(
         messageId: messageId,
         mealResponse: result.data,
@@ -206,6 +242,7 @@ class NutritionCubit extends Cubit<NutritionState> {
           total: result.data.total,
         );
         await _saveFoodLogsToCache(_lastSuccessfulResponse!);
+        _updateHomeWidget(_lastSuccessfulResponse!);
         emit(AddMealSuccess(mealResponse: result.data));
 
         await fetchTodayFoodLogs(forceRefresh: true);
@@ -235,7 +272,7 @@ class NutritionCubit extends Cubit<NutritionState> {
         total: result.data.total,
       );
       await _saveFoodLogsToCache(_lastSuccessfulResponse!);
-
+      _updateHomeWidget(_lastSuccessfulResponse!);
       emit(NutritionSuccess(foodLogs: _lastSuccessfulResponse!));
       emit(DeleteMealSuccess(
         mealId: mealId,
@@ -247,5 +284,17 @@ class NutritionCubit extends Cubit<NutritionState> {
         message: (result as Failure).message,
       ));
     }
+  }
+  // ✅ دالة جديدة - بتصفر كل شي بالذاكرة وبتمسح الكاش المحلي الخاص بالتغذية
+  Future<void> reset() async {
+    _isInitialized = false;
+    _lastSuccessfulResponse = null;
+    _messageToMealMap.clear();
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('nutrition_food_logs_cache');
+    await prefs.remove('nutrition_message_meal_map');
+
+    emit(NutritionInitial());
   }
 }

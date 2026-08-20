@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class WorkoutConfirmDialog {
@@ -29,20 +30,31 @@ class WorkoutConfirmDialog {
               // 🔥 أيقونة بدائرة خفيفة اللون - بتوضح فوراً نوع الديالوغ
               Container(
                 padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(color: iconColor.withOpacity(0.12), shape: BoxShape.circle),
+                decoration: BoxDecoration(
+                  color: iconColor.withOpacity(0.12),
+                  shape: BoxShape.circle,
+                ),
                 child: Icon(icon, color: iconColor, size: 30),
               ),
               const SizedBox(height: 18),
               Text(
                 title,
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: AppColors.textDark),
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w800,
+                  color: context.textColor,
+                ),
               ),
               const SizedBox(height: 10),
               Text(
                 message,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14, color: Colors.grey.shade600, height: 1.5),
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey.shade600,
+                  height: 1.5,
+                ),
               ),
               const SizedBox(height: 26),
 
@@ -54,14 +66,22 @@ class WorkoutConfirmDialog {
                     backgroundColor: primaryColor,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 15),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
                     elevation: 0,
                   ),
                   onPressed: () {
                     Navigator.pop(ctx);
                     onPrimary();
                   },
-                  child: Text(primaryText, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
+                  child: Text(
+                    primaryText,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 15,
+                    ),
+                  ),
                 ),
               ),
 
@@ -77,11 +97,16 @@ class WorkoutConfirmDialog {
                     },
                     style: TextButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 14),
-                      foregroundColor: Colors.grey.shade700, // 🔥 لون أغمق قليل للوضوح
+                      foregroundColor:
+                          Colors.grey.shade700, // 🔥 لون أغمق قليل للوضوح
                     ),
                     child: Text(
                       secondaryText,
-                      style: TextStyle(color: Colors.grey.shade700, fontWeight: FontWeight.w700, fontSize: 14),
+                      style: TextStyle(
+                        color: Colors.grey.shade700,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14,
+                      ),
                     ),
                   ),
                 ),

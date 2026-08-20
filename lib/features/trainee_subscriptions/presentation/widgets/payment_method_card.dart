@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/constants/payment_constants.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/helpers/snack_bar_utils.dart';
@@ -16,11 +17,11 @@ class PaymentMethodCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.backgroundColor,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: AppColors.primaryBtn.withOpacity(0.04),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -51,14 +52,23 @@ class PaymentMethodCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          _buildAccountDetailRow(l10n.subscription_payment_accountNameLabel, PaymentConstants.accountName, Icons.person_outline),
+          _buildAccountDetailRow(
+            l10n.subscription_payment_accountNameLabel,
+            PaymentConstants.accountName,
+            Icons.person_outline,
+            context,
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
             child: Divider(color: Colors.grey.shade200, height: 1),
           ),
           Row(
             children: [
-              Icon(Icons.account_balance_wallet_outlined, color: Colors.grey.shade500, size: 20),
+              Icon(
+                Icons.account_balance_wallet_outlined,
+                color: Colors.grey.shade500,
+                size: 20,
+              ),
               const SizedBox(width: 8),
               Text(
                 l10n.subscription_payment_walletNumberLabel,
@@ -82,10 +92,12 @@ class PaymentMethodCard extends StatelessWidget {
               const SizedBox(width: 6),
               InkWell(
                 onTap: () {
-                  Clipboard.setData(ClipboardData(text: PaymentConstants.accountNumber));
+                  Clipboard.setData(
+                    ClipboardData(text: PaymentConstants.accountNumber),
+                  );
                   AppSnackBar.show(
                     context,
-                    message:l10n.subscription_payment_copySuccess,
+                    message: l10n.subscription_payment_copySuccess,
                     type: SnackBarType.success,
                   );
                 },
@@ -95,7 +107,11 @@ class PaymentMethodCard extends StatelessWidget {
                     color: AppColors.primaryBtn.withOpacity(0.12),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.copy, size: 16, color: AppColors.primaryBtn),
+                  child: const Icon(
+                    Icons.copy,
+                    size: 16,
+                    color: AppColors.primaryBtn,
+                  ),
                 ),
               ),
             ],
@@ -105,17 +121,29 @@ class PaymentMethodCard extends StatelessWidget {
     );
   }
 
-  Widget _buildAccountDetailRow(String label, String value, IconData icon) {
+  Widget _buildAccountDetailRow(
+    String label,
+    String value,
+    IconData icon,
+    BuildContext context,
+  ) {
     return Row(
       children: [
         Icon(icon, color: Colors.grey.shade500, size: 20),
         const SizedBox(width: 8),
-        Text(label, style: TextStyle(color: Colors.grey.shade600, fontSize: 14)),
+        Text(
+          label,
+          style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+        ),
         const SizedBox(width: 8),
         Expanded(
           child: Text(
             value,
-            style: const TextStyle(color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 14),
+            style: TextStyle(
+              color: context.textColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+            ),
             textAlign: TextAlign.left,
             overflow: TextOverflow.ellipsis,
             maxLines: 1,

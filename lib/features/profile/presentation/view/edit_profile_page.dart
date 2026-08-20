@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/core/helpers/snack_bar_utils.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/features/auth/presentation/widgets/custom_button.dart';
 import 'package:sportifo_app/features/auth/presentation/widgets/custom_neumorphic_field.dart';
 import 'package:sportifo_app/features/profile/data/models/edit_coach_profile_request_model.dart';
@@ -87,13 +88,30 @@ class _EditProfilePageState extends State<EditProfilePage>
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.backgroundColor,
       appBar: NeumorphicAppBar(
+        color: AppColors.primaryBtn,
         title: Text(
           l10n.editProfile,
-          style: TextStyle(color: AppColors.textDark),
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+          ),
         ),
-        color: AppColors.background,
+        leading: Padding(
+          padding: const EdgeInsets.all(8),
+          child: NeumorphicButton(
+            onPressed: () => Navigator.pop(context),
+            style: NeumorphicStyle(
+              color: AppColors.primaryBtn,
+              depth: -2,
+              intensity: 0.4,
+              boxShape: const NeumorphicBoxShape.circle(),
+            ),
+            padding: EdgeInsets.zero,
+            child: const Icon(Icons.arrow_back, color: Colors.white, size: 22),
+          ),
+        ),
       ),
       body: BlocConsumer<ProfileCubit, ProfileState>(
         listener: (context, state) {
@@ -123,9 +141,53 @@ class _EditProfilePageState extends State<EditProfilePage>
               _buildPageContent(context, state),
 
               if (isLoading)
-                Container(
-                  color: Colors.black.withOpacity(0.2),
-                  child: const Center(child: CircularProgressIndicator()),
+                Positioned.fill(
+                  child: AbsorbPointer(
+                    absorbing: true,
+                    child: Container(
+                      color: Colors.black.withOpacity(0.25),
+                      child: Center(
+                        child: Neumorphic(
+                          style: NeumorphicStyle(
+                            color: context.backgroundColor,
+                            depth: 4,
+                            intensity: 0.5,
+                            boxShape: NeumorphicBoxShape.roundRect(
+                              BorderRadius.circular(20),
+                            ),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 28,
+                            vertical: 22,
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const SizedBox(
+                                width: 38,
+                                height: 38,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 3.5,
+                                  color: AppColors.primaryBtn,
+                                ),
+                              ),
+
+                              const SizedBox(height: 16),
+
+                              Text(
+                                l10n.saving,
+                                style: TextStyle(
+                                  color: context.textColor,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
             ],
           );
@@ -219,6 +281,46 @@ class _EditProfilePageState extends State<EditProfilePage>
                           initialDate: widget.profile.dateOfBirth,
                           firstDate: DateTime(1950),
                           lastDate: DateTime.now(),
+
+                          builder: (context, child) {
+                            final isDark =
+                                Theme.of(context).brightness == Brightness.dark;
+
+                            return Theme(
+                              data: Theme.of(context).copyWith(
+                                colorScheme: isDark
+                                    ? ColorScheme.dark(
+                                        primary: AppColors.primaryBtn,
+
+                                        onPrimary: Colors.white,
+
+                                        surface: context.backgroundColor,
+
+                                        onSurface: context.textColor,
+                                      )
+                                    : ColorScheme.light(
+                                        primary: AppColors.primaryBtn,
+
+                                        onPrimary: Colors.white,
+
+                                        surface: context.backgroundColor,
+
+                                        onSurface: context.textColor,
+                                      ),
+
+                                textButtonTheme: TextButtonThemeData(
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: AppColors.primaryBtn,
+                                  ),
+                                ),
+
+                                iconTheme: IconThemeData(
+                                  color: AppColors.primaryBtn,
+                                ),
+                              ),
+                              child: child!,
+                            );
+                          },
                         );
 
                         if (pickedDate != null) {
@@ -227,6 +329,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                           ).format(pickedDate);
                         }
                       },
+
                       child: AbsorbPointer(
                         child: buildField(
                           "Date of Birth",
@@ -454,7 +557,7 @@ class _EditProfilePageState extends State<EditProfilePage>
             margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: AppColors.background,
+              color: context.backgroundColor,
               borderRadius: BorderRadius.circular(30),
             ),
             child: Row(

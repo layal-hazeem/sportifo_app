@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pinput/pinput.dart';
 import 'package:sportifo_app/core/routes/app_routes.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/storage/local_storage.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -95,13 +96,13 @@ class _OTPScreenState extends State<OTPScreen> {
     final defaultPinTheme = PinTheme(
       width: 60,
       height: 65,
-      textStyle: const TextStyle(
+      textStyle: TextStyle(
         fontSize: 22,
         fontWeight: FontWeight.bold,
-        color: AppColors.textDark,
+        color: context.textColor,
       ),
       decoration: BoxDecoration(
-        color: AppColors.background,
+        color: context.backgroundColor,
         borderRadius: BorderRadius.circular(15),
         boxShadow: const [
           BoxShadow(color: Colors.white, offset: Offset(-3, -3), blurRadius: 5),
@@ -111,7 +112,7 @@ class _OTPScreenState extends State<OTPScreen> {
     );
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.backgroundColor,
       appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0),
 
       body: BlocListener<LoginCubit, LoginState>(

@@ -1,9 +1,11 @@
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart'; // 👈 لا تنسَ الـ import
 
 class CustomBottomNavBar {
-  static BottomNavigationBarItem build({
+  static BottomNavigationBarItem build(
+    BuildContext context, {
     required IconData icon,
     String? svgIcon,
     required String label,
@@ -11,12 +13,13 @@ class CustomBottomNavBar {
   }) {
     return BottomNavigationBarItem(
       label: label,
-      icon: _buildNeumorphicIcon(icon, svgIcon, false),
-      activeIcon: _buildNeumorphicIcon(icon, svgIcon, true),
+      icon: _buildNeumorphicIcon(context, icon, svgIcon, false),
+      activeIcon: _buildNeumorphicIcon(context, icon, svgIcon, true),
     );
   }
 
   static Widget _buildNeumorphicIcon(
+    BuildContext context,
     IconData icon,
     String? svgIcon,
     bool isSelected,
@@ -26,11 +29,11 @@ class CustomBottomNavBar {
       duration: const Duration(milliseconds: 200),
       child: Neumorphic(
         style: NeumorphicStyle(
-          depth: isSelected ? 6 : -4,
-          intensity: 0.8,
+          depth: isSelected ? 2 : -2,
+          intensity: 0.4,
           shape: NeumorphicShape.flat,
           boxShape: const NeumorphicBoxShape.circle(),
-          color: isSelected ? AppColors.primaryBtn : AppColors.background,
+          color: isSelected ? AppColors.primaryBtn : context.backgroundColor,
         ),
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -40,7 +43,7 @@ class CustomBottomNavBar {
                   width: 22,
                   height: 22,
                   colorFilter: ColorFilter.mode(
-                    isSelected ? AppColors.background : AppColors.primaryBtn,
+                    isSelected ? context.backgroundColor : AppColors.primaryBtn,
                     BlendMode.srcIn,
                   ),
                 )
@@ -48,7 +51,7 @@ class CustomBottomNavBar {
                   icon,
                   size: 22,
                   color: isSelected
-                      ? AppColors.background
+                      ? context.backgroundColor
                       : AppColors.primaryBtn,
                 ),
         ),

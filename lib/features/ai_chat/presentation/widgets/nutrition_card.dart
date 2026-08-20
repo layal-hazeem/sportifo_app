@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class NutritionCard extends StatelessWidget {
   final double? calories;
@@ -16,13 +19,26 @@ class NutritionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.only(top: 8),
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
       constraints: const BoxConstraints(minWidth: 240),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFF9F2),
+        color: context.backgroundColor,
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: AppColors.primaryBtn.withValues(alpha: 0.8),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 10,
+            spreadRadius: 0,
+            offset: const Offset(0, 3),
+          ),
+        ],
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -31,28 +47,28 @@ class NutritionCard extends StatelessWidget {
           if (calories != null)
             _Item(
               Icons.local_fire_department,
-              "Cal",
+              l10n.cal,
               calories!,
               const Color(0xFFFF9800),
             ),
           if (protein != null)
             _Item(
               Icons.egg_alt_outlined,
-              "Protein",
+              l10n.protein,
               protein!,
               const Color(0xFFEF5350),
             ),
           if (carbs != null)
             _Item(
               Icons.grain_outlined,
-              "Carbs",
+              l10n.carbs,
               carbs!,
               const Color(0xFFFFB300),
             ),
           if (fat != null)
             _Item(
               Icons.water_drop_outlined,
-              "Fat",
+              l10n.fat,
               fat!,
               const Color(0xFF42A5F5),
             ),

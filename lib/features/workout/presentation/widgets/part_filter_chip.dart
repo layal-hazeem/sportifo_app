@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 
 class PartFilterChip extends StatelessWidget {
   final String label;
@@ -20,17 +21,31 @@ class PartFilterChip extends StatelessWidget {
       child: ChoiceChip(
         label: Text(label),
         selected: isSelected,
+
         selectedColor: AppColors.primaryBtn,
-        backgroundColor: Colors.white,
-        showCheckmark: false, // شلناها لحتى يضل النص بمركز الكبسولة أرتب
+
+        backgroundColor: AppColors.hintText.withOpacity(0.07),
+
+        showCheckmark: false,
+
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
-          side: BorderSide(color: isSelected ? AppColors.primaryBtn : Colors.grey.shade300),
+          side: BorderSide(
+            color: isSelected
+                ? AppColors.primaryBtn
+                : AppColors.hintText.withOpacity(0.25),
+            width: 1,
+          ),
         ),
+
         labelStyle: TextStyle(
-          color: isSelected ? Colors.white : AppColors.textDark,
-          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+          color: isSelected ? Colors.white : context.textColor,
+          fontSize: 13,
+          fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
         ),
+
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+
         onSelected: onSelected,
       ),
     );

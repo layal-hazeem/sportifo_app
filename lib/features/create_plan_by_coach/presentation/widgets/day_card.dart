@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/features/create_plan_by_coach/data/models/plan_day_ui_model.dart';
 import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/exercise_settings_bottom_sheet.dart';
 import 'package:sportifo_app/features/workout/data/models/exercise_model.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class PlanDayCard extends StatefulWidget {
   final PlanDayUiModel day;
-
   final VoidCallback onAddExercise;
-
   final Function(int) onDeleteExercise;
-
   final VoidCallback onDeleteDay;
   final VoidCallback onSettings;
 
@@ -56,6 +55,7 @@ class _PlanDayCardState extends State<PlanDayCard> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final exercises = widget.day.exercises;
 
     final visibleExercises = isExpanded
@@ -65,20 +65,18 @@ class _PlanDayCardState extends State<PlanDayCard> {
     return Dismissible(
       key: ValueKey(widget.day.name),
       direction: DismissDirection.endToStart,
+
+      // 🔴 DELETE BACKGROUND
       background: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         padding: const EdgeInsets.only(right: 28),
         alignment: Alignment.centerRight,
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-            colors: [Colors.red.shade400, Colors.red.shade600],
-          ),
+          color: Colors.red,
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: Colors.red.withOpacity(.3),
+              color: Colors.red.withOpacity(0.25),
               blurRadius: 14,
               offset: const Offset(0, 6),
             ),
@@ -90,16 +88,19 @@ class _PlanDayCardState extends State<PlanDayCard> {
           size: 26,
         ),
       ),
+
       onDismissed: (_) {
         widget.onDeleteDay();
       },
+
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
+          color: context.backgroundColor,
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(.035),
+              color: AppColors.hintText.withOpacity(0.12),
               blurRadius: 22,
               offset: const Offset(0, 10),
             ),
@@ -110,14 +111,19 @@ class _PlanDayCardState extends State<PlanDayCard> {
           child: Container(
             padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: context.backgroundColor,
               borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: Colors.grey.shade100, width: 1.2),
+              border: Border.all(
+                color: AppColors.hintText.withOpacity(0.18),
+                width: 1.2,
+              ),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                /// HEADER
+                // ─────────────────────────────────────────────
+                // HEADER
+                // ─────────────────────────────────────────────
                 Row(
                   children: [
                     Container(
@@ -129,13 +135,13 @@ class _PlanDayCardState extends State<PlanDayCard> {
                           end: Alignment.bottomRight,
                           colors: [
                             AppColors.primaryBtn,
-                            AppColors.primaryBtn.withOpacity(.75),
+                            AppColors.primaryBtn.withOpacity(0.75),
                           ],
                         ),
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.primaryBtn.withOpacity(.32),
+                            color: AppColors.primaryBtn.withOpacity(0.28),
                             blurRadius: 12,
                             offset: const Offset(0, 5),
                           ),
@@ -147,20 +153,25 @@ class _PlanDayCardState extends State<PlanDayCard> {
                         size: 21,
                       ),
                     ),
+
                     const SizedBox(width: 13),
+
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             widget.day.name,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 17,
                               fontWeight: FontWeight.w800,
                               letterSpacing: -0.3,
+                              color: context.textColor,
                             ),
                           ),
+
                           const SizedBox(height: 5),
+
                           Row(
                             children: [
                               Container(
@@ -169,21 +180,23 @@ class _PlanDayCardState extends State<PlanDayCard> {
                                   vertical: 3,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: Colors.grey.shade100,
+                                  color: AppColors.hintText.withOpacity(0.12),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Text(
-                                  "${exercises.length} exercises",
+                                  '${exercises.length} ${l10n.exercises}',
                                   style: TextStyle(
-                                    color: Colors.grey.shade700,
+                                    color: context.textColor,
                                     fontSize: 11.5,
                                     fontWeight: FontWeight.w700,
                                   ),
                                 ),
                               ),
+
                               if (widget.day.defaultSets != null ||
                                   widget.day.defaultReps != null) ...[
                                 const SizedBox(width: 6),
+
                                 Container(
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 8,
@@ -191,13 +204,14 @@ class _PlanDayCardState extends State<PlanDayCard> {
                                   ),
                                   decoration: BoxDecoration(
                                     color: AppColors.primaryBtn.withOpacity(
-                                      .09,
+                                      0.09,
                                     ),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Text(
-                                    "${widget.day.defaultSets ?? '-'} × ${widget.day.defaultReps ?? '-'}",
-                                    style: TextStyle(
+                                    '${widget.day.defaultSets ?? '-'} × '
+                                    '${widget.day.defaultReps ?? '-'}',
+                                    style: const TextStyle(
                                       color: AppColors.primaryBtn,
                                       fontSize: 11.5,
                                       fontWeight: FontWeight.w800,
@@ -210,8 +224,9 @@ class _PlanDayCardState extends State<PlanDayCard> {
                         ],
                       ),
                     ),
+
                     Material(
-                      color: Colors.grey.shade50,
+                      color: context.backgroundColor,
                       shape: const CircleBorder(),
                       child: InkWell(
                         customBorder: const CircleBorder(),
@@ -224,9 +239,11 @@ class _PlanDayCardState extends State<PlanDayCard> {
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            border: Border.all(color: Colors.grey.shade200),
+                            border: Border.all(
+                              color: AppColors.hintText.withOpacity(0.22),
+                            ),
                           ),
-                          child: Icon(
+                          child: const Icon(
                             Icons.tune_rounded,
                             color: AppColors.primaryBtn,
                             size: 18,
@@ -239,23 +256,25 @@ class _PlanDayCardState extends State<PlanDayCard> {
 
                 const SizedBox(height: 18),
 
+                // ─────────────────────────────────────────────
+                // EMPTY STATE
+                // ─────────────────────────────────────────────
                 if (exercises.isEmpty)
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(vertical: 18),
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade50,
+                      color: AppColors.lightBackground,
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: Colors.grey.shade200,
-                        style: BorderStyle.solid,
+                        color: AppColors.hintText.withOpacity(0.15),
                       ),
                     ),
                     child: Center(
                       child: Text(
-                        "No exercises added yet",
+                        l10n.noExercisesAddedYet,
                         style: TextStyle(
-                          color: Colors.grey.shade500,
+                          color: AppColors.hintText,
                           fontSize: 13,
                           fontWeight: FontWeight.w500,
                         ),
@@ -263,7 +282,9 @@ class _PlanDayCardState extends State<PlanDayCard> {
                     ),
                   ),
 
-                /// EXERCISES
+                // ─────────────────────────────────────────────
+                // EXERCISES
+                // ─────────────────────────────────────────────
                 AnimatedSize(
                   duration: const Duration(milliseconds: 300),
                   curve: Curves.easeOutCubic,
@@ -275,6 +296,7 @@ class _PlanDayCardState extends State<PlanDayCard> {
 
                         final sets = _getSets(exercise);
                         final reps = _getReps(exercise);
+
                         return AnimatedOpacity(
                           duration: Duration(milliseconds: 200 + (index * 80)),
                           opacity: 1,
@@ -285,9 +307,11 @@ class _PlanDayCardState extends State<PlanDayCard> {
                               vertical: 11,
                             ),
                             decoration: BoxDecoration(
-                              color: Colors.grey.shade50,
+                              color: context.backgroundColor,
                               borderRadius: BorderRadius.circular(16),
-                              border: Border.all(color: Colors.grey.shade100),
+                              border: Border.all(
+                                color: AppColors.hintText.withOpacity(0.12),
+                              ),
                             ),
                             child: Row(
                               children: [
@@ -296,7 +320,7 @@ class _PlanDayCardState extends State<PlanDayCard> {
                                   height: 34,
                                   decoration: BoxDecoration(
                                     color: AppColors.primaryBtn.withOpacity(
-                                      .10,
+                                      0.10,
                                     ),
                                     borderRadius: BorderRadius.circular(11),
                                   ),
@@ -308,7 +332,9 @@ class _PlanDayCardState extends State<PlanDayCard> {
                                     color: AppColors.primaryBtn,
                                   ),
                                 ),
+
                                 const SizedBox(width: 11),
+
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment:
@@ -316,22 +342,26 @@ class _PlanDayCardState extends State<PlanDayCard> {
                                     children: [
                                       Text(
                                         exercise.name,
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontWeight: FontWeight.w700,
                                           fontSize: 13.5,
                                           letterSpacing: -0.1,
+                                          color: context.textColor,
                                         ),
                                         overflow: TextOverflow.ellipsis,
                                       ),
+
                                       const SizedBox(height: 2),
+
                                       Text(
                                         exercise.category?.name ?? "",
                                         style: TextStyle(
                                           fontSize: 11.5,
-                                          color: Colors.grey.shade500,
+                                          color: AppColors.hintText,
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
+
                                       if (exercise.isCardio &&
                                           exercise.duration != null)
                                         Padding(
@@ -340,7 +370,7 @@ class _PlanDayCardState extends State<PlanDayCard> {
                                           ),
                                           child: Text(
                                             exercise.duration!,
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               color: AppColors.primaryBtn,
                                               fontSize: 11.5,
                                               fontWeight: FontWeight.w800,
@@ -353,8 +383,9 @@ class _PlanDayCardState extends State<PlanDayCard> {
                                             top: 4,
                                           ),
                                           child: Text(
-                                            "${sets ?? '-'} Sets • ${reps ?? '-'} Reps",
-                                            style: TextStyle(
+                                            '${sets ?? '-'} ${l10n.sets} • '
+                                            '${reps ?? '-'} ${l10n.reps}',
+                                            style: const TextStyle(
                                               color: AppColors.primaryBtn,
                                               fontSize: 11.5,
                                               fontWeight: FontWeight.w800,
@@ -364,6 +395,8 @@ class _PlanDayCardState extends State<PlanDayCard> {
                                     ],
                                   ),
                                 ),
+
+                                // ⚙️ SETTINGS
                                 _RowIconButton(
                                   icon: Icons.tune_rounded,
                                   color: AppColors.primaryBtn,
@@ -376,10 +409,13 @@ class _PlanDayCardState extends State<PlanDayCard> {
                                     });
                                   },
                                 ),
+
                                 const SizedBox(width: 6),
+
+                                // 🔴 DELETE
                                 _RowIconButton(
                                   icon: Icons.delete_outline_rounded,
-                                  color: Colors.red.shade400,
+                                  color: Colors.red,
                                   onTap: () {
                                     widget.onDeleteExercise(
                                       exercises.indexOf(exercise),
@@ -397,7 +433,9 @@ class _PlanDayCardState extends State<PlanDayCard> {
 
                 const SizedBox(height: 6),
 
-                /// ACTION BUTTONS
+                // ─────────────────────────────────────────────
+                // ACTION BUTTONS
+                // ─────────────────────────────────────────────
                 Row(
                   children: [
                     if (exercises.length > 2)
@@ -411,10 +449,10 @@ class _PlanDayCardState extends State<PlanDayCard> {
                           style: OutlinedButton.styleFrom(
                             foregroundColor: AppColors.primaryBtn,
                             backgroundColor: AppColors.primaryBtn.withOpacity(
-                              .05,
+                              0.05,
                             ),
                             side: BorderSide(
-                              color: AppColors.primaryBtn.withOpacity(.25),
+                              color: AppColors.primaryBtn.withOpacity(0.25),
                             ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(14),
@@ -423,16 +461,19 @@ class _PlanDayCardState extends State<PlanDayCard> {
                           ),
                           child: Text(
                             isExpanded
-                                ? "Show Less"
-                                : "+ ${exercises.length - 2} More",
+                                ? l10n.showLess
+                                : '+ ${exercises.length - 2} ${l10n.more}',
                             style: const TextStyle(
+                              color: AppColors.primaryBtn,
                               fontWeight: FontWeight.w800,
                               fontSize: 13,
                             ),
                           ),
                         ),
                       ),
+
                     if (exercises.length > 2) const SizedBox(width: 10),
+
                     Expanded(
                       child: DecoratedBox(
                         decoration: BoxDecoration(
@@ -441,13 +482,13 @@ class _PlanDayCardState extends State<PlanDayCard> {
                             end: Alignment.centerRight,
                             colors: [
                               AppColors.primaryBtn,
-                              AppColors.primaryBtn.withOpacity(.82),
+                              AppColors.primaryBtn.withOpacity(0.82),
                             ],
                           ),
                           borderRadius: BorderRadius.circular(14),
                           boxShadow: [
                             BoxShadow(
-                              color: AppColors.primaryBtn.withOpacity(.28),
+                              color: AppColors.primaryBtn.withOpacity(0.25),
                               blurRadius: 14,
                               offset: const Offset(0, 6),
                             ),
@@ -460,10 +501,10 @@ class _PlanDayCardState extends State<PlanDayCard> {
                             size: 18,
                             color: Colors.white,
                           ),
-                          label: const Text(
-                            "Add Exercise",
+                          label: Text(
+                            l10n.addExercise,
                             style: TextStyle(
-                              color: Colors.white,
+                              color: context.textColor,
                               fontWeight: FontWeight.w800,
                               fontSize: 13,
                             ),
@@ -490,7 +531,13 @@ class _PlanDayCardState extends State<PlanDayCard> {
     );
   }
 
+  // ───────────────────────────────────────────────────────────
+  // DAY SETTINGS
+  // ───────────────────────────────────────────────────────────
+
   void _showDaySettings(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     final setsController = TextEditingController(
       text: widget.day.defaultSets?.toString() ?? "",
     );
@@ -502,7 +549,7 @@ class _PlanDayCardState extends State<PlanDayCard> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: context.backgroundColor,
       builder: (context) {
         return Padding(
           padding: EdgeInsets.only(
@@ -510,9 +557,11 @@ class _PlanDayCardState extends State<PlanDayCard> {
           ),
           child: Container(
             padding: const EdgeInsets.fromLTRB(24, 14, 24, 24),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+            decoration: BoxDecoration(
+              color: context.backgroundColor,
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(32),
+              ),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -521,11 +570,13 @@ class _PlanDayCardState extends State<PlanDayCard> {
                   width: 42,
                   height: 5,
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
+                    color: AppColors.hintText.withOpacity(0.35),
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
+
                 const SizedBox(height: 22),
+
                 Container(
                   width: 56,
                   height: 56,
@@ -534,57 +585,71 @@ class _PlanDayCardState extends State<PlanDayCard> {
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: [
-                        AppColors.primaryBtn.withOpacity(.16),
-                        AppColors.primaryBtn.withOpacity(.05),
+                        AppColors.primaryBtn.withOpacity(0.16),
+                        AppColors.primaryBtn.withOpacity(0.05),
                       ],
                     ),
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.tune_rounded,
                     color: AppColors.primaryBtn,
                     size: 24,
                   ),
                 ),
+
                 const SizedBox(height: 16),
-                const Text(
-                  "Workout Day Settings",
+
+                Text(
+                  l10n.workoutDaySettings,
                   style: TextStyle(
                     fontSize: 19,
                     fontWeight: FontWeight.w800,
                     letterSpacing: -0.3,
+                    color: context.textColor,
                   ),
                 ),
+
                 const SizedBox(height: 6),
+
                 Text(
-                  "These values will apply to all exercises unless customized.",
+                  l10n.workoutDaySettingsHint,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Colors.grey.shade600,
+                    color: AppColors.hintText,
                     fontSize: 13,
                     fontWeight: FontWeight.w500,
                     height: 1.4,
                   ),
                 ),
+
                 const SizedBox(height: 26),
+
                 TextField(
                   controller: setsController,
                   keyboardType: TextInputType.number,
+                  style: TextStyle(color: context.textColor),
                   decoration: InputDecoration(
-                    labelText: "Default Sets",
-                    hintText: "Example: 4",
+                    labelText: l10n.defaultSets,
+                    hintText: l10n.exampleSets,
+                    hintStyle: const TextStyle(color: AppColors.hintText),
+                    labelStyle: const TextStyle(color: AppColors.hintText),
                     filled: true,
-                    fillColor: Colors.grey.shade50,
+                    fillColor: context.backgroundColor,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide(color: Colors.grey.shade200),
+                      borderSide: BorderSide(
+                        color: AppColors.hintText.withOpacity(0.18),
+                      ),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide(color: Colors.grey.shade200),
+                      borderSide: BorderSide(
+                        color: AppColors.hintText.withOpacity(0.18),
+                      ),
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
+                    focusedBorder: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(16)),
                       borderSide: BorderSide(
                         color: AppColors.primaryBtn,
                         width: 1.5,
@@ -592,25 +657,34 @@ class _PlanDayCardState extends State<PlanDayCard> {
                     ),
                   ),
                 ),
+
                 const SizedBox(height: 14),
+
                 TextField(
                   controller: repsController,
                   keyboardType: TextInputType.number,
+                  style: TextStyle(color: context.textColor),
                   decoration: InputDecoration(
-                    labelText: "Default Reps",
-                    hintText: "Example: 12",
+                    labelText: l10n.defaultReps,
+                    hintText: l10n.exampleReps,
+                    hintStyle: const TextStyle(color: AppColors.hintText),
+                    labelStyle: const TextStyle(color: AppColors.hintText),
                     filled: true,
-                    fillColor: Colors.grey.shade50,
+                    fillColor: context.backgroundColor,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide(color: Colors.grey.shade200),
+                      borderSide: BorderSide(
+                        color: AppColors.hintText.withOpacity(0.18),
+                      ),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide(color: Colors.grey.shade200),
+                      borderSide: BorderSide(
+                        color: AppColors.hintText.withOpacity(0.18),
+                      ),
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
+                    focusedBorder: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(16)),
                       borderSide: BorderSide(
                         color: AppColors.primaryBtn,
                         width: 1.5,
@@ -618,7 +692,9 @@ class _PlanDayCardState extends State<PlanDayCard> {
                     ),
                   ),
                 ),
+
                 const SizedBox(height: 24),
+
                 SizedBox(
                   width: double.infinity,
                   height: 54,
@@ -629,13 +705,13 @@ class _PlanDayCardState extends State<PlanDayCard> {
                         end: Alignment.centerRight,
                         colors: [
                           AppColors.primaryBtn,
-                          AppColors.primaryBtn.withOpacity(.82),
+                          AppColors.primaryBtn.withOpacity(0.82),
                         ],
                       ),
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.primaryBtn.withOpacity(.32),
+                          color: AppColors.primaryBtn.withOpacity(0.28),
                           blurRadius: 16,
                           offset: const Offset(0, 8),
                         ),
@@ -664,7 +740,7 @@ class _PlanDayCardState extends State<PlanDayCard> {
                         Navigator.pop(context);
                       },
                       child: const Text(
-                        "Save Settings",
+                        'Save',
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w800,
@@ -697,7 +773,7 @@ class _RowIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.white,
+      color: context.backgroundColor,
       shape: const CircleBorder(),
       child: InkWell(
         customBorder: const CircleBorder(),
@@ -708,7 +784,11 @@ class _RowIconButton extends StatelessWidget {
           alignment: Alignment.center,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(color: Colors.grey.shade200),
+            border: Border.all(
+              color: color == Colors.red
+                  ? Colors.red.withOpacity(0.25)
+                  : AppColors.hintText.withOpacity(0.20),
+            ),
           ),
           child: Icon(icon, size: 15, color: color),
         ),

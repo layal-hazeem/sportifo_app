@@ -1,7 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import '../../../../core/routes/app_routes.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../workout/data/models/exercise_model.dart';
 import '../view_model/active_workout_state.dart';
 
@@ -31,15 +32,21 @@ class _WorkoutSummaryScreenState extends State<WorkoutSummaryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FC),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
-        title: const Text(
-          "WORKOUT SUMMARY",
-          style: TextStyle(color: AppColors.textDark, fontSize: 16, fontWeight: FontWeight.w900, letterSpacing: 1.5),
+        title: Text(
+          l10n.workoutSummary,
+          style: TextStyle(
+            color: context.textColor,
+            fontSize: 16,
+            fontWeight: FontWeight.w900,
+            letterSpacing: 1.5,
+          ),
         ),
       ),
       body: SafeArea(
@@ -54,7 +61,13 @@ class _WorkoutSummaryScreenState extends State<WorkoutSummaryScreen> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(24),
-                  boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 15, offset: const Offset(0, 5))],
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.03),
+                      blurRadius: 15,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
                 ),
                 child: Row(
                   children: [
@@ -64,16 +77,34 @@ class _WorkoutSummaryScreenState extends State<WorkoutSummaryScreen> {
                         shape: BoxShape.circle,
                         color: AppColors.primaryBtn.withOpacity(0.12),
                       ),
-                      child: const Icon(Icons.check_circle_rounded, color: AppColors.primaryBtn, size: 36),
+                      child: const Icon(
+                        Icons.check_circle_rounded,
+                        color: AppColors.primaryBtn,
+                        size: 36,
+                      ),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text("Workout Completed", style: TextStyle(color: AppColors.textDark, fontSize: 18, fontWeight: FontWeight.w900)),
+                          Text(
+                            l10n.workoutCompleted,
+                            style: TextStyle(
+                              color: context.textColor,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
                           const SizedBox(height: 4),
-                          Text("Session summary for ${widget.dayName}.", style: const TextStyle(color: Colors.grey, fontSize: 13, fontWeight: FontWeight.w600)),
+                          Text(
+                            "${l10n.sessionSummaryFor} ${widget.dayName}.",
+                            style: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -85,18 +116,35 @@ class _WorkoutSummaryScreenState extends State<WorkoutSummaryScreen> {
               // 📊 إحصائيات الوقت والتمارين
               Row(
                 children: [
-                  Expanded(child: _buildStatCard(Icons.timer_outlined, "DURATION", widget.totalTime)),
+                  Expanded(
+                    child: _buildStatCard(
+                      Icons.timer_outlined,
+                      l10n.duration,
+                      widget.totalTime,
+                    ),
+                  ),
                   const SizedBox(width: 12),
-                  Expanded(child: _buildStatCard(Icons.fitness_center_rounded, "EXERCISES", "${widget.totalExercises}")),
+                  Expanded(
+                    child: _buildStatCard(
+                      Icons.fitness_center_rounded,
+                      l10n.exercises,
+                      "${widget.totalExercises}",
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 16),
 
-              const Align(
+              Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  "PERFORMANCE SUMMARY",
-                  style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1),
+                  l10n.performanceSummary,
+                  style: const TextStyle(
+                    color: Colors.grey,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1,
+                  ),
                 ),
               ),
               const SizedBox(height: 8),
@@ -123,36 +171,75 @@ class _WorkoutSummaryScreenState extends State<WorkoutSummaryScreen> {
                         children: [
                           Text(
                             exercise.name,
-                            style: const TextStyle(color: AppColors.textDark, fontSize: 15, fontWeight: FontWeight.w900),
+                            style: TextStyle(
+                              color: context.textColor,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w900,
+                            ),
                           ),
                           const SizedBox(height: 10),
                           if (loggedSets.isNotEmpty)
                             ...List.generate(loggedSets.length, (setIdx) {
                               final set = loggedSets[setIdx];
                               // 🔥 فحص ذكي: هل هذا كاردیو (weight = 0) ولا مقاومة
-                              bool isCardio = set.weight == "0" || set.weight == "0.0";
+                              bool isCardio =
+                                  set.weight == "0" || set.weight == "0.0";
                               return Padding(
                                 padding: const EdgeInsets.only(bottom: 8),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text("Set ${setIdx + 1}", style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 12)),
+                                    Text(
+                                      "${l10n.set} ${setIdx + 1}",
+                                      style: const TextStyle(
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12,
+                                      ),
+                                    ),
                                     set.isSkipped
                                         ? Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                      decoration: BoxDecoration(color: Colors.grey.shade100, borderRadius: BorderRadius.circular(6)),
-                                      child: const Text("Skipped", style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 11)),
-                                    )
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 8,
+                                              vertical: 4,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey.shade100,
+                                              borderRadius:
+                                                  BorderRadius.circular(6),
+                                            ),
+                                            child: Text(
+                                              l10n.skipped,
+                                              style: const TextStyle(
+                                                color: Colors.grey,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 11,
+                                              ),
+                                            ),
+                                          )
                                         : Text(
-                                      isCardio ? "${set.reps} Min" : "${set.weight} kg  ×  ${set.reps} Reps",
-                                      style: const TextStyle(color: AppColors.primaryBtn, fontWeight: FontWeight.w900, fontSize: 12),
-                                    ),
+                                            isCardio
+                                                ? "${set.reps} Min"
+                                                : "${set.weight} ${l10n.kg}  ×  ${set.reps} ${l10n.reps}",
+                                            style: const TextStyle(
+                                              color: AppColors.primaryBtn,
+                                              fontWeight: FontWeight.w900,
+                                              fontSize: 12,
+                                            ),
+                                          ),
                                   ],
                                 ),
                               );
                             })
                           else
-                            Text("No sets logged", style: TextStyle(color: Colors.grey.shade400, fontSize: 12)),
+                            Text(
+                              l10n.noSetsLogged,
+                              style: TextStyle(
+                                color: Colors.grey.shade400,
+                                fontSize: 12,
+                              ),
+                            ),
                         ],
                       ),
                     );
@@ -167,34 +254,52 @@ class _WorkoutSummaryScreenState extends State<WorkoutSummaryScreen> {
                 height: 52,
                 child: ElevatedButton(
                   // منع الضغط المتكرر إذا كان في حالة تحميل
-                  onPressed: _isSyncing ? null : () async {
-                    setState(() {
-                      _isSyncing = true;
-                    });
+                  onPressed: _isSyncing
+                      ? null
+                      : () async {
+                          setState(() {
+                            _isSyncing = true;
+                          });
 
-                    // ⏳ لودينغ وهمي (أو انتظار للباك إند) لمدة ثانية ونصف ليعطي إحساس فخم للمتدرب
-                    await Future.delayed(const Duration(milliseconds: 1500));
+                          // ⏳ لودينغ وهمي (أو انتظار للباك إند) لمدة ثانية ونصف ليعطي إحساس فخم للمتدرب
+                          await Future.delayed(
+                            const Duration(milliseconds: 1500),
+                          );
 
-                    if (mounted) {
-                      // 🔥 السحر هنا: نرجع خطوتين لوراء بالـ Stack
-                      // (عشان نتخطى شاشة "تفاصيل اليوم" ونوصل لشاشة "الأيام" مباشرة)
-                      int count = 0;
-                      Navigator.of(context).popUntil((_) => count++ >= 2);
-                    }
-                  },
+                          if (mounted) {
+                            // 🔥 السحر هنا: نرجع خطوتين لوراء بالـ Stack
+                            // (عشان نتخطى شاشة "تفاصيل اليوم" ونوصل لشاشة "الأيام" مباشرة)
+                            int count = 0;
+                            Navigator.of(context).popUntil((_) => count++ >= 2);
+                          }
+                        },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryBtn,
-                    disabledBackgroundColor: AppColors.primaryBtn.withOpacity(0.7),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    disabledBackgroundColor: AppColors.primaryBtn.withOpacity(
+                      0.7,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                     elevation: 0,
                   ),
                   child: _isSyncing
                       ? const SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: CircularProgressIndicator(color: Colors.white, strokeWidth: 3),
-                  )
-                      : const Text("Done", style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w900)),
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 3,
+                          ),
+                        )
+                      : Text(
+                          l10n.done,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
                 ),
               ),
             ],
@@ -216,9 +321,25 @@ class _WorkoutSummaryScreenState extends State<WorkoutSummaryScreen> {
         children: [
           Icon(icon, color: AppColors.primaryBtn, size: 22),
           const SizedBox(height: 6),
-          Text(value, style: const TextStyle(color: AppColors.textDark, fontSize: 18, fontWeight: FontWeight.w900, fontFeatures: [FontFeature.tabularFigures()])),
+          Text(
+            value,
+            style: TextStyle(
+              color: context.textColor,
+              fontSize: 18,
+              fontWeight: FontWeight.w900,
+              fontFeatures: [FontFeature.tabularFigures()],
+            ),
+          ),
           const SizedBox(height: 2),
-          Text(label, style: const TextStyle(color: Colors.grey, fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 1)),
+          Text(
+            label,
+            style: const TextStyle(
+              color: Colors.grey,
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1,
+            ),
+          ),
         ],
       ),
     );

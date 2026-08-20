@@ -1,5 +1,6 @@
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class CustomNeumorphicField extends StatefulWidget {
@@ -34,7 +35,6 @@ class _CustomNeumorphicFieldState extends State<CustomNeumorphicField> {
   @override
   void initState() {
     super.initState();
-    // إذا كان الحقل كلمة مرور، نجعله مخفياً كبداية
     _obscureText = widget.isPassword;
   }
 
@@ -46,18 +46,17 @@ class _CustomNeumorphicFieldState extends State<CustomNeumorphicField> {
         boxShape: NeumorphicBoxShape.roundRect(
           BorderRadius.circular(AppSizes.borderRadius),
         ),
-        color: AppColors.background,
+        color: context.backgroundColor,
       ),
       child: TextFormField(
-        // ✅ إضافة widget. قبل كل المتغيرات هنا
         controller: widget.controller,
         validator: widget.validator,
         onChanged: widget.onChanged,
         keyboardType: widget.keyboardType,
         obscureText: _obscureText,
         decoration: InputDecoration(
-          hintText: widget.hint, // ✅ أضفنا widget.
-          hintStyle: const TextStyle(
+          hintText: widget.hint,
+          hintStyle: TextStyle(
             color: AppColors.hintText,
             fontSize: AppSizes.hintFontSize,
           ),

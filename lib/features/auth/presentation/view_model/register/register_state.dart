@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 @immutable
 sealed class RegisterState {
-  const RegisterState(); // إضافة const هنا
+  const RegisterState();
 }
 
 final class RegisterInitial extends RegisterState {

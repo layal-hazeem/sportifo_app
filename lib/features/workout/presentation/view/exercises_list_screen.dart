@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/widgets/loading_shimmer.dart';
 import '../../../../core/widgets/wave_app_bar.dart';
@@ -16,7 +16,7 @@ class ExercisesListScreen extends StatelessWidget {
   const ExercisesListScreen({
     super.key,
     required this.categoryId,
-    required this.categoryName
+    required this.categoryName,
   });
 
   @override
@@ -24,22 +24,26 @@ class ExercisesListScreen extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.backgroundColor,
       appBar: WaveAppBar(
-          title: categoryName,
-          showBackButton: true,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.search, color: AppColors.background),
-              onPressed: () {
-                Navigator.pushNamed(context, AppRoutes.searchScreen, arguments: {
+        title: categoryName,
+        showBackButton: true,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.search, color: context.textColor),
+            onPressed: () {
+              Navigator.pushNamed(
+                context,
+                AppRoutes.searchScreen,
+                arguments: {
                   'categoryId': categoryId,
                   'organId': null,
                   'partIds': null,
-                });
-              },
-            ),
-          ]
+                },
+              );
+            },
+          ),
+        ],
       ),
       body: BlocBuilder<ExercisesCubit, ExercisesState>(
         builder: (context, state) {
@@ -67,14 +71,20 @@ class ExercisesListScreen extends StatelessWidget {
 
             if (exercises.isEmpty) {
               return Center(
-                child: Text(l10n.no_exercises_found, style: const TextStyle(color: Colors.white)),
+                child: Text(
+                  l10n.no_exercises_found,
+                  style: const TextStyle(color: Colors.white),
+                ),
               );
             }
 
             return ExercisesGridView(exercises: exercises);
           } else if (state is ExercisesFailure) {
             return Center(
-              child: Text(state.errorMessage, style: const TextStyle(color: Colors.red)),
+              child: Text(
+                state.errorMessage,
+                style: const TextStyle(color: Colors.red),
+              ),
             );
           }
           return const SizedBox();

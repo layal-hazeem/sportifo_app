@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="calorie_start">#FF9800</color>
+    <color name="calorie_end">#FFD700</color>
+
+    <color name="progress_background">#C8C8C8</color>
+
+    <color name="protein_start">#42A5F5</color>
+    <color name="protein_end">#7E57C2</color>
+
+    <color name="carbs_start">#66BB6A</color>
+    <color name="carbs_end">#D4E157</color>
+
+    <color name="fat_start">#EF5350</color>
+    <color name="fat_end">#FF7043</color>
+
+    <color name="text_dark">#333333</color>
+    <color name="text_grey">#777777</color>
+</resources>

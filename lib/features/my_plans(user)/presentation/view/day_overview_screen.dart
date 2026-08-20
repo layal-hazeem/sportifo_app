@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../data/models/my_plan_model.dart';
 import '../view_model/active_workout_cubit.dart';
 import '../widgets/workout_confirm_dialog.dart';
 import 'exercise_preview_screen.dart';
-
 class DayOverviewScreen extends StatelessWidget {
   final PlanDayModel day;
   final int dayNumber;
@@ -22,8 +23,14 @@ class DayOverviewScreen extends StatelessWidget {
 
   // 🔥 دالة سحرية للتعامل مع بدء التمرين من أي مكان
   void _startWorkoutFlow(BuildContext context, int targetIndex) async {
+    final l10n = AppLocalizations.of(context)!;
     if (day.exercises.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No exercises available!'), backgroundColor: AppColors.primaryBtn));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(l10n.no_exercises_found),
+          backgroundColor: AppColors.primaryBtn,
+        ),
+      );
       return;
     }
 
@@ -44,45 +51,77 @@ class DayOverviewScreen extends StatelessWidget {
         iconColor: AppColors.primaryBtn,
         title: "Unfinished Exercise",
         message:
-        "You still have an unfinished exercise in this day: \"${unfinishedExercise.name}\".\n\n"
+            "You still have an unfinished exercise in this day: \"${unfinishedExercise.name}\".\n\n"
             "Would you like to go finish it, or discard it and start \"${tappedExercise.name}\" instead?",
         primaryText: "Go Finish It",
         primaryColor: AppColors.primaryBtn,
         onPrimary: () async {
           await activeWorkoutCubit.restoreSessionData();
-          activeWorkoutCubit.startWorkout(day.exercises, startIndex: savedIndex);
-          Navigator.push(context, MaterialPageRoute(builder: (context) => BlocProvider.value(
-            value: activeWorkoutCubit,
-            child: ExercisePreviewScreen(
-              exercise: day.exercises[savedIndex],
-              dayName: day.name,
-              planId: planId,
-              dayId: day.id,
-              completedSets: activeWorkoutCubit.allLoggedSets[savedIndex],
+          activeWorkoutCubit.startWorkout(
+            day.exercises,
+            startIndex: savedIndex,
+          );
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BlocProvider.value(
+                value: activeWorkoutCubit,
+                child: ExercisePreviewScreen(
+                  exercise: day.exercises[savedIndex],
+                  dayName: day.name,
+                  planId: planId,
+                  dayId: day.id,
+                  completedSets: activeWorkoutCubit.allLoggedSets[savedIndex],
+                ),
+              ),
             ),
-          )));
+          );
         },
         secondaryText: "Discard & Start \"${tappedExercise.name}\"",
         onSecondary: () {
           activeWorkoutCubit.clearSessionLocally();
-          activeWorkoutCubit.startWorkout(day.exercises, startIndex: targetIndex);
-          Navigator.push(context, MaterialPageRoute(builder: (context) => BlocProvider.value(
-            value: activeWorkoutCubit,
-            child: ExercisePreviewScreen(exercise: day.exercises[targetIndex], dayName: day.name, planId: planId, dayId: day.id),
-          )));
+          activeWorkoutCubit.startWorkout(
+            day.exercises,
+            startIndex: targetIndex,
+          );
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BlocProvider.value(
+                value: activeWorkoutCubit,
+                child: ExercisePreviewScreen(
+                  exercise: day.exercises[targetIndex],
+                  dayName: day.name,
+                  planId: planId,
+                  dayId: day.id,
+                ),
+              ),
+            ),
+          );
         },
       );
     } else {
       activeWorkoutCubit.startWorkout(day.exercises, startIndex: targetIndex);
-      Navigator.push(context, MaterialPageRoute(builder: (context) => BlocProvider.value(
-        value: activeWorkoutCubit,
-        child: ExercisePreviewScreen(exercise: day.exercises[targetIndex], dayName: day.name, planId: planId, dayId: day.id),
-      )));
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => BlocProvider.value(
+            value: activeWorkoutCubit,
+            child: ExercisePreviewScreen(
+              exercise: day.exercises[targetIndex],
+              dayName: day.name,
+              planId: planId,
+              dayId: day.id,
+            ),
+          ),
+        ),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
       body: CustomScrollView(
@@ -92,23 +131,39 @@ class DayOverviewScreen extends StatelessWidget {
 
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20, top: 24, bottom: 10),
+              padding: const EdgeInsets.only(
+                left: 20,
+                right: 20,
+                top: 24,
+                bottom: 10,
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Exercises List',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: AppColors.textDark),
+                  Text(
+                    l10n.exercisesList,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w900,
+                      color: context.textColor,
+                    ),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.primaryBtn.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      '${day.exercises.length} Total',
-                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: AppColors.primaryBtn),
+                      '${day.exercises.length} ${l10n.total}',
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.primaryBtn,
+                      ),
                     ),
                   ),
                 ],
@@ -119,50 +174,65 @@ class DayOverviewScreen extends StatelessWidget {
           SliverPadding(
             padding: const EdgeInsets.only(left: 20, right: 20, bottom: 40),
             sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                  final exercise = day.exercises[index];
+              delegate: SliverChildBuilderDelegate((context, index) {
+                final exercise = day.exercises[index];
 
-                  String imageUrl = '';
-                  if (exercise.images.isNotEmpty) {
-                    final imageObj = exercise.images.firstWhere(
-                          (img) => img.type == 'gif',
-                      orElse: () => exercise.images.first,
-                    );
-                    imageUrl = imageObj.url ?? '';
-                  }
-
-                  // 🔥 فحص نوع التمرين بناءً على الكاتيجوري أو وجود الـ Duration
-                  bool isCardio = (exercise.category != null && exercise.category!.name.toLowerCase() == 'cardio') ||
-                      (exercise.duration != null && exercise.duration.toString().isNotEmpty && exercise.duration.toString() != "0");
-
-                  String displaySets = '${exercise.sets ?? 0} Sets';
-                  String displayDetailInfo = '';
-                  IconData detailIcon = Icons.repeat_rounded;
-
-                  if (isCardio) {
-                    // إذا كارديو: اعرض أيقونة ساعة والوقت المطلوب
-                    displayDetailInfo = 'Duration ${exercise.duration ?? "N/A"}';
-                    detailIcon = Icons.timer_outlined;
-                  } else {
-                    // إذا حديد: اعرض أيقونة إعادة والعدّات
-                    final String repsStr = exercise.reps ?? '';
-                    displayDetailInfo = repsStr.contains(':')
-                        ? repsStr
-                        : (repsStr.isNotEmpty ? '$repsStr Reps' : 'N/A');
-                    detailIcon = Icons.repeat_rounded;
-                  }
-
-                  return _AnimatedExerciseCard(
-                    index: index,
-                    child: GestureDetector(
-                      onTap: () => _startWorkoutFlow(context, index),
-                      child: _buildExerciseCard(imageUrl, exercise, displaySets, displayDetailInfo, detailIcon, index),
-                    ),
+                // 🔥 التعديل الذكي: البحث عن صورة ثابتة وتجنب الـ GIF كما فعلنا مسبقاً
+                String imageUrl = '';
+                if (exercise.images.isNotEmpty) {
+                  final imageObj = exercise.images.firstWhere(
+                        (img) {
+                      final type = (img.type ?? '').toLowerCase();
+                      final url = (img.url ?? '').toLowerCase();
+                      return !type.contains('gif') && !url.contains('.gif');
+                    },
+                    orElse: () => exercise.images.first,
                   );
-                },
-                childCount: day.exercises.length,
-              ),
+                  imageUrl = imageObj.url ?? '';
+                }
+                // 🔥 فحص نوع التمرين بناءً على الكاتيجوري أو وجود الـ Duration
+                bool isCardio =
+                    (exercise.category != null &&
+                        exercise.category!.name.toLowerCase() == 'cardio') ||
+                    (exercise.duration != null &&
+                        exercise.duration.toString().isNotEmpty &&
+                        exercise.duration.toString() != "0");
+
+                String displaySets = '${exercise.sets ?? 0} ${l10n.set}s';
+                String displayDetailInfo = '';
+                IconData detailIcon = Icons.repeat_rounded;
+
+                if (isCardio) {
+                  // إذا كارديو: اعرض أيقونة ساعة والوقت المطلوب
+                  displayDetailInfo =
+                      '${l10n.duration} ${exercise.duration ?? "N/A"}';
+                  detailIcon = Icons.timer_outlined;
+                } else {
+                  // إذا حديد: اعرض أيقونة إعادة والعدّات
+                  final String repsStr = exercise.reps ?? '';
+                  displayDetailInfo = repsStr.contains(':')
+                      ? repsStr
+                      : (repsStr.isNotEmpty ? '$repsStr ${l10n.reps}' : 'N/A');
+                  detailIcon = Icons.repeat_rounded;
+                }
+
+                return _AnimatedExerciseCard(
+                  index: index,
+                  child: GestureDetector(
+                    onTap: () => _startWorkoutFlow(context, index),
+                    child: _buildExerciseCard(
+                      
+                      imageUrl,
+                      exercise,
+                      displaySets,
+                      displayDetailInfo,
+                      detailIcon,
+                      index,
+                      context,
+                    ),
+                  ),
+                );
+              }, childCount: day.exercises.length),
             ),
           ),
         ],
@@ -195,7 +265,12 @@ class DayOverviewScreen extends StatelessWidget {
                 fontWeight: FontWeight.w900,
                 fontSize: 14,
                 letterSpacing: 1.5,
-                shadows: [Shadow(color: AppColors.primaryBtn.withOpacity(0.3), blurRadius: 8)],
+                shadows: [
+                  Shadow(
+                    color: AppColors.primaryBtn.withOpacity(0.3),
+                    blurRadius: 8,
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 2),
@@ -240,8 +315,18 @@ class DayOverviewScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildExerciseCard(String imageUrl, dynamic exercise, String displaySets, String displayDetailInfo, IconData detailIcon, int index) {
-    final String exerciseNumber = (index + 1) < 10 ? '0${index + 1}' : '${index + 1}';
+  Widget _buildExerciseCard(
+    String imageUrl,
+    dynamic exercise,
+    String displaySets,
+    String displayDetailInfo,
+    IconData detailIcon,
+    int index,
+    BuildContext context,
+  ) {
+    final String exerciseNumber = (index + 1) < 10
+        ? '0${index + 1}'
+        : '${index + 1}';
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -253,7 +338,7 @@ class DayOverviewScreen extends StatelessWidget {
             color: Colors.black.withOpacity(0.03),
             blurRadius: 16,
             offset: const Offset(0, 6),
-          )
+          ),
         ],
       ),
       child: Padding(
@@ -270,10 +355,14 @@ class DayOverviewScreen extends StatelessWidget {
                     child: CachedNetworkImage(
                       imageUrl: imageUrl,
                       fit: BoxFit.cover,
-                      placeholder: (context, url) => Container(color: const Color(0xFFF0F0F0)),
+                      placeholder: (context, url) =>
+                          Container(color: const Color(0xFFF0F0F0)),
                       errorWidget: (context, url, error) => Container(
                         color: const Color(0xFFF0F0F0),
-                        child: const Icon(Icons.fitness_center, color: AppColors.hintText),
+                        child: const Icon(
+                          Icons.fitness_center,
+                          color: AppColors.hintText,
+                        ),
                       ),
                     ),
                   ),
@@ -282,7 +371,10 @@ class DayOverviewScreen extends StatelessWidget {
                   top: 0,
                   left: 0,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 4,
+                    ),
                     decoration: const BoxDecoration(
                       color: Color(0xFF12141C),
                       borderRadius: BorderRadius.only(
@@ -309,7 +401,12 @@ class DayOverviewScreen extends StatelessWidget {
                 children: [
                   Text(
                     exercise.name,
-                    style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16, color: AppColors.textDark, height: 1.2),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      fontSize: 16,
+                      color: context.textColor,
+                      height: 1.2,
+                    ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -319,8 +416,15 @@ class DayOverviewScreen extends StatelessWidget {
                     spacing: 8,
                     runSpacing: 8,
                     children: [
-                      _buildInfoChip(Icons.local_fire_department_rounded, displaySets),
-                      _buildInfoChip(detailIcon, displayDetailInfo, isPrimary: true),
+                      _buildInfoChip(
+                        Icons.local_fire_department_rounded,
+                        displaySets,
+                      ),
+                      _buildInfoChip(
+                        detailIcon,
+                        displayDetailInfo,
+                        isPrimary: true,
+                      ),
                     ],
                   ),
                 ],
@@ -337,13 +441,19 @@ class DayOverviewScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        color: isPrimary ? AppColors.primaryBtn.withOpacity(0.08) : const Color(0xFFF5F6F8),
+        color: isPrimary
+            ? AppColors.primaryBtn.withOpacity(0.08)
+            : const Color(0xFFF5F6F8),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 14, color: isPrimary ? AppColors.primaryBtn : Colors.grey.shade500),
+          Icon(
+            icon,
+            size: 14,
+            color: isPrimary ? AppColors.primaryBtn : Colors.grey.shade500,
+          ),
           const SizedBox(width: 4),
           Text(
             text,
@@ -367,7 +477,8 @@ class _AnimatedExerciseCard extends StatefulWidget {
   State<_AnimatedExerciseCard> createState() => _AnimatedExerciseCardState();
 }
 
-class _AnimatedExerciseCardState extends State<_AnimatedExerciseCard> with SingleTickerProviderStateMixin {
+class _AnimatedExerciseCardState extends State<_AnimatedExerciseCard>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
@@ -375,9 +486,18 @@ class _AnimatedExerciseCardState extends State<_AnimatedExerciseCard> with Singl
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 550));
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
-    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 550),
+    );
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.3),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
     Future.delayed(Duration(milliseconds: 80 * widget.index), () {
       if (mounted) _controller.forward();
     });
@@ -391,7 +511,10 @@ class _AnimatedExerciseCardState extends State<_AnimatedExerciseCard> with Singl
 
   @override
   Widget build(BuildContext context) {
-    return FadeTransition(opacity: _fadeAnimation, child: SlideTransition(position: _slideAnimation, child: widget.child));
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: SlideTransition(position: _slideAnimation, child: widget.child),
+    );
   }
 }
 
@@ -402,15 +525,22 @@ class _GlowingPlayButton extends StatefulWidget {
   State<_GlowingPlayButton> createState() => _GlowingPlayButtonState();
 }
 
-class _GlowingPlayButtonState extends State<_GlowingPlayButton> with SingleTickerProviderStateMixin {
+class _GlowingPlayButtonState extends State<_GlowingPlayButton>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 1000));
-    _scaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticOut));
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    );
+    _scaleAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticOut));
     Future.delayed(const Duration(milliseconds: 300), () {
       if (mounted) _controller.forward();
     });
@@ -434,7 +564,7 @@ class _GlowingPlayButtonState extends State<_GlowingPlayButton> with SingleTicke
               color: AppColors.primaryBtn.withOpacity(0.45),
               blurRadius: 16,
               offset: const Offset(0, 6),
-            )
+            ),
           ],
         ),
         child: FloatingActionButton(
@@ -442,7 +572,11 @@ class _GlowingPlayButtonState extends State<_GlowingPlayButton> with SingleTicke
           backgroundColor: AppColors.primaryBtn,
           elevation: 0,
           shape: const CircleBorder(),
-          child: const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 36),
+          child: const Icon(
+            Icons.play_arrow_rounded,
+            color: Colors.white,
+            size: 36,
+          ),
         ),
       ),
     );

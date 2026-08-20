@@ -26,7 +26,6 @@ class ApiConstants {
   static const String createPlan = "plans";
   static const String getUserPlans = "plans/user";
 
-  // 🔥 الباك إند فصل الـ endpoint الواحد لتلاتة منفصلين (كل تاب بريكويست لحاله)
   static const String plansSubscribedCoach = "plans/subscribed-coach";
   static const String plansSelf = "plans/self";
   static const String plansPlatformSaved = "plans/platform/saved";
@@ -48,12 +47,12 @@ class ApiConstants {
   static const String exerciseActivity = "exercise-logs/activity";
   static const String weightProgress = "targets/weight-progress";
 
-static const String aiChatMessages = 'ai-chat/messages';
+  static const String aiChatMessages = 'ai-chat/messages';
 
-static const String todayFoodLogs = 'food-logs/today';
-static const String addMealFromAi = 'food-logs/from-ai'; 
-static const String deleteMeal = 'food-logs';
-static const String addManualMeal = 'food-logs/manual'; 
+  static const String todayFoodLogs = 'food-logs/today';
+  static const String addMealFromAi = 'food-logs/from-ai';
+  static const String deleteMeal = 'food-logs';
+  static const String addManualMeal = 'food-logs/manual';
   static const String trainees = "plans/coach";
   static const String planDetails = "/plans";
 
@@ -64,4 +63,12 @@ static String conversationMessages(int conversationId) => "chat/conversations/$c
 static String sendMessage(int conversationId) => "chat/conversations/$conversationId/messages";
 static String deleteMessage(int conversationId, int messageId) => 
     "chat/conversations/$conversationId/messages/$messageId";
+  static const String planDetails = "plans";
+  static const String editCoachPlan = "plans";
+  static const String createSelfPlan = "plans/create/self";
+  static const String editSelfPlan = "plans/update/self";
+  static const String notifications = "notifications";
+  static const String notificationsCount = "notifications";
+
+
 }

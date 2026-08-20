@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class TypingIndicator extends StatefulWidget {
   const TypingIndicator({super.key});
@@ -14,6 +16,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
   @override
   void initState() {
     super.initState();
+
     _controllers = List.generate(3, (index) {
       return AnimationController(
         vsync: this,
@@ -23,15 +26,17 @@ class _TypingIndicatorState extends State<TypingIndicator>
 
     for (var i = 0; i < _controllers.length; i++) {
       Future.delayed(Duration(milliseconds: i * 120), () {
-        if (mounted) _controllers[i].repeat(reverse: true);
+        if (mounted) {
+          _controllers[i].repeat(reverse: true);
+        }
       });
     }
   }
 
   @override
   void dispose() {
-    for (final c in _controllers) {
-      c.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
     }
     super.dispose();
   }
@@ -41,16 +46,19 @@ class _TypingIndicatorState extends State<TypingIndicator>
     return Align(
       alignment: Alignment.centerLeft,
       child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
+        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
+          color: context.backgroundColor,
+          borderRadius: BorderRadius.circular(15),
+
+          // نفس الـ AI bubble
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
+              color: AppColors.primaryBtn.withValues(alpha: 0.3),
+              blurRadius: 12,
+              spreadRadius: 0,
+              offset: const Offset(0, 4),
             ),
           ],
         ),
@@ -65,7 +73,9 @@ class _TypingIndicatorState extends State<TypingIndicator>
                   width: 7,
                   height: 7 + (_controllers[index].value * 5),
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade400,
+                    color: AppColors.primaryBtn.withValues(
+                      alpha: 0.65 + (_controllers[index].value * 0.35),
+                    ),
                     borderRadius: BorderRadius.circular(3.5),
                   ),
                 );

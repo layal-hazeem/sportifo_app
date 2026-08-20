@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
+import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class MessageInput extends StatelessWidget {
@@ -17,10 +19,11 @@ class MessageInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.backgroundColor,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
@@ -41,12 +44,29 @@ class MessageInput extends StatelessWidget {
                 maxLines: 4,
                 minLines: 1,
                 decoration: InputDecoration(
-                  hintText: isSending ? "Sending..." : "Ask AI Coach...",
+                  hintText: isSending ? l10n.sending_hint : l10n.ask_ai_hint,
                   filled: true,
-                  fillColor: Colors.grey.shade100,
+                  fillColor: context.backgroundColor,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(24),
-                    borderSide: BorderSide.none,
+                    borderSide: BorderSide(
+                      color: context.textColor.withValues(alpha: 0.15),
+                      width: 1,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(24),
+                    borderSide: BorderSide(
+                      color: context.textColor.withValues(alpha: 0.15),
+                      width: 1,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(24),
+                    borderSide: BorderSide(
+                      color: AppColors.primaryBtn.withValues(alpha: 0.7),
+                      width: 1.5,
+                    ),
                   ),
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 20,

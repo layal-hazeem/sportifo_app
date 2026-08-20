@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:sportifo_app/core/routes/app_routes.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/core/widgets/wave_app_bar.dart';
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_cubit.dart';
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_state.dart';
@@ -42,7 +43,7 @@ class DeleteAccountScreen extends StatelessWidget {
 
       builder: (context, state) {
         return Scaffold(
-          backgroundColor: AppColors.background,
+          backgroundColor: context.backgroundColor,
 
           appBar: WaveAppBar(title: l10n.deleteAccount, showBackButton: true),
           body: SafeArea(
@@ -116,15 +117,24 @@ class DeleteAccountScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 16),
 
-                        _buildInfoTile(Icons.person_outline, l10n.yourProfile),
+                        _buildInfoTile(
+                          Icons.person_outline,
+                          l10n.yourProfile,
+                          context,
+                        ),
                         const SizedBox(height: 12),
 
-                        _buildInfoTile(Icons.fitness_center, l10n.workoutPlans),
+                        _buildInfoTile(
+                          Icons.fitness_center,
+                          l10n.workoutPlans,
+                          context,
+                        ),
                         const SizedBox(height: 12),
 
                         _buildInfoTile(
                           Icons.bookmark_outline,
                           l10n.saved_exercises,
+                          context,
                         ),
                         const SizedBox(height: 20),
                       ],
@@ -231,15 +241,15 @@ class DeleteAccountScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoTile(IconData icon, String title) {
+  Widget _buildInfoTile(IconData icon, String title, BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.backgroundColor,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.red.withValues(alpha: 0.4),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),
