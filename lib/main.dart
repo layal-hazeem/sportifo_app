@@ -65,4 +65,4 @@ class MyApp extends StatelessWidget {
   }
 }
 //وقت نضيف اي كلمة بملفات الترجمة مننفذ هاد الامر بالتيرمينال مشان يتعرف عالنصوص الجديدة اللي ترجمناها
-//flutter gen-l10n
+// flutter gen-l10n
