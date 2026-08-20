@@ -5,6 +5,7 @@ import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/features/edit_self_plan/presentation/view_model/edit_self_plan_cubit.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/loading_shimmer.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../data/models/my_plan_model.dart';
 import '../view_model/plan_days_cubit.dart';
 import '../view_model/plan_days_state.dart';
@@ -18,6 +19,7 @@ class PlanDaysScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.backgroundColor,
       body: BlocBuilder<PlanDaysCubit, PlanDaysState>(
@@ -42,16 +44,16 @@ class PlanDaysScreen extends StatelessWidget {
             final detailedPlan = state.planDetails;
 
             if (detailedPlan.days.isEmpty) {
-              return _buildEmptyState();
+              return _buildEmptyState(l10n);
             }
 
             return CustomScrollView(
               physics: const BouncingScrollPhysics(),
               slivers: [
-                _buildPremiumAppBar(context, detailedPlan),
+                _buildPremiumAppBar(context, detailedPlan, l10n),
 
                 SliverToBoxAdapter(
-                  child: _buildWeekProgressBar(state, context),
+                  child: _buildWeekProgressBar(state, context, l10n),
                 ),
 
                 SliverPadding(
@@ -64,7 +66,7 @@ class PlanDaysScreen extends StatelessWidget {
                   sliver: SliverList(
                     delegate: SliverChildBuilderDelegate((context, index) {
                       final day = detailedPlan.days[index];
-                      // 🔥 فحص ذكي: هل هذا اليوم منجز بناءً على planDayId الخاص به؟
+                      // Smart check: Is this day completed based on its planDayId?
                       final isDoneThisWeek = state.isDayCompleted(day.id);
                       return _AnimatedDayCard(
                         index: index,
@@ -74,6 +76,7 @@ class PlanDaysScreen extends StatelessWidget {
                           index,
                           detailedPlan.id,
                           isDoneThisWeek,
+                          l10n,
                         ),
                       );
                     }, childCount: detailedPlan.days.length),
@@ -89,7 +92,7 @@ class PlanDaysScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPremiumAppBar(BuildContext context, dynamic detailedPlan) {
+  Widget _buildPremiumAppBar(BuildContext context, dynamic detailedPlan, AppLocalizations l10n) {
     final bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     final Color appBarColor = isDarkMode
@@ -155,9 +158,9 @@ class PlanDaysScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "WORKOUT DAYS",
-              style: TextStyle(
+            Text(
+              l10n.workoutDays,
+              style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w900,
                 fontSize: 20,
@@ -165,7 +168,7 @@ class PlanDaysScreen extends StatelessWidget {
               ),
             ),
             Text(
-              plan.goal?.toUpperCase() ?? 'YOUR FITNESS JOURNEY',
+              plan.goal?.toUpperCase() ?? l10n.yourFitnessJourney,
               style: TextStyle(
                 color: Colors.white.withOpacity(0.6),
                 fontWeight: FontWeight.w600,
@@ -192,28 +195,27 @@ class PlanDaysScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildWeekProgressBar(PlanDaysSuccess state, BuildContext context) {
+  Widget _buildWeekProgressBar(PlanDaysSuccess state, BuildContext context, AppLocalizations l10n) {
     int totalWeeks = state.totalWeeks > 0 ? state.totalWeeks : 1;
 
-    // 🔥 الباك إند ما بيوقف المستخدم من الاستمرار باللعب حتى بعد ما يخلص
-    // كل أسابيع الخطة (current_week ممكن يصير أكبر من totalWeeks) - وهاد
-    // مقصود ومطلوب. فمنعرض الرقم الحقيقي زي ما هو ("Week 9 of 8") بدون أي
-    // تعديل أو استبدال نصي - بس شريط التقدم البصري بيوقف عند 100% لأنو
-    // فيزيائياً ما ممكن يتعدى حدود الشريط.
+    // The backend does not stop the user from continuing to play even after finishing
+    // all weeks of the plan (current_week can be greater than totalWeeks).
+    // This is intended. We show the actual number ("Week 9 of 8") as is.
+    // The visual progress bar stops at 100% since it physically cannot exceed its limits.
     int currentWeek = state.currentWeek;
 
-    // 🔥 السحر هون: حساب دقيق لنسبة التقدم يبدأ من 0%
+    // Magic here: Accurate calculation of progress percentage starting from 0%
     int totalDaysInWeek = state.planDetails.days.length;
     int completedDaysThisWeek = state.completedPlanDayIds.length;
 
-    // نحسب كم يوم خلص من هاد الأسبوع (مثلاً خلص يوم من أصل 3)
+    // Calculate how many days finished in this week
     double weekProgress = totalDaysInWeek > 0
         ? (completedDaysThisWeek / totalDaysInWeek)
         : 0.0;
 
-    // نحسب التقدم الكلي: (الأسابيع السابقة اللي خلصت + تقدم الأسبوع الحالي) تقسيم كل الأسابيع
+    // Calculate total progress
     double progress = ((currentWeek - 1) + weekProgress) / totalWeeks;
-    progress = progress.clamp(0.0, 1.0); // عشان الشريط البصري بس ما يتعدى 100%
+    progress = progress.clamp(0.0, 1.0); // Keep visual bar at max 100%
 
     return Container(
       margin: const EdgeInsets.fromLTRB(20, 20, 20, 10),
@@ -238,9 +240,9 @@ class PlanDaysScreen extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    "WEEKLY PROGRESS",
-                    style: TextStyle(
+                  Text(
+                    l10n.weeklyProgress,
+                    style: const TextStyle(
                       color: Colors.grey,
                       fontSize: 11,
                       fontWeight: FontWeight.bold,
@@ -249,7 +251,7 @@ class PlanDaysScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    "Week $currentWeek of $totalWeeks",
+                    "${l10n.week} $currentWeek ${l10n.of_word} $totalWeeks",
                     style: TextStyle(
                       color: context.textColor,
                       fontSize: 17,
@@ -286,7 +288,7 @@ class PlanDaysScreen extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: LinearProgressIndicator(
-              value: progress, // 🔥 رح يكون 0.0 بالبداية
+              value: progress, // Will be 0.0 initially
               minHeight: 10,
               backgroundColor: const Color(0xFFF0F0F0),
               valueColor: AlwaysStoppedAnimation<Color>(
@@ -300,16 +302,17 @@ class PlanDaysScreen extends StatelessWidget {
   }
 
   Widget _buildPremiumDayCard(
-    BuildContext context,
-    PlanDayModel day,
-    int index,
-    int planId,
-    bool isDoneThisWeek,
-  ) {
-    // فحص وضع التطبيق (Dark Mode أو Light Mode)
+      BuildContext context,
+      PlanDayModel day,
+      int index,
+      int planId,
+      bool isDoneThisWeek,
+      AppLocalizations l10n,
+      ) {
+    // Check app theme (Dark Mode or Light Mode)
     final bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-    // الألوان الديناميكية حسب الثيم وحالة الإنجاز
+    // Dynamic colors based on theme and completion status
     final Color mainColor = isDoneThisWeek
         ? const Color(0xFF10B981)
         : AppColors.primaryBtn;
@@ -317,19 +320,19 @@ class PlanDaysScreen extends StatelessWidget {
     final Color bgColor = isDoneThisWeek
         ? const Color(0xFF10B981).withOpacity(isDarkMode ? 0.12 : 0.06)
         : (isDarkMode
-              ? const Color(0xFF1E222D)
-              : Colors.white); // 👈 لون خلفية البطاقة يتغير حسب الثيم
+        ? const Color(0xFF1E222D)
+        : Colors.white); // Card background color adapts to theme
 
     final Color borderColor = isDoneThisWeek
         ? (isDarkMode ? Colors.green.shade700 : Colors.green.shade300)
         : (isDarkMode ? Colors.white.withOpacity(0.08) : Colors.transparent);
 
-    // لون خلفية أيقونة رقم اليوم والأيقونات الداخلية
+    // Background color of the day number icon and internal icons
     final Color innerBoxColor = isDoneThisWeek
         ? (isDarkMode ? Colors.green.withOpacity(0.2) : Colors.green.shade100)
         : (isDarkMode ? const Color(0xFF12141C) : const Color(0xFF12141C));
 
-    // لون النصوص الثانوية والحاويات الداخلية الصغيرة
+    // Secondary text colors and inner small containers
     final Color badgeBgColor = isDoneThisWeek
         ? (isDarkMode ? Colors.green.withOpacity(0.2) : Colors.white)
         : (isDarkMode ? Colors.white.withOpacity(0.06) : Colors.grey.shade100);
@@ -397,32 +400,32 @@ class PlanDaysScreen extends StatelessWidget {
                         ),
                         child: isDoneThisWeek
                             ? const Icon(
-                                Icons.check_circle_rounded,
-                                color: Colors.green,
-                                size: 32,
-                              )
+                          Icons.check_circle_rounded,
+                          color: Colors.green,
+                          size: 32,
+                        )
                             : Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Text(
-                                    'DAY',
-                                    style: TextStyle(
-                                      color: Colors.white70,
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    '${index + 1}',
-                                    style: TextStyle(
-                                      color: mainColor,
-                                      fontSize: 22,
-                                      height: 1.1,
-                                      fontWeight: FontWeight.w900,
-                                    ),
-                                  ),
-                                ],
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              l10n.dayLabel,
+                              style: const TextStyle(
+                                color: Colors.white70,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
                               ),
+                            ),
+                            Text(
+                              '${index + 1}',
+                              style: TextStyle(
+                                color: mainColor,
+                                fontSize: 22,
+                                height: 1.1,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                       const SizedBox(width: 18),
                       Expanded(
@@ -437,8 +440,8 @@ class PlanDaysScreen extends StatelessWidget {
                                 color: isDarkMode
                                     ? Colors.white
                                     : const Color(
-                                        0xFF12141C,
-                                      ), // 👈 لون عنوان التمرين يتكيف مع الثيم
+                                  0xFF12141C,
+                                ), // Exercise title color adapts to theme
                                 letterSpacing: -0.3,
                               ),
                             ),
@@ -466,7 +469,7 @@ class PlanDaysScreen extends StatelessWidget {
                                       ),
                                       const SizedBox(width: 4),
                                       Text(
-                                        '${day.exercises.length} Exercises',
+                                        '${day.exercises.length} ${l10n.exercises}',
                                         style: TextStyle(
                                           color: badgeTextColor,
                                           fontSize: 13,
@@ -489,7 +492,7 @@ class PlanDaysScreen extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Text(
-                                      'COMPLETED',
+                                      l10n.completedStatus,
                                       style: TextStyle(
                                         color: isDarkMode
                                             ? Colors.green.shade300
@@ -520,7 +523,7 @@ class PlanDaysScreen extends StatelessWidget {
     );
   }
 
-  // 🔥 هيكل شيمير قريب من شكل كرت "Weekly Progress" فوق + كروت الأيام تحته
+  // Shimmer structure similar to "Weekly Progress" card top + day cards below
   Widget _buildDaysShimmerLoading() {
     return SafeArea(
       child: ListView(
@@ -535,8 +538,8 @@ class PlanDaysScreen extends StatelessWidget {
           const SizedBox(height: 20),
           ...List.generate(
             4,
-            (index) => Padding(
-              padding: const EdgeInsets.only(bottom: 16),
+                (index) => const Padding(
+              padding: EdgeInsets.only(bottom: 16),
               child: LoadingShimmer(
                 width: double.infinity,
                 height: 96,
@@ -549,7 +552,7 @@ class PlanDaysScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(AppLocalizations l10n) {
     return Scaffold(
       appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0),
       body: Center(
@@ -562,9 +565,9 @@ class PlanDaysScreen extends StatelessWidget {
               color: Colors.grey.shade300,
             ),
             const SizedBox(height: 16),
-            const Text(
-              "No days created yet.",
-              style: TextStyle(
+            Text(
+              l10n.noDaysCreated,
+              style: const TextStyle(
                 color: AppColors.hintText,
                 fontSize: 16,
                 fontWeight: FontWeight.w600,

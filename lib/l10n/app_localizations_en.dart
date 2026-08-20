@@ -1615,6 +1615,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get createAdditionalPlan => 'Create Additional Plan';
+
   @override
   String get aboutUsContent => 'Sportifo is a smart fitness platform designed to support you throughout every stage of your fitness journey. Whether you are just getting started or working toward specific fitness goals, Sportifo provides the tools and support you need in one convenient place.\n\nThe platform brings together personalized workout programs, suitable alternative exercises, direct communication with coaches, subscription management, and AI-powered nutrition assistance. Our goal is to create a more flexible and personalized fitness experience that adapts to your individual needs.\n\nWith Sportifo, you can stay connected with your coach, explore workout alternatives that suit you, and get smart assistance with your nutrition to help you stay motivated and focused on your goals.\n\nSportifo is more than just a workout app — it is your smart companion for a better and more connected fitness journey.';
 
@@ -1728,4 +1729,136 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get subscription => 'Subscription';
+
+  @override
+  String get cancelWorkoutTitle => 'Cancel Workout?';
+
+  @override
+  String get cancelWorkoutMessage => 'All progress for this session will be lost and won\'t be saved.';
+
+  @override
+  String get noKeepGoing => 'No, Keep Going';
+
+  @override
+  String get yesCancelWorkout => 'Yes, Cancel Workout';
+
+  @override
+  String get endSessionTitle => 'End Session';
+
+  @override
+  String get endSessionMessage => 'Would you like to save your current progress and continue later, or discard this session completely?';
+
+  @override
+  String get saveAndExit => 'Save & Exit';
+
+  @override
+  String get discardSession => 'Discard Session';
+
+  @override
+  String get howToPerformTitle => 'How to perform?';
+
+  @override
+  String get noInstructionsAvailable => 'No instructions available for this exercise.';
+
+  @override
+  String get gotIt => 'Got It';
+
+  @override
+  String get enterWeightAndReps => 'Please enter weight and reps';
+
+  @override
+  String get exerciseLabel => 'EXERCISE';
+
+  @override
+  String get paused => 'Paused';
+
+  @override
+  String get target => 'Target';
+
+  @override
+  String get cancelBtn => 'Cancel';
+
+  @override
+  String get pauseBtn => 'Pause';
+
+  @override
+  String get finishBtn => 'Finish';
+
+  @override
+  String get prepareFor => 'PREPARE FOR';
+
+  @override
+  String get unfinishedExerciseTitle => 'Unfinished Exercise';
+
+  @override
+  String get unfinishedExerciseMsgPart1 => 'You still have an unfinished exercise in this day:';
+
+  @override
+  String get unfinishedExerciseMsgPart2 => 'Would you like to go finish it, or discard it and start';
+
+  @override
+  String get unfinishedExerciseMsgPart3 => 'instead?';
+
+  @override
+  String get goFinishIt => 'Go Finish It';
+
+  @override
+  String get discardAndStart => 'Discard & Start';
+
+  @override
+  String get dayLabel => 'DAY';
+
+  @override
+  String get completedStatus => 'COMPLETED';
+
+  @override
+  String get restTime => 'REST TIME';
+
+  @override
+  String get add20Secs => '+20 SECS';
+
+  @override
+  String get upNext => 'UP NEXT';
+
+  @override
+  String get workoutSessionComplete => 'Workout Session Complete!';
+
+  @override
+  String get skipRest => 'SKIP REST ⏭️';
+
+  @override
+  String get youDid => 'You Did';
+
+  @override
+  String get actual => 'Actual';
+
+  @override
+  String get endWorkout => 'End Workout';
+
+  @override
+  String get finishWorkout => 'Finish Workout';
+
+  @override
+  String get nextExercise => 'Next Exercise';
+
+  @override
+  String get resumeExercise => 'Resume Exercise';
+
+  @override
+  String get startBtn => 'Start';
+
+  @override
+  String get yourFitnessJourney => 'YOUR FITNESS JOURNEY';
+
+  @override
+  String get weeklyProgress => 'WEEKLY PROGRESS';
+
+  @override
+  String get week => 'Week';
+
+  @override
+  String get minus15s => '- 15s';
+
+  @override
+  String get plus15s => '+ 15s';
 }
