@@ -1100,7 +1100,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get buildWorkoutPlanThatFitsYou => 'قم ببناء خطة تمارين تناسبك';
 
   @override
-  String get tryAgain => 'حاول مجدداً';
+  String get tryAgain => 'إعادة المحاولة';
 
   @override
   String get yourTrainees => 'متدربينك';
@@ -1202,10 +1202,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get defaultPlan => 'خطة افتراضية';
 
   @override
-  String get startDate => 'تاريخ البداية';
+  String get startDate => 'تاريخ البدء';
 
   @override
-  String get endDate => 'تاريخ النهاية';
+  String get endDate => 'تاريخ الانتهاء';
 
   @override
   String get expired => 'منهية';
@@ -1695,4 +1695,37 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get noAlternativesFound => 'لا توجد تمارين بديلة متاحة لهذا التمرين حالياً.';
+
+  @override
+  String get mySubscriptions => 'اشتراكاتي';
+
+  @override
+  String get statusActive => 'نشط';
+
+  @override
+  String get statusPending => 'قيد المراجعة';
+
+  @override
+  String get statusExpired => 'منتهي';
+
+  @override
+  String get statusRejected => 'مرفوض';
+
+  @override
+  String get currentSubscription => 'الاشتراك الحالي';
+
+  @override
+  String get amount => 'المبلغ';
+
+  @override
+  String get processNumber => 'رقم العملية';
+
+  @override
+  String get confirmedAt => 'تاريخ التأكيد';
+
+  @override
+  String get noSubscriptionsYet => 'لا توجد لديك أي اشتراكات سابقة أو حالية';
+
+  @override
+  String get subscription => 'اشتراك';
 }

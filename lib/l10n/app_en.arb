@@ -765,5 +765,20 @@
     "termsTitle4": "4. Content Ownership",
     "termsContent4": "All text, designs, images, and software in Sportifo are protected intellectual property of the app, and may not be reused without written permission.",
     "alternativeExercises": "Alternative Exercises",
-      "noAlternativesFound": "No alternative exercises available for this workout right now."
+      "noAlternativesFound": "No alternative exercises available for this workout right now.",
+      "mySubscriptions": "My Subscriptions",
+        "statusActive": "Active",
+        "statusPending": "Pending",
+        "statusExpired": "Expired",
+        "statusRejected": "Rejected",
+        "currentSubscription": "Current Plan",
+        "coach": "Coach",
+        "amount": "Amount",
+        "processNumber": "Transaction No.",
+        "startDate": "Start Date",
+        "endDate": "End Date",
+        "confirmedAt": "Confirmed At",
+        "noSubscriptionsYet": "You have no past or active subscriptions yet",
+        "tryAgain": "Try Again",
+        "subscription":"Subscription"
 }

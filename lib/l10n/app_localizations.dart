@@ -3363,6 +3363,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No alternative exercises available for this workout right now.'**
   String get noAlternativesFound;
+
+  /// No description provided for @mySubscriptions.
+  ///
+  /// In en, this message translates to:
+  /// **'My Subscriptions'**
+  String get mySubscriptions;
+
+  /// No description provided for @statusActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get statusActive;
+
+  /// No description provided for @statusPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get statusPending;
+
+  /// No description provided for @statusExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get statusExpired;
+
+  /// No description provided for @statusRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get statusRejected;
+
+  /// No description provided for @currentSubscription.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Plan'**
+  String get currentSubscription;
+
+  /// No description provided for @amount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get amount;
+
+  /// No description provided for @processNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction No.'**
+  String get processNumber;
+
+  /// No description provided for @confirmedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmed At'**
+  String get confirmedAt;
+
+  /// No description provided for @noSubscriptionsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'You have no past or active subscriptions yet'**
+  String get noSubscriptionsYet;
+
+  /// No description provided for @subscription.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscription'**
+  String get subscription;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
