@@ -50,6 +50,6 @@ static const String planDetails = "/planDetails";
   static const String termsOfUse = '/termsOfUse';
   static const String helpSupport = '/helpSupport';
 
-
+  static const String mySubscriptions = '/mySubscriptions';
 static const String conversationsList = '/conversations_list';
 }

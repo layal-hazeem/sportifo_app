@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart'; // ✅ أضيفي هاد
 import 'package:sportifo_app/core/network/api_constants.dart';
 
 class TraineeSubscriptionWebService {
@@ -40,6 +41,20 @@ class TraineeSubscriptionWebService {
     return await _dio.post(
       ApiConstants.subscribe,
       data: formData,
+    );
+  }
+
+  // ✅ عدّلنا الطريقة يلي منجبر فيها تجاوز الكاش
+  Future<Response> getMySubscriptionsRecords({bool forceRefresh = false}) async {
+    final Options? options = forceRefresh
+        ? CacheOptions(
+      policy: CachePolicy.refresh, store: null, // ✅ هاد يلي فعلياً بيفرض طلب جديد من السيرفر
+    ).toOptions()
+        : null;
+
+    return await _dio.get(
+      ApiConstants.mySubscriptions,
+      options: options,
     );
   }
 }

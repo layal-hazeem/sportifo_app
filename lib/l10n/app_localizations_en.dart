@@ -1693,4 +1693,37 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noAlternativesFound => 'No alternative exercises available for this workout right now.';
+
+  @override
+  String get mySubscriptions => 'My Subscriptions';
+
+  @override
+  String get statusActive => 'Active';
+
+  @override
+  String get statusPending => 'Pending';
+
+  @override
+  String get statusExpired => 'Expired';
+
+  @override
+  String get statusRejected => 'Rejected';
+
+  @override
+  String get currentSubscription => 'Current Plan';
+
+  @override
+  String get amount => 'Amount';
+
+  @override
+  String get processNumber => 'Transaction No.';
+
+  @override
+  String get confirmedAt => 'Confirmed At';
+
+  @override
+  String get noSubscriptionsYet => 'You have no past or active subscriptions yet';
+
+  @override
+  String get subscription => 'Subscription';
 }
