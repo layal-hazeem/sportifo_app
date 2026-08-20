@@ -22,7 +22,12 @@ class WorkoutWebService {
       options: options,
     );
   }
-
+  Future<Response> getAlternativeExercises(int exerciseId, {Options? options}) async {
+    return await dio.get(
+      "${ApiConstants.exerciseAlternatives}/$exerciseId",
+      options: options,
+    );
+  }
   Future<Response> getExercises({
     int? categoryId,
     int? organId,

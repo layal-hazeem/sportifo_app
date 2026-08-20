@@ -45,6 +45,10 @@ class AppRoutes {
   static const String createSelfPlan = "/plans/create/self";
   static const String editSelfPlan = "/plans/update/self";
   static const String chatDetail = '/chat_detail';
+  static const String aboutUs = '/aboutUs';
+  static const String privacyPolicy = '/privacyPolicy';
+  static const String termsOfUse = '/termsOfUse';
+  static const String helpSupport = '/helpSupport';
 
   static const String conversationsList = '/conversations_list';
 }

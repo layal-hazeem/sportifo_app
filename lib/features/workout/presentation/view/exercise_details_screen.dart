@@ -12,11 +12,35 @@ import '../../../../l10n/app_localizations.dart';
 import '../../data/models/exercise_model.dart';
 import '../view_model/saved_exercises/saved_exercises_cubit.dart';
 import '../view_model/saved_exercises/saved_exercises_state.dart';
+import '../../../../core/di/service_locator.dart';
+import '../view_model/alternatives_cubit/alternatives_cubit.dart';
+import 'alternatives_screen.dart';
 
 class ExerciseDetailsScreen extends StatelessWidget {
   final ExerciseModel exercise;
+  final bool isAlternative;
+  const ExerciseDetailsScreen({super.key, required this.exercise,this.isAlternative = false,});
 
-  const ExerciseDetailsScreen({super.key, required this.exercise});
+  void _navigateToAlternatives(BuildContext context, int exerciseId) {
+    final savedExercisesCubit = context.read<SavedExercisesCubit>();
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (ctx) => MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (_) => getIt<AlternativesCubit>()..fetchAlternatives(exerciseId),
+            ),
+            BlocProvider.value(
+              value: savedExercisesCubit,
+            ),
+          ],
+          child: AlternativesScreen(exerciseId: exerciseId),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +75,37 @@ class ExerciseDetailsScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
 
+                  if (!isAlternative) ...[
+                    InkWell(
+                      onTap: () => _navigateToAlternatives(context, exercise.id),
+                      borderRadius: BorderRadius.circular(16),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryBtn.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: AppColors.primaryBtn.withOpacity(0.3)),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.swap_horiz_rounded, color: AppColors.primaryBtn),
+                            const SizedBox(width: 8),
+                            Text(
+                              l10n.alternativeExercises,
+                              style: const TextStyle(
+                                color: AppColors.primaryBtn,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                  ],
+
                   if (organName != null || partName != null) ...[
                     Row(
                       children: [
@@ -68,7 +123,7 @@ class ExerciseDetailsScreen extends StatelessWidget {
                         if (partName != null)
                           Expanded(
                             child: InfoStatCard(
-                              title: l10n.bodyPart, // 🔥 ترجمة
+                              title: l10n.bodyPart,
                               value: partName,
                               icon: Icons.line_weight_rounded,
                               accentColor: const Color(0xFF0EA5E9),
@@ -87,7 +142,7 @@ class ExerciseDetailsScreen extends StatelessWidget {
                   GallerySection(
                     imageUrls: galleryUrls,
                     title: l10n.gallery,
-                    photosLabel: l10n.photos, // 🔥 ترجمة
+                    photosLabel: l10n.photos,
                   ),
                 ],
               ),
