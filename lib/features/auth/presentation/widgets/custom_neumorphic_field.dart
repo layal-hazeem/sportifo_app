@@ -35,7 +35,6 @@ class _CustomNeumorphicFieldState extends State<CustomNeumorphicField> {
   @override
   void initState() {
     super.initState();
-    // إذا كان الحقل كلمة مرور، نجعله مخفياً كبداية
     _obscureText = widget.isPassword;
   }
 
@@ -50,14 +49,13 @@ class _CustomNeumorphicFieldState extends State<CustomNeumorphicField> {
         color: context.backgroundColor,
       ),
       child: TextFormField(
-        // ✅ إضافة widget. قبل كل المتغيرات هنا
         controller: widget.controller,
         validator: widget.validator,
         onChanged: widget.onChanged,
         keyboardType: widget.keyboardType,
         obscureText: _obscureText,
         decoration: InputDecoration(
-          hintText: widget.hint, // ✅ أضفنا widget.
+          hintText: widget.hint,
           hintStyle: TextStyle(
             color: AppColors.hintText,
             fontSize: AppSizes.hintFontSize,

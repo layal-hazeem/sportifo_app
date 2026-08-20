@@ -694,5 +694,7 @@
   "available_subscriptions": "Available Subscriptions",
 "month_single": "{count} Month",
 "month_plural": "{count} Months",
-"months_range": "{min} - {max} Months"
+"months_range": "{min} - {max} Months",
+  "free": "FREE",
+  "freePlan": "Free Plan"
 }

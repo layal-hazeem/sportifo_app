@@ -659,7 +659,9 @@
   "available_subscriptions": "الاشتراكات المتاحة",
 "month_single": "شهر {count}",
 "month_plural": "{count} أشهر",
-"months_range": "{min} - {max} أشهر"
+"months_range": "{min} - {max} أشهر",
+"free": "مجاني",
+  "freePlan": "خطة مجانية"
 
 
 

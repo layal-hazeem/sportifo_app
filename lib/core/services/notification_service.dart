@@ -12,6 +12,7 @@ import '../../features/ ads/presentation/view_model/ads_cubit.dart';
 import '../../features/ ads/presentation/view_model/ads_state.dart';
 import '../../features/ ads/presentation/widgets/ads_details_bottom_sheet.dart';
 import '../../features/my_plans(user)/presentation/view/my_plans_screen.dart';
+import '../../features/notifications/presentation/view_model/notifications_cubit.dart';
 import '../../main.dart';
 import '../routes/app_routes.dart';
 import '../storage/local_storage.dart';
@@ -166,7 +167,9 @@ class NotificationService {
   Future<void> _showLocalNotification(RemoteMessage message) async {
     final String? imageUrl = message.data['icon_url'] ?? message.data['icon'];
     final payload = jsonEncode(message.data);
-
+// استدعي الكيوبيت وزيدي العداد بمقدار 1
+    final notificationsCubit = getIt<NotificationsCubit>();
+    notificationsCubit.incrementUnreadCount();
     ByteArrayAndroidBitmap? largeIcon;
     if (imageUrl != null && imageUrl.isNotEmpty) {
       try {

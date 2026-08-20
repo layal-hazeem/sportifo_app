@@ -9,7 +9,6 @@ import '../../data/models/my_plan_model.dart';
 import '../view_model/active_workout_cubit.dart';
 import '../widgets/workout_confirm_dialog.dart';
 import 'exercise_preview_screen.dart';
-
 class DayOverviewScreen extends StatelessWidget {
   final PlanDayModel day;
   final int dayNumber;
@@ -178,15 +177,19 @@ class DayOverviewScreen extends StatelessWidget {
               delegate: SliverChildBuilderDelegate((context, index) {
                 final exercise = day.exercises[index];
 
+                // 🔥 التعديل الذكي: البحث عن صورة ثابتة وتجنب الـ GIF كما فعلنا مسبقاً
                 String imageUrl = '';
                 if (exercise.images.isNotEmpty) {
                   final imageObj = exercise.images.firstWhere(
-                    (img) => img.type == 'gif',
+                        (img) {
+                      final type = (img.type ?? '').toLowerCase();
+                      final url = (img.url ?? '').toLowerCase();
+                      return !type.contains('gif') && !url.contains('.gif');
+                    },
                     orElse: () => exercise.images.first,
                   );
                   imageUrl = imageObj.url ?? '';
                 }
-
                 // 🔥 فحص نوع التمرين بناءً على الكاتيجوري أو وجود الـ Duration
                 bool isCardio =
                     (exercise.category != null &&
@@ -319,7 +322,7 @@ class DayOverviewScreen extends StatelessWidget {
     String displayDetailInfo,
     IconData detailIcon,
     int index,
-    dynamic context,
+    BuildContext context,
   ) {
     final String exerciseNumber = (index + 1) < 10
         ? '0${index + 1}'

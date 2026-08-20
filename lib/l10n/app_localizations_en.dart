@@ -1328,6 +1328,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get description => 'Description';
+
+  @override
   String get stop_sending_title => 'Stop Sending?';
 
   @override
@@ -1538,4 +1540,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String months_range(Object max, Object min) {
     return '$min - $max Months';
   }
+
+  @override
+  String get free => 'FREE';
+
+  @override
+  String get freePlan => 'Free Plan';
 }

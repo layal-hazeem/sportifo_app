@@ -186,9 +186,8 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<CoachRepository>(
     () => CoachRepository(getIt<CoachWebService>()),
   );
-
-  getIt.registerFactory<CoachesCubit>(
-    () => CoachesCubit(getIt<CoachRepository>()),
+  getIt.registerLazySingleton<CoachesCubit>(
+        () => CoachesCubit(getIt<CoachRepository>()),
   );
   getIt.registerFactory<AllCoachesCubit>(
     () => AllCoachesCubit(getIt<CoachRepository>()),
@@ -262,11 +261,11 @@ Future<void> setupServiceLocator() async {
     () => AiChatCubit(getIt<AiChatRepository>()),
   );
 
-  getIt.registerLazySingleton<AiChatWebService>(() => AiChatWebService(getIt<Dio>()));
-getIt.registerLazySingleton<AiChatRepository>(() => AiChatRepository(getIt<AiChatWebService>()));
-  getIt.registerLazySingleton<AiChatCubit>(() => AiChatCubit(getIt<AiChatRepository>()));
-
-// Nutrition
+//   getIt.registerLazySingleton<AiChatWebService>(() => AiChatWebService(getIt<Dio>()));
+// getIt.registerLazySingleton<AiChatRepository>(() => AiChatRepository(getIt<AiChatWebService>()));
+//   getIt.registerLazySingleton<AiChatCubit>(() => AiChatCubit(getIt<AiChatRepository>()));
+//
+// // Nutrition
 getIt.registerSingleton<NutritionWebService>(
   NutritionWebService(getIt<Dio>()),
 );

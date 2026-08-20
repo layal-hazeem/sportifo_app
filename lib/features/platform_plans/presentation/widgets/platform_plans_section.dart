@@ -4,6 +4,7 @@ import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/loading_shimmer.dart';
+import '../../../../l10n/app_localizations.dart'; // 🔥 استدعاء الترجمة
 import '../view_model/platform_plans_cubit.dart';
 import '../view_model/platform_plans_state.dart';
 import 'platform_plan_card.dart';
@@ -13,10 +14,11 @@ class PlatformPlansSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return BlocBuilder<PlatformPlansCubit, PlatformPlansState>(
       builder: (context, state) {
         if (state is PlatformPlansLoading) {
-          // 🔥 هيكل شيمير أفقي قريب من شكل PlatformPlanCard (270×135 صورة + نصين)
           return SizedBox(
             height: 240,
             child: ListView.builder(
@@ -28,33 +30,37 @@ class PlatformPlansSection extends StatelessWidget {
                 width: 270,
                 margin: const EdgeInsets.only(right: 14),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: context.backgroundColor,
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const LoadingShimmer(
-                        width: 250,
-                        height: 135,
-                        borderRadius: 16,
+                child: const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    LoadingShimmer(
+                      width: 270,
+                      height: 135,
+                      borderRadius: 20,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(14),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          LoadingShimmer(
+                            width: 180,
+                            height: 16,
+                            borderRadius: 6,
+                          ),
+                          SizedBox(height: 12),
+                          LoadingShimmer(
+                            width: 120,
+                            height: 12,
+                            borderRadius: 6,
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 12),
-                      const LoadingShimmer(
-                        width: 180,
-                        height: 14,
-                        borderRadius: 6,
-                      ),
-                      const SizedBox(height: 8),
-                      const LoadingShimmer(
-                        width: 120,
-                        height: 12,
-                        borderRadius: 6,
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -68,14 +74,13 @@ class PlatformPlansSection extends StatelessWidget {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header السكشن
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Sportifo Plans',
+                      l10n.exploreFreePlans, // 🔥 ترجمة العنوان من الـ JSON
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -89,9 +94,9 @@ class PlatformPlansSection extends StatelessWidget {
                           AppRoutes.allPlatformPlans,
                         );
                       },
-                      child: const Text(
-                        'View All',
-                        style: TextStyle(
+                      child: Text(
+                        l10n.see_all, // 🔥 ترجمة كلمة See All
+                        style: const TextStyle(
                           color: AppColors.primaryBtn,
                           fontWeight: FontWeight.bold,
                         ),
@@ -101,7 +106,6 @@ class PlatformPlansSection extends StatelessWidget {
                 ),
               ),
 
-              // قائمة الكروت الأفقية
               SizedBox(
                 height: 240,
                 child: ListView.builder(

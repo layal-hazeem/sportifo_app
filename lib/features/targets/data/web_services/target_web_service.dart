@@ -5,17 +5,15 @@ class TargetWebService {
   final Dio dio;
   TargetWebService(this.dio);
 
-  // 1️⃣ دالة إرسال/تعديل الهدف (POST)
   Future<Response> setTarget(String goal) async {
     return await dio.post(
       ApiConstants.targets,
       data: {
-        'goal': goal, // بنبعت الـ goal مثل: bulk, cut, maintain
+        'goal': goal,
       },
     );
   }
 
-  // 2️⃣ دالة جلب آخر هدف نشط والسعرات الحالية (GET)
   Future<Response> getLatestTarget({Options? options}) async {
     return await dio.get(ApiConstants.targets, options: options);
   }

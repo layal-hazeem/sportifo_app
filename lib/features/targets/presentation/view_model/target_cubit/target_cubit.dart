@@ -13,11 +13,8 @@ class TargetCubit extends Cubit<TargetState> {
 
   TargetCubit(this._repository) : super(TargetInitial());
 
-  // 🔥 دالة صغيرة لتحديث الويدجت الخارجي لما الهدف يتغير
-  // 🔥 دالة تحديث الويدجت الخارجي بكل الماكروز لما الهدف يتغير
   void _updateHomeWidgetWithNewTarget(TargetModel newTarget) {
     try {
-      // بنجيب القيم اللي أكلها المستخدم حالياً من NutritionCubit
       final nutritionCubit = getIt<NutritionCubit>();
       final nutritionState = nutritionCubit.state;
 
@@ -34,7 +31,6 @@ class TargetCubit extends Cubit<TargetState> {
         currentFat = totalConsumed.fat.toInt();
       }
 
-      // بنحدث الويدجت الخارجي بالقيم الحالية + الأهداف الجديدة كاملة
       HomeWidgetService.updateCaloriesWidget(
         currentCalories: currentCalories,
         targetCalories: newTarget.calories.toInt(),
@@ -51,29 +47,25 @@ class TargetCubit extends Cubit<TargetState> {
   }
 
   Future<void> fetchLatestTarget() async {
-    //  لا تظهري التحميل إلا إذا لم يكن لدينا داتا سابقة
     if (state is! TargetSuccess) {
       emit(TargetLoading());
     }
 
     final result = await _repository.getLatestTarget();
 
-    if (isClosed) return; // حماية من الكراش
+    if (isClosed) return;
 
     switch (result) {
       case Success():
-      // 🔥 تحديث الويدجت بالهدف الجديد اللي إجا من السيرفر
         _updateHomeWidgetWithNewTarget(result.data);
         emit(TargetSuccess(result.data));
         break;
       case Failure(message: final errorMsg):
-      // 🔥 الحماية القصوى: إذا الخطأ سببه "لا يوجد إنترنت"
         if (errorMsg.contains("No Internet") || errorMsg.contains("Connection timeout")) {
-          // 🔥 إذا كان هناك داتا مكيشة (Success)، لا تظهري رسالة فشل
           if (state is TargetSuccess) return;
         }
         if (result.message.contains("no targets") || result.message.contains("not found")) {
-          emit(TargetNotSet());   // ✅ هلق حالة واضحة ومنفصلة تماماً
+          emit(TargetNotSet());
         } else {
           emit(TargetFailure(result.message));
         }
@@ -90,7 +82,6 @@ class TargetCubit extends Cubit<TargetState> {
 
     switch (result) {
       case Success():
-      // 🔥 تحديث الويدجت فوراً لما المستخدم يغير هدفه (تضخيم/تنشيف...)
         _updateHomeWidgetWithNewTarget(result.data);
         emit(TargetSuccess(result.data));
         break;
@@ -103,7 +94,6 @@ class TargetCubit extends Cubit<TargetState> {
         break;
     }
   }
-  // ✅ دالة جديدة - تصفير كامل وقت اللوغ أوت
   void reset() {
     emit(TargetInitial());
   }
