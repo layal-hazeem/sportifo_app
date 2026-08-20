@@ -22,7 +22,7 @@ class AppRoutes {
   static const String usersSubscribed = "/coaches/users/subscribed";
 
   static const String completeProfile = "/completeProfile";
-  static const String createPlan = "/plans";
+  static const String createPlan = "plans";
   static const String existingDays = '/plans/coach/days';
 
   static const String subscriptionDetails = "/subscriptionDetails";
@@ -37,8 +37,8 @@ class AppRoutes {
   static const String planDays = "/planDays";
 
   static const String allPlatformPlans = "/allPlatformPlans";
-static const String trainees = "/plans/coach";
-static const String planDetails = "/planDetails";
+  static const String trainees = "/plans/coach";
+  static const String planDetails = "/planDetails";
   static const String notifications = "/notifications";
   static const String editCoachPlan = "/plans";
 
@@ -46,6 +46,5 @@ static const String planDetails = "/planDetails";
   static const String editSelfPlan = "/plans/update/self";
   static const String chatDetail = '/chat_detail';
 
-
-static const String conversationsList = '/conversations_list';
+  static const String conversationsList = '/conversations_list';
 }

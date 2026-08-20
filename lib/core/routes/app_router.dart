@@ -100,7 +100,8 @@ class AppRouter {
 
       case AppRoutes.notifications:
         return MaterialPageRoute(
-          builder: (_) => const NotificationsScreen(), // 👈 الشاشة اللي عملناها بالخطوة الماضية
+          builder: (_) =>
+              const NotificationsScreen(), // 👈 الشاشة اللي عملناها بالخطوة الماضية
         );
 
       case AppRoutes.login:
@@ -400,45 +401,44 @@ class AppRouter {
           ),
         );
 
-        case AppRoutes.conversationsList:
-  return MaterialPageRoute(
-    builder: (_) => BlocProvider(
-      create: (context) => getIt<ConversationsCubit>(),
-      child: const ConversationsListScreen(),
-    ),
-  );
+      case AppRoutes.conversationsList:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => getIt<ConversationsCubit>(),
+            child: const ConversationsListScreen(),
+          ),
+        );
 
-case AppRoutes.chatDetail:
-  final args = settings.arguments;
-  if (args is Map<String, dynamic>) {
-    return MaterialPageRoute(
-      builder: (_) => BlocProvider(
-        create: (_) => getIt<ChatDetailCubit>(),
-        child: ChatDetailScreen(
-          conversationId: args['conversationId'] as int,
-          otherParticipantName: args['otherParticipantName'] as String,
-          otherParticipantImage: args['otherParticipantImage'] as String?,
-          subscriptionType: args['subscriptionType'] as String?, // ← جديد
-        ),
-      ),
-    );
-  } else if (args is int) {
-    return MaterialPageRoute(
-      builder: (_) => BlocProvider(
-        create: (_) => getIt<ChatDetailCubit>(),
-        child: ChatDetailScreen(
-          conversationId: args,
-          otherParticipantName: 'Unknown',
-          subscriptionType: null, // ← جديد
-        ),
-      ),
-    );
-  }
-  return MaterialPageRoute(
-    builder: (_) => const Scaffold(
-      body: Center(child: Text('خطأ في فتح المحادثة')),
-    ),
-  );
+      case AppRoutes.chatDetail:
+        final args = settings.arguments;
+        if (args is Map<String, dynamic>) {
+          return MaterialPageRoute(
+            builder: (_) => BlocProvider(
+              create: (_) => getIt<ChatDetailCubit>(),
+              child: ChatDetailScreen(
+                conversationId: args['conversationId'] as int,
+                otherParticipantName: args['otherParticipantName'] as String,
+                otherParticipantImage: args['otherParticipantImage'] as String?,
+                subscriptionType: args['subscriptionType'] as String?, // ← جديد
+              ),
+            ),
+          );
+        } else if (args is int) {
+          return MaterialPageRoute(
+            builder: (_) => BlocProvider(
+              create: (_) => getIt<ChatDetailCubit>(),
+              child: ChatDetailScreen(
+                conversationId: args,
+                otherParticipantName: 'Unknown',
+                subscriptionType: null, // ← جديد
+              ),
+            ),
+          );
+        }
+        return MaterialPageRoute(
+          builder: (_) =>
+              const Scaffold(body: Center(child: Text('خطأ في فتح المحادثة'))),
+        );
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

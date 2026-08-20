@@ -86,14 +86,14 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
             final activeSubscriptions = _getActiveSubscriptions(allUsers);
             final historySubscriptions = _getRecentHistory(allUsers);
 
-            final needsPlanCount = activeSubscriptions.where((u) {
-              final hasActiveSub =
-                  u.userSubscriptions?.any(
-                    (sub) => sub.status?.toLowerCase() == 'active',
-                  ) ??
-                  false;
-              final notHasPlan = (u.hasPlan ?? false) == false;
-              return hasActiveSub && notHasPlan;
+            final needsPlanCount = activeSubscriptions.where((user) {
+              final activeSub = user.userSubscriptions?.where(
+                (sub) => sub.status?.trim().toLowerCase() == 'active',
+              );
+
+              if (activeSub == null || activeSub.isEmpty) return false;
+
+              return activeSub.any((sub) => (sub.countPlan ?? 0) == 0);
             }).length;
 
             return RefreshIndicator(
@@ -340,10 +340,9 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                 AppRoutes.createPlan,
                 arguments: user,
               );
-              if (result == true) {
-                if (mounted) {
-                  context.read<SubscriptionCubit>().getSubscriptions();
-                }
+
+              if (result == true && mounted) {
+                context.read<SubscriptionCubit>().getSubscriptions();
               }
             },
           );
@@ -419,13 +418,24 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
     List<UsersSubscribedModel> allUsers,
   ) {
     final now = DateTime.now();
+
     return allUsers.where((user) {
       return user.userSubscriptions?.any((sub) {
+            final status = sub.status?.trim().toLowerCase();
+
+            final startDate = sub.startDate;
             final endDate = sub.endDate;
-            return sub.status?.toLowerCase() == 'active' &&
-                (sub.isActive ?? 0) == 1 &&
-                endDate != null &&
-                !endDate.isBefore(now);
+
+            if (status != 'active') return false;
+
+            if (startDate != null && startDate.isAfter(now)) {
+              return false;
+            }
+            if (endDate != null && endDate.isBefore(now)) {
+              return false;
+            }
+
+            return true;
           }) ??
           false;
     }).toList();

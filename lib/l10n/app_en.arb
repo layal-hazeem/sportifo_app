@@ -732,5 +732,6 @@
 "month_plural": "{count} Months",
 "months_range": "{min} - {max} Months",
   "free": "FREE",
-  "freePlan": "Free Plan"
+  "freePlan": "Free Plan",
+  "createAdditionalPlan":"Create Additional Plan"
 }

@@ -691,19 +691,6 @@
 "month_plural": "{count} أشهر",
 "months_range": "{min} - {max} أشهر",
 "free": "مجاني",
-  "freePlan": "خطة مجانية"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  "freePlan": "خطة مجانية",
+"createAdditionalPlan":"إنشاء خطة إضافية"
 }

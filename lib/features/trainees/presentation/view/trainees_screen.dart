@@ -108,10 +108,20 @@ class _TraineesContent extends StatelessWidget {
     return Column(
       children: [
         TraineesHeader(count: uniqueTraineesCount),
+
         Expanded(
-          child: TraineesGrid(
-            plans: filteredPlans,
-            onTraineeTap: (plan) => _openPlan(context, plan),
+          child: RefreshIndicator(
+            color: AppColors.primaryBtn,
+            backgroundColor: context.backgroundColor,
+
+            onRefresh: () async {
+              await context.read<TraineesCubit>().getCoachTrainees();
+            },
+
+            child: TraineesGrid(
+              plans: filteredPlans,
+              onTraineeTap: (plan) => _openPlan(context, plan),
+            ),
           ),
         ),
       ],

@@ -1612,4 +1612,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get freePlan => 'خطة مجانية';
+
+  @override
+  String get createAdditionalPlan => 'إنشاء خطة إضافية';
 }
