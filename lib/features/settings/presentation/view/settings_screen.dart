@@ -64,7 +64,6 @@ class SettingsScreen extends StatelessWidget {
                 },
               ),
 
-              // 2. شروط الاستخدام
               SettingsTile(
                 icon: Icons.gavel_outlined,
                 title:   l10n.termsOfUse,
@@ -73,7 +72,6 @@ class SettingsScreen extends StatelessWidget {
                 },
               ),
 
-              // 3. الحصول على المساعدة
               SettingsTile(
                 icon: Icons.headset_mic_outlined,
                 title:  l10n.helpSupport,

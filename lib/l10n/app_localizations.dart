@@ -3214,6 +3214,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'All text, designs, images, and software in Sportifo are protected intellectual property of the app, and may not be reused without written permission.'**
   String get termsContent4;
+
+  /// No description provided for @alternativeExercises.
+  ///
+  /// In en, this message translates to:
+  /// **'Alternative Exercises'**
+  String get alternativeExercises;
+
+  /// No description provided for @noAlternativesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No alternative exercises available for this workout right now.'**
+  String get noAlternativesFound;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

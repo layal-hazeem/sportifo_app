@@ -1621,4 +1621,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get termsContent4 => 'جميع النصوص، التصاميم، الصور، والبرامج في سبورتيفو هي ملكية فكرية محمية للتطبيق، ولا يجوز إعادة استخدامها دون إذن كتابي.';
+
+  @override
+  String get alternativeExercises => 'التمارين البديلة';
+
+  @override
+  String get noAlternativesFound => 'لا توجد تمارين بديلة متاحة لهذا التمرين حالياً.';
 }

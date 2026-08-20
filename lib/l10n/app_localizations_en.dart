@@ -1621,4 +1621,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get termsContent4 => 'All text, designs, images, and software in Sportifo are protected intellectual property of the app, and may not be reused without written permission.';
+
+  @override
+  String get alternativeExercises => 'Alternative Exercises';
+
+  @override
+  String get noAlternativesFound => 'No alternative exercises available for this workout right now.';
 }

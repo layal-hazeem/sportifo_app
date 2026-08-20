@@ -726,5 +726,7 @@
     "termsTitle3": "3. Account Obligations & Subscriptions",
     "termsContent3": "You are responsible for maintaining the confidentiality of your account information. Subscriptions grant you direct access to coaches and paid services according to your subscription package.",
     "termsTitle4": "4. Content Ownership",
-    "termsContent4": "All text, designs, images, and software in Sportifo are protected intellectual property of the app, and may not be reused without written permission."
+    "termsContent4": "All text, designs, images, and software in Sportifo are protected intellectual property of the app, and may not be reused without written permission.",
+    "alternativeExercises": "Alternative Exercises",
+      "noAlternativesFound": "No alternative exercises available for this workout right now."
 }

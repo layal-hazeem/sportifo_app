@@ -66,6 +66,7 @@ import '../../features/trainee_subscriptions/data/repositories/trainee_subscript
 import '../../features/trainee_subscriptions/data/web_services/trainee_subscription_web_service.dart';
 import '../../features/workout/data/repository/workout_repository.dart';
 import '../../features/workout/data/web_services/workout_web_service.dart';
+import '../../features/workout/presentation/view_model/alternatives_cubit/alternatives_cubit.dart';
 import '../../features/workout/presentation/view_model/categories_cubit/categories_cubit.dart';
 import '../../features/workout/presentation/view_model/exercises_cubit/exercises_cubit.dart';
 import '../../features/workout/presentation/view_model/saved_exercises/saved_exercises_cubit.dart';
@@ -399,4 +400,5 @@ getIt.registerSingleton<NutritionWebService>(
   getIt.registerFactory<EditCoachPlanCubit>(
     () => EditCoachPlanCubit(getIt<EditCoachPlanRepository>()),
   );
+  getIt.registerFactory(() => AlternativesCubit(getIt<WorkoutRepository>()));
 }
