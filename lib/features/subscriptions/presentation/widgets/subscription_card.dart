@@ -7,12 +7,18 @@ import '../../data/models/users_subscribed_model.dart';
 
 class SubscriptionCard extends StatelessWidget {
   final UsersSubscribedModel userModel;
+
+  // الاشتراك المحدد الذي يجب عرضه
+  // لم نعد نبحث عن أحدث اشتراك
+  final UserSubscription subscription;
+
   final VoidCallback onCreatePlan;
   final bool isHistory;
 
   const SubscriptionCard({
     super.key,
     required this.userModel,
+    required this.subscription,
     required this.onCreatePlan,
     this.isHistory = false,
   });
@@ -20,18 +26,14 @@ class SubscriptionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final subscriptions = userModel.userSubscriptions ?? [];
-    final activeSubscription = _getActiveSubscription(subscriptions);
 
-    final subscription = isHistory
-        ? _getHistorySubscription(subscriptions)
-        : activeSubscription;
-
-    final plan = subscription?.subscription;
-    final countPlan = subscription?.countPlan ?? 0;
+    final plan = subscription.subscription;
+    final countPlan = subscription.countPlan ?? 0;
     final hasPlans = countPlan > 0;
 
-    final planType = plan?.type?.trim().toLowerCase() ?? "bronze";
+    final planType =
+        plan?.type?.trim().toLowerCase() ?? "bronze";
+
     final planColors = _getPlanColors(planType);
 
     final backgroundColor = context.backgroundColor;
@@ -68,7 +70,10 @@ class SubscriptionCard extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment.topRight,
               end: Alignment.bottomLeft,
-              colors: [backgroundColor, planColors.primary.withOpacity(0.03)],
+              colors: [
+                backgroundColor,
+                planColors.primary.withOpacity(0.03),
+              ],
             ),
           ),
           child: Padding(
@@ -76,9 +81,10 @@ class SubscriptionCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // ─────────────────────────────
+                // ==================================================
                 // USER HEADER
-                // ─────────────────────────────
+                // ==================================================
+
                 Row(
                   children: [
                     Container(
@@ -95,9 +101,12 @@ class SubscriptionCard extends StatelessWidget {
                       child: CircleAvatar(
                         radius: 28,
                         backgroundColor: backgroundColor,
-                        backgroundImage: userModel.profilePic != null
-                            ? NetworkImage(userModel.profilePic!)
-                            : null,
+                        backgroundImage:
+                            userModel.profilePic != null
+                                ? NetworkImage(
+                                    userModel.profilePic!,
+                                  )
+                                : null,
                         child: userModel.profilePic == null
                             ? Icon(
                                 Icons.person,
@@ -112,7 +121,8 @@ class SubscriptionCard extends StatelessWidget {
 
                     Expanded(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment:
+                            CrossAxisAlignment.start,
                         children: [
                           Text(
                             "${userModel.firstName ?? ""} "
@@ -137,13 +147,16 @@ class SubscriptionCard extends StatelessWidget {
 
                               const SizedBox(width: 4),
 
-                              Text(
-                                "${plan?.title ?? l10n.defaultPlan} "
-                                "(${planType.toUpperCase()})",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  color: planColors.primary,
+                              Expanded(
+                                child: Text(
+                                  "${plan?.title ?? l10n.defaultPlan} "
+                                  "(${planType.toUpperCase()})",
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: planColors.primary,
+                                  ),
                                 ),
                               ),
                             ],
@@ -153,61 +166,76 @@ class SubscriptionCard extends StatelessWidget {
                     ),
 
                     isHistory
-                        ? _historyBadge(context, l10n)
-                        : _planCountBadge(context, countPlan),
+                        ? _historyBadge(
+                            context,
+                            l10n,
+                          )
+                        : _planCountBadge(
+                            context,
+                            countPlan,
+                          ),
                   ],
                 ),
 
                 const SizedBox(height: 16),
 
-                Divider(color: AppColors.hintText.withOpacity(0.12), height: 1),
+                Divider(
+                  color: AppColors.hintText.withOpacity(0.12),
+                  height: 1,
+                ),
 
                 const SizedBox(height: 16),
 
-                // ─────────────────────────────
+                // ==================================================
                 // DATES
-                // ─────────────────────────────
+                // ==================================================
+
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 14,
                     vertical: 12,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.hintText.withOpacity(0.06),
+                    color:
+                        AppColors.hintText.withOpacity(0.06),
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: AppColors.hintText.withOpacity(0.12),
+                      color:
+                          AppColors.hintText.withOpacity(0.12),
                     ),
                   ),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment:
+                        MainAxisAlignment.spaceBetween,
                     children: [
                       _infoItem(
                         context,
                         Icons.calendar_today_rounded,
                         l10n.startDate,
-                        _formatDate(subscription?.startDate),
+                        _formatDate(subscription.startDate),
                       ),
 
                       Container(
                         height: 24,
                         width: 1,
-                        color: AppColors.hintText.withOpacity(0.25),
+                        color:
+                            AppColors.hintText.withOpacity(0.25),
                       ),
 
                       _infoItem(
                         context,
                         Icons.event_available_rounded,
                         l10n.endDate,
-                        _formatDate(subscription?.endDate),
+                        _formatDate(subscription.endDate),
                       ),
                     ],
                   ),
                 ),
 
-                // ─────────────────────────────
+                // ==================================================
                 // CREATE PLAN BUTTON
-                // ─────────────────────────────
+                // ==================================================
+
                 if (!isHistory) ...[
                   const SizedBox(height: 16),
 
@@ -231,12 +259,18 @@ class SubscriptionCard extends StatelessWidget {
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primaryBtn,
+                        backgroundColor:
+                            AppColors.primaryBtn,
                         foregroundColor: Colors.white,
                         elevation: 0,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14),
+                        padding:
+                            const EdgeInsets.symmetric(
+                          vertical: 14,
+                        ),
+                        shape:
+                            RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(14),
                         ),
                       ),
                     ),
@@ -250,29 +284,37 @@ class SubscriptionCard extends StatelessWidget {
     );
   }
 
-  // ─────────────────────────────────────────
-  // PLAN STATUS
-  // ─────────────────────────────────────────
+  // ============================================================
+  // PLAN STATUS BADGE
+  // ============================================================
 
   Widget _planStatusBadge(
     BuildContext context,
     bool hasPlan,
     AppLocalizations l10n,
   ) {
-    final color = hasPlan ? Colors.green : AppColors.primaryBtn;
+    final color =
+        hasPlan ? Colors.green : AppColors.primaryBtn;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 10,
+        vertical: 6,
+      ),
       decoration: BoxDecoration(
         color: color.withOpacity(0.10),
         borderRadius: BorderRadius.circular(30),
-        border: Border.all(color: color.withOpacity(0.25)),
+        border: Border.all(
+          color: color.withOpacity(0.25),
+        ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            hasPlan ? Icons.check_circle_rounded : Icons.warning_rounded,
+            hasPlan
+                ? Icons.check_circle_rounded
+                : Icons.warning_rounded,
             size: 12,
             color: color,
           ),
@@ -280,7 +322,9 @@ class SubscriptionCard extends StatelessWidget {
           const SizedBox(width: 4),
 
           Text(
-            hasPlan ? l10n.activePlan : l10n.needs_a_plan,
+            hasPlan
+                ? l10n.activePlan
+                : l10n.needs_a_plan,
             style: TextStyle(
               color: color,
               fontSize: 11,
@@ -292,17 +336,25 @@ class SubscriptionCard extends StatelessWidget {
     );
   }
 
-  // ─────────────────────────────────────────
+  // ============================================================
   // HISTORY BADGE
-  // ─────────────────────────────────────────
+  // ============================================================
 
-  Widget _historyBadge(BuildContext context, AppLocalizations l10n) {
+  Widget _historyBadge(
+    BuildContext context,
+    AppLocalizations l10n,
+  ) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 10,
+        vertical: 6,
+      ),
       decoration: BoxDecoration(
         color: AppColors.hintText.withOpacity(0.10),
         borderRadius: BorderRadius.circular(30),
-        border: Border.all(color: AppColors.hintText.withOpacity(0.18)),
+        border: Border.all(
+          color: AppColors.hintText.withOpacity(0.18),
+        ),
       ),
       child: Text(
         l10n.expired,
@@ -315,9 +367,9 @@ class SubscriptionCard extends StatelessWidget {
     );
   }
 
-  // ─────────────────────────────────────────
+  // ============================================================
   // INFO ITEM
-  // ─────────────────────────────────────────
+  // ============================================================
 
   Widget _infoItem(
     BuildContext context,
@@ -334,18 +386,24 @@ class SubscriptionCard extends StatelessWidget {
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: context.textColor.withOpacity(0.04),
+                color:
+                    context.textColor.withOpacity(0.04),
                 blurRadius: 4,
               ),
             ],
           ),
-          child: Icon(icon, size: 14, color: AppColors.primaryBtn),
+          child: Icon(
+            icon,
+            size: 14,
+            color: AppColors.primaryBtn,
+          ),
         ),
 
         const SizedBox(width: 8),
 
         Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment:
+              CrossAxisAlignment.start,
           children: [
             Text(
               title,
@@ -372,14 +430,21 @@ class SubscriptionCard extends StatelessWidget {
     );
   }
 
+  // ============================================================
+  // DATE FORMAT
+  // ============================================================
+
   String _formatDate(DateTime? date) {
     if (date == null) return "-";
-    return DateFormat("dd MMM yyyy").format(date);
+
+    return DateFormat(
+      "dd MMM yyyy",
+    ).format(date);
   }
 
-  // ─────────────────────────────────────────
+  // ============================================================
   // PLAN COLORS
-  // ─────────────────────────────────────────
+  // ============================================================
 
   _PlanColors _getPlanColors(String type) {
     switch (type) {
@@ -403,90 +468,30 @@ class SubscriptionCard extends StatelessWidget {
     }
   }
 
-  // ─────────────────────────────────────────
-  // SUBSCRIPTION LOGIC
-  // ─────────────────────────────────────────
+  // ============================================================
+  // PLAN COUNT BADGE
+  // ============================================================
 
-  bool _isCurrentlyActive(UserSubscription sub, DateTime now) {
-    final status = sub.status?.trim().toLowerCase();
-
-    final start = sub.startDate;
-    final end = sub.endDate;
-
-    if (status != 'active') return false;
-    if (start == null || end == null) return false;
-
-    final hasStarted = !start.isAfter(now);
-    final hasNotEnded = !end.isBefore(now);
-
-    return hasStarted && hasNotEnded;
-  }
-
-  UserSubscription? _getActiveSubscription(
-    List<UserSubscription> subscriptions,
+  Widget _planCountBadge(
+    BuildContext context,
+    int countPlan,
   ) {
-    final now = DateTime.now();
-
-    UserSubscription? best;
-
-    for (final sub in subscriptions) {
-      if (!_isCurrentlyActive(sub, now)) continue;
-
-      if (best == null) {
-        best = sub;
-        continue;
-      }
-
-      final bestStart = best.startDate;
-      final subStart = sub.startDate;
-
-      if (subStart != null &&
-          (bestStart == null || subStart.isAfter(bestStart))) {
-        best = sub;
-      }
-    }
-
-    return best;
-  }
-
-  UserSubscription? _getHistorySubscription(
-    List<UserSubscription> subscriptions,
-  ) {
-    final now = DateTime.now();
-    final windowStart = now.subtract(const Duration(days: 30));
-
-    UserSubscription? latest;
-
-    for (final sub in subscriptions) {
-      final endDate = sub.endDate;
-
-      if (endDate == null) continue;
-
-      final isFinished = !_isCurrentlyActive(sub, now);
-
-      final isRecent = endDate.isAfter(windowStart);
-
-      if (!isFinished || !isRecent) continue;
-
-      if (latest == null || endDate.isAfter(latest.endDate!)) {
-        latest = sub;
-      }
-    }
-
-    return latest;
-  }
-
-  Widget _planCountBadge(BuildContext context, int countPlan) {
     final hasPlans = countPlan > 0;
 
-    final color = hasPlans ? Colors.green : AppColors.primaryBtn;
+    final color =
+        hasPlans ? Colors.green : AppColors.primaryBtn;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 10,
+        vertical: 6,
+      ),
       decoration: BoxDecoration(
         color: color.withOpacity(0.10),
         borderRadius: BorderRadius.circular(30),
-        border: Border.all(color: color.withOpacity(0.25)),
+        border: Border.all(
+          color: color.withOpacity(0.25),
+        ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -498,7 +503,9 @@ class SubscriptionCard extends StatelessWidget {
             size: 12,
             color: color,
           ),
+
           const SizedBox(width: 4),
+
           Text(
             '$countPlan ${countPlan == 1 ? 'Plan' : 'Plans'}',
             style: TextStyle(
@@ -513,9 +520,16 @@ class SubscriptionCard extends StatelessWidget {
   }
 }
 
+// ================================================================
+// PLAN COLORS MODEL
+// ================================================================
+
 class _PlanColors {
   final Color primary;
   final IconData icon;
 
-  _PlanColors({required this.primary, required this.icon});
+  _PlanColors({
+    required this.primary,
+    required this.icon,
+  });
 }
