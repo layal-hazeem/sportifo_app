@@ -218,7 +218,6 @@ class DayOverviewScreen extends StatelessWidget {
                   child: GestureDetector(
                     onTap: () => _startWorkoutFlow(context, index),
                     child: _buildExerciseCard(
-                      
                       imageUrl,
                       exercise,
                       displaySets,
@@ -319,7 +318,7 @@ class DayOverviewScreen extends StatelessWidget {
     String displayDetailInfo,
     IconData detailIcon,
     int index,
-    dynamic context,
+    BuildContext context,
   ) {
     final String exerciseNumber = (index + 1) < 10
         ? '0${index + 1}'

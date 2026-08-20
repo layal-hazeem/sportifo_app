@@ -82,11 +82,18 @@ class CoachInfo {
 class PlanDayModel {
   final int id;
   final String name;
+
+  /// Default sets/reps for all exercises in this day
+  final int? sets;
+  final String? reps;
+
   final List<ExerciseModel> exercises;
 
   PlanDayModel({
     required this.id,
     required this.name,
+    this.sets,
+    this.reps,
     required this.exercises,
   });
 
@@ -94,10 +101,20 @@ class PlanDayModel {
     return PlanDayModel(
       id: json['id'] ?? json['day_id'] ?? 0,
       name: json['name'] ?? '',
+
+      // Day default settings
+      sets: json['sets'] != null
+          ? int.tryParse(json['sets'].toString())
+          : null,
+
+      reps: json['reps']?.toString(),
+
       exercises: json['exercises'] != null
           ? List<ExerciseModel>.from(
-        json['exercises'].map((x) => ExerciseModel.fromJson(x)),
-      )
+              json['exercises'].map(
+                (x) => ExerciseModel.fromJson(x),
+              ),
+            )
           : [],
     );
   }

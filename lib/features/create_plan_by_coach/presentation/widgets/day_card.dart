@@ -264,7 +264,7 @@ class _PlanDayCardState extends State<PlanDayCard> {
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(vertical: 18),
                     decoration: BoxDecoration(
-                      color: AppColors.lightBackground,
+                      color: context.backgroundColor,
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
                         color: AppColors.hintText.withOpacity(0.15),

@@ -4,60 +4,50 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/di/service_locator.dart';
 import 'package:sportifo_app/core/network/api_result.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
+import 'package:sportifo_app/core/widgets/custom_glass_bottom_sheet.dart';
 import 'package:sportifo_app/core/widgets/wave_app_bar.dart';
 
 import 'package:sportifo_app/features/create_plan_by_coach/data/models/plan_day_ui_model.dart';
 import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/create_day_bottom_sheet.dart';
 import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/day_settings_bottom_sheet.dart';
-import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/day_card.dart';
 import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/exercises_picker.dart';
+import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/day_card.dart';
 import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/plan_details_card.dart';
 
-import 'package:sportifo_app/features/edit_self_plan/data/models/edit_self_plan_model.dart';
-import 'package:sportifo_app/features/edit_self_plan/data/models/edit_self_plan_request.dart';
-import 'package:sportifo_app/features/edit_self_plan/presentation/view_model/edit_self_plan_cubit.dart';
-import 'package:sportifo_app/features/edit_self_plan/presentation/view_model/edit_self_plan_state.dart';
+import 'package:sportifo_app/features/edit_coach_plan/presentation/widgets/edit_plan_loading.dart';
+
+import 'package:sportifo_app/features/my_plans(user)/data/models/my_plan_model.dart';
 
 import 'package:sportifo_app/features/workout/data/models/exercise_model.dart';
 import 'package:sportifo_app/features/workout/data/repository/workout_repository.dart';
 
+import 'package:sportifo_app/features/edit_self_plan/data/models/edit_self_plan_request.dart';
+import 'package:sportifo_app/features/edit_self_plan/presentation/view_model/edit_self_plan_cubit.dart';
+import 'package:sportifo_app/features/edit_self_plan/presentation/view_model/edit_self_plan_state.dart';
+
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class EditSelfPlanScreen extends StatefulWidget {
-  final SelfPlanData plan;
+  final PlanModel plan;
 
-  const EditSelfPlanScreen({
-    super.key,
-    required this.plan,
-  });
+  const EditSelfPlanScreen({super.key, required this.plan});
 
   @override
-  State<EditSelfPlanScreen> createState() =>
-      _EditSelfPlanScreenState();
+  State<EditSelfPlanScreen> createState() => _EditSelfPlanScreenState();
 }
 
 class _EditSelfPlanScreenState extends State<EditSelfPlanScreen> {
   final PageController _pageController = PageController();
 
   int _currentStep = 0;
-
   late final List<PlanDayUiModel> days;
-
-  /// Backend ID for existing days.
   final Map<PlanDayUiModel, int> _dayIds = {};
-
-  /// Backend IDs of days deleted by the user.
+  final Map<PlanDayUiModel, Set<int>> _originalExerciseIds = {};
   final List<int> _deletedDayIds = [];
-
-  String? selectedGoal;
-
-  int durationMonths = 1;
-
   bool isFabOpen = false;
-
-  bool get _isLoading =>
-      context.read<EditSelfPlanCubit>().state
-          is EditSelfPlanLoading;
+  String? selectedGoal;
+  int durationMonths = 1;
 
   @override
   void initState() {
@@ -65,27 +55,26 @@ class _EditSelfPlanScreenState extends State<EditSelfPlanScreen> {
 
     selectedGoal = widget.plan.goal;
 
-    /*
-     * durationMonths can come from the edit model
-     * as String or another numeric representation.
-     *
-     * toString() keeps this conversion safe.
-     */
-    durationMonths =
-        int.tryParse(widget.plan.durationMonths.toString()) ?? 1;
+    durationMonths = widget.plan.durationMonths ?? 1;
 
     days = widget.plan.days.map((day) {
       final uiDay = PlanDayUiModel(
         name: day.name,
-        exercises: List<ExerciseModel>.from(
-          day.exercises,
-        ),
+        exercises: List<ExerciseModel>.from(day.exercises),
+
+        defaultSets: day.sets,
+        defaultReps: int.tryParse(day.reps?.toString() ?? ''),
       );
 
-      final dayId = day.id;
+      _dayIds[uiDay] = day.id;
 
-      if (dayId != null) {
-        _dayIds[uiDay] = dayId;
+      _originalExerciseIds[uiDay] = day.exercises
+          .map((exercise) => exercise.id)
+          .toSet();
+
+      // Apply day defaults to exercises that don't have their own values
+      for (final exercise in uiDay.exercises) {
+        _applyDayDefaultsToExercise(uiDay, exercise);
       }
 
       return uiDay;
@@ -98,171 +87,115 @@ class _EditSelfPlanScreenState extends State<EditSelfPlanScreen> {
     super.dispose();
   }
 
-  // ============================================================
-  // STEP NAVIGATION
-  // ============================================================
-
-  Future<void> _goToNextStep() async {
+  void _goToNextStep() {
     if (_currentStep != 0) return;
 
     final l10n = AppLocalizations.of(context)!;
 
-    if (selectedGoal == null ||
-        selectedGoal!.trim().isEmpty) {
-      _showValidationMessage(
-        l10n.chooseGoalForTrainingPlan,
-      );
+    if (selectedGoal == null || selectedGoal!.trim().isEmpty) {
+      _showValidationMessage(l10n.chooseGoalForTrainingPlan);
       return;
     }
 
-    await _pageController.animateToPage(
-      1,
-      duration: const Duration(milliseconds: 200),
-      curve: Curves.easeInOut,
-    );
+    _pageController
+        .animateToPage(
+          1,
+          duration: const Duration(milliseconds: 180),
+          curve: Curves.easeInOut,
+        )
+        .then((_) {
+          if (!mounted) return;
 
-    if (!mounted) return;
-
-    setState(() {
-      _currentStep = 1;
-    });
+          setState(() {
+            _currentStep = 1;
+          });
+        });
   }
 
-  Future<void> _goToPreviousStep() async {
+  void _goToPreviousStep() {
     if (_currentStep != 1) return;
 
-    await _pageController.animateToPage(
-      0,
-      duration: const Duration(milliseconds: 200),
-      curve: Curves.easeInOut,
-    );
+    _pageController
+        .animateToPage(
+          0,
+          duration: const Duration(milliseconds: 180),
+          curve: Curves.easeInOut,
+        )
+        .then((_) {
+          if (!mounted) return;
 
-    if (!mounted) return;
-
-    setState(() {
-      _currentStep = 0;
-    });
+          setState(() {
+            _currentStep = 0;
+          });
+        });
   }
 
-  // ============================================================
-  // ADD DAY
-  // ============================================================
+  void _applyDayDefaultsToExercise(PlanDayUiModel day, ExerciseModel exercise) {
+    if (exercise.isCardio) {
+      exercise.sets = null;
+      exercise.reps = null;
+      return;
+    }
+
+    exercise.sets ??= day.defaultSets;
+    exercise.reps ??= day.defaultReps?.toString();
+  }
 
   void addDay() {
-    CreateDayBottomSheet.show(
-      context,
-      (value) {
-        if (!mounted) return;
-
-        setState(() {
-          days.add(
-            PlanDayUiModel(
-              name: value,
-              exercises: [],
-            ),
-          );
-        });
-      },
-    );
+    CreateDayBottomSheet.show(context, (value) {
+      setState(() {
+        days.add(PlanDayUiModel(name: value, exercises: []));
+      });
+    });
   }
-
-  // ============================================================
-  // ADD EXERCISE
-  // ============================================================
 
   Future<void> addExercise(int dayIndex) async {
     final workoutRepository = getIt<WorkoutRepository>();
 
     final result = await workoutRepository.getExercises();
 
-    if (!mounted) return;
-
     if (result is Failure) {
-      _showValidationMessage(
-        result.toString(),
-      );
       return;
     }
 
-    final exercises =
-        (result as Success<List<ExerciseModel>>).data;
+    final exercises = (result as Success<List<ExerciseModel>>).data;
 
-    final selected =
-        await showModalBottomSheet<List<ExerciseModel>>(
+    final selected = await showModalBottomSheet<List<ExerciseModel>>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(20),
-        ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (bottomSheetContext) {
+      builder: (context) {
         return SizedBox(
-          height:
-              MediaQuery.of(bottomSheetContext).size.height *
-                  0.9,
-          child: ExerciseMultiPickerBottomSheet(
-            exercises: exercises,
-          ),
+          height: MediaQuery.of(context).size.height * 0.9,
+          child: ExerciseMultiPickerBottomSheet(exercises: exercises),
         );
       },
     );
-
-    if (!mounted) return;
 
     if (selected == null || selected.isEmpty) {
       return;
     }
 
     setState(() {
-      days[dayIndex].exercises.addAll(
-        selected.map(
-          (exercise) {
-            exercise.sets = null;
-            exercise.reps = null;
-            exercise.duration = null;
+      final day = days[dayIndex];
 
-            return exercise;
-          },
-        ),
-      );
+      for (final exercise in selected) {
+        _applyDayDefaultsToExercise(day, exercise);
+        day.exercises.add(exercise);
+      }
     });
   }
 
-  // ============================================================
-  // DELETE EXERCISE
-  // ============================================================
-
-  void _onDeleteExercise(
-    int dayIndex,
-    int exerciseIndex,
-  ) {
-    if (dayIndex < 0 || dayIndex >= days.length) {
-      return;
-    }
-
-    if (exerciseIndex < 0 ||
-        exerciseIndex >= days[dayIndex].exercises.length) {
-      return;
-    }
-
+  void _onDeleteExercise(int dayIndex, int exerciseIndex) {
     setState(() {
-      days[dayIndex].exercises.removeAt(
-        exerciseIndex,
-      );
+      days[dayIndex].exercises.removeAt(exerciseIndex);
     });
   }
-
-  // ============================================================
-  // DELETE DAY
-  // ============================================================
 
   void _onDeleteDay(int index) {
-    if (index < 0 || index >= days.length) {
-      return;
-    }
-
     final day = days[index];
 
     final originalId = _dayIds[day];
@@ -270,34 +203,14 @@ class _EditSelfPlanScreenState extends State<EditSelfPlanScreen> {
     setState(() {
       days.removeAt(index);
 
-      /*
-       * If this day already exists in the backend,
-       * we must tell the backend to delete it.
-       *
-       * New days have no backend ID, therefore there is
-       * nothing to delete remotely.
-       */
-      if (originalId != null &&
-          !_deletedDayIds.contains(originalId)) {
+      if (originalId != null) {
         _deletedDayIds.add(originalId);
       }
     });
   }
 
-  // ============================================================
-  // DAY SETTINGS
-  // ============================================================
-
-  Future<void> _onDaySettings(
-    PlanDayUiModel day,
-  ) async {
-    final applyAll =
-        await DaySettingsBottomSheet.show(
-      context,
-      day,
-    );
-
-    if (!mounted) return;
+  Future<void> _onDaySettings(PlanDayUiModel day) async {
+    final applyAll = await DaySettingsBottomSheet.show(context, day);
 
     if (applyAll == true) {
       setState(() {
@@ -307,8 +220,7 @@ class _EditSelfPlanScreenState extends State<EditSelfPlanScreen> {
             exercise.reps = null;
           } else {
             exercise.sets = day.defaultSets;
-            exercise.reps =
-                day.defaultReps?.toString();
+            exercise.reps = day.defaultReps?.toString();
           }
         }
       });
@@ -317,147 +229,158 @@ class _EditSelfPlanScreenState extends State<EditSelfPlanScreen> {
     }
   }
 
-  // ============================================================
-  // BUILD REQUEST
-  // ============================================================
-
   EditSelfPlanRequest _buildRequest() {
-    final requestDays = <EditSelfPlanDay>[];
+    final dayPayloads = <EditSelfPlanDayRequest>[];
 
-    /*
-     * ----------------------------------------------------------
-     * EXISTING + NEW DAYS
-     * ----------------------------------------------------------
-     */
     for (final day in days) {
-      final dayId = _dayIds[day];
+      final originalDayId = _dayIds[day];
 
-      final requestExercises =
-          <EditSelfPlanExercise>[];
+      final currentExerciseIds = day.exercises
+          .map((exercise) => exercise.id)
+          .toSet();
 
-      /*
-       * Convert UI exercises into edit-plan exercises.
-       */
-      for (int index = 0;
-          index < day.exercises.length;
-          index++) {
+      final removedExerciseIds = (_originalExerciseIds[day] ?? <int>{})
+          .difference(currentExerciseIds);
+
+      final exercisePayloads = <EditSelfPlanExerciseRequest>[];
+
+      for (var index = 0; index < day.exercises.length; index++) {
         final exercise = day.exercises[index];
 
-        /*
-         * ExerciseModel.id is nullable.
-         *
-         * If the exercise already exists, its ID is sent.
-         * If it is a newly selected exercise and has no backend
-         * ID, exerciseId is still the selected exercise ID.
-         *
-         * The null case is skipped because the backend cannot
-         * identify an exercise without an ID.
-         */
-        final exerciseId = exercise.id;
+        // Cardio doesn't need sets/reps
+        if (exercise.isCardio) {
+          exercisePayloads.add(
+            EditSelfPlanExerciseRequest(
+              exerciseId: exercise.id,
+              sets: null,
+              reps: null,
+              order: index + 1,
+            ),
+          );
 
-        if (exerciseId == null) {
           continue;
         }
 
-        requestExercises.add(
-          EditSelfPlanExercise(
-            id: exerciseId,
-            exerciseId: exerciseId,
-            name: exercise.name,
-            description: exercise.description,
-            sets: exercise.sets,
-            reps: exercise.reps,
+        // Exercise value first, otherwise use day defaults
+        final effectiveSets = exercise.sets ?? day.defaultSets;
+
+        final effectiveReps = exercise.reps ?? day.defaultReps?.toString();
+
+        exercisePayloads.add(
+          EditSelfPlanExerciseRequest(
+            exerciseId: exercise.id,
+            sets: effectiveSets,
+            reps: effectiveReps,
             order: index + 1,
           ),
         );
       }
 
-      requestDays.add(
-        EditSelfPlanDay(
-          id: dayId,
+      // Deleted exercises
+      for (final exerciseId in removedExerciseIds) {
+        exercisePayloads.add(
+          EditSelfPlanExerciseRequest(
+            exerciseId: exerciseId,
+            order: 0,
+            delete: true,
+          ),
+        );
+      }
+
+      dayPayloads.add(
+        EditSelfPlanDayRequest(
+          id: originalDayId,
           name: day.name,
-          exercises: requestExercises,
+
+          // Day defaults
+          sets: day.defaultSets,
+          reps: day.defaultReps?.toString(),
+
+          exercises: exercisePayloads,
         ),
       );
     }
 
-    /*
-     * ----------------------------------------------------------
-     * DELETED DAYS
-     * ----------------------------------------------------------
-     *
-     * The days removed from the UI are no longer inside `days`,
-     * so they have to be added explicitly to the request with
-     * delete = true.
-     */
+    // Deleted days
     for (final deletedDayId in _deletedDayIds) {
-      requestDays.add(
-        EditSelfPlanDay(
-          id: deletedDayId,
-          name: '',
-          delete: true,
-          exercises: const [],
-        ),
-      );
+      dayPayloads.add(EditSelfPlanDayRequest(id: deletedDayId, delete: true));
     }
 
     return EditSelfPlanRequest(
-      goal: selectedGoal!,
+      goal: selectedGoal ?? '',
       durationMonths: durationMonths,
-      days: requestDays,
+      days: dayPayloads,
     );
   }
 
-  // ============================================================
-  // SAVE CHANGES
-  // ============================================================
-
   void saveChanges() {
-    if (_isLoading) return;
-
     final l10n = AppLocalizations.of(context)!;
 
     if (days.isEmpty) {
-      _showValidationMessage(
-        l10n.addAtLeastOneWorkoutDay,
-      );
+      _showValidationMessage(l10n.addAtLeastOneWorkoutDay);
       return;
     }
 
-    if (days.any(
-      (day) => day.exercises.isEmpty,
-    )) {
-      _showValidationMessage(
-        l10n.everyWorkoutDayNeedsExercise,
-      );
+    final hasEmptyDay = days.any((day) => day.exercises.isEmpty);
+
+    if (hasEmptyDay) {
+      _showValidationMessage(l10n.everyWorkoutDayNeedsExercise);
       return;
     }
 
-    if (selectedGoal == null ||
-        selectedGoal!.trim().isEmpty) {
-      _showValidationMessage(
-        l10n.chooseGoalForTrainingPlan,
-      );
+    if (selectedGoal == null || selectedGoal!.trim().isEmpty) {
+      _showValidationMessage(l10n.chooseGoalForTrainingPlan);
       return;
     }
 
-    final request = _buildRequest();
+    for (final day in days) {
+      for (final exercise in day.exercises) {
 
-    context.read<EditSelfPlanCubit>().updateSelfPlan(
-      widget.plan.id,
-      request,
+        if (exercise.isCardio) continue;
+
+        final effectiveSets = exercise.sets ?? day.defaultSets;
+
+        final effectiveReps = exercise.reps ?? day.defaultReps?.toString();
+
+        if (effectiveSets == null ||
+            effectiveReps == null ||
+            effectiveReps.trim().isEmpty) {
+          _showValidationMessage('Missing sets/reps for ${exercise.name}');
+          debugPrint('''
+━━━━━━━━━━━━━━━━━━━━━━
+DAY: ${day.name}
+EXERCISE: ${exercise.name}
+ID: ${exercise.id}
+isCardio: ${exercise.isCardio}
+
+exercise.sets: ${exercise.sets}
+exercise.reps: ${exercise.reps}
+
+dayDefaultSets: ${day.defaultSets}
+dayDefaultReps: ${day.defaultReps}
+
+EFFECTIVE SETS: $effectiveSets
+EFFECTIVE REPS: $effectiveReps
+━━━━━━━━━━━━━━━━━━━━━━
+''');
+          return;
+        }
+      }
+    }
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const EditPlanLoadingDialog(),
+    );
+
+    context.read<EditSelfPlanCubit>().updatePlan(
+      planId: widget.plan.id,
+      requestBody: _buildRequest(),
     );
   }
 
-  // ============================================================
-  // VALIDATION MESSAGE
-  // ============================================================
-
-  void _showValidationMessage(
-    String message,
-  ) {
-    if (!mounted) return;
-
+  void _showValidationMessage(String message) {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(
@@ -472,54 +395,32 @@ class _EditSelfPlanScreenState extends State<EditSelfPlanScreen> {
       );
   }
 
-  // ============================================================
-  // BUILD
-  // ============================================================
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return BlocConsumer<
-        EditSelfPlanCubit,
-        EditSelfPlanState>(
+    return BlocConsumer<EditSelfPlanCubit, EditSelfPlanState>(
       listener: (context, state) {
         if (state is EditSelfPlanSuccess) {
-          /*
-           * Show the success message BEFORE popping,
-           * otherwise the ScaffoldMessenger belongs to a route
-           * that is about to disappear.
-           */
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                l10n.planUpdatedSuccessfully,
-              ),
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
+          Navigator.of(context).pop();
 
           Navigator.of(context).pop(true);
         }
 
         if (state is EditSelfPlanError) {
+          Navigator.of(context).pop();
+
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(state.message),
+              content: Text(state.error),
               behavior: SnackBarBehavior.floating,
             ),
           );
         }
       },
       builder: (context, state) {
-        final loading =
-            state is EditSelfPlanLoading;
-
         return Scaffold(
-          appBar: WaveAppBar(
-            title: l10n.editPlan,
-            showBackButton: true,
-          ),
+          appBar: WaveAppBar(title: l10n.editPlan, showBackButton: true),
 
           body: Column(
             children: [
@@ -528,8 +429,7 @@ class _EditSelfPlanScreenState extends State<EditSelfPlanScreen> {
               Expanded(
                 child: PageView(
                   controller: _pageController,
-                  physics:
-                      const NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   children: [
                     _buildGoalAndDurationStep(),
                     _buildDaysAndExercisesStep(),
@@ -539,89 +439,77 @@ class _EditSelfPlanScreenState extends State<EditSelfPlanScreen> {
             ],
           ),
 
-          bottomNavigationBar:
-              _buildBottomNavigationBar(
-            loading: loading,
-          ),
+          bottomNavigationBar: _buildBottomNavigationBar(),
 
-          floatingActionButton:
-              _currentStep == 1 && !loading
-                  ? _buildAddDayFab()
-                  : null,
+          floatingActionButton: _currentStep == 1
+              ? FloatingActionButton(
+                  backgroundColor: AppColors.primaryBtn,
+                  elevation: 6,
+                  onPressed: addDay,
+                  child: const Icon(Icons.add, color: Colors.white),
+                )
+              : null,
         );
       },
     );
   }
 
-  // ============================================================
-  // STEP HEADER
-  // ============================================================
-
   Widget _buildStepHeader() {
     final l10n = AppLocalizations.of(context)!;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 24,
-        vertical: 16,
-      ),
-      child: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      child: Row(
         children: [
-          Text(
-            _currentStep == 0
-                ? l10n.stepOne
-                : l10n.stepTwo,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-              color: AppColors.primaryBtn,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _currentStep == 0 ? l10n.stepOne : l10n.stepTwo,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryBtn,
+                  ),
+                ),
+
+                const SizedBox(height: 8),
+
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryBtn,
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(width: 8),
+
+                    Expanded(
+                      child: Container(
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: _currentStep == 1
+                              ? AppColors.primaryBtn
+                              : AppColors.hintText,
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ),
-
-          const SizedBox(height: 8),
-
-          Row(
-            children: [
-              Expanded(
-                child: _buildStepIndicator(
-                  active: true,
-                ),
-              ),
-
-              const SizedBox(width: 8),
-
-              Expanded(
-                child: _buildStepIndicator(
-                  active: _currentStep == 1,
-                ),
-              ),
-            ],
           ),
         ],
       ),
     );
   }
-
-  Widget _buildStepIndicator({
-    required bool active,
-  }) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
-      height: 4,
-      decoration: BoxDecoration(
-        color: active
-            ? AppColors.primaryBtn
-            : Colors.grey.shade300,
-        borderRadius: BorderRadius.circular(2),
-      ),
-    );
-  }
-
-  // ============================================================
-  // GOAL + DURATION
-  // ============================================================
 
   Widget _buildGoalAndDurationStep() {
     return SingleChildScrollView(
@@ -629,11 +517,13 @@ class _EditSelfPlanScreenState extends State<EditSelfPlanScreen> {
       child: PlanDetailsCard(
         selectedGoal: selectedGoal,
         durationMonths: durationMonths,
+
         onGoalChanged: (goal) {
           setState(() {
             selectedGoal = goal;
           });
         },
+
         onDurationChanged: (duration) {
           setState(() {
             durationMonths = duration;
@@ -643,23 +533,15 @@ class _EditSelfPlanScreenState extends State<EditSelfPlanScreen> {
     );
   }
 
-  // ============================================================
-  // DAYS + EXERCISES
-  // ============================================================
-
   Widget _buildDaysAndExercisesStep() {
     final l10n = AppLocalizations.of(context)!;
 
     return CustomScrollView(
+      physics: const BouncingScrollPhysics(),
       slivers: [
         SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(
-              20,
-              10,
-              20,
-              10,
-            ),
+            padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
             child: Row(
               children: [
                 Container(
@@ -667,8 +549,7 @@ class _EditSelfPlanScreenState extends State<EditSelfPlanScreen> {
                   height: 22,
                   decoration: BoxDecoration(
                     color: AppColors.primaryBtn,
-                    borderRadius:
-                        BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
 
@@ -690,7 +571,7 @@ class _EditSelfPlanScreenState extends State<EditSelfPlanScreen> {
                   '${days.length == 1 ? l10n.day : l10n.days}',
                   style: TextStyle(
                     fontSize: 12,
-                    color: Colors.grey.shade600,
+                    color: AppColors.hintText,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -699,236 +580,107 @@ class _EditSelfPlanScreenState extends State<EditSelfPlanScreen> {
           ),
         ),
 
-        if (days.isEmpty)
-          SliverToBoxAdapter(
-            child: _buildEmptyDaysState(),
-          ),
+        if (days.isEmpty) SliverToBoxAdapter(child: _buildEmptyDaysState()),
 
-        if (days.isNotEmpty)
-          SliverList(
-            delegate:
-                SliverChildBuilderDelegate(
-              (context, index) {
-                final day = days[index];
+        SliverList(
+          delegate: SliverChildBuilderDelegate((context, index) {
+            final day = days[index];
 
-                return PlanDayCard(
-                  day: day,
+            return PlanDayCard(
+              day: day,
 
-                  onSettings: () {
-                    _onDaySettings(day);
-                  },
-
-                  onAddExercise: () {
-                    addExercise(index);
-                  },
-
-                  onDeleteExercise:
-                      (exerciseIndex) {
-                    _onDeleteExercise(
-                      index,
-                      exerciseIndex,
-                    );
-                  },
-
-                  onDeleteDay: () {
-                    _onDeleteDay(index);
-                  },
-                );
+              onSettings: () {
+                _onDaySettings(day);
               },
-              childCount: days.length,
-            ),
-          ),
 
-        const SliverToBoxAdapter(
-          child: SizedBox(height: 100),
+              onAddExercise: () {
+                addExercise(index);
+              },
+
+              onDeleteExercise: (exerciseIndex) {
+                _onDeleteExercise(index, exerciseIndex);
+              },
+
+              onDeleteDay: () {
+                _onDeleteDay(index);
+              },
+            );
+          }, childCount: days.length),
         ),
+
+        const SliverToBoxAdapter(child: SizedBox(height: 100)),
       ],
     );
   }
 
-  // ============================================================
-  // BOTTOM NAVIGATION
-  // ============================================================
-
-  Widget _buildBottomNavigationBar({
-    required bool loading,
-  }) {
+  Widget _buildBottomNavigationBar() {
     final l10n = AppLocalizations.of(context)!;
 
-    return SafeArea(
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            if (_currentStep == 1) ...[
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: loading
-                      ? null
-                      : _goToPreviousStep,
-                  style:
-                      OutlinedButton.styleFrom(
-                    padding:
-                        const EdgeInsets.symmetric(
-                      vertical: 16,
-                    ),
-                    side: BorderSide(
-                      color:
-                          AppColors.primaryBtn,
-                    ),
-                    shape:
-                        RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(18),
-                    ),
-                  ),
-                  child: Text(
-                    l10n.back,
-                    style: TextStyle(
-                      color:
-                          AppColors.primaryBtn,
-                      fontSize: 16,
-                      fontWeight:
-                          FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-
-              const SizedBox(width: 12),
-            ],
-
+    return Container(
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        children: [
+          if (_currentStep == 1) ...[
             Expanded(
-              flex: _currentStep == 1 ? 2 : 1,
-              child: ElevatedButton(
-                onPressed: loading
-                    ? null
-                    : _currentStep == 0
-                        ? _goToNextStep
-                        : saveChanges,
-                style:
-                    ElevatedButton.styleFrom(
-                  backgroundColor:
-                      AppColors.primaryBtn,
-                  disabledBackgroundColor:
-                      AppColors.primaryBtn
-                          .withValues(alpha: 0.5),
-                  padding:
-                      const EdgeInsets.symmetric(
-                    vertical: 16,
-                  ),
-                  shape:
-                      RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.circular(18),
+              child: OutlinedButton(
+                onPressed: _goToPreviousStep,
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  side: BorderSide(color: AppColors.primaryBtn),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18),
                   ),
                 ),
-                child: loading
-                    ? const SizedBox(
-                        width: 22,
-                        height: 22,
-                        child:
-                            CircularProgressIndicator(
-                          strokeWidth: 2.5,
-                          valueColor:
-                              AlwaysStoppedAnimation<
-                                  Color>(
-                            Colors.white,
-                          ),
-                        ),
-                      )
-                    : Text(
-                        _currentStep == 0
-                            ? l10n.next
-                            : l10n.saveChanges,
-                        style:
-                            const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight:
-                              FontWeight.bold,
-                        ),
-                      ),
+                child: Text(
+                  l10n.back,
+                  style: TextStyle(
+                    color: AppColors.primaryBtn,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
+
+            const SizedBox(width: 12),
           ],
-        ),
-      ),
-    );
-  }
 
-  // ============================================================
-  // ADD DAY FAB
-  // ============================================================
-
-  Widget _buildAddDayFab() {
-    return AnimatedRotation(
-      turns: isFabOpen ? 0.125 : 0,
-      duration:
-          const Duration(milliseconds: 200),
-      child: FloatingActionButton(
-        backgroundColor:
-            AppColors.primaryBtn,
-        elevation: 6,
-        onPressed: () async {
-          if (isFabOpen) return;
-
-          setState(() {
-            isFabOpen = true;
-          });
-
-          await Future.delayed(
-            const Duration(milliseconds: 200),
-          );
-
-          if (!mounted) return;
-
-          setState(() {
-            isFabOpen = false;
-          });
-
-          addDay();
-        },
-        child: AnimatedSwitcher(
-          duration:
-              const Duration(milliseconds: 100),
-          child: Icon(
-            isFabOpen
-                ? Icons.close
-                : Icons.add,
-            key: ValueKey(isFabOpen),
-            color: Colors.white,
+          Expanded(
+            flex: _currentStep == 1 ? 2 : 1,
+            child: ElevatedButton(
+              onPressed: _currentStep == 0 ? _goToNextStep : saveChanges,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primaryBtn,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18),
+                ),
+              ),
+              child: Text(
+                _currentStep == 0 ? l10n.next : l10n.saveChanges,
+                style: TextStyle(
+                  color: context.textColor,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
-
-  // ============================================================
-  // EMPTY DAYS
-  // ============================================================
 
   Widget _buildEmptyDaysState() {
     final l10n = AppLocalizations.of(context)!;
 
     return Container(
-      margin: const EdgeInsets.fromLTRB(
-        20,
-        8,
-        20,
-        20,
-      ),
-      padding: const EdgeInsets.symmetric(
-        horizontal: 24,
-        vertical: 30,
-      ),
+      margin: const EdgeInsets.fromLTRB(20, 8, 20, 20),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
       decoration: BoxDecoration(
-        color: Colors.grey.shade50,
-        borderRadius:
-            BorderRadius.circular(24),
-        border: Border.all(
-          color: Colors.grey.shade200,
-        ),
+        color: context.backgroundColor,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: Colors.grey.shade200),
       ),
       child: Column(
         children: [
@@ -936,8 +688,7 @@ class _EditSelfPlanScreenState extends State<EditSelfPlanScreen> {
             width: 64,
             height: 64,
             decoration: BoxDecoration(
-              color: AppColors.primaryBtn
-                  .withValues(alpha: 0.10),
+              color: AppColors.primaryBtn.withOpacity(.10),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -951,10 +702,7 @@ class _EditSelfPlanScreenState extends State<EditSelfPlanScreen> {
 
           Text(
             l10n.noWorkoutDaysYet,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w800,
-            ),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
           ),
 
           const SizedBox(height: 6),

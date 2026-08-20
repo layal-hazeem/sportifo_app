@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sportifo_app/core/di/service_locator.dart';
 import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
+import 'package:sportifo_app/features/edit_self_plan/presentation/view_model/edit_self_plan_cubit.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/loading_shimmer.dart';
 import '../../data/models/my_plan_model.dart';
 import '../view_model/plan_days_cubit.dart';
 import '../view_model/plan_days_state.dart';
 import 'day_overview_screen.dart';
+import 'package:sportifo_app/features/edit_self_plan/presentation/view/edit_self_plan_screen.dart';
 
 class PlanDaysScreen extends StatelessWidget {
   final PlanModel plan;
@@ -45,7 +48,7 @@ class PlanDaysScreen extends StatelessWidget {
             return CustomScrollView(
               physics: const BouncingScrollPhysics(),
               slivers: [
-                _buildPremiumAppBar(context),
+                _buildPremiumAppBar(context, detailedPlan),
 
                 SliverToBoxAdapter(
                   child: _buildWeekProgressBar(state, context),
@@ -86,14 +89,62 @@ class PlanDaysScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPremiumAppBar(BuildContext context) {
+  Widget _buildPremiumAppBar(BuildContext context, dynamic detailedPlan) {
+    final bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    final Color appBarColor = isDarkMode
+        ? AppColors.primaryBtn
+        : const Color(0xFF12141C);
+
+    final Color editButtonColor = isDarkMode
+        ? const Color(0xFF12141C)
+        : AppColors.primaryBtn;
+
     return SliverAppBar(
       expandedHeight: 180.0,
       floating: false,
       pinned: true,
-      backgroundColor: const Color(0xFF12141C),
+      backgroundColor: appBarColor,
       elevation: 0,
       iconTheme: const IconThemeData(color: Colors.white),
+      actions: [
+        if (detailedPlan.isSelfMade == true)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Center(
+              child: Material(
+                color: editButtonColor,
+                borderRadius: BorderRadius.circular(12),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(12),
+                  onTap: () async {
+                    final result = await Navigator.push<bool>(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => BlocProvider(
+                          create: (_) => getIt<EditSelfPlanCubit>(),
+                          child: EditSelfPlanScreen(plan: detailedPlan),
+                        ),
+                      ),
+                    );
+
+                    if (result == true && context.mounted) {
+                      context.read<PlanDaysCubit>().fetchPlanDays(plan.id);
+                    }
+                  },
+                  child: const Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Icon(
+                      Icons.edit_rounded,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+      ],
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(bottom: Radius.circular(32)),
       ),
@@ -168,7 +219,7 @@ class PlanDaysScreen extends StatelessWidget {
       margin: const EdgeInsets.fromLTRB(20, 20, 20, 10),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.backgroundColor,
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
@@ -255,15 +306,37 @@ class PlanDaysScreen extends StatelessWidget {
     int planId,
     bool isDoneThisWeek,
   ) {
+    // فحص وضع التطبيق (Dark Mode أو Light Mode)
+    final bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    // الألوان الديناميكية حسب الثيم وحالة الإنجاز
     final Color mainColor = isDoneThisWeek
         ? const Color(0xFF10B981)
         : AppColors.primaryBtn;
+
     final Color bgColor = isDoneThisWeek
-        ? const Color(0xFF10B981).withOpacity(0.06)
-        : Colors.white;
+        ? const Color(0xFF10B981).withOpacity(isDarkMode ? 0.12 : 0.06)
+        : (isDarkMode
+              ? const Color(0xFF1E222D)
+              : Colors.white); // 👈 لون خلفية البطاقة يتغير حسب الثيم
+
     final Color borderColor = isDoneThisWeek
-        ? Colors.green.shade300
-        : Colors.transparent;
+        ? (isDarkMode ? Colors.green.shade700 : Colors.green.shade300)
+        : (isDarkMode ? Colors.white.withOpacity(0.08) : Colors.transparent);
+
+    // لون خلفية أيقونة رقم اليوم والأيقونات الداخلية
+    final Color innerBoxColor = isDoneThisWeek
+        ? (isDarkMode ? Colors.green.withOpacity(0.2) : Colors.green.shade100)
+        : (isDarkMode ? const Color(0xFF12141C) : const Color(0xFF12141C));
+
+    // لون النصوص الثانوية والحاويات الداخلية الصغيرة
+    final Color badgeBgColor = isDoneThisWeek
+        ? (isDarkMode ? Colors.green.withOpacity(0.2) : Colors.white)
+        : (isDarkMode ? Colors.white.withOpacity(0.06) : Colors.grey.shade100);
+
+    final Color badgeTextColor = isDoneThisWeek
+        ? (isDarkMode ? Colors.green.shade300 : Colors.green.shade700)
+        : (isDarkMode ? Colors.white70 : Colors.grey.shade700);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -273,7 +346,9 @@ class PlanDaysScreen extends StatelessWidget {
         border: Border.all(color: borderColor, width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: isDarkMode
+                ? Colors.black.withOpacity(0.2)
+                : Colors.black.withOpacity(0.04),
             blurRadius: 16,
             offset: const Offset(0, 6),
           ),
@@ -297,8 +372,9 @@ class PlanDaysScreen extends StatelessWidget {
                   ),
                 ),
               );
-              if (context.mounted)
+              if (context.mounted) {
                 context.read<PlanDaysCubit>().refreshProgress();
+              }
             },
             child: Stack(
               children: [
@@ -316,9 +392,7 @@ class PlanDaysScreen extends StatelessWidget {
                         height: 56,
                         width: 56,
                         decoration: BoxDecoration(
-                          color: isDoneThisWeek
-                              ? Colors.green.shade100
-                              : const Color(0xFF12141C),
+                          color: innerBoxColor,
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: isDoneThisWeek
@@ -360,13 +434,16 @@ class PlanDaysScreen extends StatelessWidget {
                               style: TextStyle(
                                 fontWeight: FontWeight.w900,
                                 fontSize: 17,
-                                color: context.textColor,
+                                color: isDarkMode
+                                    ? Colors.white
+                                    : const Color(
+                                        0xFF12141C,
+                                      ), // 👈 لون عنوان التمرين يتكيف مع الثيم
                                 letterSpacing: -0.3,
                               ),
                             ),
                             const SizedBox(height: 6),
                             Wrap(
-                              // 👈 استبدلناه بـ Wrap
                               spacing: 8,
                               runSpacing: 8,
                               children: [
@@ -376,25 +453,22 @@ class PlanDaysScreen extends StatelessWidget {
                                     vertical: 4,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: isDoneThisWeek
-                                        ? Colors.white
-                                        : Colors.grey.shade100,
+                                    color: badgeBgColor,
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: Row(
-                                    mainAxisSize:
-                                        MainAxisSize.min, // 👈 ضفنا هي
+                                    mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Icon(
                                         Icons.fitness_center_rounded,
                                         size: 14,
-                                        color: Colors.grey.shade500,
+                                        color: badgeTextColor,
                                       ),
                                       const SizedBox(width: 4),
                                       Text(
                                         '${day.exercises.length} Exercises',
                                         style: TextStyle(
-                                          color: Colors.grey.shade700,
+                                          color: badgeTextColor,
                                           fontSize: 13,
                                           fontWeight: FontWeight.w700,
                                         ),
@@ -409,13 +483,17 @@ class PlanDaysScreen extends StatelessWidget {
                                       vertical: 4,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: Colors.green.shade50,
+                                      color: isDarkMode
+                                          ? Colors.green.withOpacity(0.2)
+                                          : Colors.green.shade50,
                                       borderRadius: BorderRadius.circular(8),
                                     ),
-                                    child: const Text(
+                                    child: Text(
                                       'COMPLETED',
                                       style: TextStyle(
-                                        color: Colors.green,
+                                        color: isDarkMode
+                                            ? Colors.green.shade300
+                                            : Colors.green,
                                         fontSize: 10,
                                         fontWeight: FontWeight.w900,
                                       ),

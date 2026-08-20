@@ -10,7 +10,9 @@ class SelfPlanResponseModel {
   factory SelfPlanResponseModel.fromJson(Map<String, dynamic> json) {
     return SelfPlanResponseModel(
       message: json['message'] ?? '',
-      data: SelfPlanData.fromJson(json['data']),
+      data: SelfPlanData.fromJson(
+        json['data'] ?? {},
+      ),
     );
   }
 }
@@ -35,7 +37,9 @@ class SelfPlanData {
       durationMonths: json['duration_months'] ?? 0,
       days: (json['days'] as List?)
               ?.map(
-                (e) => EditSelfPlanDay.fromJson(e),
+                (e) => EditSelfPlanDay.fromJson(
+                  Map<String, dynamic>.from(e),
+                ),
               )
               .toList() ??
           [],
@@ -46,9 +50,14 @@ class SelfPlanData {
 class EditSelfPlanDay {
   final int? id;
   final String name;
+
+  // Sets و reps على مستوى اليوم
   final int? sets;
   final String? reps;
-  final bool delete;
+
+  // حذف اليوم
+  final bool? delete;
+
   final List<EditSelfPlanExercise> exercises;
 
   EditSelfPlanDay({
@@ -56,108 +65,120 @@ class EditSelfPlanDay {
     required this.name,
     this.sets,
     this.reps,
-    this.delete = false,
-    this.exercises = const [],
+    this.delete,
+    required this.exercises,
   });
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-
-    if (id != null) {
-      data['id'] = id;
-    }
-
-    data['name'] = name;
-
-    if (sets != null) {
-      data['sets'] = sets;
-    }
-
-    if (reps != null) {
-      data['reps'] = reps;
-    }
-
-    if (delete) {
-      data['_delete'] = true;
-    }
-
-    data['exercises'] = exercises
-        .map(
-          (exercise) => exercise.toJson(),
-        )
-        .toList();
-
-    return data;
-  }
+  // ============================================================
+  // FROM JSON
+  // ============================================================
 
   factory EditSelfPlanDay.fromJson(Map<String, dynamic> json) {
     return EditSelfPlanDay(
       id: json['id'],
       name: json['name'] ?? '',
       sets: json['sets'],
-      reps: json['reps'],
+      reps: json['reps']?.toString(),
+      delete: json['_delete'] == true || json['_delete'] == 1,
+
       exercises: (json['exercises'] as List?)
               ?.map(
-                (e) => EditSelfPlanExercise.fromJson(e),
+                (e) => EditSelfPlanExercise.fromJson(
+                  Map<String, dynamic>.from(e),
+                ),
               )
               .toList() ??
           [],
     );
   }
+
+  // ============================================================
+  // TO JSON
+  // ============================================================
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> json = {
+      'name': name,
+      'exercises': exercises.map((e) => e.toJson()).toList(),
+    };
+
+    // اليوم الموجود مسبقًا
+    if (id != null) {
+      json['id'] = id;
+    }
+
+    // Sets الخاصة باليوم
+    if (sets != null) {
+      json['sets'] = sets;
+    }
+
+    // Reps الخاصة باليوم
+    if (reps != null) {
+      json['reps'] = reps;
+    }
+
+    // حذف اليوم
+    if (delete != null) {
+      json['_delete'] = delete;
+    }
+
+    return json;
+  }
 }
 
 class EditSelfPlanExercise {
-  final int? id;
   final int exerciseId;
-  final String? name;
-  final String? description;
   final int? sets;
   final String? reps;
   final int order;
-  final bool delete;
+
+  // حذف التمرين
+  final bool? delete;
 
   EditSelfPlanExercise({
-    this.id,
     required this.exerciseId,
-    this.name,
-    this.description,
     this.sets,
     this.reps,
     required this.order,
-    this.delete = false,
+    this.delete,
   });
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-
-    data['exercise_id'] = exerciseId;
-
-    if (sets != null) {
-      data['sets'] = sets;
-    }
-
-    if (reps != null) {
-      data['reps'] = reps;
-    }
-
-    data['order'] = order;
-
-    if (delete) {
-      data['_delete'] = true;
-    }
-
-    return data;
-  }
+  // ============================================================
+  // FROM JSON
+  // ============================================================
 
   factory EditSelfPlanExercise.fromJson(Map<String, dynamic> json) {
     return EditSelfPlanExercise(
-      id: json['id'],
-      exerciseId: json['id'] ?? 0,
-      name: json['name'],
-      description: json['description'],
+      exerciseId: json['exercise_id'] ?? json['id'] ?? 0,
       sets: json['sets'],
-      reps: json['reps'],
-      order: json['order'] ?? 1,
+      reps: json['reps']?.toString(),
+      order: json['order'] ?? 0,
+      delete: json['_delete'] == true || json['_delete'] == 1,
     );
+  }
+
+  // ============================================================
+  // TO JSON
+  // ============================================================
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> json = {
+      'exercise_id': exerciseId,
+      'order': order,
+    };
+
+    if (sets != null) {
+      json['sets'] = sets;
+    }
+
+    if (reps != null) {
+      json['reps'] = reps;
+    }
+
+    if (delete != null) {
+      json['_delete'] = delete;
+    }
+
+    return json;
   }
 }
