@@ -403,78 +403,66 @@ class SubscriptionCard extends StatelessWidget {
     }
   }
 
-  // ─────────────────────────────────────────
-  // SUBSCRIPTION LOGIC
-  // ─────────────────────────────────────────
+  // SUBSCRIPTION LOGIC ────────────────────────────---------------------------------
 
-  bool _isCurrentlyActive(UserSubscription sub, DateTime now) {
-    final status = sub.status?.trim().toLowerCase();
-
-    final start = sub.startDate;
-    final end = sub.endDate;
-
-    if (status != 'active') return false;
-    if (start == null || end == null) return false;
-
-    final hasStarted = !start.isAfter(now);
-    final hasNotEnded = !end.isBefore(now);
-
-    return hasStarted && hasNotEnded;
-  }
-
-  UserSubscription? _getActiveSubscription(
+  UserSubscription? _getLatestSubscription(
     List<UserSubscription> subscriptions,
   ) {
-    final now = DateTime.now();
-
-    UserSubscription? best;
-
-    for (final sub in subscriptions) {
-      if (!_isCurrentlyActive(sub, now)) continue;
-
-      if (best == null) {
-        best = sub;
-        continue;
-      }
-
-      final bestStart = best.startDate;
-      final subStart = sub.startDate;
-
-      if (subStart != null &&
-          (bestStart == null || subStart.isAfter(bestStart))) {
-        best = sub;
-      }
-    }
-
-    return best;
-  }
-
-  UserSubscription? _getHistorySubscription(
-    List<UserSubscription> subscriptions,
-  ) {
-    final now = DateTime.now();
-    final windowStart = now.subtract(const Duration(days: 30));
-
     UserSubscription? latest;
 
     for (final sub in subscriptions) {
-      final endDate = sub.endDate;
+      if (latest == null) {
+        latest = sub;
+        continue;
+      }
 
-      if (endDate == null) continue;
-
-      final isFinished = !_isCurrentlyActive(sub, now);
-
-      final isRecent = endDate.isAfter(windowStart);
-
-      if (!isFinished || !isRecent) continue;
-
-      if (latest == null || endDate.isAfter(latest.endDate!)) {
+      if (sub.startDate != null &&
+          (latest.startDate == null ||
+              sub.startDate!.isAfter(latest.startDate!))) {
         latest = sub;
       }
     }
 
     return latest;
   }
+
+  UserSubscription? _getActiveSubscription(
+    List<UserSubscription> subscriptions,
+  ) {
+    final latest = _getLatestSubscription(subscriptions);
+
+    if (latest == null) return null;
+
+    final status = latest.status?.trim().toLowerCase();
+
+    if (status != 'active') return null;
+    if (latest.isActive != 1) return null;
+
+    return latest;
+  }
+
+  UserSubscription? _getHistorySubscription(
+  List<UserSubscription> subscriptions,
+) {
+  final now = DateTime.now();
+
+  UserSubscription? latest;
+
+  for (final sub in subscriptions) {
+    final endDate = sub.endDate;
+
+    if (endDate == null) continue;
+
+    if (!endDate.isBefore(now)) continue;
+
+    if (latest == null ||
+        endDate.isAfter(latest.endDate!)) {
+      latest = sub;
+    }
+  }
+
+  return latest;
+}
 
   Widget _planCountBadge(BuildContext context, int countPlan) {
     final hasPlans = countPlan > 0;

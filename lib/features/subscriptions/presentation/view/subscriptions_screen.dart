@@ -87,13 +87,14 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
             final historySubscriptions = _getRecentHistory(allUsers);
 
             final needsPlanCount = activeSubscriptions.where((user) {
-              final activeSub = user.userSubscriptions?.where(
-                (sub) => sub.status?.trim().toLowerCase() == 'active',
-              );
+              final subscriptions = user.userSubscriptions ?? [];
 
-              if (activeSub == null || activeSub.isEmpty) return false;
+              final latestSubscription = _getLatestSubscription(subscriptions);
 
-              return activeSub.any((sub) => (sub.countPlan ?? 0) == 0);
+              if (latestSubscription == null) return false;
+
+              return _isActiveSubscription(latestSubscription) &&
+                  (latestSubscription.countPlan ?? 0) == 0;
             }).length;
 
             return RefreshIndicator(
@@ -417,47 +418,66 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
   List<UsersSubscribedModel> _getActiveSubscriptions(
     List<UsersSubscribedModel> allUsers,
   ) {
-    final now = DateTime.now();
-
     return allUsers.where((user) {
-      return user.userSubscriptions?.any((sub) {
-            final status = sub.status?.trim().toLowerCase();
+      final subscriptions = user.userSubscriptions ?? [];
 
-            final startDate = sub.startDate;
-            final endDate = sub.endDate;
+      if (subscriptions.isEmpty) return false;
 
-            if (status != 'active') return false;
+      // نأخذ أحدث اشتراك فقط
+      final latestSubscription = _getLatestSubscription(subscriptions);
 
-            if (startDate != null && startDate.isAfter(now)) {
-              return false;
-            }
-            if (endDate != null && endDate.isBefore(now)) {
-              return false;
-            }
+      if (latestSubscription == null) return false;
 
-            return true;
-          }) ??
-          false;
+      // الشرط الوحيد للعرض:
+      // status = active
+      // is_active = 1
+      return _isActiveSubscription(latestSubscription);
     }).toList();
+  }
+
+  UserSubscription? _getLatestSubscription(
+    List<UserSubscription> subscriptions,
+  ) {
+    UserSubscription? latest;
+
+    for (final sub in subscriptions) {
+      if (latest == null) {
+        latest = sub;
+        continue;
+      }
+
+      // الأحدث حسب startDate
+      if (sub.startDate != null &&
+          (latest.startDate == null ||
+              sub.startDate!.isAfter(latest.startDate!))) {
+        latest = sub;
+      }
+    }
+
+    return latest;
+  }
+
+  bool _isActiveSubscription(UserSubscription sub) {
+    final status = sub.status?.trim().toLowerCase();
+
+    return status == 'active' && sub.isActive == 1;
   }
 
   List<UsersSubscribedModel> _getRecentHistory(
     List<UsersSubscribedModel> allUsers,
   ) {
     final now = DateTime.now();
-    final oneMonthAgo = now.subtract(const Duration(days: 30));
 
     return allUsers.where((user) {
-      return user.userSubscriptions?.any((sub) {
-            final endDate = sub.endDate;
-            if (endDate == null) return false;
+      final subscriptions = user.userSubscriptions ?? [];
 
-            final isExpired = endDate.isBefore(now);
-            final isRecent = endDate.isAfter(oneMonthAgo);
+      return subscriptions.any((sub) {
+        final endDate = sub.endDate;
 
-            return isExpired && isRecent;
-          }) ??
-          false;
+        if (endDate == null) return false;
+
+        return endDate.isBefore(now);
+      });
     }).toList();
   }
 }
