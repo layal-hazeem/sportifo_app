@@ -1,10 +1,12 @@
+import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:sportifo_app/core/models/local_message.dart';
+import 'package:sportifo_app/core/services/pending_messages_service.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/core/theme/theme_cubit.dart';
 
@@ -26,6 +28,16 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Hive.initFlutter();
+  
+  // 🔥 سجّل الـ Adapter قبل أي استخدام لـ Hive
+  Hive.registerAdapter(LocalMessageAdapter());
+
+  await setupServiceLocator();
+  
+  // 🔥 init بعد ما نكون سجلنا الـ Adapter
+  await getIt<PendingMessagesService>().init();
 
   // 🔥 1. تهيئة Firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -59,6 +71,36 @@ class MyApp extends StatelessWidget {
       ],
       child: BlocBuilder<LocaleCubit, Locale>(
         builder: (context, locale) {
+          return NeumorphicApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Sportifo',
+            initialRoute: AppRoutes.splash,
+            onGenerateRoute: AppRouter.generateRoute,
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const [
+              Locale('en'),
+              Locale('ar'),
+            ],
+            locale: locale,
+            themeMode: ThemeMode.light,
+            theme: const NeumorphicThemeData(
+              baseColor: Color(0xFFF2F2F2),
+              lightSource: LightSource.topLeft,
+              depth: 10,
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+//وقت نضيف اي كلمة بملفات الترجمة مننفذ هاد الامر بالتيرمينال مشان يتعرف عالنصوص الجديدة اللي ترجمناها
+// flutter gen-l10n
           // 🔥 استخدام BlocBuilder للـ ThemeCubit لتوفير متغير themeMode والتبديل ديناميكياً
           return BlocBuilder<ThemeCubit, ThemeMode>(
             builder: (context, themeMode) {

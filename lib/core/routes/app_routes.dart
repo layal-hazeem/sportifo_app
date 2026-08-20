@@ -46,4 +46,7 @@ static const String planDetails = "/planDetails";
   static const String editSelfPlan = "/plans/update/self";
   static const String chatDetail = '/chat_detail';
 
+
+static const String conversationsList = '/conversations_list';
+static const String chatDetail = '/chat_detail';
 }

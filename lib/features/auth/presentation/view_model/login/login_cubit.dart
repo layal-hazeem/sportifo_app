@@ -1,4 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sportifo_app/core/di/service_locator.dart';      // 🔥 أضف هذا الاستيراد
+import 'package:sportifo_app/core/storage/local_storage.dart';    // 🔥 أضف هذا الاستيراد
 import '../../../../../core/network/api_result.dart';
 import '../../../../../core/services/notification_service.dart';
 import '../../../data/models/login/login_request.dart';
@@ -14,13 +16,27 @@ class LoginCubit extends Cubit<LoginState> {
 
   LoginCubit(this._authRepository) : super(LoginInitial());
 
-  void emitLoginStates(LoginRequest loginRequestBody) async {
+  // 🔥 غيرنا إلى Future<void> وأضفنا async
+  Future<void> emitLoginStates(LoginRequest loginRequestBody) async {
     emit(LoginLoading());
 
     final result = await _authRepository.login(loginRequestBody);
 
     if (result is Success<LoginResponse>) {
       final response = result.data;
+
+      // ========== 🔥 التعديل الجديد (هذا هو المطلوب) ==========
+      // حفظ userId و role من response.data.user
+      try {
+        final user = response.data?.user; // LoginUser
+        if (user != null) {
+          await getIt<LocalStorage>().saveUserId(user.id);
+          await getIt<LocalStorage>().saveRole(user.role);
+        }
+      } catch (e) {
+        print('⚠️ فشل حفظ بيانات المستخدم: $e');
+      }
+      // ========================================================
 
       if (response.isNotVerified) {
         emit(LoginNeedsOtp(loginRequestBody.login));
@@ -33,6 +49,8 @@ class LoginCubit extends Cubit<LoginState> {
     }
   }
 
+  // باقي الدوال (verifyOtp, emitResetPasswordStates, resendOtp) تبقى كما هي
+  // لا تغير فيها أي شيء
   void verifyOtp(VerifyOtpRequestBody body, {required OtpContext contextType}) async {
     emit(OtpLoading());
 
@@ -65,10 +83,9 @@ class LoginCubit extends Cubit<LoginState> {
     final result = await _authRepository.resendOtp(email);
 
     if (result is Success<LoginResponse>) {
-      emit(ResendOtpSuccess(result.data.message ));
+      emit(ResendOtpSuccess(result.data.message));
     } else if (result is Failure<LoginResponse>) {
       emit(ResendOtpError(result.message));
     }
   }
-
 }
