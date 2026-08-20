@@ -124,7 +124,7 @@ class DayOverviewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
+      backgroundColor: context.backgroundColor,
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
@@ -286,6 +286,25 @@ class DayOverviewScreen extends StatelessWidget {
         background: Stack(
           children: [
             Positioned(
+              left: 20,
+              right: 20,
+              bottom: -8,
+              child: Container(
+                height: 18,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.primaryBtn.withValues(alpha: 0.65),
+                      blurRadius: 24,
+                      spreadRadius: 5,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Positioned(
               right: -20,
               bottom: -20,
               child: Text(
@@ -327,8 +346,12 @@ class DayOverviewScreen extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.backgroundColor,
         borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: AppColors.primaryBtn.withOpacity(0.3),
+          width: 1.2,
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.03),
@@ -371,17 +394,17 @@ class DayOverviewScreen extends StatelessWidget {
                       horizontal: 6,
                       vertical: 4,
                     ),
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF12141C),
-                      borderRadius: BorderRadius.only(
+                    decoration: BoxDecoration(
+                      color: context.textColor,
+                      borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(18),
                         bottomRight: Radius.circular(12),
                       ),
                     ),
                     child: Text(
                       exerciseNumber,
-                      style: const TextStyle(
-                        color: Colors.white,
+                      style: TextStyle(
+                        color: context.backgroundColor,
                         fontSize: 11,
                         fontWeight: FontWeight.w900,
                       ),
