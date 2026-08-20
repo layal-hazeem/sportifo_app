@@ -77,38 +77,57 @@ class UserSubscription {
   final DateTime? startDate;
   final DateTime? endDate;
   final String? paymentFileUrl;
-  final String? processNumber;  
-  final String? confirmedAt; 
+  final String? processNumber;
+  final String? confirmedAt;
+  final int? countPlan;
 
   UserSubscription({
-    this.id, this.subscription, this.status, this.isActive,
-    this.startDate, this.endDate, this.paymentFileUrl,
-    this.processNumber, this.confirmedAt,
+    this.id,
+    this.subscription,
+    this.status,
+    this.isActive,
+    this.startDate,
+    this.endDate,
+    this.paymentFileUrl,
+    this.processNumber,
+    this.confirmedAt,
+    this.countPlan,
   });
 
-  factory UserSubscription.fromJson(Map<String, dynamic> json) => UserSubscription(
-    id: json["id"],
-    subscription: json["subscription"] == null ? null : Subscription.fromJson(json["subscription"]),
-    status: json["status"],
-    isActive: json["is_active"],
-    startDate: json["start_date"] == null ? null : DateTime.parse(json["start_date"]),
-    endDate: json["end_date"] == null ? null : DateTime.parse(json["end_date"]),
-    paymentFileUrl: json["payment_file_url"],
-    processNumber: json["process_number"],
-    confirmedAt: json["confirmed_at"],
-  );
+  int get plansCount => countPlan ?? 0;
+
+  factory UserSubscription.fromJson(Map<String, dynamic> json) =>
+      UserSubscription(
+        id: json["id"],
+        subscription: json["subscription"] == null
+            ? null
+            : Subscription.fromJson(json["subscription"]),
+        status: json["status"],
+        isActive: json["is_active"],
+        startDate: json["start_date"] == null
+            ? null
+            : DateTime.parse(json["start_date"]),
+        endDate: json["end_date"] == null
+            ? null
+            : DateTime.parse(json["end_date"]),
+        paymentFileUrl: json["payment_file_url"],
+        processNumber: json["process_number"],
+        confirmedAt: json["confirmed_at"],
+        countPlan: json["count_plan"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "subscription": subscription?.toJson(),
-    "status": status,
-    "is_active": isActive,
-    "start_date": startDate?.toIso8601String(),
-    "end_date": endDate?.toIso8601String(),
-    "payment_file_url": paymentFileUrl,
-    "process_number": processNumber,
-    "confirmed_at": confirmedAt,
-  };
+        "id": id,
+        "subscription": subscription?.toJson(),
+        "status": status,
+        "is_active": isActive,
+        "start_date": startDate?.toIso8601String(),
+        "end_date": endDate?.toIso8601String(),
+        "payment_file_url": paymentFileUrl,
+        "process_number": processNumber,
+        "confirmed_at": confirmedAt,
+        "count_plan": countPlan,
+      };
 }
 
 class Subscription {

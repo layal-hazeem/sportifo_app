@@ -1614,6 +1614,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get freePlan => 'Free Plan';
 
   @override
+  String get createAdditionalPlan => 'Create Additional Plan';
+  @override
   String get aboutUsContent => 'Sportifo is a smart fitness platform designed to support you throughout every stage of your fitness journey. Whether you are just getting started or working toward specific fitness goals, Sportifo provides the tools and support you need in one convenient place.\n\nThe platform brings together personalized workout programs, suitable alternative exercises, direct communication with coaches, subscription management, and AI-powered nutrition assistance. Our goal is to create a more flexible and personalized fitness experience that adapts to your individual needs.\n\nWith Sportifo, you can stay connected with your coach, explore workout alternatives that suit you, and get smart assistance with your nutrition to help you stay motivated and focused on your goals.\n\nSportifo is more than just a workout app — it is your smart companion for a better and more connected fitness journey.';
 
   @override

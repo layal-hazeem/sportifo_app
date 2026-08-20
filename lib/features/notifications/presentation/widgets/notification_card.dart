@@ -11,18 +11,19 @@ class NotificationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // تمييز الإشعار الغير مقروء بلون خلفية وإطار مميز
     final isUnread = !notification.isRead;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: isUnread ? AppColors.primaryBtn.withOpacity(0.06) : Colors.white,
+        color: isUnread
+            ? AppColors.primaryBtn.withOpacity(0.06)
+            : context.backgroundColor,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isUnread
               ? AppColors.primaryBtn.withOpacity(0.3)
-              : Colors.grey.shade200,
+              : AppColors.primaryBtn.withOpacity(0.3),
           width: isUnread ? 1.5 : 1.0,
         ),
         boxShadow: [
@@ -51,7 +52,7 @@ class NotificationCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: isUnread
                         ? AppColors.primaryBtn.withOpacity(0.15)
-                        : Colors.grey.shade100,
+                        : context.secondaryBackgroundColor,
                     shape: BoxShape.circle,
                   ),
                   child:

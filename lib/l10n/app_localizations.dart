@@ -3197,6 +3197,11 @@ abstract class AppLocalizations {
   /// **'Free Plan'**
   String get freePlan;
 
+  /// No description provided for @createAdditionalPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Additional Plan'**
+  String get createAdditionalPlan;
   /// No description provided for @aboutUsContent.
   ///
   /// In en, this message translates to:
