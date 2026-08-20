@@ -13,7 +13,7 @@ class EditSelfPlanSuccess extends EditSelfPlanState {
 }
 
 class EditSelfPlanError extends EditSelfPlanState {
-  final String message;
+  final String error;
 
-  EditSelfPlanError(this.message);
+  EditSelfPlanError(this.error);
 }

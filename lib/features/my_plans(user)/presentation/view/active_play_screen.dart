@@ -230,11 +230,7 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
           (description == null || description.isEmpty)
               ? "No instructions available for this exercise."
               : description,
-          style: TextStyle(
-            height: 1.5,
-            fontSize: 14,
-            color: context.textColor,
-          ),
+          style: TextStyle(height: 1.5, fontSize: 14, color: context.textColor),
         ),
         actions: [
           TextButton(
@@ -360,7 +356,7 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: context.backgroundColor,
       isDismissible: false,
       builder: (ctx) {
         return RestWorkoutScreen(
@@ -442,9 +438,9 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
             : '10 10 10';
 
         final scaffold = Scaffold(
-          backgroundColor: const Color(0xFFF8F9FC),
+          backgroundColor: context.backgroundColor,
           appBar: AppBar(
-            backgroundColor: Colors.transparent,
+            backgroundColor: AppColors.primaryBtn,
             elevation: 0,
             iconTheme: const IconThemeData(color: Colors.black87),
             title: Column(
@@ -467,7 +463,7 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
                   style: const TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.hintText,
+                    color: AppColors.darkText,
                     letterSpacing: 0.5,
                   ),
                 ),
@@ -549,7 +545,8 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
                                       child: Container(
                                         padding: const EdgeInsets.all(12),
                                         decoration: BoxDecoration(
-                                          color: Colors.white.withOpacity(0.85),
+                                          color: context.backgroundColor
+                                              .withOpacity(0.85),
                                           shape: BoxShape.circle,
                                         ),
                                         child: Icon(
@@ -573,7 +570,7 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
                                 width: 38,
                                 height: 38,
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.95),
+                                  color: context.backgroundColor.withOpacity(0.95),
                                   shape: BoxShape.circle,
                                   boxShadow: [
                                     BoxShadow(
@@ -702,7 +699,7 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
                   vertical: 12,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: context.backgroundColor,
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.04),
@@ -724,24 +721,24 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
                             height: 42,
                             decoration: BoxDecoration(
                               border: Border.all(
-                                color: Colors.black87,
+                                color: context.textColor,
                                 width: 1.5,
                               ),
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(
+                            child: Icon(
                               Icons.close_rounded,
-                              color: Colors.black87,
+                              color: context.textColor,
                               size: 22,
                             ),
                           ),
                           const SizedBox(height: 4),
-                          const Text(
+                          Text(
                             "Cancel",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 11,
-                              color: Colors.black87,
+                              color: context.textColor,
                             ),
                           ),
                         ],
@@ -757,7 +754,7 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
                             height: 42,
                             decoration: BoxDecoration(
                               border: Border.all(
-                                color: Colors.black87,
+                                color: context.textColor,
                                 width: 1.5,
                               ),
                               shape: BoxShape.circle,
@@ -766,17 +763,17 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
                               _isPaused && !_isCountingDown
                                   ? Icons.play_arrow_rounded
                                   : Icons.pause_rounded,
-                              color: Colors.black87,
+                              color: context.textColor,
                               size: 22,
                             ),
                           ),
                           const SizedBox(height: 4),
-                          const Text(
+                          Text(
                             "Pause",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 11,
-                              color: Colors.black87,
+                              color: context.textColor,
                             ),
                           ),
                         ],

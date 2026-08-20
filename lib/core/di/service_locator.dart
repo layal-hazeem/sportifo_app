@@ -373,11 +373,11 @@ getIt.registerFactory<ChatDetailCubit>(
 );
 
 
-  getIt.registerLazySingleton<EditSelfPlanService>(
+  getIt.registerFactory<EditSelfPlanService>(
     () => EditSelfPlanService(getIt<Dio>()),
   );
 
-  getIt.registerLazySingleton<EditSelfPlanRepository>(
+  getIt.registerFactory<EditSelfPlanRepository>(
     () => EditSelfPlanRepository(getIt<EditSelfPlanService>()),
   );
 
