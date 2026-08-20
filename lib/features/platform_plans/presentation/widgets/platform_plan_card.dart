@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/routes/app_routes.dart'; // 👈 ضروري للـ AppRoutes.home
+import '../../../../core/routes/app_routes.dart';
 import '../../../../core/di/service_locator.dart';
+import '../../../../l10n/app_localizations.dart'; // 🔥 استدعاء الترجمة
 import '../../../my_plans(user)/data/models/my_plan_model.dart';
-import '../../../my_plans(user)/presentation/view/my_plans_screen.dart'; // 👈 لـ activeTabNotifier
-import '../../../home/presentation/view/home_page.dart'; // 👈 لـ homeViewModel
+import '../../../my_plans(user)/presentation/view/my_plans_screen.dart';
+import '../../../home/presentation/view/home_page.dart';
 import '../view_model/platform_plans_cubit.dart';
 
 class PlatformPlanCard extends StatefulWidget {
@@ -25,57 +26,47 @@ class _PlatformPlanCardState extends State<PlatformPlanCard> {
   @override
   void initState() {
     super.initState();
-    // 1️⃣ أخذ الحالة الابتدائية من المودل (اللي جابها من السيرفر)
     _isSaved = widget.plan.isSaved;
   }
 
-  // 2️⃣ المراقبة والتحديث عند تغير البيانات من خارج الكارد
   @override
   void didUpdateWidget(covariant PlatformPlanCard oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    // 🔥 السحر هون: شلنا الـ if الشرطية، لحتى نجبر الواجهة تاخد التحديث دايماً
-    // وهيك مستحيل الهوم يعرضلك شي مختلف عن الفيو أول أو السيف!
     _isSaved = widget.plan.isSaved;
   }
 
-  // 3️⃣ دالة الكبس على زر الحفظ (سريعة وتفاعلية)
   void _toggleSave() async {
     final wasSaved = _isSaved;
 
-    // تغيير فوري للواجهة لتبدو متجاوبة
     setState(() {
       _isSaved = !_isSaved;
     });
 
-    // انتظار رد الباك إند
     final message = await getIt<PlatformPlansCubit>().toggleSave(
       widget.plan.id,
     );
 
     if (message != null && mounted) {
+      final l10n = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
       if (!wasSaved) {
-        // 🔥 تم الحفظ: إظهار سناك بار مع خيار النقل
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(message),
             action: SnackBarAction(
-              label: 'View Saved',
+              label: l10n.saved,
               textColor: Colors.white,
               onPressed: () {
-                // 1. تغيير تاب الـ Navigation Bar الأساسي لـ My Plans (رقم 1)
                 homeViewModel.changeTab(1);
 
-                // 2. أمر الشاشة لتنتقل لتاب Saved (رقم 2)
                 MyPlansScreen.activeTabNotifier.value = 2;
 
-                // 3. 🔥 الرجوع للصفحة الرئيسية بأمان تاااام (يمنع الشاشة السوداء)
                 Navigator.popUntil(
                   context,
-                  (route) =>
-                      route.isFirst || route.settings.name == AppRoutes.home,
+                      (route) =>
+                  route.isFirst || route.settings.name == AppRoutes.home,
                 );
               },
             ),
@@ -88,7 +79,6 @@ class _PlatformPlanCardState extends State<PlatformPlanCard> {
           ),
         );
       } else {
-        // تم الإلغاء: سناك بار بسيط بدون زر
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(message),
@@ -102,7 +92,6 @@ class _PlatformPlanCardState extends State<PlatformPlanCard> {
         );
       }
     } else if (mounted) {
-      // ❌ في حال فشل النت بنرجع لون الزر متل ما كان
       setState(() {
         _isSaved = wasSaved;
       });
@@ -111,6 +100,8 @@ class _PlatformPlanCardState extends State<PlatformPlanCard> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return GestureDetector(
       onTap: widget.onTap,
       child: Container(
@@ -121,7 +112,7 @@ class _PlatformPlanCardState extends State<PlatformPlanCard> {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: AppColors.primaryBtn.withOpacity(0.06),
+              color: AppColors.primaryBtn.withValues(alpha:0.06),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -174,9 +165,9 @@ class _PlatformPlanCardState extends State<PlatformPlanCard> {
                       color: AppColors.primaryBtn,
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: const Text(
-                      'FREE',
-                      style: TextStyle(
+                    child: Text(
+                      l10n.free,
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 11,
                         fontWeight: FontWeight.w800,
@@ -185,7 +176,6 @@ class _PlatformPlanCardState extends State<PlatformPlanCard> {
                   ),
                 ),
 
-                // 🔖 زر السيف التفاعلي
                 Positioned(
                   top: 8,
                   right: 8,
@@ -221,7 +211,7 @@ class _PlatformPlanCardState extends State<PlatformPlanCard> {
                     children: [
                       Expanded(
                         child: Text(
-                          (widget.plan.goal ?? 'Free Plan').toUpperCase(),
+                          (widget.plan.goal ??l10n.freePlan).toUpperCase(),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -238,7 +228,7 @@ class _PlatformPlanCardState extends State<PlatformPlanCard> {
                             vertical: 2,
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.primaryBtn.withOpacity(0.1),
+                            color: AppColors.primaryBtn.withValues(alpha:0.1),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(
@@ -262,7 +252,7 @@ class _PlatformPlanCardState extends State<PlatformPlanCard> {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        '${widget.plan.durationMonths ?? 1} Months',
+                        '${widget.plan.durationMonths ?? 1} ${l10n.months}',
                         style: const TextStyle(
                           fontSize: 12,
                           color: AppColors.hintText,
@@ -277,7 +267,7 @@ class _PlatformPlanCardState extends State<PlatformPlanCard> {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        '${widget.plan.daysCount ?? 0} Days/W',
+                        '${widget.plan.daysCount ?? 0} ${l10n.daysPerWeek}',
                         style: const TextStyle(
                           fontSize: 12,
                           color: AppColors.hintText,

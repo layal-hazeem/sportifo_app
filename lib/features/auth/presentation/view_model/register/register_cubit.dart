@@ -10,10 +10,8 @@ class RegisterCubit extends Cubit<RegisterState> {
 
   final AuthRepository _authRepository;
 
-  // حقن الـ Repository داخل الـ Constructor عند استدعاء الكيوبت
   RegisterCubit(this._authRepository) : super(const RegisterInitial());
 
-  // الدالة التي سيتم استدعاؤها عند الضغط على زر التسجيل في الواجهة
   Future<void> registerUser({
     required String firstName,
     required String lastName,
@@ -22,13 +20,11 @@ class RegisterCubit extends Cubit<RegisterState> {
     required String password,
     required String passwordConfirmation,
     required String otpMethod,
-    File? profilePic, // اختياري لأن المستخدم قد لا يرفع صورة
+    File? profilePic,
   }) async {
-    // 1. إخبار الواجهة أننا بدأنا التحميل (لإظهار دائرة تحميل CircularProgressIndicator)
     emit(const RegisterLoading());
 
 
-      // 2. تجميع البيانات القادمة من الواجهة داخل الـ Request Model
       final request = RegisterRequestModel(
         firstName: firstName,
         lastName: lastName,
@@ -42,7 +38,6 @@ class RegisterCubit extends Cubit<RegisterState> {
 
       final result = await _authRepository.register(request);
 
-      // 🔥 سحر الـ Pattern Matching في Dart (للتعامل مع الـ sealed class)
       switch (result) {
         case Success():
           await NotificationService().registerDeviceToBackend();
@@ -50,7 +45,6 @@ class RegisterCubit extends Cubit<RegisterState> {
           break;
 
         case Failure():
-        // إذا كان الرد Failure، نأخذ الرسالة الجاهزة والمترجمة التي جهزها لنا الـ ApiErrorHandler
           emit(RegisterFailure(errorMessage: result.message));
           break;
       }

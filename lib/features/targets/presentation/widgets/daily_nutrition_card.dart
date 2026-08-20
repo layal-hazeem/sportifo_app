@@ -5,6 +5,7 @@ import 'package:sportifo_app/features/nutrition/presentation/view/food_logs_scre
 import 'package:sportifo_app/features/nutrition/presentation/view/manual_meal_entry_screen.dart';
 import 'package:sportifo_app/features/targets/data/models/target_model.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../l10n/app_localizations.dart'; // 🔥 استدعاء الترجمة
 import '../../../profile/presentation/view_model/profile_cubit.dart';
 import '../../../profile/presentation/view_model/profile_state.dart';
 import '../view_model/target_cubit/target_cubit.dart';
@@ -23,6 +24,8 @@ class DailyNutritionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!; // 🔥 تعريف الترجمة
+
     // 🔥 حساب النسب الخام (قد تتجاوز 1.0) والمرئية (مقصورة عند 1.0)
     final double caloriesRaw = target.calories > 0
         ? ((consumedToday?.calories ?? 0) / target.calories).toDouble()
@@ -47,6 +50,16 @@ class DailyNutritionCard extends StatelessWidget {
         : 0.0;
     final double fatVisual = fatRaw.clamp(0.0, 1.0);
     final bool fatExceeded = fatRaw > 1.0;
+
+    // 🔥 تحديد اسم الهدف بناءً على الترجمة
+    String localizedGoal = target.goal.toUpperCase();
+    if (target.goal.toLowerCase() == 'bulk') {
+      localizedGoal = l10n.bulkGoal;
+    } else if (target.goal.toLowerCase() == 'cut') {
+      localizedGoal = l10n.cutGoal;
+    } else if (target.goal.toLowerCase() == 'maintain') {
+      localizedGoal = l10n.maintainGoal;
+    }
 
     return GestureDetector(
       onTap: () {
@@ -89,15 +102,43 @@ class DailyNutritionCard extends StatelessWidget {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start, // 🔥 محاذاة للأعلى
               children: [
-                Text(
-                  "Daily Nutrition Targets",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: context.textColor,
-                  ),
+                // 🔹 القسم الأيسر (العنوان + كلمة الهدف تحته)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.dailyNutritionTargets, // 🔥 ترجمة العنوان
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: context.textColor,
+                      ),
+                    ),
+                    const SizedBox(height: 6), // مسافة صغيرة للترتيب
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryBtn.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        localizedGoal, // 🔥 عرض الهدف المترجم
+                        style: const TextStyle(
+                          color: AppColors.primaryBtn,
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
+
+                // 🔹 القسم الأيمن (أزرار الإضافة والتعديل)
                 Row(
                   children: [
                     // 🔥 زر الزائد
@@ -117,7 +158,7 @@ class DailyNutritionCard extends StatelessWidget {
                           color: AppColors.primaryBtn.withOpacity(0.1),
                           shape: BoxShape.circle,
                         ),
-                        child: Icon(
+                        child: const Icon(
                           Icons.add,
                           size: 16,
                           color: AppColors.primaryBtn,
@@ -125,25 +166,7 @@ class DailyNutritionCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryBtn.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        target.goal.toUpperCase(),
-                        style: const TextStyle(
-                          color: AppColors.primaryBtn,
-                          fontSize: 11,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
+                    // 🔥 زر التعديل
                     InkWell(
                       borderRadius: BorderRadius.circular(50),
                       onTap: () {
@@ -210,7 +233,7 @@ class DailyNutritionCard extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              "Kcal",
+                              l10n.kcal, // 🔥 ترجمة السعرات
                               style: TextStyle(
                                 fontSize: 10,
                                 color: Colors.grey.shade500,
@@ -235,7 +258,7 @@ class DailyNutritionCard extends StatelessWidget {
                       ),
                       child: Text(
                         "${(caloriesRaw * 100).toInt()}%"
-                        "${caloriesExceeded ? ' ' : ''}",
+                            "${caloriesExceeded ? ' ' : ''}",
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.bold,
@@ -253,24 +276,24 @@ class DailyNutritionCard extends StatelessWidget {
                   child: Column(
                     children: [
                       _buildMacroRow(
-                        "Protein",
-                        "${consumedToday?.protein ?? 0} / ${target.protein}g",
+                        l10n.protein, // 🔥 ترجمة بروتين
+                        "${consumedToday?.protein ?? 0} / ${target.protein}${l10n.g}",
                         proteinVisual,
                         proteinExceeded ? Colors.red : Colors.orange,
                         proteinExceeded,
                       ),
                       const SizedBox(height: 10),
                       _buildMacroRow(
-                        "Carbs",
-                        "${consumedToday?.carbs ?? 0} / ${target.carbs}g",
+                        l10n.carbs, // 🔥 ترجمة كاربوهيدرات
+                        "${consumedToday?.carbs ?? 0} / ${target.carbs}${l10n.g}",
                         carbsVisual,
                         carbsExceeded ? Colors.red : const Color(0xFFFF9F43),
                         carbsExceeded,
                       ),
                       const SizedBox(height: 10),
                       _buildMacroRow(
-                        "Fat",
-                        "${consumedToday?.fat ?? 0} / ${target.fat}g",
+                        l10n.fat, // 🔥 ترجمة دهون
+                        "${consumedToday?.fat ?? 0} / ${target.fat}${l10n.g}",
                         fatVisual,
                         fatExceeded ? Colors.red : Colors.blueGrey.shade300,
                         fatExceeded,
@@ -287,12 +310,12 @@ class DailyNutritionCard extends StatelessWidget {
   }
 
   Widget _buildMacroRow(
-    String title,
-    String value,
-    double percentVisual,
-    Color color,
-    bool exceeded,
-  ) {
+      String title,
+      String value,
+      double percentVisual,
+      Color color,
+      bool exceeded,
+      ) {
     return Row(
       children: [
         SizedBox(
@@ -315,7 +338,7 @@ class DailyNutritionCard extends StatelessWidget {
         ),
         const SizedBox(width: 10),
         Text(
-          exceeded ? "$value" : value,
+          exceeded ? value : value,
           style: TextStyle(
             fontSize: 12,
             color: exceeded ? Colors.red : Colors.grey.shade600,

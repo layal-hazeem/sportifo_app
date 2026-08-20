@@ -6,6 +6,7 @@ import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../../../ ads/presentation/view_model/ads_cubit.dart';
 import '../../../ ads/presentation/widgets/ads_carousel_widget.dart';
 import '../../../../core/di/service_locator.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/loading_shimmer.dart';
 import '../../../coaches/presentation/view_model/coaches_cubit.dart';
 import '../../../coaches/presentation/view_model/coaches_state.dart';
@@ -33,17 +34,31 @@ class _TraineeScreenState extends State<TraineeScreen>
     with WidgetsBindingObserver {
   late final NutritionCubit _nutritionCubit;
 
+  // 🔥 متغير للاحتفاظ باللغة الحالية وتجنب جلب البيانات بشكل عشوائي
+  Locale? _currentLocale;
+
   @override
   void initState() {
     super.initState();
     _nutritionCubit = getIt<NutritionCubit>();
     WidgetsBinding.instance.addObserver(this);
+  }
 
-    // 🔥 السحر هنا: جلب كل البيانات مرة واحدة فقط عند فتح الشاشة!
-    // هذا يخفف الضغط عن الـ Main Thread ويمنع تكرار الريكويستات
-    _nutritionCubit.initialize();
-    getIt<TargetCubit>().fetchLatestTarget();
-    getIt<PlatformPlansCubit>().fetchPlatformPlans();
+  // ✅ السحر هنا: الدالة التي تعمل تلقائياً عند تغيير اللغة
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final locale = Localizations.localeOf(context);
+
+    if (_currentLocale != locale) {
+      _currentLocale = locale;
+
+      _nutritionCubit.initialize();
+      getIt<TargetCubit>().fetchLatestTarget();
+      getIt<PlatformPlansCubit>().fetchPlatformPlans();
+      getIt<CoachesCubit>().fetchCoaches();
+    }
   }
 
   @override
@@ -65,12 +80,11 @@ class _TraineeScreenState extends State<TraineeScreen>
 
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => getIt<AdsCubit>()), // دالة create تستدعى مرة واحدة تلقائياً
-
-        // 🔥 واجهة نظيفة وسريعة، فقط تمرير القيمة المحفوظة بالذاكرة
+        BlocProvider(create: (context) => getIt<AdsCubit>()),
         BlocProvider.value(value: getIt<TargetCubit>()),
         BlocProvider.value(value: _nutritionCubit),
         BlocProvider.value(value: getIt<PlatformPlansCubit>()),
+        BlocProvider.value(value: getIt<CoachesCubit>()),
       ],
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -129,7 +143,7 @@ class _TraineeScreenState extends State<TraineeScreen>
                     child: Center(
                       child: TextButton(
                         onPressed: () => context.read<TargetCubit>().fetchLatestTarget(),
-                        child: const Text("Couldn't load your target — Tap to retry"),
+                        child: Text(l10n.retry), // 🔥 تم وضع ترجمة "أعد المحاولة"
                       ),
                     ),
                   );
@@ -142,82 +156,85 @@ class _TraineeScreenState extends State<TraineeScreen>
             const CreateSelfPlanCard(),
             const SizedBox(height: 10),
 
-            BlocProvider(
-              // دالة create آمنة هنا لأنها تستدعى مرة واحدة فقط عند بناء الـ BlocProvider
-              create: (context) => getIt<CoachesCubit>()..fetchCoaches(),
-              child: BlocBuilder<CoachesCubit, CoachesState>(
-                builder: (context, state) {
-                  if (state is CoachesLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (state is CoachesLoaded) {
-                    final coaches = state.coaches;
-                    if (coaches.isEmpty) {
-                      return const SizedBox.shrink();
-                    }
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                l10n.coaches,
+            // 🔥 تم إزالة دالة Create من هنا لأننا وضعناها بالأعلى وجلبنا البيانات في didChangeDependencies
+            BlocBuilder<CoachesCubit, CoachesState>(
+              builder: (context, state) {
+                if (state is CoachesLoading) {
+                  return const Center(child: CircularProgressIndicator(color: AppColors.primaryBtn));
+                } else if (state is CoachesLoaded) {
+                  final coaches = state.coaches;
+                  if (coaches.isEmpty) {
+                    return const SizedBox.shrink();
+                  }
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              l10n.coaches,
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => const AllCoachesScreen(),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                l10n.see_all,
                                 style: const TextStyle(
-                                  fontSize: 20,
+                                  color: AppColors.primaryBtn,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => const AllCoachesScreen(),
-                                    ),
-                                  );
-                                },
-                                child: Text(l10n.see_all),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                        SizedBox(
-                          height: 175,
-                          child: ListView.separated(
-                            scrollDirection: Axis.horizontal,
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            itemCount: coaches.length,
-                            separatorBuilder: (_, _) =>
-                            const SizedBox(width: 8),
-                            itemBuilder: (context, index) {
-                              final coach = coaches[index];
-                              return CoachCard(
-                                coach: coach,
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) =>
-                                          CoachDetailsScreen(coachId: coach.id),
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                          ),
+                      ),
+                      SizedBox(
+                        height: 175,
+                        child: ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          itemCount: coaches.length,
+                          separatorBuilder: (_, _) =>
+                          const SizedBox(width: 8),
+                          itemBuilder: (context, index) {
+                            final coach = coaches[index];
+                            return CoachCard(
+                              coach: coach,
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) =>
+                                        CoachDetailsScreen(coachId: coach.id),
+                                  ),
+                                );
+                              },
+                            );
+                          },
                         ),
-                      ],
-                    );
-                  } else if (state is CoachesError) {
-                    return Center(
-                      child: Text('${l10n.error}: ${state.message}'),
-                    );
-                  }
-                  return const SizedBox.shrink();
-                },
-              ),
+                      ),
+                    ],
+                  );
+                } else if (state is CoachesError) {
+                  return Center(
+                    child: Text('${l10n.error}: ${state.message}'),
+                  );
+                }
+                return const SizedBox.shrink();
+              },
             ),
 
             const SizedBox(height: 20),

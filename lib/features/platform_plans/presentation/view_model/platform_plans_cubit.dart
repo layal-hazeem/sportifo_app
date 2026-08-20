@@ -44,7 +44,6 @@ class PlatformPlansCubit extends Cubit<PlatformPlansState> {
       print('✅ [PlatformPlansCubit] Backend success: ${result.data}');
       try {
         print('🔄 [PlatformPlansCubit] Asking MyPlansCubit to refresh Saved tab...');
-        // أمر التحديث
         await getIt<MyPlansCubit>().fetchTab(PlanTabType.saved, isRefresh: true);
         print('✅ [PlatformPlansCubit] MyPlansCubit refresh done!');
       } catch (e) {

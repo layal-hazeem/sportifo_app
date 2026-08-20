@@ -28,7 +28,11 @@ class NotificationsCubit extends Cubit<NotificationsState> {
     }
     // في حال الفشل مابنعمل شي مشان ما نزعج اليوزر بإيرور للعداد
   }
-
+// دالة لزيادة العداد فوراً عند وصول إشعار جديد والتطبيق مفتوح
+  void incrementUnreadCount() {
+    unreadCount++;
+    emit(UnreadCountSuccess(unreadCount));
+  }
   // 🔥 2. دالة جلب قائمة الإشعارات (مع دعم الـ Pagination والـ Refresh)
   void getNotifications({bool isRefresh = false}) async {
     // إذا عم نعمل سحب للأسفل (Pull to refresh) بنصفر كل شي
@@ -52,6 +56,7 @@ class NotificationsCubit extends Cubit<NotificationsState> {
 
     final result = await _repository.fetchNotifications(currentPage);
 
+    // في دالة getNotifications، استبدلي هذا الجزء:
     if (result is Success<List<NotificationModel>>) {
       final newNotifications = result.data;
 
@@ -60,10 +65,28 @@ class NotificationsCubit extends Cubit<NotificationsState> {
         hasReachedMax = true;
       }
 
-      notificationsList.addAll(newNotifications);
+      // 🔥 الحل السحري: نجبر كل الإشعارات الجديدة أن تصبح "مقروءة" في الفرونت إند
+      // لأننا فتحنا الشاشة للتو
+      final markedAsReadNotifications = newNotifications.map((notif) {
+        return NotificationModel(
+          id: notif.id,
+          eventType: notif.eventType,
+          model: notif.model,
+          modelId: notif.modelId,
+          deepLink: notif.deepLink,
+          iconUrl: notif.iconUrl,
+          title: notif.title,
+          body: notif.body,
+          isRead: true, // 👈 نجعلها true يدوياً ليختفي اللون البرتقالي
+          readAt: notif.readAt ?? DateTime.now().toIso8601String(),
+          createdAt: notif.createdAt,
+        );
+      }).toList();
+
+      notificationsList.addAll(markedAsReadNotifications);
       currentPage++;
 
-      // 💡 حركة ذكية: السيرفر بيعتبرهن انقرأوا بس نطلب اللستة، فمنصفر العداد محلياً
+      // نصفر العداد لأننا رأينا الإشعارات
       unreadCount = 0;
 
       emit(NotificationsSuccess(notificationsList, hasReachedMax));

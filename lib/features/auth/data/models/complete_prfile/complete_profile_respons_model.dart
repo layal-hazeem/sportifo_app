@@ -83,7 +83,7 @@ Map<String, dynamic> toJson() => {
         "last_name": lastName,
         "email": email,
         "phone": phone,
-        "date_of_birth": dateOfBirth?.toIso8601String(), // طريقة أسهل وأضمن للتحويل
+        "date_of_birth": dateOfBirth?.toIso8601String(),
         "gender": gender,
         "is_active": isActive,
         "is_verified": isVerified,
@@ -94,7 +94,7 @@ Map<String, dynamic> toJson() => {
 
 class Sizes {
     final int? id;
-    final double? height; // حولتها لـ double لتناسب الـ UI والـ JSON
+    final double? height;
     final double? weight;
     final double? shouldersWidth;
     final double? chestPerimeter;
@@ -144,7 +144,6 @@ class Sizes {
         
     factory Sizes.fromJson(Map<String, dynamic> json) => Sizes(
         id: json["id"],
-        // استخدام num ثم toDouble يضمن عدم الخطأ سواء جاء الرقم 55 أو 55.5
         height: (json["height"] as num?)?.toDouble(),
         weight: (json["weight"] as num?)?.toDouble(),
         shouldersWidth: (json["shoulders_width"] as num?)?.toDouble(),

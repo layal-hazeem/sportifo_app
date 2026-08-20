@@ -44,7 +44,7 @@ class AuthHeader extends StatelessWidget {
               style: TextStyle(
                 fontSize: AppSizes.hintFontSize,
                 color: AppColors.hintText,
-                height: 1.5, // ليعطي أريحية في القراءة
+                height: 1.5,
               ),
             ),
           ),

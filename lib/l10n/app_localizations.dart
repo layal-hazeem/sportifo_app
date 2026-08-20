@@ -2656,6 +2656,7 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Description'**
   String get description;
+
   /// No description provided for @stop_sending_title.
   ///
   /// In en, this message translates to:
@@ -3051,6 +3052,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{min} - {max} Months'**
   String months_range(Object max, Object min);
+
+  /// No description provided for @free.
+  ///
+  /// In en, this message translates to:
+  /// **'FREE'**
+  String get free;
+
+  /// No description provided for @freePlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Free Plan'**
+  String get freePlan;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
