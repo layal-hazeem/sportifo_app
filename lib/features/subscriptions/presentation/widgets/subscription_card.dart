@@ -27,8 +27,9 @@ class SubscriptionCard extends StatelessWidget {
         ? _getHistorySubscription(subscriptions)
         : activeSubscription;
 
-    final hasPlan = userModel.hasPlan ?? false;
     final plan = subscription?.subscription;
+    final countPlan = subscription?.countPlan ?? 0;
+    final hasPlans = countPlan > 0;
 
     final planType = plan?.type?.trim().toLowerCase() ?? "bronze";
     final planColors = _getPlanColors(planType);
@@ -42,10 +43,10 @@ class SubscriptionCard extends StatelessWidget {
         color: backgroundColor,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: !isHistory && !hasPlan
+          color: !isHistory && !hasPlans
               ? AppColors.primaryBtn.withOpacity(0.45)
               : AppColors.hintText.withOpacity(0.15),
-          width: !isHistory && !hasPlan ? 1.5 : 1,
+          width: !isHistory && !hasPlans ? 1.5 : 1,
         ),
         boxShadow: [
           BoxShadow(
@@ -153,7 +154,7 @@ class SubscriptionCard extends StatelessWidget {
 
                     isHistory
                         ? _historyBadge(context, l10n)
-                        : _planStatusBadge(context, hasPlan, l10n),
+                        : _planCountBadge(context, countPlan),
                   ],
                 ),
 
@@ -207,41 +208,35 @@ class SubscriptionCard extends StatelessWidget {
                 // ─────────────────────────────
                 // CREATE PLAN BUTTON
                 // ─────────────────────────────
-                if (!isHistory && !hasPlan) ...[
+                if (!isHistory) ...[
                   const SizedBox(height: 16),
 
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(14),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.primaryBtn.withOpacity(0.25),
-                          blurRadius: 12,
-                          offset: const Offset(0, 4),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: onCreatePlan,
+                      icon: Icon(
+                        hasPlans
+                            ? Icons.add_circle_outline_rounded
+                            : Icons.auto_awesome_rounded,
+                        size: 18,
+                      ),
+                      label: Text(
+                        hasPlans
+                            ? l10n.createAdditionalPlan
+                            : l10n.createTrainingPlan,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13.5,
                         ),
-                      ],
-                    ),
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton.icon(
-                        onPressed: onCreatePlan,
-                        icon: const Icon(Icons.auto_awesome_rounded, size: 18),
-                        label: Text(
-                          l10n.createTrainingPlan,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13.5,
-                            letterSpacing: 0.2,
-                          ),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primaryBtn,
-                          foregroundColor: Colors.white,
-                          elevation: 0,
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14),
-                          ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primaryBtn,
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
                         ),
                       ),
                     ),
@@ -412,22 +407,17 @@ class SubscriptionCard extends StatelessWidget {
   // SUBSCRIPTION LOGIC
   // ─────────────────────────────────────────
 
-  bool _hasValidActiveStatus(UserSubscription sub) {
+  bool _isCurrentlyActive(UserSubscription sub, DateTime now) {
     final status = sub.status?.trim().toLowerCase();
 
-    return status == "active" && (sub.isActive ?? 0) == 1;
-  }
-
-  bool _isCurrentlyActive(UserSubscription sub, DateTime now) {
     final start = sub.startDate;
     final end = sub.endDate;
 
-    if (end == null) return false;
-    if (!_hasValidActiveStatus(sub)) return false;
+    if (status != 'active') return false;
+    if (start == null || end == null) return false;
 
-    final hasStarted = start == null || !start.isAfter(now);
-
-    final hasNotEnded = end.isAfter(now) || end.isAtSameMomentAs(now);
+    final hasStarted = !start.isAfter(now);
+    final hasNotEnded = !end.isBefore(now);
 
     return hasStarted && hasNotEnded;
   }
@@ -484,6 +474,42 @@ class SubscriptionCard extends StatelessWidget {
     }
 
     return latest;
+  }
+
+  Widget _planCountBadge(BuildContext context, int countPlan) {
+    final hasPlans = countPlan > 0;
+
+    final color = hasPlans ? Colors.green : AppColors.primaryBtn;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.10),
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(color: color.withOpacity(0.25)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            hasPlans
+                ? Icons.check_circle_rounded
+                : Icons.add_circle_outline_rounded,
+            size: 12,
+            color: color,
+          ),
+          const SizedBox(width: 4),
+          Text(
+            '$countPlan ${countPlan == 1 ? 'Plan' : 'Plans'}',
+            style: TextStyle(
+              color: color,
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
