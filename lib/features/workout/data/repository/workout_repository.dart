@@ -23,6 +23,17 @@ class WorkoutRepository {
       return Failure(ApiErrorHandler.handle(e));
     }
   }
+
+  Future<ApiResult<List<ExerciseModel>>> getAlternativeExercises(int exerciseId) async {
+    try {
+      final response = await _webService.getAlternativeExercises(exerciseId);
+      final List data = response.data['data'] ?? [];
+      final List<ExerciseModel> exercises = data.map((json) => ExerciseModel.fromJson(json)).toList();
+      return Success(exercises);
+    } catch (e) {
+      return Failure(ApiErrorHandler.handle(e));
+    }
+  }
   Future<ApiResult<List<FilterItemModel>>> getSubCategories(int organId) async {
     try {
       final cacheOptions = await DioFactory.getCacheOptions();

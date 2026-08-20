@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:sportifo_app/core/localization/locale_cubit.dart';
 import 'package:sportifo_app/core/routes/app_routes.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
-import 'package:sportifo_app/core/theme/app_theme_extensions.dart'; // 👈 استدعاء الـ Extension
-import 'package:sportifo_app/core/theme/theme_cubit.dart'; // 👈 استدعاء الـ ThemeCubit
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
+import 'package:sportifo_app/core/theme/theme_cubit.dart';
 import 'package:sportifo_app/core/widgets/wave_app_bar.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../widgets/settings_section.dart';
@@ -19,12 +18,11 @@ class SettingsScreen extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.backgroundColor,
-
       appBar: WaveAppBar(title: l10n.settings, showBackButton: true),
-
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
+          // قسم العام
           SettingsSection(
             title: l10n.general,
             children: [
@@ -35,7 +33,6 @@ class SettingsScreen extends StatelessWidget {
                   _showLanguageDialog(context);
                 },
               ),
-
               BlocBuilder<ThemeCubit, ThemeMode>(
                 builder: (context, themeMode) {
                   bool isDark = themeMode == ThemeMode.dark;
@@ -48,7 +45,6 @@ class SettingsScreen extends StatelessWidget {
                   );
                 },
               ),
-
               SettingsTile(
                 icon: Icons.notifications_none,
                 title: l10n.notifications,
@@ -58,31 +54,29 @@ class SettingsScreen extends StatelessWidget {
           ),
 
           SettingsSection(
-            title: l10n.account,
+            title: l10n.privacyPolicy,
             children: [
-              SettingsTile(
-                icon: Icons.lock_outline,
-                title: l10n.changePassword,
-                onTap: () {},
-              ),
-
               SettingsTile(
                 icon: Icons.privacy_tip_outlined,
                 title: l10n.privacyPolicy,
-                onTap: () {},
-              ),
-            ],
-          ),
-
-          SettingsSection(
-            title: "",
-            children: [
-              SettingsTile(
-                icon: Icons.delete_forever,
-                title: l10n.deleteAccount,
-                isDanger: true,
                 onTap: () {
-                  Navigator.pushNamed(context, AppRoutes.deleteAccount);
+                  Navigator.pushNamed(context, AppRoutes.privacyPolicy);
+                },
+              ),
+
+              SettingsTile(
+                icon: Icons.gavel_outlined,
+                title:   l10n.termsOfUse,
+                onTap: () {
+                  Navigator.pushNamed(context, AppRoutes.termsOfUse);
+                },
+              ),
+
+              SettingsTile(
+                icon: Icons.headset_mic_outlined,
+                title:  l10n.helpSupport,
+                onTap: () {
+                  Navigator.pushNamed(context, AppRoutes.helpSupport);
                 },
               ),
             ],
@@ -111,7 +105,6 @@ class SettingsScreen extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Handle
               Container(
                 width: 45,
                 height: 5,
@@ -120,10 +113,7 @@ class SettingsScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
-
               const SizedBox(height: 25),
-
-              // Icon
               Container(
                 height: 75,
                 width: 75,
@@ -137,26 +127,20 @@ class SettingsScreen extends StatelessWidget {
                   color: AppColors.primaryBtn,
                 ),
               ),
-
               const SizedBox(height: 16),
-
               Text(
                 l10n.chooseLanguage,
-                style: Theme.of(
-                  context,
-                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-
               const SizedBox(height: 8),
-
               Text(
                 l10n.chooseLanguageHint,
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
               ),
-
               const SizedBox(height: 25),
-
               _languageItem(
                 context,
                 title: "English",
@@ -168,9 +152,7 @@ class SettingsScreen extends StatelessWidget {
                   Navigator.pop(context);
                 },
               ),
-
               const SizedBox(height: 14),
-
               _languageItem(
                 context,
                 title: "العربية",
@@ -190,13 +172,13 @@ class SettingsScreen extends StatelessWidget {
   }
 
   Widget _languageItem(
-    BuildContext context, {
-    required String title,
-    required String subtitle,
-    required String languageIcon,
-    required bool selected,
-    required VoidCallback onTap,
-  }) {
+      BuildContext context, {
+        required String title,
+        required String subtitle,
+        required String languageIcon,
+        required bool selected,
+        required VoidCallback onTap,
+      }) {
     final l10n = AppLocalizations.of(context)!;
     return InkWell(
       borderRadius: BorderRadius.circular(20),
@@ -216,7 +198,6 @@ class SettingsScreen extends StatelessWidget {
             width: selected ? 1.5 : 1,
           ),
         ),
-
         child: Row(
           children: [
             Container(
@@ -239,9 +220,7 @@ class SettingsScreen extends StatelessWidget {
                 ),
               ),
             ),
-
             const SizedBox(width: 16),
-
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -253,9 +232,7 @@ class SettingsScreen extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-
                   const SizedBox(height: 3),
-
                   Text(
                     subtitle,
                     style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
@@ -263,24 +240,23 @@ class SettingsScreen extends StatelessWidget {
                 ],
               ),
             ),
-
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 200),
               child: selected
                   ? Container(
-                      key: ValueKey(l10n.selected),
-                      height: 28,
-                      width: 28,
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryBtn,
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.check,
-                        color: Colors.white,
-                        size: 18,
-                      ),
-                    )
+                key: ValueKey(l10n.selected),
+                height: 28,
+                width: 28,
+                decoration: BoxDecoration(
+                  color: AppColors.primaryBtn,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.check,
+                  color: Colors.white,
+                  size: 18,
+                ),
+              )
                   : SizedBox(key: ValueKey(l10n.empty), height: 28, width: 28),
             ),
           ],
@@ -339,7 +315,6 @@ class SettingsScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 25),
-
               _themeItem(
                 context,
                 title: "Light Mode",
@@ -351,9 +326,7 @@ class SettingsScreen extends StatelessWidget {
                   Navigator.pop(context);
                 },
               ),
-
               const SizedBox(height: 14),
-
               _themeItem(
                 context,
                 title: "Dark Mode",
@@ -373,13 +346,13 @@ class SettingsScreen extends StatelessWidget {
   }
 
   Widget _themeItem(
-    BuildContext context, {
-    required String title,
-    required String subtitle,
-    required IconData icon,
-    required bool selected,
-    required VoidCallback onTap,
-  }) {
+      BuildContext context, {
+        required String title,
+        required String subtitle,
+        required IconData icon,
+        required bool selected,
+        required VoidCallback onTap,
+      }) {
     return InkWell(
       borderRadius: BorderRadius.circular(20),
       onTap: onTap,
