@@ -213,7 +213,7 @@ class DailyNutritionCard extends StatelessWidget {
                           child: CircularProgressIndicator(
                             value: caloriesVisual,
                             strokeWidth: 8,
-                            backgroundColor: Colors.grey.shade100,
+                            backgroundColor: Colors.grey.shade300,
                             valueColor: AlwaysStoppedAnimation<Color>(
                               caloriesExceeded
                                   ? Colors.red
@@ -276,26 +276,26 @@ class DailyNutritionCard extends StatelessWidget {
                   child: Column(
                     children: [
                       _buildMacroRow(
-                        l10n.protein, // 🔥 ترجمة بروتين
+                        l10n.protein,
                         "${consumedToday?.protein ?? 0} / ${target.protein}${l10n.g}",
                         proteinVisual,
-                        proteinExceeded ? Colors.red : Colors.orange,
+                        proteinExceeded ? Colors.red : const Color(0xFF00897B), // ✅ تيل غامق أنيق
                         proteinExceeded,
                       ),
                       const SizedBox(height: 10),
                       _buildMacroRow(
-                        l10n.carbs, // 🔥 ترجمة كاربوهيدرات
+                        l10n.carbs,
                         "${consumedToday?.carbs ?? 0} / ${target.carbs}${l10n.g}",
                         carbsVisual,
-                        carbsExceeded ? Colors.red : const Color(0xFFFF9F43),
+                        carbsExceeded ? Colors.red : const Color(0xFFE8790C), // ✅ برتقالي أغمق وأدفى
                         carbsExceeded,
                       ),
                       const SizedBox(height: 10),
                       _buildMacroRow(
-                        l10n.fat, // 🔥 ترجمة دهون
+                        l10n.fat,
                         "${consumedToday?.fat ?? 0} / ${target.fat}${l10n.g}",
                         fatVisual,
-                        fatExceeded ? Colors.red : Colors.blueGrey.shade300,
+                        fatExceeded ? Colors.red : const Color(0xFF546E7A), // ✅ أزرق-رمادي غامق
                         fatExceeded,
                       ),
                     ],
@@ -331,7 +331,7 @@ class DailyNutritionCard extends StatelessWidget {
             child: LinearProgressIndicator(
               value: percentVisual,
               minHeight: 6,
-              backgroundColor: Colors.grey.shade100,
+              backgroundColor: Colors.grey.shade300,
               valueColor: AlwaysStoppedAnimation<Color>(color),
             ),
           ),
