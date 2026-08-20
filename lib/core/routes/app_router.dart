@@ -36,6 +36,10 @@ import '../../features/my_plans(user)/presentation/view_model/plan_days_cubit.da
 import '../../features/notifications/presentation/view/notifications_screen.dart';
 import '../../features/platform_plans/presentation/view/all_platform_plans_screen.dart';
 import '../../features/platform_plans/presentation/view_model/platform_plans_cubit.dart';
+import '../../features/settings/presentation/view/about_us_screen.dart';
+import '../../features/settings/presentation/view/help_support_screen.dart';
+import '../../features/settings/presentation/view/privacy_policy_screen.dart';
+import '../../features/settings/presentation/view/terms_of_use_screen.dart';
 import '../../features/trainee_subscriptions/data/models/subscription_month_model.dart';
 import '../../features/trainee_subscriptions/presentation/views/payment_screen.dart';
 import '../../features/trainee_subscriptions/presentation/views/select_month_screen.dart';
@@ -375,6 +379,18 @@ class AppRouter {
 
       case AppRoutes.settings:
         return MaterialPageRoute(builder: (_) => SettingsScreen());
+
+      case AppRoutes.aboutUs:
+        return MaterialPageRoute(builder: (_) => const AboutUsScreen());
+
+      case AppRoutes.privacyPolicy:
+        return MaterialPageRoute(builder: (_) => const PrivacyPolicyScreen());
+
+      case AppRoutes.termsOfUse:
+        return MaterialPageRoute(builder: (_) => const TermsOfUseScreen());
+
+      case AppRoutes.helpSupport:
+        return MaterialPageRoute(builder: (_) => const HelpSupportScreen());
 
       case AppRoutes.deleteAccount:
         return MaterialPageRoute(

@@ -282,7 +282,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get error => 'Something went wrong, please try again';
 
   @override
-  String get aboutUs => 'about us';
+  String get aboutUs => 'About Us';
 
   @override
   String get logout => 'Logout';
@@ -1546,4 +1546,79 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get freePlan => 'Free Plan';
+
+  @override
+  String get aboutUsContent => 'Sportifo is a smart fitness platform designed to support you throughout every stage of your fitness journey. Whether you are just getting started or working toward specific fitness goals, Sportifo provides the tools and support you need in one convenient place.\n\nThe platform brings together personalized workout programs, suitable alternative exercises, direct communication with coaches, subscription management, and AI-powered nutrition assistance. Our goal is to create a more flexible and personalized fitness experience that adapts to your individual needs.\n\nWith Sportifo, you can stay connected with your coach, explore workout alternatives that suit you, and get smart assistance with your nutrition to help you stay motivated and focused on your goals.\n\nSportifo is more than just a workout app — it is your smart companion for a better and more connected fitness journey.';
+
+  @override
+  String get helpSupport => 'Help & Support';
+
+  @override
+  String get hereToHelp => 'We are here to help you!';
+
+  @override
+  String get helpSupportSubtitle => 'If you have any questions or encounter any problems, feel free to contact us through one of the following methods:';
+
+  @override
+  String get contactViaWhatsapp => 'Contact via WhatsApp';
+
+  @override
+  String get emailSupport => 'Email Support';
+
+  @override
+  String get cantOpenWhatsapp => 'Could not open WhatsApp';
+
+  @override
+  String get cantOpenEmail => 'Could not open email app';
+
+  @override
+  String get privacyTitle1 => '1. Data We Collect';
+
+  @override
+  String get privacyContent1 => 'We collect basic personal data such as name, email, and fitness data (like weight, height, and fitness goals) to provide you with a customized training and nutrition plan.';
+
+  @override
+  String get privacyTitle2 => '2. How We Use Data';
+
+  @override
+  String get privacyContent2 => 'Your data is used to improve your app experience, communicate with your personal trainer, and provide meal and exercise recommendations using the smart assistant.';
+
+  @override
+  String get privacyTitle3 => '3. Data Security & Protection';
+
+  @override
+  String get privacyContent3 => 'We are committed to protecting your personal data using the latest encryption technologies. We will not sell or share your personal data with any third parties without your explicit consent.';
+
+  @override
+  String get privacyTitle4 => '4. Your Rights with Sportifo';
+
+  @override
+  String get privacyContent4 => 'You have the right at any time to modify your personal data or request restricting its use by contacting us through technical support.';
+
+  @override
+  String get termsOfUse => 'Terms of Use';
+
+  @override
+  String get termsTitle1 => '1. Acceptance of Terms';
+
+  @override
+  String get termsContent1 => 'By using the Sportifo app, you agree to comply with these terms of use. If you do not agree to these terms, please do not use the app.';
+
+  @override
+  String get termsTitle2 => '2. Medical & Fitness Guidelines';
+
+  @override
+  String get termsContent2 => 'All exercises and nutritional tips provided in the app are for educational and general fitness purposes only. It is recommended to consult a doctor before starting any strenuous exercise program.';
+
+  @override
+  String get termsTitle3 => '3. Account Obligations & Subscriptions';
+
+  @override
+  String get termsContent3 => 'You are responsible for maintaining the confidentiality of your account information. Subscriptions grant you direct access to coaches and paid services according to your subscription package.';
+
+  @override
+  String get termsTitle4 => '4. Content Ownership';
+
+  @override
+  String get termsContent4 => 'All text, designs, images, and software in Sportifo are protected intellectual property of the app, and may not be reused without written permission.';
 }

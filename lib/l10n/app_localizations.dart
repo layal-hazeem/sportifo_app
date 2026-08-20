@@ -644,7 +644,7 @@ abstract class AppLocalizations {
   /// No description provided for @aboutUs.
   ///
   /// In en, this message translates to:
-  /// **'about us'**
+  /// **'About Us'**
   String get aboutUs;
 
   /// No description provided for @logout.
@@ -3064,6 +3064,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Free Plan'**
   String get freePlan;
+
+  /// No description provided for @aboutUsContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Sportifo is a smart fitness platform designed to support you throughout every stage of your fitness journey. Whether you are just getting started or working toward specific fitness goals, Sportifo provides the tools and support you need in one convenient place.\n\nThe platform brings together personalized workout programs, suitable alternative exercises, direct communication with coaches, subscription management, and AI-powered nutrition assistance. Our goal is to create a more flexible and personalized fitness experience that adapts to your individual needs.\n\nWith Sportifo, you can stay connected with your coach, explore workout alternatives that suit you, and get smart assistance with your nutrition to help you stay motivated and focused on your goals.\n\nSportifo is more than just a workout app — it is your smart companion for a better and more connected fitness journey.'**
+  String get aboutUsContent;
+
+  /// No description provided for @helpSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Help & Support'**
+  String get helpSupport;
+
+  /// No description provided for @hereToHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'We are here to help you!'**
+  String get hereToHelp;
+
+  /// No description provided for @helpSupportSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'If you have any questions or encounter any problems, feel free to contact us through one of the following methods:'**
+  String get helpSupportSubtitle;
+
+  /// No description provided for @contactViaWhatsapp.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact via WhatsApp'**
+  String get contactViaWhatsapp;
+
+  /// No description provided for @emailSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Email Support'**
+  String get emailSupport;
+
+  /// No description provided for @cantOpenWhatsapp.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open WhatsApp'**
+  String get cantOpenWhatsapp;
+
+  /// No description provided for @cantOpenEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open email app'**
+  String get cantOpenEmail;
+
+  /// No description provided for @privacyTitle1.
+  ///
+  /// In en, this message translates to:
+  /// **'1. Data We Collect'**
+  String get privacyTitle1;
+
+  /// No description provided for @privacyContent1.
+  ///
+  /// In en, this message translates to:
+  /// **'We collect basic personal data such as name, email, and fitness data (like weight, height, and fitness goals) to provide you with a customized training and nutrition plan.'**
+  String get privacyContent1;
+
+  /// No description provided for @privacyTitle2.
+  ///
+  /// In en, this message translates to:
+  /// **'2. How We Use Data'**
+  String get privacyTitle2;
+
+  /// No description provided for @privacyContent2.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data is used to improve your app experience, communicate with your personal trainer, and provide meal and exercise recommendations using the smart assistant.'**
+  String get privacyContent2;
+
+  /// No description provided for @privacyTitle3.
+  ///
+  /// In en, this message translates to:
+  /// **'3. Data Security & Protection'**
+  String get privacyTitle3;
+
+  /// No description provided for @privacyContent3.
+  ///
+  /// In en, this message translates to:
+  /// **'We are committed to protecting your personal data using the latest encryption technologies. We will not sell or share your personal data with any third parties without your explicit consent.'**
+  String get privacyContent3;
+
+  /// No description provided for @privacyTitle4.
+  ///
+  /// In en, this message translates to:
+  /// **'4. Your Rights with Sportifo'**
+  String get privacyTitle4;
+
+  /// No description provided for @privacyContent4.
+  ///
+  /// In en, this message translates to:
+  /// **'You have the right at any time to modify your personal data or request restricting its use by contacting us through technical support.'**
+  String get privacyContent4;
+
+  /// No description provided for @termsOfUse.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Use'**
+  String get termsOfUse;
+
+  /// No description provided for @termsTitle1.
+  ///
+  /// In en, this message translates to:
+  /// **'1. Acceptance of Terms'**
+  String get termsTitle1;
+
+  /// No description provided for @termsContent1.
+  ///
+  /// In en, this message translates to:
+  /// **'By using the Sportifo app, you agree to comply with these terms of use. If you do not agree to these terms, please do not use the app.'**
+  String get termsContent1;
+
+  /// No description provided for @termsTitle2.
+  ///
+  /// In en, this message translates to:
+  /// **'2. Medical & Fitness Guidelines'**
+  String get termsTitle2;
+
+  /// No description provided for @termsContent2.
+  ///
+  /// In en, this message translates to:
+  /// **'All exercises and nutritional tips provided in the app are for educational and general fitness purposes only. It is recommended to consult a doctor before starting any strenuous exercise program.'**
+  String get termsContent2;
+
+  /// No description provided for @termsTitle3.
+  ///
+  /// In en, this message translates to:
+  /// **'3. Account Obligations & Subscriptions'**
+  String get termsTitle3;
+
+  /// No description provided for @termsContent3.
+  ///
+  /// In en, this message translates to:
+  /// **'You are responsible for maintaining the confidentiality of your account information. Subscriptions grant you direct access to coaches and paid services according to your subscription package.'**
+  String get termsContent3;
+
+  /// No description provided for @termsTitle4.
+  ///
+  /// In en, this message translates to:
+  /// **'4. Content Ownership'**
+  String get termsTitle4;
+
+  /// No description provided for @termsContent4.
+  ///
+  /// In en, this message translates to:
+  /// **'All text, designs, images, and software in Sportifo are protected intellectual property of the app, and may not be reused without written permission.'**
+  String get termsContent4;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

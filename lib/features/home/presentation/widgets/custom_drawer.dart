@@ -287,8 +287,8 @@ class CustomDrawer extends StatelessWidget {
         break;
 
       case DrawerItem.about:
+        Navigator.pushNamed(context, AppRoutes.aboutUs); // 👈 توجيه إلى حول التطبيق
         break;
-
       case DrawerItem.logout:
         final logoutCubit = context.read<LogoutCubit>();
         final l10n = AppLocalizations.of(context)!;
