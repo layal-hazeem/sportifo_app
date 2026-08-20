@@ -246,9 +246,7 @@ class ExercisePreviewScreen extends StatelessWidget {
                                     style: TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.bold,
-                                      color: isSetSkipped
-                                          ? Colors.grey.shade400
-                                          : context.textColor,
+                                      color: AppColors.hintText,
                                     ),
                                   ),
                                 ],
@@ -316,7 +314,9 @@ class ExercisePreviewScreen extends StatelessWidget {
                                     height: 28,
                                     alignment: Alignment.center,
                                     decoration: BoxDecoration(
-                                      color: context.backgroundColor.withValues(alpha: 0.5),
+                                      color: context.backgroundColor.withValues(
+                                        alpha: 0.5,
+                                      ),
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: const Text(

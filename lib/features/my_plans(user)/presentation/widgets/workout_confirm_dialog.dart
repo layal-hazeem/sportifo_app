@@ -20,7 +20,7 @@ class WorkoutConfirmDialog {
       context: context,
       barrierDismissible: barrierDismissible,
       builder: (ctx) => Dialog(
-        backgroundColor: Colors.white,
+        backgroundColor: context.backgroundColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         child: Padding(
           padding: const EdgeInsets.fromLTRB(24, 28, 24, 20),

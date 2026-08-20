@@ -11,8 +11,10 @@ class AppColors {
   static const Color linkColor = Colors.cyan;
   static const Color hintText = Color(0xFF9E9E9E);
 
-
+  static const Color secondaryLightBackground = Color(0xFFEDEDED);
+  static const Color secondaryDarkBackground = Color(0xFF292929);
 }
+
 class AppSizes {
   static const double borderRadius = 25.0;
   static const double mainPadding = 30.0;
