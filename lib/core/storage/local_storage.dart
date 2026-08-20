@@ -18,6 +18,16 @@ class LocalStorage {
     return _prefs.getString(_tokenKey);
   }
 
+
+static const String _userIdKey = "user_id";
+
+Future<void> saveUserId(int id) async {
+  await _prefs.setInt(_userIdKey, id);
+}
+
+int? getUserId() {
+  return _prefs.getInt(_userIdKey);
+}
   Future<void> clearToken() async {
     await _prefs.remove(_tokenKey);
   }

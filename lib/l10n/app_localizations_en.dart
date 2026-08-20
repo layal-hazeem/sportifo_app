@@ -707,6 +707,72 @@ class AppLocalizationsEn extends AppLocalizations {
   String get endedLastMonth => 'Subscriptions that ended during the last month';
 
   @override
+  String get today => 'Today';
+
+  @override
+  String get yesterday => 'Yesterday';
+
+  @override
+  String get messageDetails => 'Message Details';
+
+  @override
+  String get sentAt => 'Sent at';
+
+  @override
+  String get deliveredAt => 'Delivered at';
+
+  @override
+  String get readAt => 'Read at';
+
+  @override
+  String get deleteMessageTitle => 'Delete Message';
+
+  @override
+  String get deleteMessageConfirmation => 'Are you sure you want to delete this message? This action cannot be undone.';
+
+  @override
+  String get ok => 'OK';
+
+  @override
+  String get noDetails => 'No details available';
+
+  @override
+  String get max5Images => 'You can select up to 5 images';
+
+  @override
+  String get errorUserNotFound => 'Error: Current user not identified';
+
+  @override
+  String get noMessagesYet => 'No messages yet';
+
+  @override
+  String get startConversation => 'Start the conversation now';
+
+  @override
+  String get trainerOnlyCanSend => 'Only the coach can send messages in this subscription';
+
+  @override
+  String get you => 'You';
+
+  @override
+  String get chats => 'Chats';
+
+  @override
+  String get noConversations => 'No conversations';
+
+  @override
+  String get messageDeleted => 'This message has been deleted';
+
+  @override
+  String get sendingMessage => 'Sending...';
+
+  @override
+  String get typeMessage => 'Type a message...';
+
+  @override
+  String get cannotSend => 'You cannot send';
+
+  @override
   String get editPlan => 'Edit Plan';
 
   @override

@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/routes/app_routes.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/logout/logout_cubit.dart';
+import 'package:sportifo_app/features/chat/presentation/view/chat_detail_screen.dart';
+import 'package:sportifo_app/features/chat/presentation/view/conversations_list_screen.dart';
+import 'package:sportifo_app/features/chat/presentation/view_model/chat_detail_cubit.dart';
+import 'package:sportifo_app/features/chat/presentation/view_model/conversations_cubit.dart';
 import 'package:sportifo_app/features/create_self_plan/presentation/view/create_self_plan_screen.dart';
 import 'package:sportifo_app/features/create_self_plan/presentation/view_model/create_self_plan_cubit.dart';
 import 'package:sportifo_app/features/edit_coach_plan/data/models/edit_coach_plan_model.dart';
@@ -411,6 +415,46 @@ class AppRouter {
             child: PlanDaysScreen(plan: plan),
           ),
         );
+
+        case AppRoutes.conversationsList:
+  return MaterialPageRoute(
+    builder: (_) => BlocProvider(
+      create: (context) => getIt<ConversationsCubit>(),
+      child: const ConversationsListScreen(),
+    ),
+  );
+
+case AppRoutes.chatDetail:
+  final args = settings.arguments;
+  if (args is Map<String, dynamic>) {
+    return MaterialPageRoute(
+      builder: (_) => BlocProvider(
+        create: (_) => getIt<ChatDetailCubit>(),
+        child: ChatDetailScreen(
+          conversationId: args['conversationId'] as int,
+          otherParticipantName: args['otherParticipantName'] as String,
+          otherParticipantImage: args['otherParticipantImage'] as String?,
+          subscriptionType: args['subscriptionType'] as String?, // ← جديد
+        ),
+      ),
+    );
+  } else if (args is int) {
+    return MaterialPageRoute(
+      builder: (_) => BlocProvider(
+        create: (_) => getIt<ChatDetailCubit>(),
+        child: ChatDetailScreen(
+          conversationId: args,
+          otherParticipantName: 'Unknown',
+          subscriptionType: null, // ← جديد
+        ),
+      ),
+    );
+  }
+  return MaterialPageRoute(
+    builder: (_) => const Scaffold(
+      body: Center(child: Text('خطأ في فتح المحادثة')),
+    ),
+  );
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

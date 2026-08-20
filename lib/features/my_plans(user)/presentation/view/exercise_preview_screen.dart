@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../workout/data/models/exercise_model.dart';
@@ -39,23 +40,32 @@ class ExercisePreviewScreen extends StatelessWidget {
     bool isCompleted = completedSets != null && completedSets!.isNotEmpty;
     if (isFinishedEarly && completedSets != null) isCompleted = true;
 
-    bool isFullyCompleted = !isFinishedEarly &&
+    bool isFullyCompleted =
+        !isFinishedEarly &&
         completedSets != null &&
         completedSets!.length >= totalSets;
 
     // فحص ذكي لنوع التمرين (مقاومة أم كارديو)
-    bool isCardio = (exercise.category?.name.toLowerCase() == 'cardio') ||
-        (exercise.duration != null && exercise.duration.toString().isNotEmpty && exercise.duration.toString() != "0");
+    bool isCardio =
+        (exercise.category?.name.toLowerCase() == 'cardio') ||
+        (exercise.duration != null &&
+            exercise.duration.toString().isNotEmpty &&
+            exercise.duration.toString() != "0");
 
-    String targetDuration = exercise.duration ?? "1:00"; // الوقت الافتراضي للكارديو
+    String targetDuration =
+        exercise.duration ?? "1:00"; // الوقت الافتراضي للكارديو
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: context.backgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: context.backgroundColor,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black, size: 20),
+          icon: Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: context.textColor,
+            size: 20,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -79,15 +89,30 @@ class ExercisePreviewScreen extends StatelessWidget {
                             children: [
                               Text(
                                 exercise.name,
-                                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900, height: 1.2),
+                                style: TextStyle(
+                                  color: context.textColor,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w900,
+                                  height: 1.2,
+                                ),
                               ),
                               const SizedBox(height: 12),
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                                decoration: BoxDecoration(color: AppColors.primaryBtn.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 6,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppColors.primaryBtn.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
                                 child: Text(
                                   exercise.category?.name ?? 'Exercise',
-                                  style: const TextStyle(color: AppColors.primaryBtn, fontSize: 13, fontWeight: FontWeight.bold),
+                                  style: const TextStyle(
+                                    color: AppColors.primaryBtn,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ],
@@ -95,21 +120,32 @@ class ExercisePreviewScreen extends StatelessWidget {
                         ),
                         const SizedBox(width: 16),
                         Container(
-                          width: 140, height: 140,
+                          width: 140,
+                          height: 140,
                           decoration: BoxDecoration(
-                            color: isFullyCompleted ? Colors.green.withOpacity(0.1) : Colors.transparent,
+                            color: isFullyCompleted
+                                ? Colors.green.withOpacity(0.1)
+                                : Colors.transparent,
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: isFullyCompleted
-                              ? const Icon(Icons.check_circle_rounded, color: Colors.green, size: 60)
+                              ? const Icon(
+                                  Icons.check_circle_rounded,
+                                  color: Colors.green,
+                                  size: 60,
+                                )
                               : ClipRRect(
-                            borderRadius: BorderRadius.circular(16),
-                            child: CachedNetworkImage(
-                              imageUrl: exercise.gifUrl ?? exercise.images.firstOrNull?.url ?? '',
-                              fit: BoxFit.cover,
-                              placeholder: (context, url) => Container(color: Colors.grey.shade100),
-                            ),
-                          ),
+                                  borderRadius: BorderRadius.circular(16),
+                                  child: CachedNetworkImage(
+                                    imageUrl:
+                                        exercise.gifUrl ??
+                                        exercise.images.firstOrNull?.url ??
+                                        '',
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) =>
+                                        Container(color: Colors.grey.shade100),
+                                  ),
+                                ),
                         ),
                       ],
                     ),
@@ -117,25 +153,37 @@ class ExercisePreviewScreen extends StatelessWidget {
 
                     // 2️⃣ جدول الجولات (🔥 التصميم الجديد المُميز للـ UX 🔥)
                     ...List.generate(totalSets, (index) {
-                      String targetRep = index < repsList.length ? repsList[index] : (repsList.isNotEmpty ? repsList.last : '10');
+                      String targetRep = index < repsList.length
+                          ? repsList[index]
+                          : (repsList.isNotEmpty ? repsList.last : '10');
 
                       LoggedSetModel? loggedSet;
                       bool isSetLogged = false;
                       bool isSetSkipped = false;
 
-                      if (completedSets != null && index < completedSets!.length) {
+                      if (completedSets != null &&
+                          index < completedSets!.length) {
                         loggedSet = completedSets![index];
                         isSetSkipped = loggedSet.isSkipped;
                         isSetLogged = !isSetSkipped;
                       }
 
                       // تحديد الألوان بناءً على حالة السيت
-                      Color bgColor = isSetLogged ? Colors.green.shade50 : (isSetSkipped ? Colors.grey.shade50 : Colors.white);
-                      Color borderColor = isSetLogged ? Colors.green.shade200 : Colors.grey.shade200;
+                      Color bgColor = isSetLogged
+                          ? Colors.green.shade50
+                          : (isSetSkipped
+                                ? Colors.grey.shade50
+                                : context.backgroundColor);
+                      Color borderColor = isSetLogged
+                          ? Colors.green.shade200
+                          : AppColors.primaryBtn.withValues(alpha: 0.5);
 
                       return Container(
                         margin: const EdgeInsets.only(bottom: 10),
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
                         decoration: BoxDecoration(
                           color: bgColor,
                           borderRadius: BorderRadius.circular(16),
@@ -147,13 +195,35 @@ class ExercisePreviewScreen extends StatelessWidget {
                             SizedBox(
                               width: 40,
                               child: isSetLogged
-                                  ? const Icon(Icons.check_circle_rounded, color: Colors.green, size: 28)
+                                  ? const Icon(
+                                      Icons.check_circle_rounded,
+                                      color: Colors.green,
+                                      size: 28,
+                                    )
                                   : Column(
-                                children: [
-                                  Text("SET", style: TextStyle(fontSize: 10, color: isSetSkipped ? Colors.grey.shade400 : Colors.grey, fontWeight: FontWeight.bold)),
-                                  Text("${index + 1}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: isSetSkipped ? Colors.grey.shade400 : Colors.black87)),
-                                ],
-                              ),
+                                      children: [
+                                        Text(
+                                          "SET",
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            color: isSetSkipped
+                                                ? Colors.grey.shade400
+                                                : Colors.grey,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          "${index + 1}",
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w900,
+                                            color: isSetSkipped
+                                                ? Colors.grey.shade400
+                                                : context.textColor,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                             ),
                             const SizedBox(width: 16),
 
@@ -162,10 +232,22 @@ class ExercisePreviewScreen extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(isCardio ? "Target" : "Goal", style: const TextStyle(fontSize: 11, color: Colors.grey)),
                                   Text(
-                                      isCardio ? "$targetDuration Min" : "$targetRep Reps",
-                                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: isSetSkipped ? Colors.grey.shade400 : Colors.black87)
+                                    isCardio ? "Target" : "Goal",
+                                    style: const TextStyle(
+                                      fontSize: 11,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  Text(
+                                    isCardio
+                                        ? "$targetDuration Min"
+                                        : "$targetRep Reps",
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.hintText,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -175,30 +257,75 @@ class ExercisePreviewScreen extends StatelessWidget {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                Text(isSetLogged ? "You Did" : (isCardio ? "Actual" : "Weight"), style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                                Text(
+                                  isSetLogged
+                                      ? "You Did"
+                                      : (isCardio ? "Actual" : "Weight"),
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    color: Colors.grey,
+                                  ),
+                                ),
                                 const SizedBox(height: 4),
 
                                 if (isSetLogged && loggedSet != null)
                                   Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                                    decoration: BoxDecoration(color: Colors.green.shade100, borderRadius: BorderRadius.circular(8)),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                      vertical: 4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.green.shade100,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
                                     child: Text(
-                                      isCardio ? "${loggedSet.reps} Min" : "${loggedSet.weight} kg",
-                                      style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w900, fontSize: 14),
+                                      isCardio
+                                          ? "${loggedSet.reps} Min"
+                                          : "${loggedSet.weight} kg",
+                                      style: const TextStyle(
+                                        color: Colors.green,
+                                        fontWeight: FontWeight.w900,
+                                        fontSize: 14,
+                                      ),
                                     ),
                                   )
                                 else if (isSetSkipped)
                                   Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                                    decoration: BoxDecoration(color: Colors.grey.shade200, borderRadius: BorderRadius.circular(8)),
-                                    child: Text("Skipped", style: TextStyle(color: Colors.grey.shade600, fontSize: 12, fontWeight: FontWeight.bold)),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                      vertical: 4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey.shade200,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Text(
+                                      "Skipped",
+                                      style: TextStyle(
+                                        color: Colors.grey.shade600,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                                   )
                                 else
                                   Container(
-                                    width: 50, height: 28,
+                                    width: 50,
+                                    height: 28,
                                     alignment: Alignment.center,
-                                    decoration: BoxDecoration(color: Colors.grey.shade100, borderRadius: BorderRadius.circular(8)),
-                                    child: const Text("-", style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
+                                    decoration: BoxDecoration(
+                                      color: context.backgroundColor.withValues(
+                                        alpha: 0.5,
+                                      ),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: const Text(
+                                      "-",
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                                   ),
                               ],
                             ),
@@ -215,13 +342,13 @@ class ExercisePreviewScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(20),
               child: SizedBox(
-                width: double.infinity, height: 56,
+                width: double.infinity,
+                height: 56,
                 child: ElevatedButton(
                   onPressed: () async {
                     if (isFinishedEarly) {
                       Navigator.of(context).popUntil((route) => route.isFirst);
-                    }
-                    else if (isFullyCompleted) {
+                    } else if (isFullyCompleted) {
                       if (isLastExercise) {
                         // 🛑 السحر المعماري هنا لمنع مشكلة الكاش والتأخير واختفاء الداتا 🛑
 
@@ -229,14 +356,21 @@ class ExercisePreviewScreen extends StatelessWidget {
                         showDialog(
                           context: context,
                           barrierDismissible: false,
-                          builder: (ctx) => const Center(child: CircularProgressIndicator(color: AppColors.primaryBtn)),
+                          builder: (ctx) => const Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.primaryBtn,
+                            ),
+                          ),
                         );
 
                         final workoutCubit = context.read<ActiveWorkoutCubit>();
 
                         // 🔥 أخذ نسخة احتياطية من البيانات "قبل" ما تتمسح من الذاكرة 🔥
-                        final Map<int, List<LoggedSetModel>> savedSetsCopy = Map.from(workoutCubit.allLoggedSets);
-                        final List<ExerciseModel> exercisesCopy = List.from(workoutCubit.exercises);
+                        final Map<int, List<LoggedSetModel>> savedSetsCopy =
+                            Map.from(workoutCubit.allLoggedSets);
+                        final List<ExerciseModel> exercisesCopy = List.from(
+                          workoutCubit.exercises,
+                        );
 
                         // 2. إجبار التطبيق ينتظر (await) حتى يختم السيرفر اليوم كلياً ويمسح الكاش
                         await workoutCubit.completeWorkout(
@@ -267,9 +401,13 @@ class ExercisePreviewScreen extends StatelessWidget {
 
                         int currentIndex = 0;
                         if (workoutCubit.state is ActiveWorkoutInProgress) {
-                          currentIndex = (workoutCubit.state as ActiveWorkoutInProgress).currentIndex;
+                          currentIndex =
+                              (workoutCubit.state as ActiveWorkoutInProgress)
+                                  .currentIndex;
                         } else {
-                          currentIndex = workoutCubit.exercises.indexOf(exercise);
+                          currentIndex = workoutCubit.exercises.indexOf(
+                            exercise,
+                          );
                         }
 
                         if (currentIndex == -1) currentIndex = 0;
@@ -278,13 +416,17 @@ class ExercisePreviewScreen extends StatelessWidget {
                         final nextExercise = workoutCubit.exercises[nextIndex];
                         int nextTotalSets = nextExercise.sets ?? 1;
 
-                        bool isNextAlreadyDone = workoutCubit.allLoggedSets.containsKey(nextIndex) &&
-                            (workoutCubit.allLoggedSets[nextIndex]?.length ?? 0) >= nextTotalSets;
+                        bool isNextAlreadyDone =
+                            workoutCubit.allLoggedSets.containsKey(nextIndex) &&
+                            (workoutCubit.allLoggedSets[nextIndex]?.length ??
+                                    0) >=
+                                nextTotalSets;
 
                         workoutCubit.nextExercise();
 
                         if (isNextAlreadyDone) {
-                          bool isAbsoluteLast = (nextIndex == workoutCubit.exercises.length - 1);
+                          bool isAbsoluteLast =
+                              (nextIndex == workoutCubit.exercises.length - 1);
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
@@ -295,7 +437,8 @@ class ExercisePreviewScreen extends StatelessWidget {
                                   dayName: dayName,
                                   planId: planId,
                                   dayId: dayId,
-                                  completedSets: workoutCubit.allLoggedSets[nextIndex],
+                                  completedSets:
+                                      workoutCubit.allLoggedSets[nextIndex],
                                   isLastExercise: isAbsoluteLast,
                                 ),
                               ),
@@ -307,37 +450,52 @@ class ExercisePreviewScreen extends StatelessWidget {
                             MaterialPageRoute(
                               builder: (_) => BlocProvider.value(
                                 value: workoutCubit,
-                                child: ActivePlayScreen(dayName: dayName, planId: planId, dayId: dayId),
+                                child: ActivePlayScreen(
+                                  dayName: dayName,
+                                  planId: planId,
+                                  dayId: dayId,
+                                ),
                               ),
                             ),
                           );
                         }
                       }
-                    }
-                    else {
+                    } else {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                           builder: (_) => BlocProvider.value(
                             value: context.read<ActiveWorkoutCubit>(),
-                            child: ActivePlayScreen(dayName: dayName, planId: planId, dayId: dayId,),
+                            child: ActivePlayScreen(
+                              dayName: dayName,
+                              planId: planId,
+                              dayId: dayId,
+                            ),
                           ),
                         ),
                       );
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: isFinishedEarly ? const Color(0xFF1E293B) : AppColors.primaryBtn,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    backgroundColor: isFinishedEarly
+                        ? const Color(0xFF1E293B)
+                        : AppColors.primaryBtn,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                     elevation: 0,
                   ),
                   child: Text(
-                      isFinishedEarly
-                          ? "End Workout"
-                          : isFullyCompleted
-                          ? (isLastExercise ? "Finish Workout" : "Next Exercise")
-                          : (isCompleted ? "Resume Exercise" : "Start"),
-                      style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w900)
+                    isFinishedEarly
+                        ? "End Workout"
+                        : isFullyCompleted
+                        ? (isLastExercise ? "Finish Workout" : "Next Exercise")
+                        : (isCompleted ? "Resume Exercise" : "Start"),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w900,
+                    ),
                   ),
                 ),
               ),

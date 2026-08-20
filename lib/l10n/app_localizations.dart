@@ -1427,6 +1427,138 @@ abstract class AppLocalizations {
   /// **'Subscriptions that ended during the last month'**
   String get endedLastMonth;
 
+  /// No description provided for @today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get today;
+
+  /// No description provided for @yesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get yesterday;
+
+  /// No description provided for @messageDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Message Details'**
+  String get messageDetails;
+
+  /// No description provided for @sentAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent at'**
+  String get sentAt;
+
+  /// No description provided for @deliveredAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivered at'**
+  String get deliveredAt;
+
+  /// No description provided for @readAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Read at'**
+  String get readAt;
+
+  /// No description provided for @deleteMessageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Message'**
+  String get deleteMessageTitle;
+
+  /// No description provided for @deleteMessageConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this message? This action cannot be undone.'**
+  String get deleteMessageConfirmation;
+
+  /// No description provided for @ok.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
+
+  /// No description provided for @noDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'No details available'**
+  String get noDetails;
+
+  /// No description provided for @max5Images.
+  ///
+  /// In en, this message translates to:
+  /// **'You can select up to 5 images'**
+  String get max5Images;
+
+  /// No description provided for @errorUserNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Error: Current user not identified'**
+  String get errorUserNotFound;
+
+  /// No description provided for @noMessagesYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No messages yet'**
+  String get noMessagesYet;
+
+  /// No description provided for @startConversation.
+  ///
+  /// In en, this message translates to:
+  /// **'Start the conversation now'**
+  String get startConversation;
+
+  /// No description provided for @trainerOnlyCanSend.
+  ///
+  /// In en, this message translates to:
+  /// **'Only the coach can send messages in this subscription'**
+  String get trainerOnlyCanSend;
+
+  /// No description provided for @you.
+  ///
+  /// In en, this message translates to:
+  /// **'You'**
+  String get you;
+
+  /// No description provided for @chats.
+  ///
+  /// In en, this message translates to:
+  /// **'Chats'**
+  String get chats;
+
+  /// No description provided for @noConversations.
+  ///
+  /// In en, this message translates to:
+  /// **'No conversations'**
+  String get noConversations;
+
+  /// No description provided for @messageDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'This message has been deleted'**
+  String get messageDeleted;
+
+  /// No description provided for @sendingMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Sending...'**
+  String get sendingMessage;
+
+  /// No description provided for @typeMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Type a message...'**
+  String get typeMessage;
+
+  /// No description provided for @cannotSend.
+  ///
+  /// In en, this message translates to:
+  /// **'You cannot send'**
+  String get cannotSend;
+
   /// No description provided for @editPlan.
   ///
   /// In en, this message translates to:

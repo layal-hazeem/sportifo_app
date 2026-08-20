@@ -1,10 +1,12 @@
+import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:sportifo_app/core/models/local_message.dart';
+import 'package:sportifo_app/core/services/pending_messages_service.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/core/theme/theme_cubit.dart';
 
@@ -27,22 +29,22 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // 🔥 1. تهيئة Firebase
+  // 🔥 1. تهيئة Firebase وتسجيل الـ Background Handler أولاً
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
-  // 🔥 2. تسجيل Background Handler قبل أي شي
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
-  // باقي الخدمات
+  // 2. تهيئة Hive للرسائل والإعدادات
   await Hive.initFlutter();
-
-  // 🔥 فتح صندوق الإعدادات
+  Hive.registerAdapter(LocalMessageAdapter());
   await Hive.openBox('settings_box');
 
+  // 3. تهيئة الـ Service Locator والـ Pending Messages
   await setupServiceLocator();
+  await getIt<PendingMessagesService>().init();
 
-  // 🔥 3. تشغيل خدمة الإشعارات
+  // 🔥 4. تشغيل خدمة الإشعارات بعد الجاهزية الكاملة
   await NotificationService().init();
+
   runApp(const MyApp());
 }
 
@@ -59,11 +61,11 @@ class MyApp extends StatelessWidget {
       ],
       child: BlocBuilder<LocaleCubit, Locale>(
         builder: (context, locale) {
-          // 🔥 استخدام BlocBuilder للـ ThemeCubit لتوفير متغير themeMode والتبديل ديناميكياً
           return BlocBuilder<ThemeCubit, ThemeMode>(
             builder: (context, themeMode) {
               return NeumorphicApp(
-                navigatorKey: navigatorKey, // 🔥 تم الحفاظ عليه هنا (هام جداً للتنقل من الإشعارات)
+                navigatorKey:
+                    navigatorKey, // 🔥 تم الحفاظ عليه هنا (هام جداً للتنقل من الإشعارات)
                 debugShowCheckedModeBanner: false,
                 title: 'Sportifo',
                 initialRoute: AppRoutes.splash,
@@ -74,17 +76,15 @@ class MyApp extends StatelessWidget {
                   GlobalWidgetsLocalizations.delegate,
                   GlobalCupertinoLocalizations.delegate,
                 ],
-                supportedLocales: const [
-                  Locale('en'),
-                  Locale('ar'),
-                ],
+                supportedLocales: const [Locale('en'), Locale('ar')],
                 locale: locale,
                 themeMode: themeMode, // 👈 تم ربط الثيم بنجاح
                 theme: NeumorphicThemeData(
                   baseColor: AppColors.lightBackground,
                   defaultTextColor: AppColors.lightText,
                   accentColor: AppColors.primaryBtn,
-                  lightSource: LightSource.topLeft, // من الكود الأصلي للحفاظ على الشكل
+                  lightSource:
+                      LightSource.topLeft, // من الكود الأصلي للحفاظ على الشكل
                   depth: 10,
                 ),
                 darkTheme: NeumorphicThemeData(
@@ -102,3 +102,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+//وقت نضيف اي كلمة بملفات الترجمة مننفذ هاد الامر بالتيرمينال مشان يتعرف عالنصوص الجديدة اللي ترجمناها
+// flutter gen-l10n

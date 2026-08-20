@@ -54,7 +54,15 @@ class ApiConstants {
   static const String deleteMeal = 'food-logs';
   static const String addManualMeal = 'food-logs/manual';
   static const String trainees = "plans/coach";
-  static const String planDetails = "plans";
+  static const String planDetails = "/plans";
+
+
+  // Chat endpoints
+static const String conversations = "chat/conversations";
+static String conversationMessages(int conversationId) => "chat/conversations/$conversationId/messages";
+static String sendMessage(int conversationId) => "chat/conversations/$conversationId/messages";
+static String deleteMessage(int conversationId, int messageId) => 
+    "chat/conversations/$conversationId/messages/$messageId";
   static const String editCoachPlan = "plans";
   static const String createSelfPlan = "plans/create/self";
   static const String editSelfPlan = "plans/update/self";
