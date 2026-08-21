@@ -86,6 +86,7 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
       child: TextField(
         controller: controller,
         keyboardType: keyboard,
+        textInputAction: TextInputAction.next,
         style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
         decoration: InputDecoration(
           labelText: label,
@@ -239,7 +240,7 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
             field(
               l10n.customSets,
               setsController,
-              TextInputType.number,
+              TextInputType.text,
               l10n.exampleSets,
             ),
 
@@ -283,7 +284,7 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
             field(
               l10n.order,
               orderController,
-              TextInputType.number,
+              TextInputType.text,
               l10n.exerciseOrder,
             ),
 

@@ -627,7 +627,7 @@ class _PlanDayCardState extends State<PlanDayCard> {
 
                 TextField(
                   controller: setsController,
-                  keyboardType: TextInputType.number,
+                  keyboardType: TextInputType.text,
                   style: TextStyle(color: context.textColor),
                   decoration: InputDecoration(
                     labelText: l10n.defaultSets,
@@ -662,7 +662,7 @@ class _PlanDayCardState extends State<PlanDayCard> {
 
                 TextField(
                   controller: repsController,
-                  keyboardType: TextInputType.number,
+                  keyboardType: TextInputType.text,
                   style: TextStyle(color: context.textColor),
                   decoration: InputDecoration(
                     labelText: l10n.defaultReps,
