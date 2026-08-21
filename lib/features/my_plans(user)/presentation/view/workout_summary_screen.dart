@@ -27,16 +27,16 @@ class WorkoutSummaryScreen extends StatefulWidget {
 }
 
 class _WorkoutSummaryScreenState extends State<WorkoutSummaryScreen> {
-  // 🔥 متغير للتحكم بحالة التحميل للزر
+  // Variable to control loading state of the button
   bool _isSyncing = false;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FC),
+      backgroundColor: context.backgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: context.backgroundColor,
         elevation: 0,
         centerTitle: true,
         title: Text(
@@ -54,12 +54,12 @@ class _WorkoutSummaryScreenState extends State<WorkoutSummaryScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Column(
             children: [
-              // 🏆 كارت الإنجاز العلوي
+              // Top Achievement Card
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: context.secondaryBackgroundColor,
                   borderRadius: BorderRadius.circular(24),
                   boxShadow: [
                     BoxShadow(
@@ -113,7 +113,7 @@ class _WorkoutSummaryScreenState extends State<WorkoutSummaryScreen> {
               ),
               const SizedBox(height: 16),
 
-              // 📊 إحصائيات الوقت والتمارين
+              // Time and Exercises Statistics
               Row(
                 children: [
                   Expanded(
@@ -121,6 +121,7 @@ class _WorkoutSummaryScreenState extends State<WorkoutSummaryScreen> {
                       Icons.timer_outlined,
                       l10n.duration,
                       widget.totalTime,
+                      context,
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -129,6 +130,7 @@ class _WorkoutSummaryScreenState extends State<WorkoutSummaryScreen> {
                       Icons.fitness_center_rounded,
                       l10n.exercises,
                       "${widget.totalExercises}",
+                      context,
                     ),
                   ),
                 ],
@@ -149,7 +151,7 @@ class _WorkoutSummaryScreenState extends State<WorkoutSummaryScreen> {
               ),
               const SizedBox(height: 8),
 
-              // 📋 قائمة تفاصيل التمارين
+              // Exercises Details List
               Expanded(
                 child: ListView.builder(
                   physics: const BouncingScrollPhysics(),
@@ -162,7 +164,7 @@ class _WorkoutSummaryScreenState extends State<WorkoutSummaryScreen> {
                       margin: const EdgeInsets.only(bottom: 12),
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: context.secondaryBackgroundColor,
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(color: const Color(0xFFE2E8F0)),
                       ),
@@ -181,14 +183,14 @@ class _WorkoutSummaryScreenState extends State<WorkoutSummaryScreen> {
                           if (loggedSets.isNotEmpty)
                             ...List.generate(loggedSets.length, (setIdx) {
                               final set = loggedSets[setIdx];
-                              // 🔥 فحص ذكي: هل هذا كاردیو (weight = 0) ولا مقاومة
+                              // Smart check: Is this cardio (weight = 0) or resistance
                               bool isCardio =
                                   set.weight == "0" || set.weight == "0.0";
                               return Padding(
                                 padding: const EdgeInsets.only(bottom: 8),
                                 child: Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       "${l10n.set} ${setIdx + 1}",
@@ -200,34 +202,34 @@ class _WorkoutSummaryScreenState extends State<WorkoutSummaryScreen> {
                                     ),
                                     set.isSkipped
                                         ? Container(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 8,
-                                              vertical: 4,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey.shade100,
-                                              borderRadius:
-                                                  BorderRadius.circular(6),
-                                            ),
-                                            child: Text(
-                                              l10n.skipped,
-                                              style: const TextStyle(
-                                                color: Colors.grey,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 11,
-                                              ),
-                                            ),
-                                          )
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 8,
+                                        vertical: 4,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey.shade100,
+                                        borderRadius:
+                                        BorderRadius.circular(6),
+                                      ),
+                                      child: Text(
+                                        l10n.skipped,
+                                        style: const TextStyle(
+                                          color: Colors.grey,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 11,
+                                        ),
+                                      ),
+                                    )
                                         : Text(
-                                            isCardio
-                                                ? "${set.reps} Min"
-                                                : "${set.weight} ${l10n.kg}  ×  ${set.reps} ${l10n.reps}",
-                                            style: const TextStyle(
-                                              color: AppColors.primaryBtn,
-                                              fontWeight: FontWeight.w900,
-                                              fontSize: 12,
-                                            ),
-                                          ),
+                                      isCardio
+                                          ? "${set.reps} ${l10n.min}"
+                                          : "${set.weight} ${l10n.kg}  ×  ${set.reps} ${l10n.reps}",
+                                      style: const TextStyle(
+                                        color: AppColors.primaryBtn,
+                                        fontWeight: FontWeight.w900,
+                                        fontSize: 12,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               );
@@ -248,31 +250,30 @@ class _WorkoutSummaryScreenState extends State<WorkoutSummaryScreen> {
               ),
               const SizedBox(height: 12),
 
-              // 🔘 زر العودة (الذي يحتوي على السحر ✨)
+              // Return Button
               SizedBox(
                 width: double.infinity,
                 height: 52,
                 child: ElevatedButton(
-                  // منع الضغط المتكرر إذا كان في حالة تحميل
+                  // Prevent multiple clicks if syncing
                   onPressed: _isSyncing
                       ? null
                       : () async {
-                          setState(() {
-                            _isSyncing = true;
-                          });
+                    setState(() {
+                      _isSyncing = true;
+                    });
 
-                          // ⏳ لودينغ وهمي (أو انتظار للباك إند) لمدة ثانية ونصف ليعطي إحساس فخم للمتدرب
-                          await Future.delayed(
-                            const Duration(milliseconds: 1500),
-                          );
+                    // Fake loading to give a premium feel to the trainee
+                    await Future.delayed(
+                      const Duration(milliseconds: 1500),
+                    );
 
-                          if (mounted) {
-                            // 🔥 السحر هنا: نرجع خطوتين لوراء بالـ Stack
-                            // (عشان نتخطى شاشة "تفاصيل اليوم" ونوصل لشاشة "الأيام" مباشرة)
-                            int count = 0;
-                            Navigator.of(context).popUntil((_) => count++ >= 2);
-                          }
-                        },
+                    if (mounted) {
+                      // Pop twice to skip day details and go straight to days screen
+                      int count = 0;
+                      Navigator.of(context).popUntil((_) => count++ >= 2);
+                    }
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryBtn,
                     disabledBackgroundColor: AppColors.primaryBtn.withOpacity(
@@ -285,21 +286,21 @@ class _WorkoutSummaryScreenState extends State<WorkoutSummaryScreen> {
                   ),
                   child: _isSyncing
                       ? const SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 3,
-                          ),
-                        )
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 3,
+                    ),
+                  )
                       : Text(
-                          l10n.done,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
+                    l10n.done,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -309,11 +310,11 @@ class _WorkoutSummaryScreenState extends State<WorkoutSummaryScreen> {
     );
   }
 
-  Widget _buildStatCard(IconData icon, String label, String value) {
+  Widget _buildStatCard(IconData icon, String label, String value, BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.secondaryBackgroundColor,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(color: const Color(0xFFE2E8F0)),
       ),
@@ -327,7 +328,7 @@ class _WorkoutSummaryScreenState extends State<WorkoutSummaryScreen> {
               color: context.textColor,
               fontSize: 18,
               fontWeight: FontWeight.w900,
-              fontFeatures: [FontFeature.tabularFigures()],
+              fontFeatures: const [FontFeature.tabularFigures()],
             ),
           ),
           const SizedBox(height: 2),

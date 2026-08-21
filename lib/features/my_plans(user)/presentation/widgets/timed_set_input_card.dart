@@ -8,15 +8,14 @@ import '../../../../l10n/app_localizations.dart';
 class TimedSetInputCard extends StatefulWidget {
   final int currentSet;
   final int totalSets;
-  final String targetDuration; // مثال: "1:00"
+  final String targetDuration; // Example: "1:00"
   final TextEditingController durationController;
   final bool isPaused;
   final bool isLoading;
   final VoidCallback onLogSet;
   final VoidCallback onSkipSet;
-  final ValueChanged<bool>?
-  onTimerStateChanged; // 🔥 إخبار الشاشة بحالة المؤقت لتجميد الـ GIF
-  final bool autoStart; // 🔥 تشغيل تلقائي بعد العد التنازلي
+  final ValueChanged<bool>? onTimerStateChanged; // Notify screen of timer state to freeze GIF
+  final bool autoStart; // Auto start after countdown
 
   const TimedSetInputCard({
     super.key,
@@ -47,7 +46,7 @@ class _TimedSetInputCardState extends State<TimedSetInputCard> {
     super.initState();
     _initTime();
 
-    // 🔥 تفعيل التشغيل التلقائي
+    // Enable auto start
     if (widget.autoStart && !widget.isPaused) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) _startTimer();
@@ -67,15 +66,12 @@ class _TimedSetInputCardState extends State<TimedSetInputCard> {
       }
     }
 
-    // إيقاف التايمر إذا كبس المتدرب Pause العام للتطبيق
+    // Stop timer if user presses general Pause
     if (widget.isPaused && !oldWidget.isPaused && _isRunning) {
       _stopTimer();
     }
 
-    // 🔥 ضفنا هاد الاتجاه الناقص: لما يرفع المتدرب الـ Pause (يعني isPaused
-    // رجعت false)، لازم العداد يكمل لحاله فوراً - بدون هاد السطر، ما كان
-    // في أي طريقة يرجع يشتغل غير زر التشغيل اليدوي (يلي هلق شلناه بالكامل
-    // بناءً على طلبك: البوز العام هو المتحكم الوحيد).
+    // Resume timer automatically when Pause is lifted
     if (!widget.isPaused && oldWidget.isPaused && !_isRunning) {
       _startTimer();
     }
@@ -162,11 +158,11 @@ class _TimedSetInputCardState extends State<TimedSetInputCard> {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.backgroundColor,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: AppColors.primaryBtn.withOpacity(0.03),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -262,13 +258,9 @@ class _TimedSetInputCardState extends State<TimedSetInputCard> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _buildAdjustButton("- 15s", _subtract15Seconds),
-              const SizedBox(width: 24),
-              // 🔥 شلنا زر التشغيل/الإيقاف اليدوي (كان دائرة بالنص) بناءً على
-              // طلبك - البوز العام (Pause) تبع الشاشة هو المتحكم الوحيد
-              // بالعداد هلق، بمقاومة ولا كارديو، بدون زر إضافي هون يلخبط.
-              const SizedBox(width: 24),
-              _buildAdjustButton("+ 15s", _add15Seconds),
+              _buildAdjustButton(l10n.minus15s, _subtract15Seconds, context),
+              const SizedBox(width: 48), // Added spacing since center button was removed
+              _buildAdjustButton(l10n.plus15s, _add15Seconds, context),
             ],
           ),
 
@@ -281,14 +273,14 @@ class _TimedSetInputCardState extends State<TimedSetInputCard> {
               onPressed: widget.isLoading
                   ? null
                   : () {
-                      _stopTimer();
-                      // 🔥 حساب الوقت الفعلي اللي لعبه المتدرب بدقة تامة!
-                      int actualPlayed = _targetSeconds - _remainingSeconds;
-                      widget.durationController.text = _formatTime(
-                        actualPlayed,
-                      );
-                      widget.onLogSet();
-                    },
+                _stopTimer();
+                // Calculate actual played time accurately
+                int actualPlayed = _targetSeconds - _remainingSeconds;
+                widget.durationController.text = _formatTime(
+                  actualPlayed,
+                );
+                widget.onLogSet();
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primaryBtn.withOpacity(0.12),
                 foregroundColor: AppColors.primaryBtn,
@@ -299,20 +291,20 @@ class _TimedSetInputCardState extends State<TimedSetInputCard> {
               ),
               child: widget.isLoading
                   ? const SizedBox(
-                      width: 18,
-                      height: 18,
-                      child: CircularProgressIndicator(
-                        color: AppColors.primaryBtn,
-                        strokeWidth: 2,
-                      ),
-                    )
+                width: 18,
+                height: 18,
+                child: CircularProgressIndicator(
+                  color: AppColors.primaryBtn,
+                  strokeWidth: 2,
+                ),
+              )
                   : Text(
-                      l10n.logCompletedSet,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
+                l10n.logCompletedSet,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
             ),
           ),
         ],
@@ -320,7 +312,7 @@ class _TimedSetInputCardState extends State<TimedSetInputCard> {
     );
   }
 
-  Widget _buildAdjustButton(String label, VoidCallback onTap) {
+  Widget _buildAdjustButton(String label, VoidCallback onTap, BuildContext context) {
     return GestureDetector(
       onTap: widget.isPaused ? null : onTap,
       child: Container(

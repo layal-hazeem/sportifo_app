@@ -35,29 +35,21 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return Scaffold(
       backgroundColor: context.backgroundColor,
-      // 2. استخدام BlocListener لمراقبة الحالة وتغيير الشاشات
       body: BlocListener<LoginCubit, LoginState>(
-        // ... بداخل الـ BlocListener في LoginScreen
-          listener: (context, state) async {
-            if (state is LoginLoading) {
-              showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (_) => const Center(child: CircularProgressIndicator()),
-              );
-            }
+        listener: (context, state) async {
+          // ❌ تم حذف الـ showDialog من هنا نهائياً
 
-            else if (state is LoginSuccess) {
-              Navigator.pop(context);
+          if (state is LoginSuccess) {
+            // ❌ تم حذف Navigator.pop(context) من هنا
+            final token = state.response.data!.token;
+            final role = state.response.data!.user.role;
+            print("Current Role = $role");
 
-              final token = state.response.data!.token;
-              final role = state.response.data!.user.role;
-              print("Current Role = $role");
-
-              // 🔥 حفظ التوكن
-              await getIt<LocalStorage>().saveToken(token);
-              await getIt<LocalStorage>().saveRole(role);
-              await NotificationService().registerDeviceToBackend();
+            // 🔥 حفظ التوكن
+            await getIt<LocalStorage>().saveToken(token);
+            await getIt<LocalStorage>().saveRole(role);
+            await NotificationService().registerDeviceToBackend();
+            if (context.mounted) {
               AppSnackBar.show(
                 context,
                 message: l10n.loginSuccess,
@@ -69,33 +61,32 @@ class _LoginScreenState extends State<LoginScreen> {
                 MaterialPageRoute(builder: (_) => const HomePage()),
               );
             }
+          }
 
-            else if (state is LoginNeedsOtp) {
-              Navigator.pop(context); // إغلاق الـ Loading Dialog
+          else if (state is LoginNeedsOtp) {
+            // ❌ تم حذف Navigator.pop(context) من هنا
+            Navigator.pushNamed(
+              context,
+              AppRoutes.otpScreen,
+              arguments: state.login,
+            );
+          }
 
-              Navigator.pushNamed(
-                context,
-                AppRoutes.otpScreen,
-                arguments: state.login, // نرسل الإيميل كـ argument
-              );
-            }
-
-            else if (state is LoginError) {
-              Navigator.pop(context);
-
-              AppSnackBar.show(
-                context,
-                message: state.message,
-                type: SnackBarType.error,
-              );
-            }
-          },
+          else if (state is LoginError) {
+            // ❌ تم حذف Navigator.pop(context) من هنا
+            AppSnackBar.show(
+              context,
+              message: state.message,
+              type: SnackBarType.error,
+            );
+          }
+        },
         child: SafeArea(
           child: SizedBox.expand(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: AppSizes.mainPadding),
               child: Form(
-                key: formKey, // 3. ربط الفورم
+                key: formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -128,12 +119,11 @@ class _LoginScreenState extends State<LoginScreen> {
                             fontWeight: FontWeight.bold,
                             fontSize: AppSizes.labelFontSize)),
                     const SizedBox(height: 15),
-                    // حقل كلمة السر في LoginScreen
                     CustomNeumorphicField(
                       controller: passwordController,
                       hint: l10n.passwordHint,
-                      icon: Icons.lock_outline, // أيقونة القفل كأيقونة أساسية (Prefix)
-                      isPassword: true,        // هذا سيفعل زر العين تلقائياً (Suffix)
+                      icon: Icons.lock_outline,
+                      isPassword: true,
                       validator: (value) {
                         if (value == null || value.isEmpty) return l10n.fieldRequired;
                         if (value.length < 8) return l10n.passwordTooShort;
@@ -144,7 +134,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       alignment: Alignment.centerRight,
                       child: TextButton(
                         onPressed: () {
-                          // ✅ التعديل هنا: نستخدم pushNamed بدلاً من push العادي
                           Navigator.pushNamed(context, AppRoutes.forgotPasswordScreen);
                         },
                         child: Text(l10n.forgotPassword,
@@ -152,20 +141,34 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     const SizedBox(height: 35),
-                    CustomAuthButton(
-                      text: l10n.login,
-                      onPressed: () {
-                        // 4. تنفيذ الـ Validation قبل الإرسال
-                        if (formKey.currentState!.validate()) {
-                          context.read<LoginCubit>().emitLoginStates(
-                            LoginRequest(
-                              login: loginController.text.trim(),
-                              password: passwordController.text,
+
+                    // ✅ اللودينغ صار مكان الزر تماماً وبلون برتقالي
+                    BlocBuilder<LoginCubit, LoginState>(
+                      builder: (context, state) {
+                        if (state is LoginLoading) {
+                          return const Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.primaryBtn,
                             ),
                           );
                         }
+
+                        return CustomAuthButton(
+                          text: l10n.login,
+                          onPressed: () {
+                            if (formKey.currentState!.validate()) {
+                              context.read<LoginCubit>().emitLoginStates(
+                                LoginRequest(
+                                  login: loginController.text.trim(),
+                                  password: passwordController.text,
+                                ),
+                              );
+                            }
+                          },
+                        );
                       },
                     ),
+
                     const SizedBox(height: 30),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -186,7 +189,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ],
-                    ),                  ],
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -195,9 +199,11 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+
   void register() {
     Navigator.pushReplacementNamed(context, AppRoutes.register);
   }
+
   @override
   void dispose() {
     loginController.dispose();

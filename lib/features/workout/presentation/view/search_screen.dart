@@ -81,7 +81,7 @@ class _SearchExercisesScreenState extends State<SearchExercisesScreen> {
           height: 45,
           margin: const EdgeInsets.only(right: 20),
           decoration: BoxDecoration(
-            color: Colors.grey.shade200,
+            color: context.secondaryBackgroundColor,
             borderRadius: BorderRadius.circular(15),
           ),
           child: TextField(
@@ -190,10 +190,10 @@ class _SearchExercisesScreenState extends State<SearchExercisesScreen> {
                   color: context.textColor,
                   fontWeight: FontWeight.w600,
                 ),
-                backgroundColor: Colors.white,
+                backgroundColor: context.secondaryBackgroundColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
-                  side: BorderSide(color: Colors.grey.shade300),
+                  side: BorderSide(color: AppColors.primaryBtn),
                 ),
                 // 🔥 عندما يضغط عليها، سيتم البحث بالكلمة المترجمة (عربي أو إنجليزي)
                 onPressed: () => _triggerQuickSearch(keyword),

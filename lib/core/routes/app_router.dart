@@ -40,7 +40,13 @@ import '../../features/my_plans(user)/presentation/view_model/plan_days_cubit.da
 import '../../features/notifications/presentation/view/notifications_screen.dart';
 import '../../features/platform_plans/presentation/view/all_platform_plans_screen.dart';
 import '../../features/platform_plans/presentation/view_model/platform_plans_cubit.dart';
+import '../../features/settings/presentation/view/about_us_screen.dart';
+import '../../features/settings/presentation/view/help_support_screen.dart';
+import '../../features/settings/presentation/view/privacy_policy_screen.dart';
+import '../../features/settings/presentation/view/terms_of_use_screen.dart';
 import '../../features/trainee_subscriptions/data/models/subscription_month_model.dart';
+import '../../features/trainee_subscriptions/presentation/view_model/my_subscriptions_cubit/my_subscriptions_cubit.dart';
+import '../../features/trainee_subscriptions/presentation/views/my_subscriptions_screen.dart';
 import '../../features/trainee_subscriptions/presentation/views/payment_screen.dart';
 import '../../features/trainee_subscriptions/presentation/views/select_month_screen.dart';
 import '../../features/home/presentation/view/home_page.dart';
@@ -100,7 +106,8 @@ class AppRouter {
 
       case AppRoutes.notifications:
         return MaterialPageRoute(
-          builder: (_) => const NotificationsScreen(), // 👈 الشاشة اللي عملناها بالخطوة الماضية
+          builder: (_) =>
+              const NotificationsScreen(), // 👈 الشاشة اللي عملناها بالخطوة الماضية
         );
 
       case AppRoutes.login:
@@ -366,14 +373,26 @@ class AppRouter {
       case AppRoutes.settings:
         return MaterialPageRoute(builder: (_) => SettingsScreen());
 
-      case AppRoutes.deleteAccount:
+      case AppRoutes.aboutUs:
+        return MaterialPageRoute(builder: (_) => const AboutUsScreen());
+
+      case AppRoutes.privacyPolicy:
+        return MaterialPageRoute(builder: (_) => const PrivacyPolicyScreen());
+
+      case AppRoutes.termsOfUse:
+        return MaterialPageRoute(builder: (_) => const TermsOfUseScreen());
+
+      case AppRoutes.helpSupport:
+        return MaterialPageRoute(builder: (_) => const HelpSupportScreen());
+
+
+      case AppRoutes.mySubscriptions:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
-            create: (context) => getIt<ProfileCubit>(),
-            child: const DeleteAccountScreen(),
+            create: (_) => getIt<MySubscriptionsCubit>()..fetchMySubscriptions(),
+            child: const MySubscriptionsScreen(),
           ),
         );
-
       case AppRoutes.foodLogs:
         return MaterialPageRoute(builder: (_) => const FoodLogsScreen());
       case AppRoutes.planDays:
@@ -386,45 +405,44 @@ class AppRouter {
           ),
         );
 
-        case AppRoutes.conversationsList:
-  return MaterialPageRoute(
-    builder: (_) => BlocProvider(
-      create: (context) => getIt<ConversationsCubit>(),
-      child: const ConversationsListScreen(),
-    ),
-  );
+      case AppRoutes.conversationsList:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => getIt<ConversationsCubit>(),
+            child: const ConversationsListScreen(),
+          ),
+        );
 
-case AppRoutes.chatDetail:
-  final args = settings.arguments;
-  if (args is Map<String, dynamic>) {
-    return MaterialPageRoute(
-      builder: (_) => BlocProvider(
-        create: (_) => getIt<ChatDetailCubit>(),
-        child: ChatDetailScreen(
-          conversationId: args['conversationId'] as int,
-          otherParticipantName: args['otherParticipantName'] as String,
-          otherParticipantImage: args['otherParticipantImage'] as String?,
-          subscriptionType: args['subscriptionType'] as String?, // ← جديد
-        ),
-      ),
-    );
-  } else if (args is int) {
-    return MaterialPageRoute(
-      builder: (_) => BlocProvider(
-        create: (_) => getIt<ChatDetailCubit>(),
-        child: ChatDetailScreen(
-          conversationId: args,
-          otherParticipantName: 'Unknown',
-          subscriptionType: null, // ← جديد
-        ),
-      ),
-    );
-  }
-  return MaterialPageRoute(
-    builder: (_) => const Scaffold(
-      body: Center(child: Text('خطأ في فتح المحادثة')),
-    ),
-  );
+      case AppRoutes.chatDetail:
+        final args = settings.arguments;
+        if (args is Map<String, dynamic>) {
+          return MaterialPageRoute(
+            builder: (_) => BlocProvider(
+              create: (_) => getIt<ChatDetailCubit>(),
+              child: ChatDetailScreen(
+                conversationId: args['conversationId'] as int,
+                otherParticipantName: args['otherParticipantName'] as String,
+                otherParticipantImage: args['otherParticipantImage'] as String?,
+                subscriptionType: args['subscriptionType'] as String?, // ← جديد
+              ),
+            ),
+          );
+        } else if (args is int) {
+          return MaterialPageRoute(
+            builder: (_) => BlocProvider(
+              create: (_) => getIt<ChatDetailCubit>(),
+              child: ChatDetailScreen(
+                conversationId: args,
+                otherParticipantName: 'Unknown',
+                subscriptionType: null, // ← جديد
+              ),
+            ),
+          );
+        }
+        return MaterialPageRoute(
+          builder: (_) =>
+              const Scaffold(body: Center(child: Text('خطأ في فتح المحادثة'))),
+        );
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

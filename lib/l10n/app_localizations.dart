@@ -644,7 +644,7 @@ abstract class AppLocalizations {
   /// No description provided for @aboutUs.
   ///
   /// In en, this message translates to:
-  /// **'about us'**
+  /// **'About Us'**
   String get aboutUs;
 
   /// No description provided for @logout.
@@ -3268,6 +3268,503 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please check your connection and try again.\nTrainees will appear automatically when available.'**
   String get unableToLoadTraineesSubtitle;
+  /// No description provided for @createAdditionalPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Additional Plan'**
+  String get createAdditionalPlan;
+
+  /// No description provided for @aboutUsContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Sportifo is a smart fitness platform designed to support you throughout every stage of your fitness journey. Whether you are just getting started or working toward specific fitness goals, Sportifo provides the tools and support you need in one convenient place.\n\nThe platform brings together personalized workout programs, suitable alternative exercises, direct communication with coaches, subscription management, and AI-powered nutrition assistance. Our goal is to create a more flexible and personalized fitness experience that adapts to your individual needs.\n\nWith Sportifo, you can stay connected with your coach, explore workout alternatives that suit you, and get smart assistance with your nutrition to help you stay motivated and focused on your goals.\n\nSportifo is more than just a workout app — it is your smart companion for a better and more connected fitness journey.'**
+  String get aboutUsContent;
+
+  /// No description provided for @helpSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Help & Support'**
+  String get helpSupport;
+
+  /// No description provided for @hereToHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'We are here to help you!'**
+  String get hereToHelp;
+
+  /// No description provided for @helpSupportSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'If you have any questions or encounter any problems, feel free to contact us through one of the following methods:'**
+  String get helpSupportSubtitle;
+
+  /// No description provided for @contactViaWhatsapp.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact via WhatsApp'**
+  String get contactViaWhatsapp;
+
+  /// No description provided for @emailSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Email Support'**
+  String get emailSupport;
+
+  /// No description provided for @cantOpenWhatsapp.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open WhatsApp'**
+  String get cantOpenWhatsapp;
+
+  /// No description provided for @cantOpenEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open email app'**
+  String get cantOpenEmail;
+
+  /// No description provided for @privacyTitle1.
+  ///
+  /// In en, this message translates to:
+  /// **'1. Data We Collect'**
+  String get privacyTitle1;
+
+  /// No description provided for @privacyContent1.
+  ///
+  /// In en, this message translates to:
+  /// **'We collect basic personal data such as name, email, and fitness data (like weight, height, and fitness goals) to provide you with a customized training and nutrition plan.'**
+  String get privacyContent1;
+
+  /// No description provided for @privacyTitle2.
+  ///
+  /// In en, this message translates to:
+  /// **'2. How We Use Data'**
+  String get privacyTitle2;
+
+  /// No description provided for @privacyContent2.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data is used to improve your app experience, communicate with your personal trainer, and provide meal and exercise recommendations using the smart assistant.'**
+  String get privacyContent2;
+
+  /// No description provided for @privacyTitle3.
+  ///
+  /// In en, this message translates to:
+  /// **'3. Data Security & Protection'**
+  String get privacyTitle3;
+
+  /// No description provided for @privacyContent3.
+  ///
+  /// In en, this message translates to:
+  /// **'We are committed to protecting your personal data using the latest encryption technologies. We will not sell or share your personal data with any third parties without your explicit consent.'**
+  String get privacyContent3;
+
+  /// No description provided for @privacyTitle4.
+  ///
+  /// In en, this message translates to:
+  /// **'4. Your Rights with Sportifo'**
+  String get privacyTitle4;
+
+  /// No description provided for @privacyContent4.
+  ///
+  /// In en, this message translates to:
+  /// **'You have the right at any time to modify your personal data or request restricting its use by contacting us through technical support.'**
+  String get privacyContent4;
+
+  /// No description provided for @termsOfUse.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Use'**
+  String get termsOfUse;
+
+  /// No description provided for @termsTitle1.
+  ///
+  /// In en, this message translates to:
+  /// **'1. Acceptance of Terms'**
+  String get termsTitle1;
+
+  /// No description provided for @termsContent1.
+  ///
+  /// In en, this message translates to:
+  /// **'By using the Sportifo app, you agree to comply with these terms of use. If you do not agree to these terms, please do not use the app.'**
+  String get termsContent1;
+
+  /// No description provided for @termsTitle2.
+  ///
+  /// In en, this message translates to:
+  /// **'2. Medical & Fitness Guidelines'**
+  String get termsTitle2;
+
+  /// No description provided for @termsContent2.
+  ///
+  /// In en, this message translates to:
+  /// **'All exercises and nutritional tips provided in the app are for educational and general fitness purposes only. It is recommended to consult a doctor before starting any strenuous exercise program.'**
+  String get termsContent2;
+
+  /// No description provided for @termsTitle3.
+  ///
+  /// In en, this message translates to:
+  /// **'3. Account Obligations & Subscriptions'**
+  String get termsTitle3;
+
+  /// No description provided for @termsContent3.
+  ///
+  /// In en, this message translates to:
+  /// **'You are responsible for maintaining the confidentiality of your account information. Subscriptions grant you direct access to coaches and paid services according to your subscription package.'**
+  String get termsContent3;
+
+  /// No description provided for @termsTitle4.
+  ///
+  /// In en, this message translates to:
+  /// **'4. Content Ownership'**
+  String get termsTitle4;
+
+  /// No description provided for @termsContent4.
+  ///
+  /// In en, this message translates to:
+  /// **'All text, designs, images, and software in Sportifo are protected intellectual property of the app, and may not be reused without written permission.'**
+  String get termsContent4;
+
+  /// No description provided for @alternativeExercises.
+  ///
+  /// In en, this message translates to:
+  /// **'Alternative Exercises'**
+  String get alternativeExercises;
+
+  /// No description provided for @noAlternativesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No alternative exercises available for this workout right now.'**
+  String get noAlternativesFound;
+
+  /// No description provided for @mySubscriptions.
+  ///
+  /// In en, this message translates to:
+  /// **'My Subscriptions'**
+  String get mySubscriptions;
+
+  /// No description provided for @statusActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get statusActive;
+
+  /// No description provided for @statusPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get statusPending;
+
+  /// No description provided for @statusExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get statusExpired;
+
+  /// No description provided for @statusRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get statusRejected;
+
+  /// No description provided for @currentSubscription.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Plan'**
+  String get currentSubscription;
+
+  /// No description provided for @amount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get amount;
+
+  /// No description provided for @processNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction No.'**
+  String get processNumber;
+
+  /// No description provided for @confirmedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmed At'**
+  String get confirmedAt;
+
+  /// No description provided for @noSubscriptionsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'You have no past or active subscriptions yet'**
+  String get noSubscriptionsYet;
+
+  /// No description provided for @subscription.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscription'**
+  String get subscription;
+
+  /// No description provided for @cancelWorkoutTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Workout?'**
+  String get cancelWorkoutTitle;
+
+  /// No description provided for @cancelWorkoutMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'All progress for this session will be lost and won\'t be saved.'**
+  String get cancelWorkoutMessage;
+
+  /// No description provided for @noKeepGoing.
+  ///
+  /// In en, this message translates to:
+  /// **'No, Keep Going'**
+  String get noKeepGoing;
+
+  /// No description provided for @yesCancelWorkout.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, Cancel Workout'**
+  String get yesCancelWorkout;
+
+  /// No description provided for @endSessionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'End Session'**
+  String get endSessionTitle;
+
+  /// No description provided for @endSessionMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Would you like to save your current progress and continue later, or discard this session completely?'**
+  String get endSessionMessage;
+
+  /// No description provided for @saveAndExit.
+  ///
+  /// In en, this message translates to:
+  /// **'Save & Exit'**
+  String get saveAndExit;
+
+  /// No description provided for @discardSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard Session'**
+  String get discardSession;
+
+  /// No description provided for @howToPerformTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How to perform?'**
+  String get howToPerformTitle;
+
+  /// No description provided for @noInstructionsAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No instructions available for this exercise.'**
+  String get noInstructionsAvailable;
+
+  /// No description provided for @gotIt.
+  ///
+  /// In en, this message translates to:
+  /// **'Got It'**
+  String get gotIt;
+
+  /// No description provided for @enterWeightAndReps.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter weight and reps'**
+  String get enterWeightAndReps;
+
+  /// No description provided for @exerciseLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'EXERCISE'**
+  String get exerciseLabel;
+
+  /// No description provided for @paused.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get paused;
+
+  /// No description provided for @target.
+  ///
+  /// In en, this message translates to:
+  /// **'Target'**
+  String get target;
+
+  /// No description provided for @cancelBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancelBtn;
+
+  /// No description provided for @pauseBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get pauseBtn;
+
+  /// No description provided for @finishBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish'**
+  String get finishBtn;
+
+  /// No description provided for @prepareFor.
+  ///
+  /// In en, this message translates to:
+  /// **'PREPARE FOR'**
+  String get prepareFor;
+
+  /// No description provided for @unfinishedExerciseTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Unfinished Exercise'**
+  String get unfinishedExerciseTitle;
+
+  /// No description provided for @unfinishedExerciseMsgPart1.
+  ///
+  /// In en, this message translates to:
+  /// **'You still have an unfinished exercise in this day:'**
+  String get unfinishedExerciseMsgPart1;
+
+  /// No description provided for @unfinishedExerciseMsgPart2.
+  ///
+  /// In en, this message translates to:
+  /// **'Would you like to go finish it, or discard it and start'**
+  String get unfinishedExerciseMsgPart2;
+
+  /// No description provided for @unfinishedExerciseMsgPart3.
+  ///
+  /// In en, this message translates to:
+  /// **'instead?'**
+  String get unfinishedExerciseMsgPart3;
+
+  /// No description provided for @goFinishIt.
+  ///
+  /// In en, this message translates to:
+  /// **'Go Finish It'**
+  String get goFinishIt;
+
+  /// No description provided for @discardAndStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard & Start'**
+  String get discardAndStart;
+
+  /// No description provided for @dayLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'DAY'**
+  String get dayLabel;
+
+  /// No description provided for @completedStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'COMPLETED'**
+  String get completedStatus;
+
+  /// No description provided for @restTime.
+  ///
+  /// In en, this message translates to:
+  /// **'REST TIME'**
+  String get restTime;
+
+  /// No description provided for @add20Secs.
+  ///
+  /// In en, this message translates to:
+  /// **'+20 SECS'**
+  String get add20Secs;
+
+  /// No description provided for @upNext.
+  ///
+  /// In en, this message translates to:
+  /// **'UP NEXT'**
+  String get upNext;
+
+  /// No description provided for @workoutSessionComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Session Complete!'**
+  String get workoutSessionComplete;
+
+  /// No description provided for @skipRest.
+  ///
+  /// In en, this message translates to:
+  /// **'SKIP REST ⏭️'**
+  String get skipRest;
+
+  /// No description provided for @youDid.
+  ///
+  /// In en, this message translates to:
+  /// **'You Did'**
+  String get youDid;
+
+  /// No description provided for @actual.
+  ///
+  /// In en, this message translates to:
+  /// **'Actual'**
+  String get actual;
+
+  /// No description provided for @endWorkout.
+  ///
+  /// In en, this message translates to:
+  /// **'End Workout'**
+  String get endWorkout;
+
+  /// No description provided for @finishWorkout.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish Workout'**
+  String get finishWorkout;
+
+  /// No description provided for @nextExercise.
+  ///
+  /// In en, this message translates to:
+  /// **'Next Exercise'**
+  String get nextExercise;
+
+  /// No description provided for @resumeExercise.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume Exercise'**
+  String get resumeExercise;
+
+  /// No description provided for @startBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get startBtn;
+
+  /// No description provided for @yourFitnessJourney.
+  ///
+  /// In en, this message translates to:
+  /// **'YOUR FITNESS JOURNEY'**
+  String get yourFitnessJourney;
+
+  /// No description provided for @weeklyProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'WEEKLY PROGRESS'**
+  String get weeklyProgress;
+
+  /// No description provided for @week.
+  ///
+  /// In en, this message translates to:
+  /// **'Week'**
+  String get week;
+
+  /// No description provided for @minus15s.
+  ///
+  /// In en, this message translates to:
+  /// **'- 15s'**
+  String get minus15s;
+
+  /// No description provided for @plus15s.
+  ///
+  /// In en, this message translates to:
+  /// **'+ 15s'**
+  String get plus15s;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

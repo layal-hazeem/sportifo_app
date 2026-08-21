@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/core/widgets/no_internet_view.dart';
 import '../../../../core/routes/app_routes.dart';
@@ -40,7 +41,7 @@ class ExercisesListScreen extends StatelessWidget {
         showBackButton: true,
         actions: [
           IconButton(
-            icon: Icon(Icons.search, color: context.textColor),
+            icon: Icon(Icons.search, color: AppColors.darkText),
             onPressed: () {
               Navigator.pushNamed(
                 context,

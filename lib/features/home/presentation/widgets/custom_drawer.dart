@@ -73,6 +73,12 @@ class CustomDrawer extends StatelessWidget {
                     context: context,
                   ),
                   _buildItem(
+                    icon: Icons.card_membership_outlined,
+                    text: l10n.mySubscriptions,
+                    item: DrawerItem.mySubscriptions,
+                    context: context,
+                  ),
+                  _buildItem(
                     icon: Icons.settings,
                     text: l10n.settings,
                     item: DrawerItem.settings,
@@ -281,14 +287,16 @@ class CustomDrawer extends StatelessWidget {
       case DrawerItem.saved:
         Navigator.pushNamed(context, AppRoutes.savedExercises);
         break;
-
+      case DrawerItem.mySubscriptions:
+        Navigator.pushNamed(context, AppRoutes.mySubscriptions);
+        break;
       case DrawerItem.settings:
         Navigator.pushNamed(context, AppRoutes.settings);
         break;
 
       case DrawerItem.about:
+        Navigator.pushNamed(context, AppRoutes.aboutUs); // 👈 توجيه إلى حول التطبيق
         break;
-
       case DrawerItem.logout:
         final logoutCubit = context.read<LogoutCubit>();
         final l10n = AppLocalizations.of(context)!;

@@ -6,6 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../workout/data/models/exercise_model.dart';
 import '../view_model/active_workout_cubit.dart';
 import '../view_model/active_workout_state.dart';
@@ -41,7 +42,6 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
   bool _isPaused = true;
 
   bool _isTimedExercise = false;
-
   bool _isCountingDown = false;
   int _countdown = 3;
   Timer? _countdownTimer;
@@ -80,11 +80,11 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
 
     bool isCardioCategory =
         exercise.category != null &&
-        exercise.category!.name.toLowerCase() == 'cardio';
+            exercise.category!.name.toLowerCase() == 'cardio';
     bool hasDuration =
         exercise.duration != null &&
-        exercise.duration.toString().isNotEmpty &&
-        exercise.duration.toString() != "0";
+            exercise.duration.toString().isNotEmpty &&
+            exercise.duration.toString() != "0";
     _isTimedExercise = isCardioCategory || hasDuration;
 
     if (!_isTimedExercise) {
@@ -103,11 +103,11 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
     }
   }
 
-  // 🔥 اللوجيك المحدث والمنطقي للعداد (يبدأ من 3 بثبات)
+  // Updated logical countdown starting from 3
   void _startCountdown() {
     setState(() {
       _isCountingDown = true;
-      _countdown = 3; // البداية الأكيدة
+      _countdown = 3;
       _isPaused = true;
     });
 
@@ -119,7 +119,6 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
         if (_countdown > 1) {
           _countdown--;
         } else {
-          // الانتهاء بعد 3 ثواني
           timer.cancel();
           _isCountingDown = false;
           _isPaused = false;
@@ -151,22 +150,22 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
     setState(() => _isPaused = !_isPaused);
   }
 
-  void _onCancelWorkout() {
+  void _onCancelWorkout(AppLocalizations l10n) {
     WorkoutConfirmDialog.show(
       context: context,
       icon: Icons.close_rounded,
       iconColor: Colors.red,
-      title: "Cancel Workout?",
-      message: "All progress for this session will be lost and won't be saved.",
-      primaryText: "No, Keep Going",
+      title: l10n.cancelWorkoutTitle,
+      message: l10n.cancelWorkoutMessage,
+      primaryText: l10n.noKeepGoing,
       onPrimary: () {},
       primaryColor: AppColors.primaryBtn,
-      secondaryText: "Yes, Cancel Workout",
+      secondaryText: l10n.yesCancelWorkout,
       onSecondary: () => Navigator.pop(context),
     );
   }
 
-  void _onFinishWorkout() {
+  void _onFinishWorkout(AppLocalizations l10n) {
     final workoutCubit = context.read<ActiveWorkoutCubit>();
     final state = workoutCubit.state;
     if (state is! ActiveWorkoutInProgress) return;
@@ -175,10 +174,9 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
       context: context,
       icon: Icons.pause_circle_outline_rounded,
       iconColor: AppColors.primaryBtn,
-      title: "End Session",
-      message:
-          "Would you like to save your current progress and continue later, or discard this session completely?",
-      primaryText: "Save & Exit",
+      title: l10n.endSessionTitle,
+      message: l10n.endSessionMessage,
+      primaryText: l10n.saveAndExit,
       primaryColor: AppColors.primaryBtn,
       onPrimary: () async {
         await workoutCubit.saveSessionLocally(
@@ -204,7 +202,7 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
           ),
         );
       },
-      secondaryText: "Discard Session",
+      secondaryText: l10n.discardSession,
       onSecondary: () async {
         await workoutCubit.clearSessionLocally();
         Navigator.of(context).popUntil((route) => route.isFirst);
@@ -212,36 +210,32 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
     );
   }
 
-  void _showHowToDialog(String? description) {
+  void _showHowToDialog(String? description, AppLocalizations l10n) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
         title: Row(
-          children: const [
-            Icon(Icons.info_outline_rounded, color: AppColors.primaryBtn),
-            SizedBox(width: 8),
+          children: [
+            const Icon(Icons.info_outline_rounded, color: AppColors.primaryBtn),
+            const SizedBox(width: 8),
             Text(
-              "How to perform?",
-              style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18),
+              l10n.howToPerformTitle,
+              style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 18),
             ),
           ],
         ),
         content: Text(
           (description == null || description.isEmpty)
-              ? "No instructions available for this exercise."
+              ? l10n.noInstructionsAvailable
               : description,
-          style: TextStyle(
-            height: 1.5,
-            fontSize: 14,
-            color: context.textColor,
-          ),
+          style: TextStyle(height: 1.5, fontSize: 14, color: context.textColor),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text(
-              "Got It",
-              style: TextStyle(
+            child: Text(
+              l10n.gotIt,
+              style: const TextStyle(
                 color: AppColors.primaryBtn,
                 fontWeight: FontWeight.bold,
               ),
@@ -254,10 +248,10 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
     );
   }
 
-  void _onLogSet(ActiveWorkoutInProgress state) {
+  void _onLogSet(ActiveWorkoutInProgress state, AppLocalizations l10n) {
     if (_repsController.text.isEmpty || _weightController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter weight and reps')),
+        SnackBar(content: Text(l10n.enterWeightAndReps)),
       );
       return;
     }
@@ -295,16 +289,16 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
   }
 
   void _handlePostSetActions(
-    ActiveWorkoutInProgress state,
-    ExerciseModel exercise,
-    int currentSetIdx,
-  ) {
+      ActiveWorkoutInProgress state,
+      ExerciseModel exercise,
+      int currentSetIdx,
+      ) {
     setState(() => _isPaused = true);
 
     int totalSets = exercise.sets ?? 1;
     bool isLastSetOfExercise = (currentSetIdx + 1) >= totalSets;
     bool isAbsoluteLastExercise =
-        (state.currentIndex == state.exercises.length - 1);
+    (state.currentIndex == state.exercises.length - 1);
 
     if (isLastSetOfExercise) {
       final updatedState = context.read<ActiveWorkoutCubit>().state;
@@ -360,7 +354,7 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: context.backgroundColor,
       isDismissible: false,
       builder: (ctx) {
         return RestWorkoutScreen(
@@ -395,6 +389,8 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return BlocConsumer<ActiveWorkoutCubit, ActiveWorkoutState>(
       listener: (context, state) {
         if (state is ActiveWorkoutCompleted) {
@@ -418,8 +414,9 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
         }
       },
       builder: (context, state) {
-        if (state is! ActiveWorkoutInProgress)
+        if (state is! ActiveWorkoutInProgress) {
           return const Scaffold(backgroundColor: Color(0xFFF8F9FC));
+        }
 
         final exercise = state.currentExercise;
         final totalSets = exercise.sets ?? 1;
@@ -428,12 +425,12 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
 
         String imageUrl = exercise.images.isNotEmpty
             ? (exercise.images
-                      .firstWhere(
-                        (img) => img.type == 'gif',
-                        orElse: () => exercise.images.first,
-                      )
-                      .url ??
-                  '')
+            .firstWhere(
+              (img) => img.type == 'gif',
+          orElse: () => exercise.images.first,
+        )
+            .url ??
+            '')
             : '';
         String formatTime(int s) =>
             '${(s ~/ 60).toString().padLeft(2, '0')}:${(s % 60).toString().padLeft(2, '0')}';
@@ -442,9 +439,9 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
             : '10 10 10';
 
         final scaffold = Scaffold(
-          backgroundColor: const Color(0xFFF8F9FC),
+          backgroundColor: context.backgroundColor,
           appBar: AppBar(
-            backgroundColor: Colors.transparent,
+            backgroundColor: AppColors.primaryBtn,
             elevation: 0,
             iconTheme: const IconThemeData(color: Colors.black87),
             title: Column(
@@ -463,11 +460,11 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  "EXERCISE ${state.currentIndex + 1} OF ${state.exercises.length}",
+                  "${l10n.exerciseLabel} ${state.currentIndex + 1} ${l10n.of_word} ${state.exercises.length}",
                   style: const TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.hintText,
+                    color: AppColors.darkText,
                     letterSpacing: 0.5,
                   ),
                 ),
@@ -549,7 +546,8 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
                                       child: Container(
                                         padding: const EdgeInsets.all(12),
                                         decoration: BoxDecoration(
-                                          color: Colors.white.withOpacity(0.85),
+                                          color: context.backgroundColor
+                                              .withOpacity(0.85),
                                           shape: BoxShape.circle,
                                         ),
                                         child: Icon(
@@ -568,12 +566,12 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
                             right: 12,
                             child: GestureDetector(
                               onTap: () =>
-                                  _showHowToDialog(exercise.description),
+                                  _showHowToDialog(exercise.description, l10n),
                               child: Container(
                                 width: 38,
                                 height: 38,
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.95),
+                                  color: context.backgroundColor.withOpacity(0.95),
                                   shape: BoxShape.circle,
                                   boxShadow: [
                                     BoxShadow(
@@ -619,7 +617,7 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
                               ),
                               const SizedBox(width: 6),
                               Text(
-                                "Paused",
+                                l10n.paused,
                                 style: TextStyle(
                                   color: Colors.orange.shade700,
                                   fontSize: 12,
@@ -639,7 +637,7 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            "$totalSets Sets",
+                            "$totalSets ${l10n.sets}",
                             style: TextStyle(
                               fontWeight: FontWeight.w800,
                               fontSize: 14,
@@ -657,8 +655,8 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
                           const SizedBox(width: 4),
                           Text(
                             _isTimedExercise
-                                ? "Target ${exercise.duration ?? "1:00"} Min"
-                                : "Reps $repsDisplay",
+                                ? "${l10n.target} ${exercise.duration ?? "1:00"} ${l10n.min}"
+                                : "${l10n.reps} $repsDisplay",
                             style: TextStyle(
                               fontWeight: FontWeight.w800,
                               fontSize: 14,
@@ -670,27 +668,26 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
                       const SizedBox(height: 16),
                       _isTimedExercise
                           ? TimedSetInputCard(
-                              currentSet: currentActiveSetIndex + 1,
-                              totalSets: totalSets,
-                              targetDuration: exercise.duration ?? "1:00",
-                              durationController: _repsController,
-                              isPaused: _isPaused,
-                              isLoading: _isLoading,
-                              autoStart:
-                                  true, // 🔥 كان الـ parameter موجود بس مش مفعّل من هون - هيك بالضبط كان السبب إنو ما كان يبلش لحاله
-                              onLogSet: () => _onLogTimedSet(state),
-                              onSkipSet: () => _onSkipSet(state),
-                            )
+                        currentSet: currentActiveSetIndex + 1,
+                        totalSets: totalSets,
+                        targetDuration: exercise.duration ?? "1:00",
+                        durationController: _repsController,
+                        isPaused: _isPaused,
+                        isLoading: _isLoading,
+                        autoStart: true,
+                        onLogSet: () => _onLogTimedSet(state),
+                        onSkipSet: () => _onSkipSet(state),
+                      )
                           : SetInputCard(
-                              currentSet: currentActiveSetIndex + 1,
-                              totalSets: totalSets,
-                              weightController: _weightController,
-                              repsController: _repsController,
-                              isPaused: _isPaused,
-                              isLoading: _isLoading,
-                              onLogSet: () => _onLogSet(state),
-                              onSkipSet: () => _onSkipSet(state),
-                            ),
+                        currentSet: currentActiveSetIndex + 1,
+                        totalSets: totalSets,
+                        weightController: _weightController,
+                        repsController: _repsController,
+                        isPaused: _isPaused,
+                        isLoading: _isLoading,
+                        onLogSet: () => _onLogSet(state, l10n),
+                        onSkipSet: () => _onSkipSet(state),
+                      ),
                     ],
                   ),
                 ),
@@ -702,7 +699,7 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
                   vertical: 12,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: context.backgroundColor,
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.04),
@@ -715,7 +712,7 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     GestureDetector(
-                      onTap: _onCancelWorkout,
+                      onTap: () => _onCancelWorkout(l10n),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -724,24 +721,24 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
                             height: 42,
                             decoration: BoxDecoration(
                               border: Border.all(
-                                color: Colors.black87,
+                                color: context.textColor,
                                 width: 1.5,
                               ),
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(
+                            child: Icon(
                               Icons.close_rounded,
-                              color: Colors.black87,
+                              color: context.textColor,
                               size: 22,
                             ),
                           ),
                           const SizedBox(height: 4),
-                          const Text(
-                            "Cancel",
+                          Text(
+                            l10n.cancelBtn,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 11,
-                              color: Colors.black87,
+                              color: context.textColor,
                             ),
                           ),
                         ],
@@ -757,7 +754,7 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
                             height: 42,
                             decoration: BoxDecoration(
                               border: Border.all(
-                                color: Colors.black87,
+                                color: context.textColor,
                                 width: 1.5,
                               ),
                               shape: BoxShape.circle,
@@ -766,24 +763,24 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
                               _isPaused && !_isCountingDown
                                   ? Icons.play_arrow_rounded
                                   : Icons.pause_rounded,
-                              color: Colors.black87,
+                              color: context.textColor,
                               size: 22,
                             ),
                           ),
                           const SizedBox(height: 4),
-                          const Text(
-                            "Pause",
+                          Text(
+                            l10n.pauseBtn,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 11,
-                              color: Colors.black87,
+                              color: context.textColor,
                             ),
                           ),
                         ],
                       ),
                     ),
                     GestureDetector(
-                      onTap: _onFinishWorkout,
+                      onTap: () => _onFinishWorkout(l10n),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -806,9 +803,9 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
                             ),
                           ),
                           const SizedBox(height: 4),
-                          const Text(
-                            "Finish",
-                            style: TextStyle(
+                          Text(
+                            l10n.finishBtn,
+                            style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 11,
                               color: AppColors.primaryBtn,
@@ -828,18 +825,18 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
           canPop: false,
           onPopInvokedWithResult: (didPop, result) {
             if (didPop) return;
-            _onFinishWorkout();
+            _onFinishWorkout(l10n);
           },
           child: Stack(
             children: [
               scaffold,
-              // 🔥 واجهة GET READY مع حل مشكلة الخطوط 🔥
+              // GET READY UI overlay
               if (_isCountingDown)
                 Positioned.fill(
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
                     child: Material(
-                      // 👈 المُنقِذ السري! Material شفاف لمنع الخطوط الصفراء
+                      // Transparent Material to prevent yellow lines overlay
                       color: Colors.transparent,
                       child: Container(
                         color: const Color(0xFF0F111A).withOpacity(0.85),
@@ -856,15 +853,14 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
                                 color: Colors.white.withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Text(
-                                "PREPARE FOR",
-                                style: TextStyle(
+                              child: Text(
+                                l10n.prepareFor,
+                                style: const TextStyle(
                                   color: Colors.white70,
                                   fontSize: 12,
                                   fontWeight: FontWeight.w800,
                                   letterSpacing: 2,
-                                  decoration:
-                                      TextDecoration.none, // 👈 حماية إضافية
+                                  decoration: TextDecoration.none,
                                 ),
                               ),
                             ),
@@ -882,8 +878,7 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
                                   fontSize: 26,
                                   fontWeight: FontWeight.w900,
                                   height: 1.2,
-                                  decoration:
-                                      TextDecoration.none, // 👈 حماية إضافية
+                                  decoration: TextDecoration.none,
                                 ),
                               ),
                             ),
@@ -893,23 +888,23 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
                               duration: const Duration(milliseconds: 300),
                               transitionBuilder:
                                   (Widget child, Animation<double> animation) {
-                                    return FadeTransition(
-                                      opacity: animation,
-                                      child: ScaleTransition(
-                                        scale:
-                                            Tween<double>(
-                                              begin: 0.5,
-                                              end: 1.0,
-                                            ).animate(
-                                              CurvedAnimation(
-                                                parent: animation,
-                                                curve: Curves.elasticOut,
-                                              ),
-                                            ),
-                                        child: child,
+                                return FadeTransition(
+                                  opacity: animation,
+                                  child: ScaleTransition(
+                                    scale:
+                                    Tween<double>(
+                                      begin: 0.5,
+                                      end: 1.0,
+                                    ).animate(
+                                      CurvedAnimation(
+                                        parent: animation,
+                                        curve: Curves.elasticOut,
                                       ),
-                                    );
-                                  },
+                                    ),
+                                    child: child,
+                                  ),
+                                );
+                              },
                               child: Text(
                                 "$_countdown",
                                 key: ValueKey<int>(_countdown),
@@ -917,8 +912,7 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
                                   color: AppColors.primaryBtn,
                                   fontSize: 120,
                                   fontWeight: FontWeight.w900,
-                                  decoration:
-                                      TextDecoration.none, // 👈 حماية إضافية
+                                  decoration: TextDecoration.none,
                                   fontFeatures: [FontFeature.tabularFigures()],
                                   shadows: [
                                     Shadow(

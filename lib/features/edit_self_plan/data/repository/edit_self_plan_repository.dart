@@ -7,17 +7,13 @@ class EditSelfPlanRepository {
 
   EditSelfPlanRepository(this.service);
 
-  Future<SelfPlanResponseModel> updateSelfPlan(
-    int planId,
-    EditSelfPlanRequest request,
-  ) async {
-    final response = await service.updateSelfPlan(
-      planId,
-      request.toJson(),
-    );
-
-    return SelfPlanResponseModel.fromJson(
-      response.data,
+  Future<SelfPlanResponseModel> updateSelfPlan({
+    required int planId,
+    required EditSelfPlanRequest request,
+  }) async {
+    return await service.updateSelfPlan(
+      planId: planId,
+      body: request.toJson(),
     );
   }
 }

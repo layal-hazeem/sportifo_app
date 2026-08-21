@@ -70,8 +70,10 @@ import '../../features/targets/data/web_services/target_web_service.dart';
 import '../../features/targets/presentation/view_model/target_cubit/target_cubit.dart';
 import '../../features/trainee_subscriptions/data/repositories/trainee_subscription_repository.dart';
 import '../../features/trainee_subscriptions/data/web_services/trainee_subscription_web_service.dart';
+import '../../features/trainee_subscriptions/presentation/view_model/my_subscriptions_cubit/my_subscriptions_cubit.dart';
 import '../../features/workout/data/repository/workout_repository.dart';
 import '../../features/workout/data/web_services/workout_web_service.dart';
+import '../../features/workout/presentation/view_model/alternatives_cubit/alternatives_cubit.dart';
 import '../../features/workout/presentation/view_model/categories_cubit/categories_cubit.dart';
 import '../../features/workout/presentation/view_model/exercises_cubit/exercises_cubit.dart';
 import '../../features/workout/presentation/view_model/saved_exercises/saved_exercises_cubit.dart';
@@ -373,11 +375,11 @@ getIt.registerFactory<ChatDetailCubit>(
 );
 
 
-  getIt.registerLazySingleton<EditSelfPlanService>(
+  getIt.registerFactory<EditSelfPlanService>(
     () => EditSelfPlanService(getIt<Dio>()),
   );
 
-  getIt.registerLazySingleton<EditSelfPlanRepository>(
+  getIt.registerFactory<EditSelfPlanRepository>(
     () => EditSelfPlanRepository(getIt<EditSelfPlanService>()),
   );
 
@@ -435,5 +437,11 @@ getIt.registerFactory<ChatDetailCubit>(
 
   getIt.registerFactory<EditCoachPlanCubit>(
     () => EditCoachPlanCubit(getIt<EditCoachPlanRepository>()),
+  );
+  getIt.registerFactory(() => AlternativesCubit(getIt<WorkoutRepository>()));
+
+  // My Subscriptions (History)
+  getIt.registerFactory<MySubscriptionsCubit>(
+        () => MySubscriptionsCubit(getIt<TraineeSubscriptionRepository>()),
   );
 }

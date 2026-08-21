@@ -282,7 +282,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get error => 'Something went wrong, please try again';
 
   @override
-  String get aboutUs => 'about us';
+  String get aboutUs => 'About Us';
 
   @override
   String get logout => 'Logout';
@@ -1648,4 +1648,251 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get unableToLoadTraineesSubtitle => 'Please check your connection and try again.\nTrainees will appear automatically when available.';
+  String get createAdditionalPlan => 'Create Additional Plan';
+
+  @override
+  String get aboutUsContent => 'Sportifo is a smart fitness platform designed to support you throughout every stage of your fitness journey. Whether you are just getting started or working toward specific fitness goals, Sportifo provides the tools and support you need in one convenient place.\n\nThe platform brings together personalized workout programs, suitable alternative exercises, direct communication with coaches, subscription management, and AI-powered nutrition assistance. Our goal is to create a more flexible and personalized fitness experience that adapts to your individual needs.\n\nWith Sportifo, you can stay connected with your coach, explore workout alternatives that suit you, and get smart assistance with your nutrition to help you stay motivated and focused on your goals.\n\nSportifo is more than just a workout app — it is your smart companion for a better and more connected fitness journey.';
+
+  @override
+  String get helpSupport => 'Help & Support';
+
+  @override
+  String get hereToHelp => 'We are here to help you!';
+
+  @override
+  String get helpSupportSubtitle => 'If you have any questions or encounter any problems, feel free to contact us through one of the following methods:';
+
+  @override
+  String get contactViaWhatsapp => 'Contact via WhatsApp';
+
+  @override
+  String get emailSupport => 'Email Support';
+
+  @override
+  String get cantOpenWhatsapp => 'Could not open WhatsApp';
+
+  @override
+  String get cantOpenEmail => 'Could not open email app';
+
+  @override
+  String get privacyTitle1 => '1. Data We Collect';
+
+  @override
+  String get privacyContent1 => 'We collect basic personal data such as name, email, and fitness data (like weight, height, and fitness goals) to provide you with a customized training and nutrition plan.';
+
+  @override
+  String get privacyTitle2 => '2. How We Use Data';
+
+  @override
+  String get privacyContent2 => 'Your data is used to improve your app experience, communicate with your personal trainer, and provide meal and exercise recommendations using the smart assistant.';
+
+  @override
+  String get privacyTitle3 => '3. Data Security & Protection';
+
+  @override
+  String get privacyContent3 => 'We are committed to protecting your personal data using the latest encryption technologies. We will not sell or share your personal data with any third parties without your explicit consent.';
+
+  @override
+  String get privacyTitle4 => '4. Your Rights with Sportifo';
+
+  @override
+  String get privacyContent4 => 'You have the right at any time to modify your personal data or request restricting its use by contacting us through technical support.';
+
+  @override
+  String get termsOfUse => 'Terms of Use';
+
+  @override
+  String get termsTitle1 => '1. Acceptance of Terms';
+
+  @override
+  String get termsContent1 => 'By using the Sportifo app, you agree to comply with these terms of use. If you do not agree to these terms, please do not use the app.';
+
+  @override
+  String get termsTitle2 => '2. Medical & Fitness Guidelines';
+
+  @override
+  String get termsContent2 => 'All exercises and nutritional tips provided in the app are for educational and general fitness purposes only. It is recommended to consult a doctor before starting any strenuous exercise program.';
+
+  @override
+  String get termsTitle3 => '3. Account Obligations & Subscriptions';
+
+  @override
+  String get termsContent3 => 'You are responsible for maintaining the confidentiality of your account information. Subscriptions grant you direct access to coaches and paid services according to your subscription package.';
+
+  @override
+  String get termsTitle4 => '4. Content Ownership';
+
+  @override
+  String get termsContent4 => 'All text, designs, images, and software in Sportifo are protected intellectual property of the app, and may not be reused without written permission.';
+
+  @override
+  String get alternativeExercises => 'Alternative Exercises';
+
+  @override
+  String get noAlternativesFound => 'No alternative exercises available for this workout right now.';
+
+  @override
+  String get mySubscriptions => 'My Subscriptions';
+
+  @override
+  String get statusActive => 'Active';
+
+  @override
+  String get statusPending => 'Pending';
+
+  @override
+  String get statusExpired => 'Expired';
+
+  @override
+  String get statusRejected => 'Rejected';
+
+  @override
+  String get currentSubscription => 'Current Plan';
+
+  @override
+  String get amount => 'Amount';
+
+  @override
+  String get processNumber => 'Transaction No.';
+
+  @override
+  String get confirmedAt => 'Confirmed At';
+
+  @override
+  String get noSubscriptionsYet => 'You have no past or active subscriptions yet';
+
+  @override
+  String get subscription => 'Subscription';
+
+  @override
+  String get cancelWorkoutTitle => 'Cancel Workout?';
+
+  @override
+  String get cancelWorkoutMessage => 'All progress for this session will be lost and won\'t be saved.';
+
+  @override
+  String get noKeepGoing => 'No, Keep Going';
+
+  @override
+  String get yesCancelWorkout => 'Yes, Cancel Workout';
+
+  @override
+  String get endSessionTitle => 'End Session';
+
+  @override
+  String get endSessionMessage => 'Would you like to save your current progress and continue later, or discard this session completely?';
+
+  @override
+  String get saveAndExit => 'Save & Exit';
+
+  @override
+  String get discardSession => 'Discard Session';
+
+  @override
+  String get howToPerformTitle => 'How to perform?';
+
+  @override
+  String get noInstructionsAvailable => 'No instructions available for this exercise.';
+
+  @override
+  String get gotIt => 'Got It';
+
+  @override
+  String get enterWeightAndReps => 'Please enter weight and reps';
+
+  @override
+  String get exerciseLabel => 'EXERCISE';
+
+  @override
+  String get paused => 'Paused';
+
+  @override
+  String get target => 'Target';
+
+  @override
+  String get cancelBtn => 'Cancel';
+
+  @override
+  String get pauseBtn => 'Pause';
+
+  @override
+  String get finishBtn => 'Finish';
+
+  @override
+  String get prepareFor => 'PREPARE FOR';
+
+  @override
+  String get unfinishedExerciseTitle => 'Unfinished Exercise';
+
+  @override
+  String get unfinishedExerciseMsgPart1 => 'You still have an unfinished exercise in this day:';
+
+  @override
+  String get unfinishedExerciseMsgPart2 => 'Would you like to go finish it, or discard it and start';
+
+  @override
+  String get unfinishedExerciseMsgPart3 => 'instead?';
+
+  @override
+  String get goFinishIt => 'Go Finish It';
+
+  @override
+  String get discardAndStart => 'Discard & Start';
+
+  @override
+  String get dayLabel => 'DAY';
+
+  @override
+  String get completedStatus => 'COMPLETED';
+
+  @override
+  String get restTime => 'REST TIME';
+
+  @override
+  String get add20Secs => '+20 SECS';
+
+  @override
+  String get upNext => 'UP NEXT';
+
+  @override
+  String get workoutSessionComplete => 'Workout Session Complete!';
+
+  @override
+  String get skipRest => 'SKIP REST ⏭️';
+
+  @override
+  String get youDid => 'You Did';
+
+  @override
+  String get actual => 'Actual';
+
+  @override
+  String get endWorkout => 'End Workout';
+
+  @override
+  String get finishWorkout => 'Finish Workout';
+
+  @override
+  String get nextExercise => 'Next Exercise';
+
+  @override
+  String get resumeExercise => 'Resume Exercise';
+
+  @override
+  String get startBtn => 'Start';
+
+  @override
+  String get yourFitnessJourney => 'YOUR FITNESS JOURNEY';
+
+  @override
+  String get weeklyProgress => 'WEEKLY PROGRESS';
+
+  @override
+  String get week => 'Week';
+
+  @override
+  String get minus15s => '- 15s';
+
+  @override
+  String get plus15s => '+ 15s';
 }

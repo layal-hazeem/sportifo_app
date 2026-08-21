@@ -72,7 +72,9 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
         emptyTitle: l10n.noCustomPlans,
         emptySubtitle: l10n.noCustomPlansSub,
         emptyButtonText: l10n.createCustomPlan,
-        onEmptyButtonTap: null,
+        onEmptyButtonTap: (context) {
+          Navigator.pushNamed(context, AppRoutes.createSelfPlan);
+        },
       ),
       _PlanTabConfig(
         type: PlanTabType.saved,

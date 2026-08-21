@@ -244,6 +244,9 @@ class NotificationService {
         MyPlansScreen.activeTabNotifier.value = 0;
         navigatorKey.currentState?.pushNamed(AppRoutes.myPlans);
         break;
+      case 'subscription':
+        navigatorKey.currentState?.pushNamed(AppRoutes.mySubscriptions);
+        break;
       case 'user_profile':
         navigatorKey.currentState?.pushNamed(AppRoutes.getProfile);
         break;
