@@ -753,7 +753,7 @@
 "notifications_emptySubtitle": "We will notify you when something important arrives.",
 
 "unableToLoadTraineesTitle": "Unable to Load Trainees",
-"unableToLoadTraineesSubtitle": "Please check your connection and try again.\nTrainees will appear automatically when available."
+"unableToLoadTraineesSubtitle": "Please check your connection and try again.\nTrainees will appear automatically when available.",
 
 
   "createAdditionalPlan":"Create Additional Plan",
@@ -852,5 +852,9 @@
           "week": "Week",
           "minus15s": "- 15s",
           "plus15s": "+ 15s",
-          "logCompletedSet": "Log Completed Set"
+          "logCompletedSet": "Log Completed Set",
+          "unableToLoadMusclesTitle": "Unable to Load Muscles",
+          "unableToLoadMusclesSubtitle": "Please check your connection and try again.\nMuscles will appear automatically when available.",
+          "unableToLoadExercisesTitle": "Unable to Load Exercises",
+          "unableToLoadExercisesSubtitle": "Please check your connection and try again.\nExercises will appear automatically when available."
 }

@@ -5,45 +5,29 @@ import 'exercises_state.dart';
 
 class ExercisesCubit extends Cubit<ExercisesState> {
   final WorkoutRepository _repository;
-  bool _isFetching = false;
 
   ExercisesCubit(this._repository) : super(ExercisesInitial());
 
-  Future<void> fetchExercises({
-    int? categoryId,
-    int? organId,
-    List<int>? smallestCategoryId,
-    bool forceRefresh = false,
-  }) async {
-    if (_isFetching) return;
-    if (!forceRefresh && state is ExercisesSuccess) return;
-
-    _isFetching = true;
+  // الدالة التي سنستدعيها من الـ UI
+  Future<void> fetchExercises({int? categoryId, int? organId, List<int>? smallestCategoryId}) async {
     emit(ExercisesLoading());
 
     final result = await _repository.getExercises(
       categoryId: categoryId,
       organId: organId,
-      smallestCategoryId: smallestCategoryId,
+      smallestCategoryId: smallestCategoryId, // 🔥 التعديل هون: صارت partIds
     );
 
-    _isFetching = false;
+    // 🛡️ خط الدفاع الأساسي: إذا تم إغلاق الـ Cubit أثناء طلب البيانات، اخرج فوراً ولا تعمل emit
     if (isClosed) return;
 
     switch (result) {
       case Success():
         emit(ExercisesSuccess(result.data));
+        break;
       case Failure():
         emit(ExercisesFailure(result.message));
+        break;
     }
-  }
-
-  void retry({int? categoryId, int? organId, List<int>? smallestCategoryId}) {
-    fetchExercises(
-      categoryId: categoryId,
-      organId: organId,
-      smallestCategoryId: smallestCategoryId,
-      forceRefresh: true,
-    );
   }
 }

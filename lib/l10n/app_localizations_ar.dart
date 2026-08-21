@@ -1648,6 +1648,8 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get unableToLoadTraineesSubtitle => 'يرجى التحقق من الاتصال والمحاولة مرة أخرى.\nستظهر بيانات المتدربين تلقائياً عند توفرها.';
+
+  @override
   String get createAdditionalPlan => 'إنشاء خطة إضافية';
 
   @override
@@ -1895,4 +1897,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get plus15s => '+ 15 ثا';
+
+  @override
+  String get unableToLoadMusclesTitle => 'تعذر تحميل العضلات';
+
+  @override
+  String get unableToLoadMusclesSubtitle => 'يرجى التحقق من الاتصال والمحاولة مرة أخرى.\nستظهر العضلات تلقائياً عند توفرها.';
+
+  @override
+  String get unableToLoadExercisesTitle => 'تعذر تحميل التمارين';
+
+  @override
+  String get unableToLoadExercisesSubtitle => 'يرجى التحقق من الاتصال والمحاولة مرة أخرى.\nستظهر التمارين تلقائياً عند توفرها.';
 }

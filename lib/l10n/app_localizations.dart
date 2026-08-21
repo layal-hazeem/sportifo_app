@@ -3268,6 +3268,7 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please check your connection and try again.\nTrainees will appear automatically when available.'**
   String get unableToLoadTraineesSubtitle;
+
   /// No description provided for @createAdditionalPlan.
   ///
   /// In en, this message translates to:
@@ -3765,6 +3766,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'+ 15s'**
   String get plus15s;
+
+  /// No description provided for @unableToLoadMusclesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to Load Muscles'**
+  String get unableToLoadMusclesTitle;
+
+  /// No description provided for @unableToLoadMusclesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your connection and try again.\nMuscles will appear automatically when available.'**
+  String get unableToLoadMusclesSubtitle;
+
+  /// No description provided for @unableToLoadExercisesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to Load Exercises'**
+  String get unableToLoadExercisesTitle;
+
+  /// No description provided for @unableToLoadExercisesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your connection and try again.\nExercises will appear automatically when available.'**
+  String get unableToLoadExercisesSubtitle;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

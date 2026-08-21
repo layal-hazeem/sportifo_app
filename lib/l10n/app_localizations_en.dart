@@ -1648,6 +1648,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get unableToLoadTraineesSubtitle => 'Please check your connection and try again.\nTrainees will appear automatically when available.';
+
+  @override
   String get createAdditionalPlan => 'Create Additional Plan';
 
   @override
@@ -1895,4 +1897,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get plus15s => '+ 15s';
+
+  @override
+  String get unableToLoadMusclesTitle => 'Unable to Load Muscles';
+
+  @override
+  String get unableToLoadMusclesSubtitle => 'Please check your connection and try again.\nMuscles will appear automatically when available.';
+
+  @override
+  String get unableToLoadExercisesTitle => 'Unable to Load Exercises';
+
+  @override
+  String get unableToLoadExercisesSubtitle => 'Please check your connection and try again.\nExercises will appear automatically when available.';
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
-import 'package:sportifo_app/core/widgets/no_internet_view.dart'; // ← جديد
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/widgets/loading_shimmer.dart';
@@ -26,6 +25,7 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
   @override
   void initState() {
     super.initState();
+
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1200),
@@ -33,24 +33,24 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
 
     _headerSlideAnimation =
         Tween<Offset>(begin: const Offset(0, -0.5), end: Offset.zero).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(0.0, 0.5, curve: Curves.easeOutCubic),
-      ),
-    );
+          CurvedAnimation(
+            parent: _controller,
+            curve: const Interval(0.0, 0.5, curve: Curves.easeOutCubic),
+          ),
+        );
 
     _headerOpacityAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _controller, curve: const Interval(0.0, 0.5)),
     );
+
+    // ❌ تم إزالة استدعاء الـ Fetch من هنا لكي يتحدث الكيوبيت عند تغيير اللغة
   }
 
+  // ✅ تمت إضافة هذه الدالة لتحديث البيانات من السيرفر (والكاش) فوراً عند تغيير اللغة أو فتح الشاشة
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final cubit = context.read<CategoriesCubit>();
-    if (cubit.state is CategoriesInitial) {
-      cubit.fetchCategories(1);
-    }
+    context.read<CategoriesCubit>().fetchCategories(1);
   }
 
   @override
@@ -59,30 +59,20 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
     super.dispose();
   }
 
-  // 🔥 دالة مساعدة لفحص إذا الخطأ بسبب الانترنت
-  bool _isOfflineError(String message) {
-    final lower = message.toLowerCase();
-    return lower.contains('socket') ||
-        lower.contains('connection') ||
-        lower.contains('network') ||
-        lower.contains('failed host lookup') ||
-        lower.contains('timeout') ||
-        lower.contains('unreachable');
-  }
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final screenWidth = MediaQuery.of(context).size.width;
     final cardWidth = screenWidth * 0.75;
 
+    // 🔥 نقلنا الـ Map إلى داخل دالة build لكي تستطيع قراءة الترجمة المتغيرة (l10n)
     final Map<int, Map<String, String>> categoryUIInfo = {
       1: {
-        'subtitle': l10n.build_muscle,
+        'subtitle': l10n.build_muscle, // 🔥 تمت الترجمة
         'image': 'assets/images/strength.jpg',
       },
       2: {
-        'subtitle': l10n.burn_fat,
+        'subtitle': l10n.burn_fat, // 🔥 تمت الترجمة
         'image': 'assets/images/cardio.jpg',
       },
     };
@@ -120,51 +110,14 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
                   );
                 },
               );
-            }
-
-            // 🔥🔥🔥 هاد التعديل الأساسي
-            if (state is CategoriesFailure) {
-              final isOffline = _isOfflineError(state.errorMessage);
-
-              if (isOffline) {
-                return NoInternetView(
-                  onRetry: () {
-                    context.read<CategoriesCubit>().retry(1);
-                  },
-                );
-              }
-
-              // خطأ تاني (مش offline)
+            } else if (state is CategoriesFailure) {
               return Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.error_outline, size: 64, color: Colors.red),
-                      const SizedBox(height: 16),
-                      Text(
-                        state.errorMessage,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(color: Colors.red),
-                      ),
-                      const SizedBox(height: 16),
-                      ElevatedButton.icon(
-                        onPressed: () => context.read<CategoriesCubit>().retry(1),
-                        icon: const Icon(Icons.refresh),
-                        label: const Text('Retry'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primaryBtn,
-                        ),
-                      ),
-                    ],
-                  ),
+                child: Text(
+                  state.errorMessage,
+                  style: const TextStyle(color: Colors.red),
                 ),
               );
-            }
-
-            if (state is CategoriesSuccess) {
-              // ... نفس الكود القديم بالضبط ...
+            } else if (state is CategoriesSuccess) {
               final categories = state.categories;
 
               if (categories.isEmpty) {
@@ -185,6 +138,7 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const SizedBox(height: 5),
+                            // 🔥 ترجمة النص الثابت فوق الكروت
                             Text(
                               l10n.chooseYourWorkoutType ??
                                   "Choose Your\nWorkout Type",
@@ -209,14 +163,16 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
                       itemCount: categories.length,
                       itemBuilder: (context, index) {
                         final category = categories[index];
-                        final uiInfo = categoryUIInfo[category.id] ??
-                            {
-                              'subtitle': l10n.start_training,
-                              'image': 'assets/images/default_workout.png',
-                            };
+                        final uiInfo =
+                            categoryUIInfo[category.id] ??
+                                {
+                                  'subtitle': l10n.start_training, // 🔥 تمت الترجمة
+                                  'image': 'assets/images/default_workout.png',
+                                };
 
                         final delay = 0.2 + (index * 0.2);
-                        final slideAnim = Tween<Offset>(
+                        final slideAnim =
+                        Tween<Offset>(
                           begin: const Offset(0.5, 0.0),
                           end: Offset.zero,
                         ).animate(
@@ -251,6 +207,7 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
                               child: SizedBox(
                                 width: cardWidth,
                                 child: LightPremiumWorkoutCard(
+                                  // 🔥 إزالة toUpperCase() لتجنب أخطاء الخطوط العربية
                                   title: category.name,
                                   subtitle: uiInfo['subtitle']!,
                                   imagePath: uiInfo['image']!,
@@ -283,7 +240,6 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
                 ],
               );
             }
-
             return const SizedBox();
           },
         ),

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
-import 'package:sportifo_app/core/widgets/no_internet_view.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/widgets/loading_shimmer.dart';
+import '../../../../core/widgets/no_internet_view.dart';
 import '../../../../core/widgets/wave_app_bar.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../view_model/exercises_cubit/exercises_cubit.dart';
@@ -20,15 +20,6 @@ class ExercisesListScreen extends StatelessWidget {
     required this.categoryId,
     required this.categoryName,
   });
-
-  bool _isOfflineError(String message) {
-    final lower = message.toLowerCase();
-    return lower.contains('socket') ||
-        lower.contains('connection') ||
-        lower.contains('network') ||
-        lower.contains('failed host lookup') ||
-        lower.contains('timeout');
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,51 +68,7 @@ class ExercisesListScreen extends StatelessWidget {
                 );
               },
             );
-          }
-
-          if (state is ExercisesFailure) {
-            final isOffline = _isOfflineError(state.errorMessage);
-
-            if (isOffline) {
-              return NoInternetView(
-                onRetry: () {
-                  context.read<ExercisesCubit>().retry(categoryId: categoryId);
-                },
-              );
-            }
-
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.error_outline, size: 64, color: Colors.red),
-                    const SizedBox(height: 16),
-                    Text(
-                      state.errorMessage,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(color: Colors.red),
-                    ),
-                    const SizedBox(height: 16),
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        context.read<ExercisesCubit>().retry(categoryId: categoryId);
-                      },
-                      icon: const Icon(Icons.refresh),
-                      label: const Text('Retry'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFF57C00),
-                        foregroundColor: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }
-
-          if (state is ExercisesSuccess) {
+          } else if (state is ExercisesSuccess) {
             final exercises = state.exercises;
 
             if (exercises.isEmpty) {
@@ -133,9 +80,18 @@ class ExercisesListScreen extends StatelessWidget {
               );
             }
 
-            return ExercisesGridView(exercises: exercises);
-          }
 
+            return ExercisesGridView(exercises: exercises);
+          } else if (state is ExercisesFailure) {
+            // ✅✅✅ NEW: بدل Center(Text أحمر) → NoInternetView
+            return NoInternetView(
+              onRetry: () => context.read<ExercisesCubit>().fetchExercises(
+                categoryId: categoryId,
+              ),
+              title: l10n.unableToLoadExercisesTitle,
+              subtitle: l10n.unableToLoadExercisesSubtitle,
+            );
+          }
           return const SizedBox();
         },
       ),
