@@ -24,18 +24,33 @@ class WorkoutRepository {
     return Failure(ApiErrorHandler.handle(e));
   }
 }
-Future<ApiResult<List<ExerciseModel>>> getExercises({
-  int? categoryId,
-  int? organId,
-  List<int>? smallestCategoryId,
-  String? searchQuery,
-}) async {
-  try {
-    final cacheOptions = await DioFactory.getCacheOptions();
-    final dioOptions = cacheOptions.copyWith(
-      policy: CachePolicy.request,        // ← جرب السيرفر أولاً
-      maxStale: const Duration(days: 7),  // ← صلاحية الكاش
-    ).toOptions();
+  Future<ApiResult<List<ExerciseModel>>> getExercises({
+    int? categoryId,
+    int? organId,
+    List<int>? smallestCategoryId,
+    String? searchQuery,
+  }) async {
+    try {
+      final cacheOptions = await DioFactory.getCacheOptions();
+      final dioOptions = cacheOptions.copyWith(
+        policy: CachePolicy.forceCache,
+      ).toOptions();
+
+      final response = await _webService.getExercises(
+        categoryId: categoryId,
+        organId: organId,
+        smallestCategoryId: smallestCategoryId,
+        searchQuery: searchQuery,
+        options: dioOptions,
+      );
+
+      final responseModel = ExerciseResponseModel.fromJson(response.data);
+      return Success(responseModel.data);
+    } catch (e) {
+      return Failure(ApiErrorHandler.handle(e));
+    }
+  }
+
 
   Future<ApiResult<List<ExerciseModel>>> getAlternativeExercises(int exerciseId) async {
     try {
@@ -47,27 +62,7 @@ Future<ApiResult<List<ExerciseModel>>> getExercises({
       return Failure(ApiErrorHandler.handle(e));
     }
   }
-  Future<ApiResult<List<FilterItemModel>>> getSubCategories(int organId) async {
-    try {
-      final cacheOptions = await DioFactory.getCacheOptions();
-      final dioOptions = cacheOptions.copyWith(
-        policy: CachePolicy.forceCache,
-      ).toOptions();
 
-    final response = await _webService.getExercises(
-      categoryId: categoryId,
-      organId: organId,
-      smallestCategoryId: smallestCategoryId,
-      searchQuery: searchQuery,
-      options: dioOptions,
-    );
-
-    final responseModel = ExerciseResponseModel.fromJson(response.data);
-    return Success(responseModel.data);
-  } catch (e) {
-    return Failure(ApiErrorHandler.handle(e));
-  }
-}
 
 Future<ApiResult<List<FilterItemModel>>> getSubCategories(int organId) async {
   try {
