@@ -7,23 +7,28 @@ class SubscriptionRepository {
 
   SubscriptionRepository(this._webServices);
 
-  Future<List<UsersSubscribedModel>> fetchSubscriptions() async {
+  Future<List<UsersSubscribedModel>> fetchSubscriptions({
+    bool forceRefresh = false,
+  }) async {
     try {
-      // 1. جلب الـ response الخام من الـ Web Service
-      final responseMap = await _webServices.getSubscriptions();
-      
-      // 2. الوصول إلى قائمة الـ "data" داخل الـ JSON
-      final List<dynamic> dataList = responseMap['data'] as List<dynamic>;
-      
-      // 3. تحويل كل عنصر في القائمة إلى موديل UsersSubscribedModel
-      final List<UsersSubscribedModel> usersWithSubscriptions = dataList
-          .map((userJson) => UsersSubscribedModel.fromJson(userJson as Map<String, dynamic>))
+      final responseMap = await _webServices.getSubscriptions(
+        forceRefresh: forceRefresh,
+      );
+
+      final List<dynamic> dataList =
+          responseMap['data'] as List<dynamic>;
+
+      return dataList
+          .map(
+            (userJson) => UsersSubscribedModel.fromJson(
+              userJson as Map<String, dynamic>,
+            ),
+          )
           .toList();
-          
-      return usersWithSubscriptions;
     } catch (error) {
-      // يمكنك هنا تخصيخ رسالة الخطأ بناءً على نوع الـ DioException إذا أردت
-      throw Exception('Failed to load subscriptions: ${error.toString()}');
+      throw Exception(
+        'Failed to load subscriptions: ${error.toString()}',
+      );
     }
   }
 }

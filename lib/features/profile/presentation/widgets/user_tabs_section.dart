@@ -98,42 +98,49 @@ class _UserTabsSectionState extends State<UserTabsSection> {
         children: [
           _measurementRow(
             l10n.height,
-            "${s.height ?? "-"} cm",
+            s.height != null ? "${s.height} ${l10n.cm}" : "-",
             "assets/icons/height.svg",
           ),
+
           _measurementRow(
             l10n.weight,
-            "${s.weight ?? "-"} kg",
+            s.weight != null ? "${s.weight} ${l10n.kg}" : "-",
             "assets/icons/weight.svg",
           ),
+
           _measurementRow(
             l10n.shoulders,
-            s.shouldersWidth?.toString() ?? "-",
+            s.shouldersWidth != null ? "${s.shouldersWidth} ${l10n.cm}" : "-",
             "assets/icons/shoulders.svg",
           ),
+
           _measurementRow(
             l10n.chestCircumference,
-            s.chestPerimeter?.toString() ?? "-",
+            s.chestPerimeter != null ? "${s.chestPerimeter} ${l10n.cm}" : "-",
             "assets/icons/chest.svg",
           ),
+
           _measurementRow(
             l10n.waist,
-            s.waistPerimeter?.toString() ?? "-",
+            s.waistPerimeter != null ? "${s.waistPerimeter} ${l10n.cm}" : "-",
             "assets/icons/waist.svg",
           ),
+
           _measurementRow(
             l10n.thighCircumference,
-            s.thighPerimeter?.toString() ?? "-",
+            s.thighPerimeter != null ? "${s.thighPerimeter} ${l10n.cm}" : "-",
             "assets/icons/leg.svg",
           ),
+
           _measurementRow(
             l10n.hipCircumference,
-            s.hipPerimeter?.toString() ?? "-",
+            s.hipPerimeter != null ? "${s.hipPerimeter} ${l10n.cm}" : "-",
             "assets/icons/chest.svg",
           ),
+
           _measurementRow(
             l10n.armCircumference,
-            s.armPerimeter?.toString() ?? "-",
+            s.armPerimeter != null ? "${s.armPerimeter} ${l10n.cm}" : "-",
             "assets/icons/hand.svg",
           ),
         ],
@@ -206,7 +213,7 @@ class _UserTabsSectionState extends State<UserTabsSection> {
 
   BoxDecoration _tabDecoration() {
     return BoxDecoration(
-     color: context.backgroundColor,
+      color: context.backgroundColor,
       borderRadius: BorderRadius.circular(30),
       boxShadow: [
         BoxShadow(color: Colors.black.withOpacity(.05), blurRadius: 10),

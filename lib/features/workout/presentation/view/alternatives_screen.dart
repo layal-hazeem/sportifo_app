@@ -25,7 +25,11 @@ class AlternativesScreen extends StatelessWidget {
         backgroundColor: context.backgroundColor,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new, color: context.textColor, size: 18),
+          icon: Icon(
+            Icons.arrow_back_ios_new,
+            color: context.textColor,
+            size: 18,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -42,9 +46,7 @@ class AlternativesScreen extends StatelessWidget {
         builder: (context, state) {
           if (state is AlternativesLoading) {
             return const Center(
-              child: CircularProgressIndicator(
-                color: AppColors.primaryBtn,
-              ),
+              child: CircularProgressIndicator(color: AppColors.primaryBtn),
             );
           } else if (state is AlternativesError) {
             return Center(
@@ -90,14 +92,11 @@ class AlternativesScreen extends StatelessWidget {
 
     String displayImageUrl = '';
     if (exercise.images != null && exercise.images!.isNotEmpty) {
-      final selectedImage = exercise.images!.firstWhere(
-            (img) {
-          final type = (img.type ?? '').toLowerCase();
-          final url = (img.url ?? '').toLowerCase();
-          return !type.contains('gif') && !url.contains('.gif');
-        },
-        orElse: () => exercise.images!.first,
-      );
+      final selectedImage = exercise.images!.firstWhere((img) {
+        final type = (img.type ?? '').toLowerCase();
+        final url = (img.url ?? '').toLowerCase();
+        return !type.contains('gif') && !url.contains('.gif');
+      }, orElse: () => exercise.images!.first);
       displayImageUrl = selectedImage.url ?? '';
     }
 
@@ -107,83 +106,83 @@ class AlternativesScreen extends StatelessWidget {
     }
 
     return Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        decoration: BoxDecoration(
-          color: context.backgroundColor,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.primaryBtn.withOpacity(0.2)),
-        ),
-        child: Material(
-          color: Colors.transparent,
-          borderRadius: BorderRadius.circular(16),
-          child: ListTile(
-            contentPadding: const EdgeInsets.all(8),
-            leading: ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Container(
-                width: 60,
-                height: 60,
-            color: Colors.white,
-            child: displayImageUrl.isNotEmpty
-                ? CachedNetworkImage(
-              imageUrl: displayImageUrl,
-              fit: BoxFit.contain,
-              placeholder: (context, url) => const Padding(
-                padding: EdgeInsets.all(16.0),
-                child: CircularProgressIndicator(strokeWidth: 2),
-              ),
-              errorWidget: (context, url, error) => const Icon(
-                Icons.fitness_center,
-                color: Colors.grey,
-              ),
-            )
-                : const Icon(
-              Icons.image_not_supported,
-              color: Colors.grey,
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: context.backgroundColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.primaryBtn.withOpacity(0.2)),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(16),
+        child: ListTile(
+          contentPadding: const EdgeInsets.all(8),
+          leading: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              width: 60,
+              height: 60,
+              color: Colors.white,
+              child: displayImageUrl.isNotEmpty
+                  ? CachedNetworkImage(
+                      imageUrl: displayImageUrl,
+                      fit: BoxFit.contain,
+                      placeholder: (context, url) => const Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.fitness_center, color: Colors.grey),
+                    )
+                  : const Icon(Icons.image_not_supported, color: Colors.grey),
             ),
           ),
-        ),
-        title: Text(
-          exercise.name,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-        subtitle: Text(
-          muscleText,
-          style: TextStyle(
+          title: Text(
+            exercise.name,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          subtitle: Text(
+            muscleText,
+            style: TextStyle(
               color: Colors.grey.shade500,
               fontSize: 12,
-              fontWeight: FontWeight.w500),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-        trailing: Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: AppColors.primaryBtn.withOpacity(0.1),
-            shape: BoxShape.circle,
+              fontWeight: FontWeight.w500,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
-          child: const Icon(Icons.arrow_forward_ios_rounded, color: AppColors.primaryBtn, size: 16),
-        ),
-        onTap: () {
-          final savedExercisesCubit = context.read<SavedExercisesCubit>();
+          trailing: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: AppColors.primaryBtn.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.arrow_forward_ios_rounded,
+              color: AppColors.primaryBtn,
+              size: 16,
+            ),
+          ),
+          onTap: () {
+            final savedExercisesCubit = context.read<SavedExercisesCubit>();
 
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => BlocProvider.value(
-                value: savedExercisesCubit,
-                child: ExerciseDetailsScreen(
-                  exercise: exercise,
-                  isAlternative: true, // إخفاء زر البدائل في الشاشة الداخلية
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BlocProvider.value(
+                  value: savedExercisesCubit,
+                  child: ExerciseDetailsScreen(
+                    exercise: exercise,
+                    isAlternative: true, // إخفاء زر البدائل في الشاشة الداخلية
+                  ),
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
-            ) ,
     );
   }
 }

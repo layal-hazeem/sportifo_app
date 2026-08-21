@@ -7,15 +7,19 @@ class TraineesRepository {
 
   TraineesRepository(this._webService);
 
-  Future<ApiResult<CoachPlansResponseModel>> getCoachTrainees() async {
-    try {
-      final response = await _webService.getCoachTrainees();
+  Future<ApiResult<CoachPlansResponseModel>> getCoachTrainees({
+  bool forceRefresh = false,
+}) async {
+  try {
+    final response = await _webService.getCoachTrainees(
+      forceRefresh: forceRefresh,
+    );
 
-      final data = CoachPlansResponseModel.fromJson(response.data);
+    final data = CoachPlansResponseModel.fromJson(response.data);
 
-      return Success(data);
-    } catch (error) {
-      return Failure(error.toString());
-    }
+    return Success(data);
+  } catch (error) {
+    return Failure(error.toString());
   }
+}
 }

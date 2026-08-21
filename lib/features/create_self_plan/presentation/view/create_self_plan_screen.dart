@@ -119,9 +119,8 @@ class _CreateSelfPlanScreenState extends State<CreateSelfPlanScreen> {
             Navigator.pop(context);
           }
 
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(state.message)));
+            _showErrorMessage(state.message);
+
         }
       },
       child: Scaffold(
@@ -232,9 +231,7 @@ class _CreateSelfPlanScreenState extends State<CreateSelfPlanScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  _currentStep == 0
-                      ? l10n.stepOne
-                      : l10n.stepTwo,
+                  _currentStep == 0 ? l10n.stepOne : l10n.stepTwo,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
@@ -619,5 +616,41 @@ class _CreateSelfPlanScreenState extends State<CreateSelfPlanScreen> {
         ],
       ),
     );
+  }
+
+  void _showErrorMessage(String message) {
+    final l10n = AppLocalizations.of(context)!;
+
+    final lowerMessage = message.toLowerCase();
+
+    String errorMessage;
+
+    if (lowerMessage.contains('sets') ||
+        lowerMessage.contains('reps') ||
+        lowerMessage.contains('specify sets') ||
+        lowerMessage.contains('specify reps')) {
+      errorMessage = l10n.setsAndRepsRequired;
+    } else if (lowerMessage.contains('subscription')) {
+      errorMessage = l10n.userHasNoActiveSubscription;
+    } else if (lowerMessage.contains('plan')) {
+      errorMessage = l10n.planCreationFailed;
+    } else if (lowerMessage.contains('unauthorized')) {
+      errorMessage = l10n.unauthorizedAction;
+    } else {
+      errorMessage = l10n.somethingWentWrong;
+    }
+
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(errorMessage),
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.all(16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+        ),
+      );
   }
 }
