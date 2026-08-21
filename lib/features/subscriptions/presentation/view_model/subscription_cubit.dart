@@ -20,7 +20,20 @@ class SubscriptionCubit extends Cubit<SubscriptionState> {
       emit(SubscriptionSuccess(usersWithSubscriptions: result));
     } catch (error) {
       print("🚨 Error occurred: $error");
+
       emit(SubscriptionError(errorMessage: error.toString()));
+    }
+  }
+
+  Future<void> refreshSubscriptions() async {
+    try {
+      final result = await _subscriptionRepository.fetchSubscriptions(
+        forceRefresh: true,
+      );
+
+      emit(SubscriptionSuccess(usersWithSubscriptions: result));
+    } catch (error) {
+      print("🚨 Refresh error: $error");
     }
   }
 }

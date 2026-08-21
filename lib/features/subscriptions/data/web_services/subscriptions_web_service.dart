@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:sportifo_app/core/routes/app_routes.dart';
 
 class SubscriptionWebService {
@@ -6,19 +7,23 @@ class SubscriptionWebService {
 
   SubscriptionWebService(this._dio);
 
-  Future<Map<String, dynamic>> getSubscriptions() async {
+  Future<Map<String, dynamic>> getSubscriptions({
+    bool forceRefresh = false,
+  }) async {
     try {
-      // هنا نستخدم المسار الخاص بجلب الاشتراكات من الـ api_constants
-      final response = await _dio.get(AppRoutes.usersSubscribed);
-      
-      // نتحقق من أن الطلب تم بنجاح
+      final response = await _dio.get(
+        AppRoutes.usersSubscribed,
+        options: forceRefresh
+            ? CacheOptions(policy: CachePolicy.refresh, store: null).toOptions()
+            : null,
+      );
+
       if (response.data != null) {
         return response.data as Map<String, dynamic>;
-      } else {
-        throw Exception('Response data is empty');
       }
+
+      throw Exception('Response data is empty');
     } catch (e) {
-      // إعادة رمي الخطأ ليتم التعامل معه في الطبقات الأعلى
       rethrow;
     }
   }
