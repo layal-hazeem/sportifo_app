@@ -514,53 +514,45 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
                       Stack(
                         alignment: Alignment.center,
                         children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: CachedNetworkImage(
-                              imageUrl: imageUrl,
-                              height: 280,
-                              width: double.infinity,
-                              fit: BoxFit.contain,
-                              errorWidget: (c, u, e) => const SizedBox(
-                                height: 300,
-                                child: Icon(
-                                  Icons.fitness_center,
-                                  size: 50,
-                                  color: Colors.grey,
+                          // 🔥 الإطار الجديد الأنيق حول الصورة
+                          Container(
+                            width: double.infinity,
+                            height: 280,
+                            decoration: BoxDecoration(
+                              color: context.backgroundColor,
+                              borderRadius: BorderRadius.circular(32), // 🔥 حواف أنعم بكثير
+                              border: Border.all(
+                                color: AppColors.primaryBtn.withOpacity(0.3), // إطار ناعم بلون التطبيق
+                                width: 2,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.04),
+                                  blurRadius: 12,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(30), // متناسق مع الإطار الخارجي
+                              child: CachedNetworkImage(
+                                imageUrl: imageUrl,
+                                height: 280,
+                                width: double.infinity,
+                                fit: BoxFit.cover, // 🔥 تعبئة العرض بالكامل لتصبح أعرض
+                                errorWidget: (c, u, e) => const SizedBox(
+                                  height: 280,
+                                  child: Icon(
+                                    Icons.fitness_center,
+                                    size: 50,
+                                    color: Colors.grey,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                          if (_isPaused && !_isCountingDown)
-                            Positioned.fill(
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: BackdropFilter(
-                                  filter: ImageFilter.blur(
-                                    sigmaX: 2,
-                                    sigmaY: 2,
-                                  ),
-                                  child: Container(
-                                    color: Colors.black.withOpacity(0.35),
-                                    child: Center(
-                                      child: Container(
-                                        padding: const EdgeInsets.all(12),
-                                        decoration: BoxDecoration(
-                                          color: context.backgroundColor
-                                              .withOpacity(0.85),
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: Icon(
-                                          Icons.pause_rounded,
-                                          color: context.textColor,
-                                          size: 36,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
+
+                          // زر المساعدة (?)
                           Positioned(
                             top: 12,
                             right: 12,
@@ -596,38 +588,8 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 16),
-                      if (_isPaused && !_isCountingDown)
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.orange.shade100,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(
-                                Icons.pause_rounded,
-                                color: Colors.orange,
-                                size: 16,
-                              ),
-                              const SizedBox(width: 6),
-                              Text(
-                                l10n.paused,
-                                style: TextStyle(
-                                  color: Colors.orange.shade700,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 20),
+
                       Row(
                         children: [
                           const Icon(

@@ -95,7 +95,7 @@ class PlatformPlansSection extends StatelessWidget {
                         );
                       },
                       child: Text(
-                        l10n.see_all, // 🔥 ترجمة كلمة See All
+                        l10n.see_all,
                         style: const TextStyle(
                           color: AppColors.primaryBtn,
                           fontWeight: FontWeight.bold,

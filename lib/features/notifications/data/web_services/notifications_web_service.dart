@@ -7,7 +7,6 @@ class NotificationsWebService {
 
   NotificationsWebService(this._dio);
 
-  // 1️⃣ إند بوينت جلب عدد الإشعارات الغير مقروءة
   Future<Response> getUnreadNotificationsCount({Options? options}) async {
     return await _dio.get(
        ApiConstants.notificationsCount ,
@@ -15,7 +14,6 @@ class NotificationsWebService {
     );
   }
 
-  // 2️⃣ إند بوينت جلب لستة الإشعارات (مع الـ Pagination)
   Future<Response> getNotifications({
     required int page,
     int perPage = 20,

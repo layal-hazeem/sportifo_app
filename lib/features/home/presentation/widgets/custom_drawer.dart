@@ -40,66 +40,73 @@ class CustomDrawer extends StatelessWidget {
                   topLeft: Radius.circular(40),
                 ),
               ),
-              child: Column(
-                children: [
-                  BlocBuilder<ProfileCubit, ProfileState>(
-                    builder: (context, state) {
-                      if (state is ProfileSuccess) {
-                        final user = state.profileModel;
+              // 🔥 التعديل الجوهري هنا: غلفنا الـ Column بالـ BlocBuilder لنقدر نعرف الرول
+              child: BlocBuilder<ProfileCubit, ProfileState>(
+                builder: (context, state) {
+                  if (state is ProfileSuccess) {
+                    final user = state.profileModel;
+                    // 🔥 فحصنا إذا المستخدم كوتش
+                    final isCoach = user.role == 'coach';
 
-                        return _buildUserInfo(
+                    return Column(
+                      children: [
+                        _buildUserInfo(
                           name: "${user.firstName} ${user.lastName}",
                           email: user.email ?? "",
                           imageUrl: user.profilePic,
                           context: context,
-                        );
-                      }
+                        ),
+                        const SizedBox(height: 20),
 
-                      return const Center(child: CircularProgressIndicator());
-                    },
-                  ),
-                  const SizedBox(height: 20),
+                        _buildItem(
+                          icon: Icons.person_outline,
+                          text: l10n.profile,
+                          item: DrawerItem.profile,
+                          context: context,
+                        ),
+                        _buildItem(
+                          icon: Icons.bookmark_border,
+                          text: l10n.saved_exercises,
+                          item: DrawerItem.saved,
+                          context: context,
+                        ),
 
-                  _buildItem(
-                    icon: Icons.person_outline,
-                    text: l10n.profile,
-                    item: DrawerItem.profile,
-                    context: context,
-                  ),
-                  _buildItem(
-                    icon: Icons.bookmark_border,
-                    text: l10n.saved_exercises,
-                    item: DrawerItem.saved,
-                    context: context,
-                  ),
-                  _buildItem(
-                    icon: Icons.card_membership_outlined,
-                    text: l10n.mySubscriptions,
-                    item: DrawerItem.mySubscriptions,
-                    context: context,
-                  ),
-                  _buildItem(
-                    icon: Icons.settings,
-                    text: l10n.settings,
-                    item: DrawerItem.settings,
-                    context: context,
-                  ),
-                  _buildItem(
-                    icon: Icons.info_outline,
-                    text: l10n.aboutUs,
-                    item: DrawerItem.about,
-                    context: context,
-                  ),
+                        // 🚀 السحر هنا: هذا العنصر لن يظهر أبداً إذا كان الحساب كوتش!
+                        if (!isCoach)
+                          _buildItem(
+                            icon: Icons.card_membership_outlined,
+                            text: l10n.mySubscriptions,
+                            item: DrawerItem.mySubscriptions,
+                            context: context,
+                          ),
 
-                  const Spacer(),
+                        _buildItem(
+                          icon: Icons.settings,
+                          text: l10n.settings,
+                          item: DrawerItem.settings,
+                          context: context,
+                        ),
+                        _buildItem(
+                          icon: Icons.info_outline,
+                          text: l10n.aboutUs,
+                          item: DrawerItem.about,
+                          context: context,
+                        ),
 
-                  _buildItem(
-                    icon: Icons.logout,
-                    text: l10n.logout,
-                    item: DrawerItem.logout,
-                    context: context,
-                  ),
-                ],
+                        const Spacer(),
+
+                        _buildItem(
+                          icon: Icons.logout,
+                          text: l10n.logout,
+                          item: DrawerItem.logout,
+                          context: context,
+                        ),
+                      ],
+                    );
+                  }
+
+                  return const Center(child: CircularProgressIndicator());
+                },
               ),
             ),
           ),

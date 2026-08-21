@@ -34,7 +34,6 @@ class _NotificationsViewState extends State<_NotificationsView> {
   @override
   void initState() {
     super.initState();
-    // إعداد الـ ScrollListener لدعم الـ Pagination
     _scrollController.addListener(_onScroll);
   }
 
@@ -196,10 +195,8 @@ class _NotificationsViewState extends State<_NotificationsView> {
                 return NotificationCard(
                   notification: notification,
                   onTap: () {
-                    // فتح الـ Deep Link إن وجد عند الكبس على الإشعار
                     if (notification.deepLink != null &&
                         notification.deepLink!.isNotEmpty) {
-                      // يمكنك استخدام دالة _handleDeepLink هنا
                     }
                   },
                 );
