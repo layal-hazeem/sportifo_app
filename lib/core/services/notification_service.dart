@@ -245,7 +245,12 @@ class NotificationService {
         navigatorKey.currentState?.pushNamed(AppRoutes.myPlans);
         break;
       case 'subscription':
-        navigatorKey.currentState?.pushNamed(AppRoutes.mySubscriptions);
+        final role = getIt<LocalStorage>().getRole();
+        if (role == 'coach') {
+          navigatorKey.currentState?.pushNamed(AppRoutes.usersSubscribed);
+        } else {
+          navigatorKey.currentState?.pushNamed(AppRoutes.mySubscriptions);
+        }
         break;
       case 'user_profile':
         navigatorKey.currentState?.pushNamed(AppRoutes.getProfile);
@@ -265,7 +270,6 @@ class NotificationService {
       case 'ad':
         _handleAdNavigation(modelId);
         break;
-    // 💬 حالة إشعار المحادثة الفورية
       case 'chat':
       case 'message':
       case 'conversation':
@@ -273,14 +277,12 @@ class NotificationService {
           final conversationId = int.tryParse(modelId.toString());
 
           if (conversationId != null) {
-            // 🔥 جلب بيانات الطرف الآخر من الإشعار (إذا كان الباك إند يرسلها)
-            // إذا لم يرسلها، نضع قيمة افتراضية مثل "New Message"
             final senderName = data['sender_name']?.toString() ?? 'New Message';
             final senderImage = data['sender_image']?.toString();
             final subType = data['subscription_type']?.toString();
 
             navigatorKey.currentState?.pushNamed(
-              AppRoutes.chatDetail, // 👈 مسار الشات
+              AppRoutes.chatDetail,
               arguments: {
                 'conversationId': conversationId,
                 'otherParticipantName': senderName,
