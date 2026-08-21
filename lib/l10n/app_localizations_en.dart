@@ -1734,6 +1734,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noAlternativesFound => 'No alternative exercises available for this workout right now.';
 
   @override
+  String get userHasNoActiveSubscription => 'User Has No Active Subscription';
+
+  @override
+  String get planCreationFailed => 'Plan Creation Failed';
+
+  @override
+  String get unauthorizedAction => 'Unauthorized Action';
+
+  @override
+  String get setsAndRepsRequired => 'Sets And Reps Required';
+
+  @override
+  String get somethingWentWrong => 'Something Went Wrong';
+  @override
   String get mySubscriptions => 'My Subscriptions';
 
   @override

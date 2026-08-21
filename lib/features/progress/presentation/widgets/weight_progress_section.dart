@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../../data/models/weight_progress_model.dart';
 
@@ -78,7 +79,7 @@ class WeightProgressSection extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: context.secondaryBackgroundColor,
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(

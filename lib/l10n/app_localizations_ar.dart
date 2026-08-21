@@ -1734,6 +1734,20 @@ class AppLocalizationsAr extends AppLocalizations {
   String get noAlternativesFound => 'لا توجد تمارين بديلة متاحة لهذا التمرين حالياً.';
 
   @override
+  String get userHasNoActiveSubscription => 'المستخدم ليس لديه اشتراك فعال';
+
+  @override
+  String get planCreationFailed => 'فشل إنشاء الخطة';
+
+  @override
+  String get unauthorizedAction => 'إجراء غير مصرح به';
+
+  @override
+  String get setsAndRepsRequired => '';
+
+  @override
+  String get somethingWentWrong => 'حدث خطأ ما';
+  @override
   String get mySubscriptions => 'اشتراكاتي';
 
   @override

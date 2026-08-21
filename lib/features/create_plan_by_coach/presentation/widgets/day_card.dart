@@ -244,7 +244,7 @@ class _PlanDayCardState extends State<PlanDayCard> {
                             ),
                           ),
                           child: const Icon(
-                            Icons.tune_rounded,
+                            Icons.settings,
                             color: AppColors.primaryBtn,
                             size: 18,
                           ),
@@ -398,7 +398,7 @@ class _PlanDayCardState extends State<PlanDayCard> {
 
                                 // ⚙️ SETTINGS
                                 _RowIconButton(
-                                  icon: Icons.tune_rounded,
+                                  icon: Icons.settings,
                                   color: AppColors.primaryBtn,
                                   onTap: () {
                                     ExerciseSettingsBottomSheet.show(
@@ -592,7 +592,7 @@ class _PlanDayCardState extends State<PlanDayCard> {
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
-                    Icons.tune_rounded,
+                    Icons.settings,
                     color: AppColors.primaryBtn,
                     size: 24,
                   ),
