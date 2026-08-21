@@ -42,7 +42,7 @@ class ExerciseCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: context.backgroundColor,
+          color: context.secondaryBackgroundColor,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
