@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../../data/models/weight_progress_model.dart';
 
@@ -21,10 +22,11 @@ class WeightProgressSection extends StatelessWidget {
     for (final entry in history) {
       lastWeightPerDay.putIfAbsent(entry.date, () => entry.weight);
     }
-    final sortedHistory = lastWeightPerDay.entries
-        .map((e) => WeightHistoryEntry(date: e.key, weight: e.value))
-        .toList()
-      ..sort((a, b) => a.date.compareTo(b.date));
+    final sortedHistory =
+        lastWeightPerDay.entries
+            .map((e) => WeightHistoryEntry(date: e.key, weight: e.value))
+            .toList()
+          ..sort((a, b) => a.date.compareTo(b.date));
 
     double weightChange = 0;
     if (sortedHistory.length >= 2) {
@@ -78,7 +80,7 @@ class WeightProgressSection extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: context.secondaryBackgroundColor,
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
@@ -93,10 +95,10 @@ class WeightProgressSection extends StatelessWidget {
                 children: [
                   Text(
                     l10n.weight_history,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black54,
+                      color: context.textColor,
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -181,7 +183,9 @@ class WeightProgressSection extends StatelessWidget {
                             barWidth: 3,
                             belowBarData: BarAreaData(
                               show: true,
-                              color: AppColors.primaryBtn.withValues(alpha: 0.1),
+                              color: AppColors.primaryBtn.withValues(
+                                alpha: 0.1,
+                              ),
                             ),
                             dotData: FlDotData(
                               show: true,
@@ -241,7 +245,7 @@ class _StatCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.secondaryBackgroundColor,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
@@ -257,10 +261,10 @@ class _StatCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               value,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Colors.black87,
+                color: context.textColor,
               ),
               textAlign: TextAlign.center,
             ),

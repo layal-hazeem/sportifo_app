@@ -174,6 +174,7 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<PartsCubit>(
     () => PartsCubit(getIt<WorkoutRepository>()),
   );
+  
   final savedExercisesCubit = SavedExercisesCubit(getIt<WorkoutRepository>());
   getIt.registerSingleton<SavedExercisesCubit>(savedExercisesCubit);
   await savedExercisesCubit.initialize();

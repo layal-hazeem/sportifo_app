@@ -6,7 +6,7 @@ import '../theme/app_colors.dart';
 
 class WaveAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
-  final String? userName; // 🔥 المتغير اللي رح يحمل اسم المستخدم
+  final String? userName;
   final int? currentIndex;
   final bool? isCoach;
   final List<Widget>? actions;
@@ -16,7 +16,7 @@ class WaveAppBar extends StatelessWidget implements PreferredSizeWidget {
   const WaveAppBar({
     super.key,
     this.title,
-    this.userName, // 🔥
+    this.userName,
     this.currentIndex,
     this.isCoach,
     this.actions,
@@ -49,7 +49,6 @@ class WaveAppBar extends StatelessWidget implements PreferredSizeWidget {
         defaultTitle = (!userIsCoach) ? "Trainees" : "My Plans";
         break;
       case 2:
-      // 🚀 جنب بعض، بدون "to Sportifo"، حجم أكبر شوي، نفس الحجم، والاسم أغمق وأبرز
         final name = (userName != null && userName!.isNotEmpty) ? userName! : "Champion";
         return RichText(
           maxLines: 1,
@@ -58,16 +57,16 @@ class WaveAppBar extends StatelessWidget implements PreferredSizeWidget {
             text: "Welcome, ",
             style: TextStyle(
               color: Colors.white.withOpacity(0.85),
-              fontSize: 16, // حجم أكبر شوي
+              fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
             children: [
               TextSpan(
                 text: name,
                 style: const TextStyle(
-                  color: Colors.white, // أبيض صافي وبارز
-                  fontSize: 18, // نفس الحجم
-                  fontWeight: FontWeight.w900, // أغمق وأعرض (أبرز)
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w900,
                 ),
               ),
             ],

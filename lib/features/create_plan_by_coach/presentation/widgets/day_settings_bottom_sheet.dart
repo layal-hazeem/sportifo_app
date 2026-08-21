@@ -66,7 +66,7 @@ class _DaySettingsBottomSheetState extends State<DaySettingsBottomSheet> {
       padding: const EdgeInsets.only(bottom: 16),
       child: TextField(
         controller: controller,
-        keyboardType: TextInputType.number,
+        keyboardType: TextInputType.text,
         style: TextStyle(
           color: context.textColor,
           fontSize: 16,
@@ -187,6 +187,7 @@ class _DaySettingsBottomSheetState extends State<DaySettingsBottomSheet> {
 
             // Default Reps
             inputField(l10n.defaultReps, repsController),
+            
 
             // Apply to all
             CheckboxListTile(

@@ -17,7 +17,7 @@ class ProfileResponseModel {
   final String? email;
   final String? phone;
   final DateTime dateOfBirth;
-  final bool gender;
+  final bool? gender;
   final String? role;
   final double height;
   final double weight;
@@ -55,7 +55,7 @@ class ProfileResponseModel {
         dateOfBirth: json["date_of_birth"] != null
             ? DateTime.parse(json["date_of_birth"])
             : DateTime.fromMillisecondsSinceEpoch(0),
-        gender: json["gender"] == 1,
+        gender: json["gender"] == null ? null : json["gender"] == 1,
         role: json["role"],
         height: (json["height"] ?? 0).toDouble(),
         weight: (json["weight"] ?? 0).toDouble(),
@@ -74,7 +74,7 @@ class ProfileResponseModel {
     "phone": phone,
     "date_of_birth":
         "${dateOfBirth.year.toString().padLeft(4, '0')}-${dateOfBirth.month.toString().padLeft(2, '0')}-${dateOfBirth.day.toString().padLeft(2, '0')}",
-    "gender": gender ? 1 : 0,
+    "gender": gender == null ? null : (gender! ? 1 : 0),
     "role": role,
     "height": height,
     "weight": weight,

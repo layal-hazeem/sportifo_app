@@ -37,18 +37,15 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: context.backgroundColor,
       body: BlocListener<LoginCubit, LoginState>(
         listener: (context, state) async {
-          // ❌ تم حذف الـ showDialog من هنا نهائياً
 
           if (state is LoginSuccess) {
-            // ❌ تم حذف Navigator.pop(context) من هنا
             final token = state.response.data!.token;
             final role = state.response.data!.user.role;
             print("Current Role = $role");
 
-            // 🔥 حفظ التوكن
             await getIt<LocalStorage>().saveToken(token);
             await getIt<LocalStorage>().saveRole(role);
-            await NotificationService().registerDeviceToBackend();
+             NotificationService().registerDeviceToBackend();
             if (context.mounted) {
               AppSnackBar.show(
                 context,

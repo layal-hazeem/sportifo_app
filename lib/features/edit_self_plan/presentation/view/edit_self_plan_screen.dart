@@ -5,7 +5,6 @@ import 'package:sportifo_app/core/di/service_locator.dart';
 import 'package:sportifo_app/core/network/api_result.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
-import 'package:sportifo_app/core/widgets/custom_glass_bottom_sheet.dart';
 import 'package:sportifo_app/core/widgets/wave_app_bar.dart';
 
 import 'package:sportifo_app/features/create_plan_by_coach/data/models/plan_day_ui_model.dart';
@@ -335,7 +334,6 @@ class _EditSelfPlanScreenState extends State<EditSelfPlanScreen> {
 
     for (final day in days) {
       for (final exercise in day.exercises) {
-
         if (exercise.isCardio) continue;
 
         final effectiveSets = exercise.sets ?? day.defaultSets;
@@ -410,12 +408,7 @@ EFFECTIVE REPS: $effectiveReps
         if (state is EditSelfPlanError) {
           Navigator.of(context).pop();
 
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.error),
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
+          _showErrorMessage(state.error);
         }
       },
       builder: (context, state) {
@@ -730,5 +723,41 @@ EFFECTIVE REPS: $effectiveReps
         ],
       ),
     );
+  }
+
+  void _showErrorMessage(String message) {
+    final l10n = AppLocalizations.of(context)!;
+
+    final lowerMessage = message.toLowerCase();
+
+    String errorMessage;
+
+    if (lowerMessage.contains('sets') ||
+        lowerMessage.contains('reps') ||
+        lowerMessage.contains('specify sets') ||
+        lowerMessage.contains('specify reps')) {
+      errorMessage = l10n.setsAndRepsRequired;
+    } else if (lowerMessage.contains('subscription')) {
+      errorMessage = l10n.userHasNoActiveSubscription;
+    } else if (lowerMessage.contains('plan')) {
+      errorMessage = l10n.planCreationFailed;
+    } else if (lowerMessage.contains('unauthorized')) {
+      errorMessage = l10n.unauthorizedAction;
+    } else {
+      errorMessage = l10n.somethingWentWrong;
+    }
+
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(errorMessage),
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.all(16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+        ),
+      );
   }
 }

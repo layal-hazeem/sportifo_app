@@ -115,7 +115,7 @@ class _TraineesContent extends StatelessWidget {
             backgroundColor: context.backgroundColor,
 
             onRefresh: () async {
-              await context.read<TraineesCubit>().getCoachTrainees();
+              await context.read<TraineesCubit>().refreshCoachTrainees();
             },
 
             child: TraineesGrid(

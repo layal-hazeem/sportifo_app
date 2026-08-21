@@ -356,9 +356,7 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
         if (state is EditCoachPlanError) {
           Navigator.of(context).pop();
 
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(state.error)));
+          _showErrorMessage(state.error);
         }
       },
       builder: (context, state) {
@@ -795,5 +793,41 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
         ],
       ),
     );
+  }
+
+  void _showErrorMessage(String message) {
+    final l10n = AppLocalizations.of(context)!;
+
+    final lowerMessage = message.toLowerCase();
+
+    String errorMessage;
+
+    if (lowerMessage.contains('sets') ||
+        lowerMessage.contains('reps') ||
+        lowerMessage.contains('specify sets') ||
+        lowerMessage.contains('specify reps')) {
+      errorMessage = l10n.setsAndRepsRequired;
+    } else if (lowerMessage.contains('subscription')) {
+      errorMessage = l10n.userHasNoActiveSubscription;
+    } else if (lowerMessage.contains('plan')) {
+      errorMessage = l10n.planCreationFailed;
+    } else if (lowerMessage.contains('unauthorized')) {
+      errorMessage = l10n.unauthorizedAction;
+    } else {
+      errorMessage = l10n.somethingWentWrong;
+    }
+
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(errorMessage),
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.all(16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+        ),
+      );
   }
 }

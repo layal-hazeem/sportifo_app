@@ -244,7 +244,7 @@ class _PlanDayCardState extends State<PlanDayCard> {
                             ),
                           ),
                           child: const Icon(
-                            Icons.tune_rounded,
+                            Icons.settings,
                             color: AppColors.primaryBtn,
                             size: 18,
                           ),
@@ -398,7 +398,7 @@ class _PlanDayCardState extends State<PlanDayCard> {
 
                                 // ⚙️ SETTINGS
                                 _RowIconButton(
-                                  icon: Icons.tune_rounded,
+                                  icon: Icons.settings,
                                   color: AppColors.primaryBtn,
                                   onTap: () {
                                     ExerciseSettingsBottomSheet.show(
@@ -592,7 +592,7 @@ class _PlanDayCardState extends State<PlanDayCard> {
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
-                    Icons.tune_rounded,
+                    Icons.settings,
                     color: AppColors.primaryBtn,
                     size: 24,
                   ),
@@ -627,7 +627,7 @@ class _PlanDayCardState extends State<PlanDayCard> {
 
                 TextField(
                   controller: setsController,
-                  keyboardType: TextInputType.number,
+                  keyboardType: TextInputType.text,
                   style: TextStyle(color: context.textColor),
                   decoration: InputDecoration(
                     labelText: l10n.defaultSets,
@@ -662,7 +662,7 @@ class _PlanDayCardState extends State<PlanDayCard> {
 
                 TextField(
                   controller: repsController,
-                  keyboardType: TextInputType.number,
+                  keyboardType: TextInputType.text,
                   style: TextStyle(color: context.textColor),
                   decoration: InputDecoration(
                     labelText: l10n.defaultReps,

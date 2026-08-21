@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/routes/app_routes.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/loading_shimmer.dart';
 import '../../../../core/widgets/wave_app_bar.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -27,22 +27,42 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
   int? selectedMuscleId;
   List<int> selectedSmallestCategoryId = [];
 
-  // 🔥 تم التعديل هنا: استخدام int (الـ ID) كـ Key بدلاً من String (الاسم)
-  // ⚠️ يرجى التأكد من مطابقة هذه الأرقام مع الـ IDs الحقيقية في الباك إند
   final Map<int, String> _muscleAssets = {
-    1: 'assets/images/muscles/chest.jpg', // id الصدر
-    2: 'assets/images/muscles/back.jpg', // id الظهر
-    3: 'assets/images/muscles/shoulders.jpg', // id الأرجل
-    4: 'assets/images/muscles/legs.jpg', // id الأكتاف
-    5: 'assets/images/muscles/biceps.jpg', // id البايسبس
-    6: 'assets/images/muscles/triceps.jpg', // id الترايسبس
-    7: 'assets/images/muscles/ABS.jpg', // id المعدة
+    1: 'assets/images/muscles/chest.jpg',
+    2: 'assets/images/muscles/back.jpg',
+    3: 'assets/images/muscles/shoulders.jpg',
+    4: 'assets/images/muscles/legs.jpg',
+    5: 'assets/images/muscles/biceps.jpg',
+    6: 'assets/images/muscles/triceps.jpg',
+    7: 'assets/images/muscles/ABS.jpg',
   };
 
   @override
   void initState() {
     super.initState();
+    context.read<ExercisesCubit>().reset();
+    _loadInitialData();
+  }
+
+  void _loadInitialData() {
     context.read<CategoriesCubit>().fetchCategories(2);
+  }
+
+  Future<void> _onRefresh() async {
+    setState(() {
+      selectedMuscleId = null;
+      selectedSmallestCategoryId.clear();
+    });
+
+    context.read<PartsCubit>().reset();
+
+    await Future.wait([
+      context.read<CategoriesCubit>().fetchCategories(2),
+      context.read<ExercisesCubit>().fetchExercises(
+        categoryId: 1,
+        forceRefresh: true,
+      ),
+    ]);
   }
 
   @override
@@ -75,7 +95,7 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 1️⃣ شيمر العضلات الأفقية العلوي
+          // 1️⃣ شريط العضلات العلوي
           SizedBox(
             height: 115,
             child: BlocConsumer<CategoriesCubit, CategoriesState>(
@@ -90,7 +110,6 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
               },
               builder: (context, state) {
                 if (state is CategoriesLoading) {
-                  // 🔥 تأثير شيمر أفقي للكروت العلوية
                   return ListView.builder(
                     scrollDirection: Axis.horizontal,
                     padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -112,17 +131,13 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                     itemBuilder: (context, index) {
                       final muscle = state.categories[index];
                       final isSelected = selectedMuscleId == muscle.id;
-
-                      // 🔥 جلب الصورة بناءً على الـ ID الخاص بالعضلة بدلاً من اسمها المتغير
                       final imagePath =
                           _muscleAssets[muscle.id] ??
-                          'assets/images/muscles/default.jpg';
+                              'assets/images/muscles/default.jpg';
 
                       return HorizontalMuscleCard(
-                        name: muscle
-                            .name, // الاسم يظهر باللغة الصحيحة (عربي/إنجليزي)
-                        imagePath:
-                            imagePath, // الصورة تظهر بشكل دائم بغض النظر عن اللغة
+                        name: muscle.name,
+                        imagePath: imagePath,
                         isSelected: isSelected,
                         anyMuscleSelected: selectedMuscleId != null,
                         onTap: () {
@@ -133,7 +148,7 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                               context.read<ExercisesCubit>().fetchExercises(
                                 categoryId: 1,
                               );
-                              context.read<PartsCubit>().emit(PartsInitial());
+                              context.read<PartsCubit>().reset();
                             } else {
                               selectedMuscleId = muscle.id;
                               selectedSmallestCategoryId.clear();
@@ -150,9 +165,13 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                   );
                 } else if (state is CategoriesFailure) {
                   return Center(
-                    child: Text(
-                      state.errorMessage,
-                      style: const TextStyle(color: Colors.red),
+                    child: TextButton.icon(
+                      onPressed: _onRefresh,
+                      icon: const Icon(Icons.refresh, color: AppColors.primaryBtn),
+                      label: Text(
+                        state.errorMessage,
+                        style: const TextStyle(color: Colors.red, fontSize: 13),
+                      ),
                     ),
                   );
                 }
@@ -162,6 +181,7 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
           ),
           const SizedBox(height: 15),
 
+          // 2️⃣ شريط الفلاتر الفرعية (Parts)
           BlocBuilder<PartsCubit, PartsState>(
             builder: (context, state) {
               if (state is PartsSuccess && state.Parts.isNotEmpty) {
@@ -196,7 +216,7 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                             categoryId: 1,
                             organId: selectedMuscleId,
                             smallestCategoryId:
-                                selectedSmallestCategoryId.isEmpty
+                            selectedSmallestCategoryId.isEmpty
                                 ? null
                                 : selectedSmallestCategoryId,
                           );
@@ -214,41 +234,83 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
             padding: EdgeInsets.symmetric(vertical: 10),
             child: Divider(color: Colors.black12, thickness: 1),
           ),
+
+          // 3️⃣ شبكة التمارين مع خاصية السحب للتحديث (Pull-To-Refresh)
           Expanded(
-            child: BlocBuilder<ExercisesCubit, ExercisesState>(
-              builder: (context, state) {
-                if (state is ExercisesLoading) {
-                  return GridView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 15,
-                          mainAxisSpacing: 15,
-                          childAspectRatio: 0.85,
+            child: RefreshIndicator(
+              onRefresh: _onRefresh,
+              color: AppColors.primaryBtn,
+              backgroundColor: context.backgroundColor,
+              child: BlocBuilder<ExercisesCubit, ExercisesState>(
+                builder: (context, state) {
+                  if (state is ExercisesLoading) {
+                    return GridView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      gridDelegate:
+                      const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 15,
+                        mainAxisSpacing: 15,
+                        childAspectRatio: 0.85,
+                      ),
+                      itemCount: 6,
+                      itemBuilder: (context, index) {
+                        return const LoadingShimmer(
+                          width: double.infinity,
+                          height: double.infinity,
+                          borderRadius: 16,
+                        );
+                      },
+                    );
+                  } else if (state is ExercisesSuccess) {
+                    return ExercisesGridView(exercises: state.exercises);
+                  } else if (state is ExercisesFailure) {
+                    return LayoutBuilder(
+                      builder: (context, constraints) => SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        child: SizedBox(
+                          height: constraints.maxHeight,
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.wifi_off_rounded,
+                                  size: 48,
+                                  color: Colors.redAccent,
+                                ),
+                                const SizedBox(height: 12),
+                                Text(
+                                  state.errorMessage,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(color: Colors.red),
+                                ),
+                                const SizedBox(height: 16),
+                                ElevatedButton.icon(
+                                  onPressed: _onRefresh,
+                                  icon: const Icon(Icons.refresh, color: Colors.white),
+                                  label: Text(
+                                    l10n.retry,
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.primaryBtn,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                    itemCount: 6,
-                    itemBuilder: (context, index) {
-                      return const LoadingShimmer(
-                        width: double.infinity,
-                        height: double.infinity,
-                        borderRadius: 16,
-                      );
-                    },
-                  );
-                } else if (state is ExercisesSuccess) {
-                  return ExercisesGridView(exercises: state.exercises);
-                } else if (state is ExercisesFailure) {
-                  return Center(
-                    child: Text(
-                      state.errorMessage,
-                      style: const TextStyle(color: Colors.red),
-                    ),
-                  );
-                }
-                return const SizedBox();
-              },
+                      ),
+                    );
+                  }
+                  return const SizedBox();
+                },
+              ),
             ),
           ),
         ],

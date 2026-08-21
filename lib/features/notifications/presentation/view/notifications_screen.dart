@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/di/service_locator.dart';
+import '../../../../core/services/notification_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../view_model/notifications_cubit.dart';
 import '../view_model/notifications_state.dart';
@@ -34,7 +35,6 @@ class _NotificationsViewState extends State<_NotificationsView> {
   @override
   void initState() {
     super.initState();
-    // إعداد الـ ScrollListener لدعم الـ Pagination
     _scrollController.addListener(_onScroll);
   }
 
@@ -196,11 +196,12 @@ class _NotificationsViewState extends State<_NotificationsView> {
                 return NotificationCard(
                   notification: notification,
                   onTap: () {
-                    // فتح الـ Deep Link إن وجد عند الكبس على الإشعار
-                    if (notification.deepLink != null &&
-                        notification.deepLink!.isNotEmpty) {
-                      // يمكنك استخدام دالة _handleDeepLink هنا
-                    }
+                    NotificationService().handleNotificationNavigation({
+                      'event_type': notification.eventType,
+                      'model': notification.model,
+                      'model_id': notification.modelId,
+                      'deep_link': notification.deepLink,
+                    });
                   },
                 );
               },

@@ -43,10 +43,8 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
       CurvedAnimation(parent: _controller, curve: const Interval(0.0, 0.5)),
     );
 
-    // ❌ تم إزالة استدعاء الـ Fetch من هنا لكي يتحدث الكيوبيت عند تغيير اللغة
   }
 
-  // ✅ تمت إضافة هذه الدالة لتحديث البيانات من السيرفر (والكاش) فوراً عند تغيير اللغة أو فتح الشاشة
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -65,14 +63,13 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
     final screenWidth = MediaQuery.of(context).size.width;
     final cardWidth = screenWidth * 0.75;
 
-    // 🔥 نقلنا الـ Map إلى داخل دالة build لكي تستطيع قراءة الترجمة المتغيرة (l10n)
     final Map<int, Map<String, String>> categoryUIInfo = {
       1: {
-        'subtitle': l10n.build_muscle, // 🔥 تمت الترجمة
+        'subtitle': l10n.build_muscle,
         'image': 'assets/images/strength.jpg',
       },
       2: {
-        'subtitle': l10n.burn_fat, // 🔥 تمت الترجمة
+        'subtitle': l10n.burn_fat,
         'image': 'assets/images/cardio.jpg',
       },
     };
@@ -118,7 +115,7 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
                 ),
               );
             } else if (state is CategoriesSuccess) {
-              final categories = state.categories;
+              final categories = state.categories.take(2).toList();
 
               if (categories.isEmpty) {
                 return Center(child: Text(l10n.no_categories_found));
@@ -138,7 +135,6 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const SizedBox(height: 5),
-                            // 🔥 ترجمة النص الثابت فوق الكروت
                             Text(
                               l10n.chooseYourWorkoutType ??
                                   "Choose Your\nWorkout Type",
@@ -166,7 +162,7 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
                         final uiInfo =
                             categoryUIInfo[category.id] ??
                             {
-                              'subtitle': l10n.start_training, // 🔥 تمت الترجمة
+                              'subtitle': l10n.start_training,
                               'image': 'assets/images/default_workout.png',
                             };
 
@@ -207,7 +203,6 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
                               child: SizedBox(
                                 width: cardWidth,
                                 child: LightPremiumWorkoutCard(
-                                  // 🔥 إزالة toUpperCase() لتجنب أخطاء الخطوط العربية
                                   title: category.name,
                                   subtitle: uiInfo['subtitle']!,
                                   imagePath: uiInfo['image']!,

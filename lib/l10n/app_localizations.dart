@@ -674,7 +674,7 @@ abstract class AppLocalizations {
   /// No description provided for @resistance_training.
   ///
   /// In en, this message translates to:
-  /// **'Resistance Training'**
+  /// **'Resistance '**
   String get resistance_training;
 
   /// No description provided for @target_muscle.
@@ -3365,6 +3365,36 @@ abstract class AppLocalizations {
   /// **'No alternative exercises available for this workout right now.'**
   String get noAlternativesFound;
 
+  /// No description provided for @userHasNoActiveSubscription.
+  ///
+  /// In en, this message translates to:
+  /// **'User Has No Active Subscription'**
+  String get userHasNoActiveSubscription;
+
+  /// No description provided for @planCreationFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan Creation Failed'**
+  String get planCreationFailed;
+
+  /// No description provided for @unauthorizedAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Unauthorized Action'**
+  String get unauthorizedAction;
+
+  /// No description provided for @setsAndRepsRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Sets And Reps Required'**
+  String get setsAndRepsRequired;
+
+  /// No description provided for @somethingWentWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Something Went Wrong'**
+  String get somethingWentWrong;
+
   /// No description provided for @mySubscriptions.
   ///
   /// In en, this message translates to:
@@ -3706,6 +3736,11 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please check your connection and try again.'**
   String get noInternetSubtitle;
+  /// No description provided for @activateSmartPlanTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Activate Your Smart Plan ⚡'**
+  String get activateSmartPlanTitle;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

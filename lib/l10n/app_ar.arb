@@ -98,7 +98,7 @@
   "confirmLogout":"هل أنت متأكد أنك تريد تسجيل الخروج؟",
   "logoutApproval":"نعم، تسجيل الخروج",
   "agreed":"موافق",
-  "resistance_training": "تدريبات المقاومة",
+  "resistance_training": " المقاومة",
   "target_muscle": "العضلة المستهدفة",
   "how_to_perform": "كيفية الأداء",
   "gallery": "معرض الصور",
@@ -725,6 +725,11 @@
     "termsContent4": "جميع النصوص، التصاميم، الصور، والبرامج في سبورتيفو هي ملكية فكرية محمية للتطبيق، ولا يجوز إعادة استخدامها دون إذن كتابي.",
     "alternativeExercises": "التمارين البديلة",
     "noAlternativesFound": "لا توجد تمارين بديلة متاحة لهذا التمرين حالياً.",
+    "userHasNoActiveSubscription":"المستخدم ليس لديه اشتراك فعال",
+    "planCreationFailed":"فشل إنشاء الخطة",
+    "unauthorizedAction":"إجراء غير مصرح به",
+    "setsAndRepsRequired":"",
+    "somethingWentWrong":"حدث خطأ ما",
     "mySubscriptions": "اشتراكاتي",
       "statusActive": "نشط",
       "statusPending": "قيد المراجعة",
@@ -794,6 +799,9 @@
           "noInternetTitle": "لا يوجد اتصال بالإنترنت",
   "noInternetSubtitle": "يرجى التحقق من اتصالك والمحاولة مرة أخرى.",
   "retry": "إعادة المحاولة"
+        "activateSmartPlanTitle": "تفعيل الخطة الذكية ",
+          "activateSmartPlanDesc": "اضبط هدفك البدني الأساسي الآن لحساب سعراتك اليومية والماكروز تلقائياً وبدقة.",
+          "setMyGoalNow": "ضبط هدفي الآن"
 
 
 

@@ -10,16 +10,29 @@ class TraineesCubit extends Cubit<TraineesState> {
 
   TraineesCubit(this._repository) : super(const TraineesInitial());
 
+  // التحميل العادي
   Future<void> getCoachTrainees() async {
     emit(const TraineesLoading());
 
-    final ApiResult<CoachPlansResponseModel> result =
-        await _repository.getCoachTrainees();
+    final ApiResult<CoachPlansResponseModel> result = await _repository
+        .getCoachTrainees();
 
     if (result is Success<CoachPlansResponseModel>) {
       emit(TraineesSuccess(result.data));
     } else if (result is Failure<CoachPlansResponseModel>) {
       emit(TraineesFailure(result.message));
+    }
+  }
+
+  // Pull to Refresh
+  Future<void> refreshCoachTrainees() async {
+    final ApiResult<CoachPlansResponseModel> result = await _repository
+        .getCoachTrainees(forceRefresh: true);
+
+    if (result is Success<CoachPlansResponseModel>) {
+      emit(TraineesSuccess(result.data));
+    } else if (result is Failure<CoachPlansResponseModel>) {
+      print('🚨 TRAINEES REFRESH ERROR: ${result.message}');
     }
   }
 }

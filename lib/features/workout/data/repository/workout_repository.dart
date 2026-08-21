@@ -8,13 +8,18 @@ import '../web_services/workout_web_service.dart';
 
 class WorkoutRepository {
   final WorkoutWebService _webService;
+
   WorkoutRepository(this._webService);
-  Future<ApiResult<List<FilterItemModel>>> getCategories(int id) async {
+
+  // 1️⃣ جلب فئات التمارين / العضلات الأساسية
+  Future<ApiResult<List<FilterItemModel>>> getCategories(
+      int id, {
+        bool forceRefresh = false,
+      }) async {
     try {
       final cacheOptions = await DioFactory.getCacheOptions();
-      final dioOptions = cacheOptions.copyWith(
-        policy: CachePolicy.forceCache,
-      ).toOptions();
+      final policy = forceRefresh ? CachePolicy.refresh : CachePolicy.forceCache;
+      final dioOptions = cacheOptions.copyWith(policy: policy).toOptions();
 
       final response = await _webService.getCategories(id, options: dioOptions);
       final responseModel = FilterResponseModel.fromJson(response.data);
@@ -24,22 +29,15 @@ class WorkoutRepository {
     }
   }
 
-  Future<ApiResult<List<ExerciseModel>>> getAlternativeExercises(int exerciseId) async {
-    try {
-      final response = await _webService.getAlternativeExercises(exerciseId);
-      final List data = response.data['data'] ?? [];
-      final List<ExerciseModel> exercises = data.map((json) => ExerciseModel.fromJson(json)).toList();
-      return Success(exercises);
-    } catch (e) {
-      return Failure(ApiErrorHandler.handle(e));
-    }
-  }
-  Future<ApiResult<List<FilterItemModel>>> getSubCategories(int organId) async {
+  // 2️⃣ جلب الأجزاء الدقيقة (الكبسولات)
+  Future<ApiResult<List<FilterItemModel>>> getSubCategories(
+      int organId, {
+        bool forceRefresh = false,
+      }) async {
     try {
       final cacheOptions = await DioFactory.getCacheOptions();
-      final dioOptions = cacheOptions.copyWith(
-        policy: CachePolicy.forceCache,
-      ).toOptions();
+      final policy = forceRefresh ? CachePolicy.refresh : CachePolicy.forceCache;
+      final dioOptions = cacheOptions.copyWith(policy: policy).toOptions();
 
       final response = await _webService.getSubCategories(organId, options: dioOptions);
       final responseModel = FilterResponseModel.fromJson(response.data);
@@ -49,17 +47,18 @@ class WorkoutRepository {
     }
   }
 
+  // 3️⃣ جلب التمارين الأساسية مع دعم الفلاتر والبحث وكسر الكاش
   Future<ApiResult<List<ExerciseModel>>> getExercises({
     int? categoryId,
     int? organId,
     List<int>? smallestCategoryId,
     String? searchQuery,
+    bool forceRefresh = false,
   }) async {
     try {
       final cacheOptions = await DioFactory.getCacheOptions();
-      final dioOptions = cacheOptions.copyWith(
-        policy: CachePolicy.forceCache,
-      ).toOptions();
+      final policy = forceRefresh ? CachePolicy.refresh : CachePolicy.forceCache;
+      final dioOptions = cacheOptions.copyWith(policy: policy).toOptions();
 
       final response = await _webService.getExercises(
         categoryId: categoryId,
@@ -76,6 +75,20 @@ class WorkoutRepository {
     }
   }
 
+  // 4️⃣ جلب التمارين البديلة
+  Future<ApiResult<List<ExerciseModel>>> getAlternativeExercises(int exerciseId) async {
+    try {
+      final response = await _webService.getAlternativeExercises(exerciseId);
+      final List data = response.data['data'] ?? [];
+      final List<ExerciseModel> exercises =
+      data.map((json) => ExerciseModel.fromJson(json)).toList();
+      return Success(exercises);
+    } catch (e) {
+      return Failure(ApiErrorHandler.handle(e));
+    }
+  }
+
+  // 5️⃣ حفظ أو إلغاء حفظ تمرين (POST - بدون كاش)
   Future<ApiResult<bool>> toggleSaveExercise(int exerciseId) async {
     try {
       final response = await _webService.toggleSaveExercise(exerciseId);
@@ -89,32 +102,27 @@ class WorkoutRepository {
     }
   }
 
-Future<ApiResult<List<ExerciseModel>>> getSavedExercises({
-  bool forceRefresh = false,
-}) async {
-  try {
-    final cacheOptions = await DioFactory.getCacheOptions();
-    final policy = forceRefresh 
-        ? CachePolicy.refresh  
-        : CachePolicy.forceCache; 
-    
-    final dioOptions = cacheOptions.copyWith(
-      policy: policy,
-    ).toOptions();
+  // 6️⃣ جلب التمارين المحفوظة
+  Future<ApiResult<List<ExerciseModel>>> getSavedExercises({
+    bool forceRefresh = false,
+  }) async {
+    try {
+      final cacheOptions = await DioFactory.getCacheOptions();
+      final policy = forceRefresh ? CachePolicy.refresh : CachePolicy.forceCache;
+      final dioOptions = cacheOptions.copyWith(policy: policy).toOptions();
 
-    final response = await _webService.getSavedExercises(options: dioOptions);
+      final response = await _webService.getSavedExercises(options: dioOptions);
 
-    if (response.data['data'] is List) {
-      final List data = response.data['data'];
-      final exercises = data.map((e) => ExerciseModel.fromJson(e)).toList();
-      return Success(exercises);
+      if (response.data['data'] is List) {
+        final List data = response.data['data'];
+        final exercises = data.map((e) => ExerciseModel.fromJson(e)).toList();
+        return Success(exercises);
+      }
+
+      final responseModel = ExerciseResponseModel.fromJson(response.data);
+      return Success(responseModel.data);
+    } catch (e) {
+      return Failure(ApiErrorHandler.handle(e));
     }
-
-    final responseModel = ExerciseResponseModel.fromJson(response.data);
-    return Success(responseModel.data);
-  } catch (e) {
-    print("Error fetching saved: $e");
-    return Failure(ApiErrorHandler.handle(e));
   }
-}
 }

@@ -1,7 +1,8 @@
-import 'package:dio_cache_interceptor/dio_cache_interceptor.dart'; // تأكدي من هذا الاستيراد
+import 'package:dio/dio.dart'; // 🔥 ضفنا استيراد Dio لمعرفة الـ DioException
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import '../../../../core/network/api_error_handler.dart';
 import '../../../../core/network/api_result.dart';
-import '../../../../core/network/dio_factory.dart'; // لاستدعاء DioFactory
+import '../../../../core/network/dio_factory.dart';
 import '../models/target_model.dart';
 import '../web_services/target_web_service.dart';
 
@@ -31,6 +32,9 @@ class TargetRepository {
       final responseModel = TargetResponseModel.fromJson(response.data);
       return Success(responseModel.data);
     } catch (e) {
+      if (e is DioException && e.response?.statusCode == 404) {
+        return Failure("not found");
+      }
       return Failure(ApiErrorHandler.handle(e));
     }
   }

@@ -24,7 +24,6 @@ class _AllPlatformPlansScreenState extends State<AllPlatformPlansScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // 🔥 تحديث تلقائي عند تغيير اللغة (كما فعلنا في شاشة المتدرب)
     final locale = Localizations.localeOf(context);
     if (_currentLocale != locale) {
       _currentLocale = locale;
@@ -44,7 +43,6 @@ class _AllPlatformPlansScreenState extends State<AllPlatformPlansScreen> {
         body: BlocBuilder<PlatformPlansCubit, PlatformPlansState>(
           builder: (context, state) {
             if (state is PlatformPlansLoading) {
-              // 🔥 تطبيق اللودينج شيمر هنا بشكل احترافي ومطابق للكارد
               return ListView.builder(
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                 itemCount: 5,
@@ -98,7 +96,7 @@ class _AllPlatformPlansScreenState extends State<AllPlatformPlansScreen> {
               if (plans.isEmpty) {
                 return Center(
                   child: Text(
-                    l10n.noCustomPlans, // 🔥 ترجمة عند عدم وجود خطط
+                    l10n.noCustomPlans,
                     style: const TextStyle(color: AppColors.hintText, fontSize: 16),
                   ),
                 );

@@ -297,7 +297,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get agreed => 'Agreed';
 
   @override
-  String get resistance_training => 'Resistance Training';
+  String get resistance_training => 'Resistance ';
 
   @override
   String get target_muscle => 'Target Muscle';
@@ -1698,6 +1698,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noAlternativesFound => 'No alternative exercises available for this workout right now.';
 
   @override
+  String get userHasNoActiveSubscription => 'User Has No Active Subscription';
+
+  @override
+  String get planCreationFailed => 'Plan Creation Failed';
+
+  @override
+  String get unauthorizedAction => 'Unauthorized Action';
+
+  @override
+  String get setsAndRepsRequired => 'Sets And Reps Required';
+
+  @override
+  String get somethingWentWrong => 'Something Went Wrong';
+
+  @override
   String get mySubscriptions => 'My Subscriptions';
 
   @override
@@ -1867,4 +1882,5 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noInternetSubtitle => 'Please check your connection and try again.';
+  String get activateSmartPlanTitle => 'Activate Your Smart Plan ⚡';
 }

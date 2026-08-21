@@ -176,7 +176,7 @@ class _GoalSelectorBottomSheetState extends State<GoalSelectorBottomSheet> {
                         const SizedBox(height: 8),
                         Center(
                           child: Text(
-                            l10n.goalSubtitle, // 🔥 ترجمة الوصف
+                            l10n.goalSubtitle,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 13,
@@ -187,7 +187,6 @@ class _GoalSelectorBottomSheetState extends State<GoalSelectorBottomSheet> {
                         ),
                         const SizedBox(height: 25),
 
-                        // 🔥 كرت التضخيم
                         _buildGoalCard(
                           title: l10n.bulkTitle,
                           subtitle: l10n.bulkSubtitle,
@@ -196,7 +195,6 @@ class _GoalSelectorBottomSheetState extends State<GoalSelectorBottomSheet> {
                           context: context,
                         ),
 
-                        // 🔥 كرت التنشيف
                         _buildGoalCard(
                           title: l10n.cutTitle,
                           subtitle: l10n.cutSubtitle,
@@ -205,7 +203,6 @@ class _GoalSelectorBottomSheetState extends State<GoalSelectorBottomSheet> {
                           context: context,
                         ),
 
-                        // 🔥 كرت المحافظة
                         _buildGoalCard(
                           title: l10n.maintainTitle,
                           subtitle: l10n.maintainSubtitle,
@@ -243,7 +240,7 @@ class _GoalSelectorBottomSheetState extends State<GoalSelectorBottomSheet> {
                       ),
                     ),
                     child: Text(
-                      l10n.confirmAndComputePlan, // 🔥 ترجمة زر التأكيد
+                      l10n.confirmAndComputePlan,
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -307,7 +304,7 @@ class _GoalSelectorBottomSheetState extends State<GoalSelectorBottomSheet> {
                       fontSize: 14,
                       color: isSelected
                           ? AppColors.primaryBtn
-                          : context.textColor, // الان يستخدم textColor بشكل صحيح
+                          : context.textColor,
                     ),
                   ),
                   const SizedBox(height: 3),
