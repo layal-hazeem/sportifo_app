@@ -55,11 +55,29 @@ class _CoachHomeSkeletonState extends State<CoachHomeSkeleton>
         const SizedBox(height: 24),
         Row(
           children: [
-            Expanded(child: _shimmerBox(width: double.infinity, height: 80, radius: 16)),
+            Expanded(
+              child: _shimmerBox(
+                width: double.infinity,
+                height: 80,
+                radius: 16,
+              ),
+            ),
             const SizedBox(width: 12),
-            Expanded(child: _shimmerBox(width: double.infinity, height: 80, radius: 16)),
+            Expanded(
+              child: _shimmerBox(
+                width: double.infinity,
+                height: 80,
+                radius: 16,
+              ),
+            ),
             const SizedBox(width: 12),
-            Expanded(child: _shimmerBox(width: double.infinity, height: 80, radius: 16)),
+            Expanded(
+              child: _shimmerBox(
+                width: double.infinity,
+                height: 80,
+                radius: 16,
+              ),
+            ),
           ],
         ),
         const SizedBox(height: 24),
@@ -69,7 +87,7 @@ class _CoachHomeSkeletonState extends State<CoachHomeSkeleton>
           height: 100,
           child: Row(
             children: List.generate(
-              4,
+              3,
               (i) => Padding(
                 padding: const EdgeInsets.only(right: 14),
                 child: _shimmerBox(width: 70, height: 100, radius: 12),

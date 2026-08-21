@@ -33,6 +33,8 @@ class ProfileTopSection extends StatelessWidget {
       imageProvider = AssetImage(
         gender! ? "assets/images/male.jpg" : "assets/images/female.jpg",
       );
+    } else {
+      imageProvider = const AssetImage("assets/images/default_avatar.jpg");
     }
 
     return SizedBox(

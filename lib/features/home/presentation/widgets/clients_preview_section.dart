@@ -5,9 +5,6 @@ import 'package:sportifo_app/features/subscriptions/data/models/users_subscribed
 import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 
-/// Expects the FULL client list (not pre-filtered by `hasPlan`) — otherwise
-/// the "needs a plan" badge below can never render, since every item would
-/// already have `hasPlan == true`.
 class ClientsPreviewSection extends StatelessWidget {
   final List<UsersSubscribedModel> clients;
   final VoidCallback onSeeAllTap;

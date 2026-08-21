@@ -22,36 +22,35 @@ class CoachHomeRepositoryImpl implements CoachHomeRepository {
     this._subscriptionRepository,
   );
 
- @override
-Future<CoachModel> getCoachInfo() async {
-  final result = await _profileRepository.getProfile();
+  @override
+  Future<CoachModel> getCoachInfo() async {
+    final result = await _profileRepository.getProfile();
 
-  if (result is Success<ProfileResponseModel>) {
-    final profile = result.data;
-    final coach = profile.coach;
+    if (result is Success<ProfileResponseModel>) {
+      final profile = result.data;
+      final coach = profile.coach;
 
-    final fullName =
-        coach?.fullName?.trim().isNotEmpty == true
-            ? coach!.fullName!.trim()
-            : '${profile.firstName} ${profile.lastName}'.trim();
+      final fullName = coach?.fullName?.trim().isNotEmpty == true
+          ? coach!.fullName!.trim()
+          : '${profile.firstName} ${profile.lastName}'.trim();
 
-    return CoachModel(
-      id: coach?.id ?? profile.id ?? 0,
-      fullName: fullName,
-      description: coach?.description ?? '',
-      yearsOfExp: coach?.yearsOfExp ?? 0,
-      dateOfBirth: profile.dateOfBirth.toIso8601String(),
-      gender: profile.gender ? 1 : 0,
-      profilePic: profile.profilePic ?? '',
-    );
+      return CoachModel(
+        id: coach?.id ?? profile.id ?? 0,
+        fullName: fullName,
+        description: coach?.description ?? '',
+        yearsOfExp: coach?.yearsOfExp ?? 0,
+        dateOfBirth: profile.dateOfBirth.toIso8601String(),
+        gender: profile.gender == true ? 1 : 0,
+        profilePic: profile.profilePic ?? '',
+      );
+    }
+
+    if (result is Failure) {
+      throw Exception(result);
+    }
+
+    throw Exception('Failed to load coach profile');
   }
-
-  if (result is Failure) {
-    throw Exception(result);
-  }
-
-  throw Exception('Failed to load coach profile');
-}
 
   @override
   Future<int> getUnreadNotificationsCount() async {
