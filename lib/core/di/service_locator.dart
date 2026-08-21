@@ -70,6 +70,7 @@ import '../../features/targets/data/web_services/target_web_service.dart';
 import '../../features/targets/presentation/view_model/target_cubit/target_cubit.dart';
 import '../../features/trainee_subscriptions/data/repositories/trainee_subscription_repository.dart';
 import '../../features/trainee_subscriptions/data/web_services/trainee_subscription_web_service.dart';
+import '../../features/trainee_subscriptions/presentation/view_model/my_subscriptions_cubit/my_subscriptions_cubit.dart';
 import '../../features/workout/data/repository/workout_repository.dart';
 import '../../features/workout/data/web_services/workout_web_service.dart';
 import '../../features/workout/presentation/view_model/alternatives_cubit/alternatives_cubit.dart';
@@ -153,19 +154,18 @@ Future<void> setupServiceLocator() async {
   );
 
   getIt.registerLazySingleton<ExercisesCubit>(
-    () => ExercisesCubit(getIt<WorkoutRepository>()),
+        () => ExercisesCubit(getIt<WorkoutRepository>()),
   );
   getIt.registerFactory<CategoriesCubit>(
-    () => CategoriesCubit(getIt<WorkoutRepository>()),
+        () => CategoriesCubit(getIt<WorkoutRepository>()),
   );
 
   getIt.registerLazySingleton<PartsCubit>(
-    () => PartsCubit(getIt<WorkoutRepository>()),
+        () => PartsCubit(getIt<WorkoutRepository>()),
   );
   
   final savedExercisesCubit = SavedExercisesCubit(getIt<WorkoutRepository>());
-  getIt.registerSingleton<SavedExercisesCubit>(savedExercisesCubit);
-  await savedExercisesCubit.initialize();
+  getIt.registerSingleton<SavedExercisesCubit>(savedExercisesCubit); 
 
   getIt.registerLazySingleton<ProfileWebService>(
     () => ProfileWebService(getIt<Dio>()),
@@ -439,4 +439,9 @@ getIt.registerFactory<ChatDetailCubit>(
     () => EditCoachPlanCubit(getIt<EditCoachPlanRepository>()),
   );
   getIt.registerFactory(() => AlternativesCubit(getIt<WorkoutRepository>()));
+
+  // My Subscriptions (History)
+  getIt.registerFactory<MySubscriptionsCubit>(
+        () => MySubscriptionsCubit(getIt<TraineeSubscriptionRepository>()),
+  );
 }

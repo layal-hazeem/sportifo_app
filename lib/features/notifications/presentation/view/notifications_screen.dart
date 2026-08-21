@@ -3,10 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/no_internet_view.dart'; // ✅ استدعاء الودجت الموحدة
 import '../view_model/notifications_cubit.dart';
 import '../view_model/notifications_state.dart';
 import '../widgets/notification_card.dart';
 import '../widgets/notifications_shimmer.dart';
+import '../../../../l10n/app_localizations.dart';
 
 class NotificationsScreen extends StatelessWidget {
   const NotificationsScreen({super.key});
@@ -34,7 +36,6 @@ class _NotificationsViewState extends State<_NotificationsView> {
   @override
   void initState() {
     super.initState();
-    // إعداد الـ ScrollListener لدعم الـ Pagination
     _scrollController.addListener(_onScroll);
   }
 
@@ -53,11 +54,12 @@ class _NotificationsViewState extends State<_NotificationsView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.backgroundColor,
       appBar: AppBar(
         title: Text(
-          'Notifications',
+          l10n.notifications,
           style: TextStyle(
             color: context.textColor,
             fontWeight: FontWeight.bold,
@@ -80,46 +82,23 @@ class _NotificationsViewState extends State<_NotificationsView> {
         builder: (context, state) {
           final cubit = context.read<NotificationsCubit>();
 
+          // ⏳ تحميل أول مرة (ما في بيانات سابقة)
           if (state is NotificationsLoading &&
               cubit.notificationsList.isEmpty) {
             return const NotificationsShimmerLoading();
           }
 
+          // ✅✅✅ هون عدلنا: إذا فشل التحميل وما في بيانات مخزنة سابقاً
+          // بنعرض NoInternetView الموحدة بدل الـ Center القديم
           if (state is NotificationsError && cubit.notificationsList.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.error_outline_rounded,
-                    size: 64,
-                    color: Colors.grey.shade400,
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    state.message,
-                    style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () => cubit.getNotifications(isRefresh: true),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primaryBtn,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: const Text(
-                      'Try Again',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ],
-              ),
+            return NoInternetView(
+              onRetry: () => cubit.getNotifications(isRefresh: true),
+              title: l10n.notifications_unableToLoadTitle,
+              subtitle: l10n.notifications_unableToLoadSubtitle,
             );
           }
 
+          // 📭 قائمة فارغة (نجاح بس ما في إشعارات)
           if (cubit.notificationsList.isEmpty) {
             return RefreshIndicator(
               color: AppColors.primaryBtn,
@@ -146,7 +125,7 @@ class _NotificationsViewState extends State<_NotificationsView> {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          'No Notifications Yet',
+                          l10n.notifications_emptyTitle,
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -155,7 +134,7 @@ class _NotificationsViewState extends State<_NotificationsView> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'We will notify you when something important arrives.',
+                          l10n.notifications_emptySubtitle,
                           style: TextStyle(
                             fontSize: 13,
                             color: Colors.grey.shade600,
@@ -170,6 +149,7 @@ class _NotificationsViewState extends State<_NotificationsView> {
             );
           }
 
+          // ✅ في بيانات: نعرض اللستة
           return RefreshIndicator(
             color: AppColors.primaryBtn,
             onRefresh: () async => cubit.getNotifications(isRefresh: true),
@@ -196,7 +176,6 @@ class _NotificationsViewState extends State<_NotificationsView> {
                 return NotificationCard(
                   notification: notification,
                   onTap: () {
-                    // فتح الـ Deep Link إن وجد عند الكبس على الإشعار
                     if (notification.deepLink != null &&
                         notification.deepLink!.isNotEmpty) {
                       // يمكنك استخدام دالة _handleDeepLink هنا

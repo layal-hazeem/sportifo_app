@@ -3197,6 +3197,78 @@ abstract class AppLocalizations {
   /// **'Free Plan'**
   String get freePlan;
 
+  /// No description provided for @noInternetConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'No Internet Connection'**
+  String get noInternetConnection;
+
+  /// No description provided for @noInternetSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your network and try again.\nCached data will appear automatically when available.'**
+  String get noInternetSubtitle;
+
+  /// No description provided for @unableToLoadChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to Load Chat'**
+  String get unableToLoadChat;
+
+  /// No description provided for @unableToLoadChatSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your connection and try again.\nYour chat history will appear automatically when available.'**
+  String get unableToLoadChatSub;
+
+  /// No description provided for @unableToLoadPlans.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to Load Plans'**
+  String get unableToLoadPlans;
+
+  /// No description provided for @unableToLoadPlansSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your connection and try again.\nCached data will appear automatically when available.'**
+  String get unableToLoadPlansSub;
+
+  /// No description provided for @notifications_unableToLoadTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to Load Notifications'**
+  String get notifications_unableToLoadTitle;
+
+  /// No description provided for @notifications_unableToLoadSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your connection and try again.\nNotifications will appear automatically when available.'**
+  String get notifications_unableToLoadSubtitle;
+
+  /// No description provided for @notifications_emptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No Notifications Yet'**
+  String get notifications_emptyTitle;
+
+  /// No description provided for @notifications_emptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We will notify you when something important arrives.'**
+  String get notifications_emptySubtitle;
+
+  /// No description provided for @unableToLoadTraineesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to Load Trainees'**
+  String get unableToLoadTraineesTitle;
+
+  /// No description provided for @unableToLoadTraineesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your connection and try again.\nTrainees will appear automatically when available.'**
+  String get unableToLoadTraineesSubtitle;
+
   /// No description provided for @createAdditionalPlan.
   ///
   /// In en, this message translates to:
@@ -3394,6 +3466,359 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Something Went Wrong'**
   String get somethingWentWrong;
+  /// No description provided for @mySubscriptions.
+  ///
+  /// In en, this message translates to:
+  /// **'My Subscriptions'**
+  String get mySubscriptions;
+
+  /// No description provided for @statusActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get statusActive;
+
+  /// No description provided for @statusPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get statusPending;
+
+  /// No description provided for @statusExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get statusExpired;
+
+  /// No description provided for @statusRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get statusRejected;
+
+  /// No description provided for @currentSubscription.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Plan'**
+  String get currentSubscription;
+
+  /// No description provided for @amount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get amount;
+
+  /// No description provided for @processNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction No.'**
+  String get processNumber;
+
+  /// No description provided for @confirmedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmed At'**
+  String get confirmedAt;
+
+  /// No description provided for @noSubscriptionsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'You have no past or active subscriptions yet'**
+  String get noSubscriptionsYet;
+
+  /// No description provided for @subscription.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscription'**
+  String get subscription;
+
+  /// No description provided for @cancelWorkoutTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Workout?'**
+  String get cancelWorkoutTitle;
+
+  /// No description provided for @cancelWorkoutMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'All progress for this session will be lost and won\'t be saved.'**
+  String get cancelWorkoutMessage;
+
+  /// No description provided for @noKeepGoing.
+  ///
+  /// In en, this message translates to:
+  /// **'No, Keep Going'**
+  String get noKeepGoing;
+
+  /// No description provided for @yesCancelWorkout.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, Cancel Workout'**
+  String get yesCancelWorkout;
+
+  /// No description provided for @endSessionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'End Session'**
+  String get endSessionTitle;
+
+  /// No description provided for @endSessionMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Would you like to save your current progress and continue later, or discard this session completely?'**
+  String get endSessionMessage;
+
+  /// No description provided for @saveAndExit.
+  ///
+  /// In en, this message translates to:
+  /// **'Save & Exit'**
+  String get saveAndExit;
+
+  /// No description provided for @discardSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard Session'**
+  String get discardSession;
+
+  /// No description provided for @howToPerformTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How to perform?'**
+  String get howToPerformTitle;
+
+  /// No description provided for @noInstructionsAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No instructions available for this exercise.'**
+  String get noInstructionsAvailable;
+
+  /// No description provided for @gotIt.
+  ///
+  /// In en, this message translates to:
+  /// **'Got It'**
+  String get gotIt;
+
+  /// No description provided for @enterWeightAndReps.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter weight and reps'**
+  String get enterWeightAndReps;
+
+  /// No description provided for @exerciseLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'EXERCISE'**
+  String get exerciseLabel;
+
+  /// No description provided for @paused.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get paused;
+
+  /// No description provided for @target.
+  ///
+  /// In en, this message translates to:
+  /// **'Target'**
+  String get target;
+
+  /// No description provided for @cancelBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancelBtn;
+
+  /// No description provided for @pauseBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get pauseBtn;
+
+  /// No description provided for @finishBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish'**
+  String get finishBtn;
+
+  /// No description provided for @prepareFor.
+  ///
+  /// In en, this message translates to:
+  /// **'PREPARE FOR'**
+  String get prepareFor;
+
+  /// No description provided for @unfinishedExerciseTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Unfinished Exercise'**
+  String get unfinishedExerciseTitle;
+
+  /// No description provided for @unfinishedExerciseMsgPart1.
+  ///
+  /// In en, this message translates to:
+  /// **'You still have an unfinished exercise in this day:'**
+  String get unfinishedExerciseMsgPart1;
+
+  /// No description provided for @unfinishedExerciseMsgPart2.
+  ///
+  /// In en, this message translates to:
+  /// **'Would you like to go finish it, or discard it and start'**
+  String get unfinishedExerciseMsgPart2;
+
+  /// No description provided for @unfinishedExerciseMsgPart3.
+  ///
+  /// In en, this message translates to:
+  /// **'instead?'**
+  String get unfinishedExerciseMsgPart3;
+
+  /// No description provided for @goFinishIt.
+  ///
+  /// In en, this message translates to:
+  /// **'Go Finish It'**
+  String get goFinishIt;
+
+  /// No description provided for @discardAndStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard & Start'**
+  String get discardAndStart;
+
+  /// No description provided for @dayLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'DAY'**
+  String get dayLabel;
+
+  /// No description provided for @completedStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'COMPLETED'**
+  String get completedStatus;
+
+  /// No description provided for @restTime.
+  ///
+  /// In en, this message translates to:
+  /// **'REST TIME'**
+  String get restTime;
+
+  /// No description provided for @add20Secs.
+  ///
+  /// In en, this message translates to:
+  /// **'+20 SECS'**
+  String get add20Secs;
+
+  /// No description provided for @upNext.
+  ///
+  /// In en, this message translates to:
+  /// **'UP NEXT'**
+  String get upNext;
+
+  /// No description provided for @workoutSessionComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Session Complete!'**
+  String get workoutSessionComplete;
+
+  /// No description provided for @skipRest.
+  ///
+  /// In en, this message translates to:
+  /// **'SKIP REST ⏭️'**
+  String get skipRest;
+
+  /// No description provided for @youDid.
+  ///
+  /// In en, this message translates to:
+  /// **'You Did'**
+  String get youDid;
+
+  /// No description provided for @actual.
+  ///
+  /// In en, this message translates to:
+  /// **'Actual'**
+  String get actual;
+
+  /// No description provided for @endWorkout.
+  ///
+  /// In en, this message translates to:
+  /// **'End Workout'**
+  String get endWorkout;
+
+  /// No description provided for @finishWorkout.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish Workout'**
+  String get finishWorkout;
+
+  /// No description provided for @nextExercise.
+  ///
+  /// In en, this message translates to:
+  /// **'Next Exercise'**
+  String get nextExercise;
+
+  /// No description provided for @resumeExercise.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume Exercise'**
+  String get resumeExercise;
+
+  /// No description provided for @startBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get startBtn;
+
+  /// No description provided for @yourFitnessJourney.
+  ///
+  /// In en, this message translates to:
+  /// **'YOUR FITNESS JOURNEY'**
+  String get yourFitnessJourney;
+
+  /// No description provided for @weeklyProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'WEEKLY PROGRESS'**
+  String get weeklyProgress;
+
+  /// No description provided for @week.
+  ///
+  /// In en, this message translates to:
+  /// **'Week'**
+  String get week;
+
+  /// No description provided for @minus15s.
+  ///
+  /// In en, this message translates to:
+  /// **'- 15s'**
+  String get minus15s;
+
+  /// No description provided for @plus15s.
+  ///
+  /// In en, this message translates to:
+  /// **'+ 15s'**
+  String get plus15s;
+
+  /// No description provided for @unableToLoadMusclesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to Load Muscles'**
+  String get unableToLoadMusclesTitle;
+
+  /// No description provided for @unableToLoadMusclesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your connection and try again.\nMuscles will appear automatically when available.'**
+  String get unableToLoadMusclesSubtitle;
+
+  /// No description provided for @unableToLoadExercisesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to Load Exercises'**
+  String get unableToLoadExercisesTitle;
+
+  /// No description provided for @unableToLoadExercisesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your connection and try again.\nExercises will appear automatically when available.'**
+  String get unableToLoadExercisesSubtitle;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

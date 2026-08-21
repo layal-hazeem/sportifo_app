@@ -10,14 +10,19 @@ import '../../../../core/services/home_widget_service.dart';
 import '../../../targets/presentation/view_model/target_cubit/target_cubit.dart';
 import '../../../targets/presentation/view_model/target_cubit/target_state.dart';
 import '../../../../core/di/service_locator.dart';
+
 class NutritionCubit extends Cubit<NutritionState> {
   final NutritionRepository _repository;
 
   final Map<int, int> _messageToMealMap = {};
   TodayFoodLogsResponse? _lastSuccessfulResponse;
   bool _isInitialized = false;
+  
+  // ✅ حماية من الاستدعى المتزامن
+  bool _isInitializing = false;
 
   NutritionCubit(this._repository) : super(NutritionInitial());
+
   void _updateHomeWidget(TodayFoodLogsResponse data) {
     try {
       final targetCubit = getIt<TargetCubit>();
@@ -49,8 +54,10 @@ class NutritionCubit extends Cubit<NutritionState> {
       print("Error updating home widget from NutritionCubit: $e");
     }
   }
+
   Future<void> initialize() async {
-    if (_isInitialized) return;
+    if (_isInitialized || _isInitializing) return;
+    _isInitializing = true;
 
     await _loadMessageToMealMap();
 
@@ -80,6 +87,7 @@ class NutritionCubit extends Cubit<NutritionState> {
       }
     }
 
+    _isInitializing = false;
     _isInitialized = true;
   }
 
@@ -285,9 +293,10 @@ class NutritionCubit extends Cubit<NutritionState> {
       ));
     }
   }
-  // ✅ دالة جديدة - بتصفر كل شي بالذاكرة وبتمسح الكاش المحلي الخاص بالتغذية
+
   Future<void> reset() async {
     _isInitialized = false;
+    _isInitializing = false;
     _lastSuccessfulResponse = null;
     _messageToMealMap.clear();
 

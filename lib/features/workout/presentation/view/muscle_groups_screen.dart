@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/widgets/loading_shimmer.dart';
+import '../../../../core/widgets/no_internet_view.dart';
 import '../../../../core/widgets/wave_app_bar.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../view_model/categories_cubit/categories_cubit.dart';
@@ -115,13 +116,13 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                       // 🔥 جلب الصورة بناءً على الـ ID الخاص بالعضلة بدلاً من اسمها المتغير
                       final imagePath =
                           _muscleAssets[muscle.id] ??
-                          'assets/images/muscles/default.jpg';
+                              'assets/images/muscles/default.jpg';
 
                       return HorizontalMuscleCard(
                         name: muscle
                             .name, // الاسم يظهر باللغة الصحيحة (عربي/إنجليزي)
                         imagePath:
-                            imagePath, // الصورة تظهر بشكل دائم بغض النظر عن اللغة
+                        imagePath, // الصورة تظهر بشكل دائم بغض النظر عن اللغة
                         isSelected: isSelected,
                         anyMuscleSelected: selectedMuscleId != null,
                         onTap: () {
@@ -146,13 +147,12 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                         },
                       );
                     },
-                  );
-                } else if (state is CategoriesFailure) {
-                  return Center(
-                    child: Text(
-                      state.errorMessage,
-                      style: const TextStyle(color: Colors.red),
-                    ),
+                  );       } else if (state is CategoriesFailure) {
+                  // ✅✅✅ NEW: بدل Center(Text أحمر) → NoInternetView
+                  return NoInternetView(
+                    onRetry: () => context.read<CategoriesCubit>().fetchCategories(2),
+                    title: l10n.unableToLoadMusclesTitle,
+                    subtitle: l10n.unableToLoadMusclesSubtitle,
                   );
                 }
                 return const SizedBox();
@@ -195,7 +195,7 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                             categoryId: 1,
                             organId: selectedMuscleId,
                             smallestCategoryId:
-                                selectedSmallestCategoryId.isEmpty
+                            selectedSmallestCategoryId.isEmpty
                                 ? null
                                 : selectedSmallestCategoryId,
                           );
@@ -221,12 +221,12 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     physics: const NeverScrollableScrollPhysics(),
                     gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 15,
-                          mainAxisSpacing: 15,
-                          childAspectRatio: 0.85,
-                        ),
+                    const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 15,
+                      mainAxisSpacing: 15,
+                      childAspectRatio: 0.85,
+                    ),
                     itemCount: 6,
                     itemBuilder: (context, index) {
                       return const LoadingShimmer(

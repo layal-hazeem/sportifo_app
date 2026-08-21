@@ -617,7 +617,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get theme => 'لون التطبيق';
 
   @override
-  String get notifications => 'الاشعارات';
+  String get notifications => 'الإشعارات';
 
   @override
   String get account => 'الحساب';
@@ -788,7 +788,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get addExistingDaySubtitle => 'استخدم يوم محفوظ مسبقاً';
 
   @override
-  String get workoutDays => 'ايام التمرين';
+  String get workoutDays => 'أيام التمارين';
 
   @override
   String get day => 'يوم';
@@ -1100,7 +1100,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get buildWorkoutPlanThatFitsYou => 'قم ببناء خطة تمارين تناسبك';
 
   @override
-  String get tryAgain => 'حاول مجدداً';
+  String get tryAgain => 'إعادة المحاولة';
 
   @override
   String get yourTrainees => 'متدربينك';
@@ -1202,10 +1202,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get defaultPlan => 'خطة افتراضية';
 
   @override
-  String get startDate => 'تاريخ البداية';
+  String get startDate => 'تاريخ البدء';
 
   @override
-  String get endDate => 'تاريخ النهاية';
+  String get endDate => 'تاريخ الانتهاء';
 
   @override
   String get expired => 'منهية';
@@ -1220,7 +1220,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get athlete => 'متدرب';
 
   @override
-  String get sets => 'الجلسات';
+  String get sets => 'جولات';
 
   @override
   String get strength => 'مقاومة';
@@ -1572,7 +1572,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get current_weight => 'الحالي';
 
   @override
-  String get goal => 'الهدف';
+  String get goal => 'المطلوب';
 
   @override
   String get weight_history => 'سجل الوزن';
@@ -1612,6 +1612,42 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get freePlan => 'خطة مجانية';
+
+  @override
+  String get noInternetConnection => 'لا يوجد اتصال بالإنترنت';
+
+  @override
+  String get noInternetSubtitle => 'يرجى التحقق من الشبكة وإعادة المحاولة.\nستظهر البيانات المخزنة مؤقتاً تلقائياً عند توفرها.';
+
+  @override
+  String get unableToLoadChat => 'تعذر تحميل المحادثة';
+
+  @override
+  String get unableToLoadChatSub => 'يرجى التحقق من الاتصال والمحاولة مرة أخرى.\nستظهَر سجلات المحادثة تلقائياً فور توفرها.';
+
+  @override
+  String get unableToLoadPlans => 'تعذر تحميل الخطط';
+
+  @override
+  String get unableToLoadPlansSub => 'يرجى التحقق من الاتصال والمحاولة مرة أخرى.\nستظهر البيانات المخزنة تلقائياً فور توفرها.';
+
+  @override
+  String get notifications_unableToLoadTitle => 'تعذر تحميل الإشعارات';
+
+  @override
+  String get notifications_unableToLoadSubtitle => 'يرجى التحقق من الاتصال والمحاولة مرة أخرى.\nستظهر الإشعارات تلقائياً عند توفرها.';
+
+  @override
+  String get notifications_emptyTitle => 'لا توجد إشعارات بعد';
+
+  @override
+  String get notifications_emptySubtitle => 'سنخبرك عند وصول شيء مهم.';
+
+  @override
+  String get unableToLoadTraineesTitle => 'تعذر تحميل المتدربين';
+
+  @override
+  String get unableToLoadTraineesSubtitle => 'يرجى التحقق من الاتصال والمحاولة مرة أخرى.\nستظهر بيانات المتدربين تلقائياً عند توفرها.';
 
   @override
   String get createAdditionalPlan => 'إنشاء خطة إضافية';
@@ -1711,4 +1747,180 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get somethingWentWrong => 'حدث خطأ ما';
+  @override
+  String get mySubscriptions => 'اشتراكاتي';
+
+  @override
+  String get statusActive => 'نشط';
+
+  @override
+  String get statusPending => 'قيد المراجعة';
+
+  @override
+  String get statusExpired => 'منتهي';
+
+  @override
+  String get statusRejected => 'مرفوض';
+
+  @override
+  String get currentSubscription => 'الاشتراك الحالي';
+
+  @override
+  String get amount => 'المبلغ';
+
+  @override
+  String get processNumber => 'رقم العملية';
+
+  @override
+  String get confirmedAt => 'تاريخ التأكيد';
+
+  @override
+  String get noSubscriptionsYet => 'لا توجد لديك أي اشتراكات سابقة أو حالية';
+
+  @override
+  String get subscription => 'اشتراك';
+
+  @override
+  String get cancelWorkoutTitle => 'إلغاء التمرين؟';
+
+  @override
+  String get cancelWorkoutMessage => 'سيتم فقدان جميع التطورات في هذه الجلسة ولن يتم حفظها.';
+
+  @override
+  String get noKeepGoing => 'لا، استمر';
+
+  @override
+  String get yesCancelWorkout => 'نعم، إلغاء التمرين';
+
+  @override
+  String get endSessionTitle => 'إنهاء الجلسة';
+
+  @override
+  String get endSessionMessage => 'هل ترغب في حفظ تقدمك الحالي والمتابعة لاحقاً، أم التخلي عن هذه الجلسة بالكامل؟';
+
+  @override
+  String get saveAndExit => 'حفظ وخروج';
+
+  @override
+  String get discardSession => 'التخلي عن الجلسة';
+
+  @override
+  String get howToPerformTitle => 'كيفية الأداء؟';
+
+  @override
+  String get noInstructionsAvailable => 'لا توجد تعليمات متاحة لهذا التمرين.';
+
+  @override
+  String get gotIt => 'حسناً';
+
+  @override
+  String get enterWeightAndReps => 'يرجى إدخال الوزن والعدات';
+
+  @override
+  String get exerciseLabel => 'تمرين';
+
+  @override
+  String get paused => 'متوقف مؤقتاً';
+
+  @override
+  String get target => 'الهدف';
+
+  @override
+  String get cancelBtn => 'إلغاء';
+
+  @override
+  String get pauseBtn => 'إيقاف';
+
+  @override
+  String get finishBtn => 'إنهاء';
+
+  @override
+  String get prepareFor => 'استعد لـ';
+
+  @override
+  String get unfinishedExerciseTitle => 'تمرين غير مكتمل';
+
+  @override
+  String get unfinishedExerciseMsgPart1 => 'لا يزال لديك تمرين غير مكتمل في هذا اليوم:';
+
+  @override
+  String get unfinishedExerciseMsgPart2 => 'هل ترغب في الذهاب لإنهائه، أم تجاهله والبدء بـ';
+
+  @override
+  String get unfinishedExerciseMsgPart3 => 'بدلاً من ذلك؟';
+
+  @override
+  String get goFinishIt => 'الذهاب لإنهائه';
+
+  @override
+  String get discardAndStart => 'تجاهل والبدء';
+
+  @override
+  String get dayLabel => 'يوم';
+
+  @override
+  String get completedStatus => 'مكتمل';
+
+  @override
+  String get restTime => 'وقت الراحة';
+
+  @override
+  String get add20Secs => '+20 ثانية';
+
+  @override
+  String get upNext => 'التالي';
+
+  @override
+  String get workoutSessionComplete => 'اكتملت جلسة التمرين!';
+
+  @override
+  String get skipRest => 'تخطي الراحة ⏭️';
+
+  @override
+  String get youDid => 'إنجازك';
+
+  @override
+  String get actual => 'الفعلي';
+
+  @override
+  String get endWorkout => 'إنهاء التمرين';
+
+  @override
+  String get finishWorkout => 'إنهاء التمرين';
+
+  @override
+  String get nextExercise => 'التمرين التالي';
+
+  @override
+  String get resumeExercise => 'استئناف التمرين';
+
+  @override
+  String get startBtn => 'ابدأ';
+
+  @override
+  String get yourFitnessJourney => 'رحلة لياقتك';
+
+  @override
+  String get weeklyProgress => 'التقدم الأسبوعي';
+
+  @override
+  String get week => 'أسبوع';
+
+  @override
+  String get minus15s => '- 15 ثا';
+
+  @override
+  String get plus15s => '+ 15 ثا';
+
+  @override
+  String get unableToLoadMusclesTitle => 'تعذر تحميل العضلات';
+
+  @override
+  String get unableToLoadMusclesSubtitle => 'يرجى التحقق من الاتصال والمحاولة مرة أخرى.\nستظهر العضلات تلقائياً عند توفرها.';
+
+  @override
+  String get unableToLoadExercisesTitle => 'تعذر تحميل التمارين';
+
+  @override
+  String get unableToLoadExercisesSubtitle => 'يرجى التحقق من الاتصال والمحاولة مرة أخرى.\nستظهر التمارين تلقائياً عند توفرها.';
 }

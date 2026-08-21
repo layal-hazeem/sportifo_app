@@ -43,20 +43,20 @@ class WorkoutWebService {
         if (smallestCategoryId != null && smallestCategoryId.isNotEmpty) 'smallest_category_id[]': smallestCategoryId,
         'search': ?searchQuery,
       },
-      options: options, 
+      options: options,
     );
   }
 
   Future<Response> toggleSaveExercise(int exerciseId) async {
     return await dio.post(
-      ApiConstants.saveExercise, 
+      ApiConstants.saveExercise,
       data: {'exercise_id': exerciseId},
     );
   }
   Future<Response> getSavedExercises({Options? options}) async {
     return await dio.get(
       ApiConstants.getSavedExercises,
-      options: options, 
+      options: options,
     );
   }
 }

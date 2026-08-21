@@ -24,7 +24,7 @@ class WorkoutPlanCard extends StatelessWidget {
         ? selfMadeDefaultCoverImage
         : coachDefaultCoverImage;
 
-    // 🔥 حسابات شريط التقدم والأسابيع
+    // Progress and weeks calculations
     int durationMonths = plan.durationMonths ?? 1;
     int totalDays = durationMonths * 30;
     int daysElapsed = 0;
@@ -42,7 +42,7 @@ class WorkoutPlanCard extends StatelessWidget {
         currentWeek = (daysElapsed ~/ 7) + 1;
         if (currentWeek > totalWeeks) currentWeek = totalWeeks;
       } catch (e) {
-        // تجاهل الخطأ في حال كان التاريخ غير صالح
+        // Ignore parsing errors for invalid dates
       }
     }
 
@@ -62,7 +62,7 @@ class WorkoutPlanCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 1️⃣ البانر العلوي للكارد
+          // 1️⃣ Card Top Banner
           ClipRRect(
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(25),
@@ -70,7 +70,7 @@ class WorkoutPlanCard extends StatelessWidget {
             ),
             child: Stack(
               children: [
-                // 🔥 التعديل هنا: نستخدم صورة الخطة إذا موجودة، وإلا الصورة الافتراضية
+                // Use plan image if available, else fallback to default
                 CustomCachedImage(
                   imageUrl: (plan.image != null && plan.image!.isNotEmpty)
                       ? plan.image!
@@ -93,7 +93,7 @@ class WorkoutPlanCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                // 🔥 التعديل هنا: شارة تعرض الـ Type إذا كان موجود (للخطط المحفوظة)
+                // Badge displaying Type if exists (for saved plans)
                 if (plan.type != null && plan.type!.isNotEmpty)
                   Positioned(
                     top: 16,
@@ -104,7 +104,7 @@ class WorkoutPlanCard extends StatelessWidget {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: AppColors.primaryBtn, // لون برتقالي مميز
+                        color: AppColors.primaryBtn,
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
@@ -117,7 +117,7 @@ class WorkoutPlanCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                // التاريخ فوق الصورة
+                // Date overlay
                 Positioned(
                   top: 16,
                   right: 20,
@@ -140,7 +140,7 @@ class WorkoutPlanCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                // اسم الهدف
+                // Goal Name
                 Positioned(
                   bottom: 16,
                   left: 20,
@@ -158,13 +158,13 @@ class WorkoutPlanCard extends StatelessWidget {
             ),
           ),
 
-          // 2️⃣ المحتوى الداخلي للكارد
+          // 2️⃣ Internal Card Content
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // معلومات الكوتش (بتظهر بس إذا الخطة مو شخصية وفي كوتش)
+                // Coach Info (shows only if it has a coach)
                 if (!plan.isSelfMade && plan.coach != null) ...[
                   Row(
                     children: [
@@ -173,7 +173,7 @@ class WorkoutPlanCard extends StatelessWidget {
                         backgroundColor: context.backgroundColor,
                         backgroundImage: CachedNetworkImageProvider(
                           plan.coach!.profilePic,
-                        ), // 🔥 كاش عالـ disk بدل NetworkImage
+                        ),
                       ),
                       const SizedBox(width: 12),
                       Column(
@@ -202,12 +202,12 @@ class WorkoutPlanCard extends StatelessWidget {
                   Divider(height: 24, color: context.backgroundColor),
                 ],
 
-                // 📊 3️⃣ الإحصائيات والدائرة
+                // 📊 3️⃣ Stats and Circular Progress
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // الإحصائيات (اليسار)
+                    // Stats (Left)
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -228,7 +228,7 @@ class WorkoutPlanCard extends StatelessWidget {
                       ],
                     ),
 
-                    // الدائرة (اليمين)
+                    // Progress Circle (Right)
                     if (plan.createdAt != null && plan.durationMonths != null)
                       Column(
                         children: [
@@ -283,7 +283,7 @@ class WorkoutPlanCard extends StatelessWidget {
 
                 const SizedBox(height: 24),
 
-                // 🔥 الزر الرئيسي
+                // Main Button
                 SizedBox(
                   width: double.infinity,
                   height: 52,

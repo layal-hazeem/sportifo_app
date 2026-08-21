@@ -18,7 +18,6 @@ class RegisterScreen extends StatefulWidget {
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-// مفاتيح التحقق للنماذج
 final _step1FormKey = GlobalKey<FormState>();
 final _step2FormKey = GlobalKey<FormState>();
 
@@ -27,7 +26,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   int currentPage = 0;
   bool _isTermsAccepted = false;
 
-  // 🔥 متغيرات التحكم بحالة التحقق التلقائي لكل خطوة
   AutovalidateMode _step1AutovalidateMode = AutovalidateMode.disabled;
   AutovalidateMode _step2AutovalidateMode = AutovalidateMode.disabled;
 
@@ -65,7 +63,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
           curve: Curves.easeInOut,
         );
       } else {
-        // 🔥 إذا فشل التحقق عند الضغط، نُفعل التحقق التلقائي لتظهر الأخطاء للمستخدم ويعدلها
         setState(() {
           _step1AutovalidateMode = AutovalidateMode.onUserInteraction;
         });
@@ -98,7 +95,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
           );
         }
       } else {
-        // 🔥 إذا فشل التحقق في الخطوة الثانية، نُفعل التحقق التلقائي لها
         setState(() {
           _step2AutovalidateMode = AutovalidateMode.onUserInteraction;
         });
@@ -232,7 +228,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         _buildScrollablePage(
                           formKey: _step1FormKey,
                           autovalidateMode:
-                              _step1AutovalidateMode, // 🔥 تمرير الحالة الديناميكية
+                              _step1AutovalidateMode,
                           l10n: l10n,
                           state: state,
                           isLastStep: false,
@@ -324,7 +320,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         _buildScrollablePage(
                           formKey: _step2FormKey,
                           autovalidateMode:
-                              _step2AutovalidateMode, // 🔥 تمرير الحالة الديناميكية
+                              _step2AutovalidateMode,
                           l10n: l10n,
                           state: state,
                           isLastStep: true,
@@ -371,7 +367,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget _buildScrollablePage({
     required GlobalKey<FormState> formKey,
     required AutovalidateMode
-    autovalidateMode, // 🔥 أصبحت تستقبل الـ mode كمعامل مرن
+    autovalidateMode,
     required AppLocalizations l10n,
     required RegisterState state,
     required bool isLastStep,
@@ -386,7 +382,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: IntrinsicHeight(
               child: Form(
                 key: formKey,
-                autovalidateMode: autovalidateMode, // 🔥 ربطها بالمتغير الممرر
+                autovalidateMode: autovalidateMode,
                 child: Column(
                   children: [
                     ...children,

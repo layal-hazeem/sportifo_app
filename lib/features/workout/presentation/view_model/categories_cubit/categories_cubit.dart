@@ -11,7 +11,6 @@ class CategoriesCubit extends Cubit<CategoriesState> {
   Future<void> fetchCategories(int levelId) async {
     emit(CategoriesLoading());
 
-    // 🔥 التعديل هنا: خليناه ينادي getCategories
     final result = await _repository.getCategories(levelId);
 
     switch (result) {
@@ -23,4 +22,5 @@ class CategoriesCubit extends Cubit<CategoriesState> {
         break;
     }
   }
+
 }

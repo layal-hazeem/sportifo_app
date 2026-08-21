@@ -1614,6 +1614,42 @@ class AppLocalizationsEn extends AppLocalizations {
   String get freePlan => 'Free Plan';
 
   @override
+  String get noInternetConnection => 'No Internet Connection';
+
+  @override
+  String get noInternetSubtitle => 'Please check your network and try again.\nCached data will appear automatically when available.';
+
+  @override
+  String get unableToLoadChat => 'Unable to Load Chat';
+
+  @override
+  String get unableToLoadChatSub => 'Please check your connection and try again.\nYour chat history will appear automatically when available.';
+
+  @override
+  String get unableToLoadPlans => 'Unable to Load Plans';
+
+  @override
+  String get unableToLoadPlansSub => 'Check your connection and try again.\nCached data will appear automatically when available.';
+
+  @override
+  String get notifications_unableToLoadTitle => 'Unable to Load Notifications';
+
+  @override
+  String get notifications_unableToLoadSubtitle => 'Please check your connection and try again.\nNotifications will appear automatically when available.';
+
+  @override
+  String get notifications_emptyTitle => 'No Notifications Yet';
+
+  @override
+  String get notifications_emptySubtitle => 'We will notify you when something important arrives.';
+
+  @override
+  String get unableToLoadTraineesTitle => 'Unable to Load Trainees';
+
+  @override
+  String get unableToLoadTraineesSubtitle => 'Please check your connection and try again.\nTrainees will appear automatically when available.';
+
+  @override
   String get createAdditionalPlan => 'Create Additional Plan';
 
   @override
@@ -1711,4 +1747,180 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get somethingWentWrong => 'Something Went Wrong';
+  @override
+  String get mySubscriptions => 'My Subscriptions';
+
+  @override
+  String get statusActive => 'Active';
+
+  @override
+  String get statusPending => 'Pending';
+
+  @override
+  String get statusExpired => 'Expired';
+
+  @override
+  String get statusRejected => 'Rejected';
+
+  @override
+  String get currentSubscription => 'Current Plan';
+
+  @override
+  String get amount => 'Amount';
+
+  @override
+  String get processNumber => 'Transaction No.';
+
+  @override
+  String get confirmedAt => 'Confirmed At';
+
+  @override
+  String get noSubscriptionsYet => 'You have no past or active subscriptions yet';
+
+  @override
+  String get subscription => 'Subscription';
+
+  @override
+  String get cancelWorkoutTitle => 'Cancel Workout?';
+
+  @override
+  String get cancelWorkoutMessage => 'All progress for this session will be lost and won\'t be saved.';
+
+  @override
+  String get noKeepGoing => 'No, Keep Going';
+
+  @override
+  String get yesCancelWorkout => 'Yes, Cancel Workout';
+
+  @override
+  String get endSessionTitle => 'End Session';
+
+  @override
+  String get endSessionMessage => 'Would you like to save your current progress and continue later, or discard this session completely?';
+
+  @override
+  String get saveAndExit => 'Save & Exit';
+
+  @override
+  String get discardSession => 'Discard Session';
+
+  @override
+  String get howToPerformTitle => 'How to perform?';
+
+  @override
+  String get noInstructionsAvailable => 'No instructions available for this exercise.';
+
+  @override
+  String get gotIt => 'Got It';
+
+  @override
+  String get enterWeightAndReps => 'Please enter weight and reps';
+
+  @override
+  String get exerciseLabel => 'EXERCISE';
+
+  @override
+  String get paused => 'Paused';
+
+  @override
+  String get target => 'Target';
+
+  @override
+  String get cancelBtn => 'Cancel';
+
+  @override
+  String get pauseBtn => 'Pause';
+
+  @override
+  String get finishBtn => 'Finish';
+
+  @override
+  String get prepareFor => 'PREPARE FOR';
+
+  @override
+  String get unfinishedExerciseTitle => 'Unfinished Exercise';
+
+  @override
+  String get unfinishedExerciseMsgPart1 => 'You still have an unfinished exercise in this day:';
+
+  @override
+  String get unfinishedExerciseMsgPart2 => 'Would you like to go finish it, or discard it and start';
+
+  @override
+  String get unfinishedExerciseMsgPart3 => 'instead?';
+
+  @override
+  String get goFinishIt => 'Go Finish It';
+
+  @override
+  String get discardAndStart => 'Discard & Start';
+
+  @override
+  String get dayLabel => 'DAY';
+
+  @override
+  String get completedStatus => 'COMPLETED';
+
+  @override
+  String get restTime => 'REST TIME';
+
+  @override
+  String get add20Secs => '+20 SECS';
+
+  @override
+  String get upNext => 'UP NEXT';
+
+  @override
+  String get workoutSessionComplete => 'Workout Session Complete!';
+
+  @override
+  String get skipRest => 'SKIP REST ⏭️';
+
+  @override
+  String get youDid => 'You Did';
+
+  @override
+  String get actual => 'Actual';
+
+  @override
+  String get endWorkout => 'End Workout';
+
+  @override
+  String get finishWorkout => 'Finish Workout';
+
+  @override
+  String get nextExercise => 'Next Exercise';
+
+  @override
+  String get resumeExercise => 'Resume Exercise';
+
+  @override
+  String get startBtn => 'Start';
+
+  @override
+  String get yourFitnessJourney => 'YOUR FITNESS JOURNEY';
+
+  @override
+  String get weeklyProgress => 'WEEKLY PROGRESS';
+
+  @override
+  String get week => 'Week';
+
+  @override
+  String get minus15s => '- 15s';
+
+  @override
+  String get plus15s => '+ 15s';
+
+  @override
+  String get unableToLoadMusclesTitle => 'Unable to Load Muscles';
+
+  @override
+  String get unableToLoadMusclesSubtitle => 'Please check your connection and try again.\nMuscles will appear automatically when available.';
+
+  @override
+  String get unableToLoadExercisesTitle => 'Unable to Load Exercises';
+
+  @override
+  String get unableToLoadExercisesSubtitle => 'Please check your connection and try again.\nExercises will appear automatically when available.';
 }

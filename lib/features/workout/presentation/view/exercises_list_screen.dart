@@ -4,6 +4,7 @@ import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/widgets/loading_shimmer.dart';
+import '../../../../core/widgets/no_internet_view.dart';
 import '../../../../core/widgets/wave_app_bar.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../view_model/exercises_cubit/exercises_cubit.dart';
@@ -79,13 +80,16 @@ class ExercisesListScreen extends StatelessWidget {
               );
             }
 
+
             return ExercisesGridView(exercises: exercises);
           } else if (state is ExercisesFailure) {
-            return Center(
-              child: Text(
-                state.errorMessage,
-                style: const TextStyle(color: Colors.red),
+            // ✅✅✅ NEW: بدل Center(Text أحمر) → NoInternetView
+            return NoInternetView(
+              onRetry: () => context.read<ExercisesCubit>().fetchExercises(
+                categoryId: categoryId,
               ),
+              title: l10n.unableToLoadExercisesTitle,
+              subtitle: l10n.unableToLoadExercisesSubtitle,
             );
           }
           return const SizedBox();

@@ -34,7 +34,6 @@ class _TraineeScreenState extends State<TraineeScreen>
     with WidgetsBindingObserver {
   late final NutritionCubit _nutritionCubit;
 
-  // 🔥 متغير للاحتفاظ باللغة الحالية وتجنب جلب البيانات بشكل عشوائي
   Locale? _currentLocale;
 
   @override
@@ -44,7 +43,6 @@ class _TraineeScreenState extends State<TraineeScreen>
     WidgetsBinding.instance.addObserver(this);
   }
 
-  // ✅ السحر هنا: الدالة التي تعمل تلقائياً عند تغيير اللغة
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -143,7 +141,7 @@ class _TraineeScreenState extends State<TraineeScreen>
                     child: Center(
                       child: TextButton(
                         onPressed: () => context.read<TargetCubit>().fetchLatestTarget(),
-                        child: Text(l10n.retry), // 🔥 تم وضع ترجمة "أعد المحاولة"
+                        child: Text(l10n.retry),
                       ),
                     ),
                   );
@@ -156,7 +154,6 @@ class _TraineeScreenState extends State<TraineeScreen>
             const CreateSelfPlanCard(),
             const SizedBox(height: 10),
 
-            // 🔥 تم إزالة دالة Create من هنا لأننا وضعناها بالأعلى وجلبنا البيانات في didChangeDependencies
             BlocBuilder<CoachesCubit, CoachesState>(
               builder: (context, state) {
                 if (state is CoachesLoading) {

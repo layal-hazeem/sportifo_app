@@ -55,8 +55,7 @@ Future<CoachModel> getCoachInfo() async {
 
   @override
   Future<int> getUnreadNotificationsCount() async {
-    // لا يوجد حاليًا Notifications API ضمن الـ architecture المرسلة.
-    // لذلك نرجع 0 بدل اختراع endpoint غير موجود.
+
     return 0;
   }
 

@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../workout/data/models/exercise_model.dart';
 
 class RestWorkoutScreen extends StatefulWidget {
@@ -61,6 +63,7 @@ class _RestWorkoutScreenState extends State<RestWorkoutScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     String formatTime(int s) =>
         '${(s ~/ 60).toString().padLeft(2, '0')}:${(s % 60).toString().padLeft(2, '0')}';
 
@@ -101,12 +104,12 @@ class _RestWorkoutScreenState extends State<RestWorkoutScreen> {
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Icon(Icons.timer, color: AppColors.primaryBtn, size: 20),
-                      SizedBox(width: 8),
+                    children: [
+                      const Icon(Icons.timer, color: AppColors.primaryBtn, size: 20),
+                      const SizedBox(width: 8),
                       Text(
-                        "REST TIME",
-                        style: TextStyle(
+                        l10n.restTime,
+                        style: const TextStyle(
                           color: AppColors.primaryBtn,
                           fontSize: 15,
                           fontWeight: FontWeight.w900,
@@ -145,9 +148,9 @@ class _RestWorkoutScreenState extends State<RestWorkoutScreen> {
                               fontFeatures: const [FontFeature.tabularFigures()],
                             ),
                           ),
-                          const Text(
-                            "Remaining",
-                            style: TextStyle(
+                          Text(
+                            l10n.remaining,
+                            style: const TextStyle(
                               color: Colors.grey,
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
@@ -166,9 +169,9 @@ class _RestWorkoutScreenState extends State<RestWorkoutScreen> {
                       color: AppColors.primaryBtn,
                       size: 16,
                     ),
-                    label: const Text(
-                      "+20 SECS",
-                      style: TextStyle(
+                    label: Text(
+                      l10n.add20Secs,
+                      style: const TextStyle(
                         color: AppColors.primaryBtn,
                         fontWeight: FontWeight.w900,
                         fontSize: 12,
@@ -219,9 +222,9 @@ class _RestWorkoutScreenState extends State<RestWorkoutScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                "UP NEXT",
-                                style: TextStyle(
+                              Text(
+                                l10n.upNext,
+                                style: const TextStyle(
                                   color: Colors.grey,
                                   fontSize: 10,
                                   fontWeight: FontWeight.bold,
@@ -232,8 +235,8 @@ class _RestWorkoutScreenState extends State<RestWorkoutScreen> {
                               Text(
                                 widget.isLastSet
                                     ? (widget.nextExercise?.name ??
-                                          "Workout Session Complete!")
-                                    : "Set ${widget.currentSetIndex + 2} of ${widget.currentExerciseName}",
+                                    l10n.workoutSessionComplete)
+                                    : "${l10n.set} ${widget.currentSetIndex + 2} ${l10n.of_word} ${widget.currentExerciseName}",
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -253,13 +256,13 @@ class _RestWorkoutScreenState extends State<RestWorkoutScreen> {
                             borderRadius: BorderRadius.circular(10),
                             child: CachedNetworkImage(
                               imageUrl:
-                                  widget.nextExercise!.images
-                                      .firstWhere(
-                                        (img) => img.type == 'gif',
-                                        orElse: () =>
-                                            widget.nextExercise!.images.first,
-                                      )
-                                      .url ??
+                              widget.nextExercise!.images
+                                  .firstWhere(
+                                    (img) => img.type == 'gif',
+                                orElse: () =>
+                                widget.nextExercise!.images.first,
+                              )
+                                  .url ??
                                   '',
                               width: 48,
                               height: 48,
@@ -283,9 +286,9 @@ class _RestWorkoutScreenState extends State<RestWorkoutScreen> {
                         ),
                         elevation: 0,
                       ),
-                      child: const Text(
-                        "SKIP REST ⏭️",
-                        style: TextStyle(
+                      child: Text(
+                        l10n.skipRest,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 15,
                           fontWeight: FontWeight.w900,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
-
+import '../../../../core/widgets/no_internet_view.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/loading_shimmer.dart';
@@ -35,7 +35,6 @@ class _PlanTabConfig {
 class MyPlansScreen extends StatefulWidget {
   const MyPlansScreen({super.key});
 
-  // 🔥 متغير ساكن لمراقبة التاب المطلوب من خارج الشاشة (السناك بار)
   static final ValueNotifier<int> activeTabNotifier = ValueNotifier<int>(0);
 
   @override
@@ -45,14 +44,12 @@ class MyPlansScreen extends StatefulWidget {
 class _MyPlansScreenState extends State<MyPlansScreen> {
   late int _activeTabIndex;
 
-  // 🔥 مصفوفة الأنواع ثابتة هنا لنستخدمها في الـ initState بدون الحاجة للـ Context
   final List<PlanTabType> _tabTypes = [
     PlanTabType.coach,
     PlanTabType.custom,
     PlanTabType.saved,
   ];
 
-  // 🔥 قمنا بتحويل مصفوفة الإعدادات لدالة تأخذ Context لكي نتمكن من قراءة ملفات الترجمة
   List<_PlanTabConfig> _getTabConfigs(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return [
@@ -75,15 +72,16 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
         emptyTitle: l10n.noCustomPlans,
         emptySubtitle: l10n.noCustomPlansSub,
         emptyButtonText: l10n.createCustomPlan,
-        onEmptyButtonTap: null, // إضافة زر الإنشاء مستقبلاً إن أردت
+        onEmptyButtonTap: (context) {
+          Navigator.pushNamed(context, AppRoutes.createSelfPlan);
+        },
       ),
       _PlanTabConfig(
         type: PlanTabType.saved,
         label: l10n.saved,
         emptyTitle: l10n.noSavedPlans,
         emptySubtitle: l10n.noSavedPlansSub,
-        emptyButtonText:
-            l10n.exploreFreePlans, // تم تفعيل الكلمة اللي ترجمتها بالـ JSON
+        emptyButtonText: l10n.exploreFreePlans,
         onEmptyButtonTap: (context) {
           Navigator.pushNamed(context, AppRoutes.allPlatformPlans);
         },
@@ -94,11 +92,9 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
   @override
   void initState() {
     super.initState();
-    // أخذ القيمة الابتدائية من النوتيفاير
     _activeTabIndex = MyPlansScreen.activeTabNotifier.value;
     context.read<MyPlansCubit>().fetchTab(_tabTypes[_activeTabIndex]);
 
-    // الاستماع لأي تغيير يأتي من خارج الشاشة
     MyPlansScreen.activeTabNotifier.addListener(_onExternalTabChange);
   }
 
@@ -118,13 +114,13 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
 
   void _onTabTap(int index) {
     setState(() => _activeTabIndex = index);
-    MyPlansScreen.activeTabNotifier.value = index; // تحديث النوتيفاير
+    MyPlansScreen.activeTabNotifier.value = index;
     context.read<MyPlansCubit>().fetchTab(_tabTypes[index]);
   }
 
   @override
   Widget build(BuildContext context) {
-    // 🚀 جلبنا الإعدادات بعد الترجمة هنا داخل الـ Build
+    final l10n = AppLocalizations.of(context)!; // 🌐 جلب الترجمة
     final tabConfigs = _getTabConfigs(context);
     final activeConfig = tabConfigs[_activeTabIndex];
 
@@ -160,11 +156,13 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
                   final status = state.statusFor(activeConfig.type);
                   return switch (status) {
                     TabLoading() || TabInitial() => _buildShimmerLoading(),
-                    TabFailure() => Center(
-                      child: Text(
-                        status.message,
-                        style: const TextStyle(color: AppColors.hintText),
+                    TabFailure() => NoInternetView(
+                      onRetry: () => context.read<MyPlansCubit>().fetchTab(
+                        activeConfig.type,
+                        isRefresh: true,
                       ),
+                      title: l10n.unableToLoadPlans, // 🌐 تم الاستبدال
+                      subtitle: l10n.unableToLoadPlansSub, // 🌐 تم الاستبدال
                     ),
                     TabSuccess() => _buildPlansList(activeConfig, status.plans),
                   };
@@ -284,7 +282,6 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
         itemCount: plans.length,
         itemBuilder: (context, index) {
-          // 🔥 التعديل الجوهري هنا: إذا كنا بتاب الـ Saved بنرسم كارد المنصة اللي زر السيف فيه شغال!
           if (config.type == PlanTabType.saved) {
             return Padding(
               padding: const EdgeInsets.only(bottom: 16.0),
@@ -304,14 +301,12 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
             );
           }
 
-          // أما إذا كنا بتاب الكوتش أو الخطط المخصصة بنرسم الكارد العادي
           return WorkoutPlanCard(plan: plans[index]);
         },
       ),
     );
   }
 
-  // 🔥 هيكل شيمير قريب من شكل WorkoutPlanCard (صورة فوق + سطرين نص)
   Widget _buildShimmerLoading() {
     return ListView.builder(
       physics: const NeverScrollableScrollPhysics(),

@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../workout/data/models/exercise_model.dart';
 import '../view_model/active_workout_cubit.dart';
 import '../view_model/active_workout_state.dart';
@@ -34,6 +35,7 @@ class ExercisePreviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     int totalSets = exercise.sets ?? 1;
     List<String> repsList = exercise.reps?.split(RegExp(r'[:,/\-]+')) ?? [];
 
@@ -42,18 +44,17 @@ class ExercisePreviewScreen extends StatelessWidget {
 
     bool isFullyCompleted =
         !isFinishedEarly &&
-        completedSets != null &&
-        completedSets!.length >= totalSets;
+            completedSets != null &&
+            completedSets!.length >= totalSets;
 
-    // فحص ذكي لنوع التمرين (مقاومة أم كارديو)
+    // Smart check for exercise type (resistance or cardio)
     bool isCardio =
         (exercise.category?.name.toLowerCase() == 'cardio') ||
-        (exercise.duration != null &&
-            exercise.duration.toString().isNotEmpty &&
-            exercise.duration.toString() != "0");
+            (exercise.duration != null &&
+                exercise.duration.toString().isNotEmpty &&
+                exercise.duration.toString() != "0");
 
-    String targetDuration =
-        exercise.duration ?? "1:00"; // الوقت الافتراضي للكارديو
+    String targetDuration = exercise.duration ?? "1:00";
 
     return Scaffold(
       backgroundColor: context.backgroundColor,
@@ -79,7 +80,7 @@ class ExercisePreviewScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // 1️⃣ هيدر التمرين (الاسم + الصورة)
+                    // 1️⃣ Exercise Header (Name + Image)
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -107,7 +108,7 @@ class ExercisePreviewScreen extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Text(
-                                  exercise.category?.name ?? 'Exercise',
+                                  exercise.category?.name ?? l10n.exerciseLabel,
                                   style: const TextStyle(
                                     color: AppColors.primaryBtn,
                                     fontSize: 13,
@@ -130,28 +131,28 @@ class ExercisePreviewScreen extends StatelessWidget {
                           ),
                           child: isFullyCompleted
                               ? const Icon(
-                                  Icons.check_circle_rounded,
-                                  color: Colors.green,
-                                  size: 60,
-                                )
+                            Icons.check_circle_rounded,
+                            color: Colors.green,
+                            size: 60,
+                          )
                               : ClipRRect(
-                                  borderRadius: BorderRadius.circular(16),
-                                  child: CachedNetworkImage(
-                                    imageUrl:
-                                        exercise.gifUrl ??
-                                        exercise.images.firstOrNull?.url ??
-                                        '',
-                                    fit: BoxFit.cover,
-                                    placeholder: (context, url) =>
-                                        Container(color: Colors.grey.shade100),
-                                  ),
-                                ),
+                            borderRadius: BorderRadius.circular(16),
+                            child: CachedNetworkImage(
+                              imageUrl:
+                              exercise.gifUrl ??
+                                  exercise.images.firstOrNull?.url ??
+                                  '',
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) =>
+                                  Container(color: Colors.grey.shade100),
+                            ),
+                          ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 32),
 
-                    // 2️⃣ جدول الجولات (🔥 التصميم الجديد المُميز للـ UX 🔥)
+                    // 2️⃣ Sets Table (Distinctive UX Design)
                     ...List.generate(totalSets, (index) {
                       String targetRep = index < repsList.length
                           ? repsList[index]
@@ -168,12 +169,12 @@ class ExercisePreviewScreen extends StatelessWidget {
                         isSetLogged = !isSetSkipped;
                       }
 
-                      // تحديد الألوان بناءً على حالة السيت
+                      // Determine colors based on set status
                       Color bgColor = isSetLogged
                           ? Colors.green.shade50
                           : (isSetSkipped
-                                ? Colors.grey.shade50
-                                : context.backgroundColor);
+                          ? Colors.grey.shade50
+                          : context.backgroundColor);
                       Color borderColor = isSetLogged
                           ? Colors.green.shade200
                           : AppColors.primaryBtn.withValues(alpha: 0.5);
@@ -191,49 +192,49 @@ class ExercisePreviewScreen extends StatelessWidget {
                         ),
                         child: Row(
                           children: [
-                            // 🔢 رقم الجولة أو علامة الصح ✅
+                            // 🔢 Set number or Checkmark ✅
                             SizedBox(
                               width: 40,
                               child: isSetLogged
                                   ? const Icon(
-                                      Icons.check_circle_rounded,
-                                      color: Colors.green,
-                                      size: 28,
-                                    )
+                                Icons.check_circle_rounded,
+                                color: Colors.green,
+                                size: 28,
+                              )
                                   : Column(
-                                      children: [
-                                        Text(
-                                          "SET",
-                                          style: TextStyle(
-                                            fontSize: 10,
-                                            color: isSetSkipped
-                                                ? Colors.grey.shade400
-                                                : Colors.grey,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        Text(
-                                          "${index + 1}",
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w900,
-                                            color: isSetSkipped
-                                                ? Colors.grey.shade400
-                                                : context.textColor,
-                                          ),
-                                        ),
-                                      ],
+                                children: [
+                                  Text(
+                                    l10n.set.toUpperCase(),
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      color: isSetSkipped
+                                          ? Colors.grey.shade400
+                                          : Colors.grey,
+                                      fontWeight: FontWeight.bold,
                                     ),
+                                  ),
+                                  Text(
+                                    "${index + 1}",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w900,
+                                      color: isSetSkipped
+                                          ? Colors.grey.shade400
+                                          : context.textColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                             const SizedBox(width: 16),
 
-                            // 🎯 الهدف (Reps / Duration)
+                            // 🎯 Target (Reps / Duration)
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    isCardio ? "Target" : "Goal",
+                                    isCardio ? l10n.target : l10n.goal,
                                     style: const TextStyle(
                                       fontSize: 11,
                                       color: Colors.grey,
@@ -241,9 +242,9 @@ class ExercisePreviewScreen extends StatelessWidget {
                                   ),
                                   Text(
                                     isCardio
-                                        ? "$targetDuration Min"
-                                        : "$targetRep Reps",
-                                    style: TextStyle(
+                                        ? "$targetDuration ${l10n.min}"
+                                        : "$targetRep ${l10n.reps}",
+                                    style: const TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.bold,
                                       color: AppColors.hintText,
@@ -253,14 +254,14 @@ class ExercisePreviewScreen extends StatelessWidget {
                               ),
                             ),
 
-                            // 📝 الإنجاز الفعلي (تم التمييز بشكل رائع)
+                            // 📝 Actual Achievement
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
                                   isSetLogged
-                                      ? "You Did"
-                                      : (isCardio ? "Actual" : "Weight"),
+                                      ? l10n.youDid
+                                      : (isCardio ? l10n.actual : l10n.weight),
                                   style: const TextStyle(
                                     fontSize: 11,
                                     color: Colors.grey,
@@ -280,8 +281,8 @@ class ExercisePreviewScreen extends StatelessWidget {
                                     ),
                                     child: Text(
                                       isCardio
-                                          ? "${loggedSet.reps} Min"
-                                          : "${loggedSet.weight} kg",
+                                          ? "${loggedSet.reps} ${l10n.min}"
+                                          : "${loggedSet.weight} ${l10n.kg}",
                                       style: const TextStyle(
                                         color: Colors.green,
                                         fontWeight: FontWeight.w900,
@@ -300,7 +301,7 @@ class ExercisePreviewScreen extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Text(
-                                      "Skipped",
+                                      l10n.skipped,
                                       style: TextStyle(
                                         color: Colors.grey.shade600,
                                         fontSize: 12,
@@ -338,7 +339,7 @@ class ExercisePreviewScreen extends StatelessWidget {
               ),
             ),
 
-            // 3️⃣ أزرار الإجراءات السفلية
+            // 3️⃣ Bottom Action Buttons
             Padding(
               padding: const EdgeInsets.all(20),
               child: SizedBox(
@@ -350,9 +351,9 @@ class ExercisePreviewScreen extends StatelessWidget {
                       Navigator.of(context).popUntil((route) => route.isFirst);
                     } else if (isFullyCompleted) {
                       if (isLastExercise) {
-                        // 🛑 السحر المعماري هنا لمنع مشكلة الكاش والتأخير واختفاء الداتا 🛑
+                        // Architectural magic here to prevent caching, delay, and data loss issues
 
-                        // 1. إظهار دائرة تحميل شفافة لتمنع الانتقال قبل رد السيرفر
+                        // 1. Show transparent loading dialog
                         showDialog(
                           context: context,
                           barrierDismissible: false,
@@ -365,23 +366,23 @@ class ExercisePreviewScreen extends StatelessWidget {
 
                         final workoutCubit = context.read<ActiveWorkoutCubit>();
 
-                        // 🔥 أخذ نسخة احتياطية من البيانات "قبل" ما تتمسح من الذاكرة 🔥
+                        // Backup data before memory cleanup
                         final Map<int, List<LoggedSetModel>> savedSetsCopy =
-                            Map.from(workoutCubit.allLoggedSets);
+                        Map.from(workoutCubit.allLoggedSets);
                         final List<ExerciseModel> exercisesCopy = List.from(
                           workoutCubit.exercises,
                         );
 
-                        // 2. إجبار التطبيق ينتظر (await) حتى يختم السيرفر اليوم كلياً ويمسح الكاش
+                        // 2. Await server confirmation
                         await workoutCubit.completeWorkout(
                           planId: planId,
                           planDayId: dayId,
                         );
 
-                        // 3. إخفاء دائرة التحميل بعد تأكيد السيرفر
+                        // 3. Hide loading dialog
                         if (context.mounted) Navigator.pop(context);
 
-                        // 4. الآن ننتقل لشاشة الملخص ونمرر لها "النسخ المحفوظة" بدلاً من الكيوبيت الممسوح!
+                        // 4. Navigate to Summary Screen passing backed-up data
                         if (context.mounted) {
                           Navigator.pushReplacementNamed(
                             context,
@@ -396,7 +397,7 @@ class ExercisePreviewScreen extends StatelessWidget {
                           );
                         }
                       } else {
-                        // 🧠 اللوجيك الذكي للتمرين التالي
+                        // Smart logic for next exercise
                         final workoutCubit = context.read<ActiveWorkoutCubit>();
 
                         int currentIndex = 0;
@@ -418,15 +419,15 @@ class ExercisePreviewScreen extends StatelessWidget {
 
                         bool isNextAlreadyDone =
                             workoutCubit.allLoggedSets.containsKey(nextIndex) &&
-                            (workoutCubit.allLoggedSets[nextIndex]?.length ??
+                                (workoutCubit.allLoggedSets[nextIndex]?.length ??
                                     0) >=
-                                nextTotalSets;
+                                    nextTotalSets;
 
                         workoutCubit.nextExercise();
 
                         if (isNextAlreadyDone) {
                           bool isAbsoluteLast =
-                              (nextIndex == workoutCubit.exercises.length - 1);
+                          (nextIndex == workoutCubit.exercises.length - 1);
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
@@ -438,7 +439,7 @@ class ExercisePreviewScreen extends StatelessWidget {
                                   planId: planId,
                                   dayId: dayId,
                                   completedSets:
-                                      workoutCubit.allLoggedSets[nextIndex],
+                                  workoutCubit.allLoggedSets[nextIndex],
                                   isLastExercise: isAbsoluteLast,
                                 ),
                               ),
@@ -487,10 +488,10 @@ class ExercisePreviewScreen extends StatelessWidget {
                   ),
                   child: Text(
                     isFinishedEarly
-                        ? "End Workout"
+                        ? l10n.endWorkout
                         : isFullyCompleted
-                        ? (isLastExercise ? "Finish Workout" : "Next Exercise")
-                        : (isCompleted ? "Resume Exercise" : "Start"),
+                        ? (isLastExercise ? l10n.finishWorkout : l10n.nextExercise)
+                        : (isCompleted ? l10n.resumeExercise : l10n.startBtn),
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,
