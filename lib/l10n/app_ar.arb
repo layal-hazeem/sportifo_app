@@ -708,7 +708,10 @@
 "notifications_unableToLoadTitle": "تعذر تحميل الإشعارات",
 "notifications_unableToLoadSubtitle": "يرجى التحقق من الاتصال والمحاولة مرة أخرى.\nستظهر الإشعارات تلقائياً عند توفرها.",
 "notifications_emptyTitle": "لا توجد إشعارات بعد",
-"notifications_emptySubtitle": "سنخبرك عند وصول شيء مهم."
+"notifications_emptySubtitle": "سنخبرك عند وصول شيء مهم.",
+
+"unableToLoadTraineesTitle": "تعذر تحميل المتدربين",
+"unableToLoadTraineesSubtitle": "يرجى التحقق من الاتصال والمحاولة مرة أخرى.\nستظهر بيانات المتدربين تلقائياً عند توفرها."
 
 
 

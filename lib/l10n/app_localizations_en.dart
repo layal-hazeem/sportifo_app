@@ -1642,4 +1642,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notifications_emptySubtitle => 'We will notify you when something important arrives.';
+
+  @override
+  String get unableToLoadTraineesTitle => 'Unable to Load Trainees';
+
+  @override
+  String get unableToLoadTraineesSubtitle => 'Please check your connection and try again.\nTrainees will appear automatically when available.';
 }

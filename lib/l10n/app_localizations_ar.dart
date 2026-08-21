@@ -1642,4 +1642,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get notifications_emptySubtitle => 'سنخبرك عند وصول شيء مهم.';
+
+  @override
+  String get unableToLoadTraineesTitle => 'تعذر تحميل المتدربين';
+
+  @override
+  String get unableToLoadTraineesSubtitle => 'يرجى التحقق من الاتصال والمحاولة مرة أخرى.\nستظهر بيانات المتدربين تلقائياً عند توفرها.';
 }

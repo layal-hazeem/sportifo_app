@@ -3256,6 +3256,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'We will notify you when something important arrives.'**
   String get notifications_emptySubtitle;
+
+  /// No description provided for @unableToLoadTraineesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to Load Trainees'**
+  String get unableToLoadTraineesTitle;
+
+  /// No description provided for @unableToLoadTraineesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your connection and try again.\nTrainees will appear automatically when available.'**
+  String get unableToLoadTraineesSubtitle;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

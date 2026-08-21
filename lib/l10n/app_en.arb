@@ -750,7 +750,10 @@
 "notifications_unableToLoadTitle": "Unable to Load Notifications",
 "notifications_unableToLoadSubtitle": "Please check your connection and try again.\nNotifications will appear automatically when available.",
 "notifications_emptyTitle": "No Notifications Yet",
-"notifications_emptySubtitle": "We will notify you when something important arrives."
+"notifications_emptySubtitle": "We will notify you when something important arrives.",
+
+"unableToLoadTraineesTitle": "Unable to Load Trainees",
+"unableToLoadTraineesSubtitle": "Please check your connection and try again.\nTrainees will appear automatically when available."
 
 
 }
