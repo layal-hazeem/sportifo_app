@@ -27,3 +27,4 @@ class PlanDaysFailure extends PlanDaysState {
   final String message;
   PlanDaysFailure(this.message);
 }
+

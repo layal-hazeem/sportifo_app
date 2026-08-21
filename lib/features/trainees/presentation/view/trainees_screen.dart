@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/routes/app_routes.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
+import 'package:sportifo_app/core/widgets/no_internet_view.dart';
 import 'package:sportifo_app/features/trainees/data/models/coach_plan_model.dart';
 import 'package:sportifo_app/features/trainees/presentation/view_model/trainees_cubit.dart';
 import 'package:sportifo_app/features/trainees/presentation/view_model/trainees_state.dart';
@@ -29,6 +30,7 @@ class _TraineesScreenState extends State<TraineesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.backgroundColor,
       body: Container(
@@ -47,12 +49,13 @@ class _TraineesScreenState extends State<TraineesScreen> {
                 return const _TraineesLoading();
               }
 
-              if (state is TraineesFailure) {
-                return _TraineesError(
-                  message: state.message,
+             if (state is TraineesFailure) {
+                return NoInternetView(
                   onRetry: () {
                     context.read<TraineesCubit>().getCoachTrainees();
                   },
+                  title: l10n.unableToLoadTraineesTitle,
+                  subtitle: l10n.unableToLoadTraineesSubtitle,
                 );
               }
 

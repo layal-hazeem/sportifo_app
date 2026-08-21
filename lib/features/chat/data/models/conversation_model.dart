@@ -33,13 +33,19 @@ class ConversationModel {
       }
     }
 
+      String? subType;
+  final typeObj = json['type'];
+  if (typeObj is Map<String, dynamic>) {
+    subType = typeObj['subscription_type']?.toString();
+  }
+
     return ConversationModel(
       id: json['id'] ?? 0,
       otherParticipant:
           ParticipantModel.fromJson(json['other_participant'] ?? {}),
       lastMessage: lastMsg,
       lastMessageAt: parseTime,
-      subscriptionType: json['subscription_type']?.toString(),
+      subscriptionType: subType, 
     );
   }
 
@@ -62,7 +68,8 @@ ConversationModel copyWith({
       'other_participant': otherParticipant.toJson(),
       'last_message': lastMessage?.toJson(),
       'last_message_at': lastMessageAt.toIso8601String(),
-      'subscription_type': subscriptionType,
+      'type': subscriptionType != null ? {'subscription_type': subscriptionType} : null,
+
     };
   }
 

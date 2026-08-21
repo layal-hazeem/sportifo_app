@@ -617,7 +617,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get theme => 'لون التطبيق';
 
   @override
-  String get notifications => 'الاشعارات';
+  String get notifications => 'الإشعارات';
 
   @override
   String get account => 'الحساب';
@@ -1614,6 +1614,40 @@ class AppLocalizationsAr extends AppLocalizations {
   String get freePlan => 'خطة مجانية';
 
   @override
+  String get noInternetConnection => 'لا يوجد اتصال بالإنترنت';
+
+  @override
+  String get noInternetSubtitle => 'يرجى التحقق من الشبكة وإعادة المحاولة.\nستظهر البيانات المخزنة مؤقتاً تلقائياً عند توفرها.';
+
+  @override
+  String get unableToLoadChat => 'تعذر تحميل المحادثة';
+
+  @override
+  String get unableToLoadChatSub => 'يرجى التحقق من الاتصال والمحاولة مرة أخرى.\nستظهَر سجلات المحادثة تلقائياً فور توفرها.';
+
+  @override
+  String get unableToLoadPlans => 'تعذر تحميل الخطط';
+
+  @override
+  String get unableToLoadPlansSub => 'يرجى التحقق من الاتصال والمحاولة مرة أخرى.\nستظهر البيانات المخزنة تلقائياً فور توفرها.';
+
+  @override
+  String get notifications_unableToLoadTitle => 'تعذر تحميل الإشعارات';
+
+  @override
+  String get notifications_unableToLoadSubtitle => 'يرجى التحقق من الاتصال والمحاولة مرة أخرى.\nستظهر الإشعارات تلقائياً عند توفرها.';
+
+  @override
+  String get notifications_emptyTitle => 'لا توجد إشعارات بعد';
+
+  @override
+  String get notifications_emptySubtitle => 'سنخبرك عند وصول شيء مهم.';
+
+  @override
+  String get unableToLoadTraineesTitle => 'تعذر تحميل المتدربين';
+
+  @override
+  String get unableToLoadTraineesSubtitle => 'يرجى التحقق من الاتصال والمحاولة مرة أخرى.\nستظهر بيانات المتدربين تلقائياً عند توفرها.';
   String get createAdditionalPlan => 'إنشاء خطة إضافية';
 
   @override

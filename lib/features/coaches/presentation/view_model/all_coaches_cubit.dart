@@ -7,6 +7,10 @@ import 'all_coaches_state.dart';
 class AllCoachesCubit extends Cubit<AllCoachesState> {
   final CoachRepository _coachRepository;
 
+  // ✅✅✅ هون عدلنا: كاش داخلي لحفظ آخر بيانات ناجحة
+  // بيمنع عرض NoInternetView لو في بيانات قديمة مخزنة
+  List<CoachModel>? _cachedCoaches;
+
   AllCoachesCubit(this._coachRepository) : super(AllCoachesInitial());
 
   Future<void> fetchAllCoaches({
@@ -26,9 +30,17 @@ class AllCoachesCubit extends Cubit<AllCoachesState> {
     );
 
     if (result is Success<List<CoachModel>>) {
+      // ✅ خزن النتيجة بالكاش
+      _cachedCoaches = result.data;
       emit(AllCoachesLoaded(result.data));
-    }else if (result is Failure<List<CoachModel>>) {
-      emit(AllCoachesError(result.message));
+    } else if (result is Failure<List<CoachModel>>) {
+      // ✅ إذا في كاش قديم، ارجع البيانات القديمة بدل ما تطلع Error
+      if (_cachedCoaches != null && _cachedCoaches!.isNotEmpty) {
+        emit(AllCoachesLoaded(_cachedCoaches!));
+      } else {
+        // ✅ ما في كاش → Error حقيقي
+        emit(AllCoachesError(result.message));
+      }
     }
   }
 }

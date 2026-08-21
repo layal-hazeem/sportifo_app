@@ -1,30 +1,32 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sportifo_app/features/workout/presentation/view_model/parts_cubit/parts_state.dart';
 import '../../../../../core/network/api_result.dart';
 import '../../../data/repository/workout_repository.dart';
+import 'parts_state.dart';
 
 class PartsCubit extends Cubit<PartsState> {
   final WorkoutRepository _repository;
+  bool _isFetching = false;
 
   PartsCubit(this._repository) : super(PartsInitial());
 
-  // نمرر 2 لجلب العضلات، أو 3 لجلب الأجزاء الدقيقة
-  Future<void> fetchParts(int levelId) async {
+  Future<void> fetchParts(int levelId, {bool forceRefresh = false}) async {
+    if (_isFetching) return;
+    if (!forceRefresh && state is PartsSuccess) return;
+
+    _isFetching = true;
     emit(PartsLoading());
 
     final result = await _repository.getSubCategories(levelId);
+    _isFetching = false;
     if (isClosed) return;
+
     switch (result) {
       case Success():
         emit(PartsSuccess(result.data));
-        break;
       case Failure():
         emit(PartsFailure(result.message));
-        break;
     }
   }
 
-  void reset() {
-    emit(PartsInitial());
-  }
+  void reset() => emit(PartsInitial());
 }

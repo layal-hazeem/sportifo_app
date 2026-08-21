@@ -43,15 +43,15 @@ class ConversationTile extends StatelessWidget {
 GestureDetector(
   onTap: () => _showFullImage(context, fixedProfilePic),
   child: CircleAvatar(
-    radius: 28,
-    backgroundColor: Colors.grey.shade300,
-    backgroundImage: fixedProfilePic != null
-        ? CachedNetworkImageProvider(fixedProfilePic)
-        : const AssetImage('assets/images/female.jpg') as ImageProvider,
-    child: fixedProfilePic == null
-        ? const Icon(Icons.person, color: Colors.grey, size: 28)
-        : null,
-  ),
+  radius: 28,
+  backgroundColor: Colors.grey.shade300,
+  backgroundImage: fixedProfilePic != null
+      ? CachedNetworkImageProvider(fixedProfilePic)
+      : (conversation.otherParticipant.gender == 1
+          ? const AssetImage('assets/images/male.jpg')
+          : const AssetImage('assets/images/female.jpg')) as ImageProvider,
+  child: fixedProfilePic == null ? null : null,
+),
 ),
 const SizedBox(width: 16), // ← مسافة أكبر
             // النصوص (الاسم، معاينة الرسالة، الوقت)

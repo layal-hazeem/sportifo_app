@@ -27,12 +27,14 @@ class ChatDetailScreen extends StatefulWidget {
   final int conversationId;
   final String otherParticipantName;
   final String? otherParticipantImage;
+  final int? otherParticipantGender;
   final String? subscriptionType;
 
   const ChatDetailScreen({
     Key? key,
     required this.conversationId,
     required this.otherParticipantName,
+    this.otherParticipantGender,
     this.otherParticipantImage,
     this.subscriptionType,
   }) : super(key: key);
@@ -84,15 +86,15 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
   void _calculateCanSend() {
   final localStorage = getIt<LocalStorage>();
   final userRole = localStorage.getRole()?.toLowerCase();
-  final subType = widget.subscriptionType?.toLowerCase();
+  final type = widget.subscriptionType?.toLowerCase();
 print ('🔍 userRole = $userRole');
-print ('🔍 subscriptionType = $subType');
+print ('🔍 subscriptionType = $type');
  
 
   if (userRole == 'coach') {
     _canSend = true;
   } else {
-    _canSend = subType == 'gold';
+    _canSend = type == 'gold';
   }
   print('🔍 _canSend = $_canSend');
 }
@@ -371,17 +373,18 @@ void _showDeleteConfirmation(int? messageId, String? clientUuid) {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                CircleAvatar(
+                      CircleAvatar(
                   radius: 17,
                   backgroundImage: widget.otherParticipantImage != null
                       ? NetworkImage(
                           UrlFixer.image(widget.otherParticipantImage!)!,
                         )
-                      : null,
+                      : (widget.otherParticipantGender == 1
+                          ? const AssetImage('assets/images/male.jpg')
+                          : const AssetImage('assets/images/female.jpg'))
+                          as ImageProvider,
                   backgroundColor: Colors.white24,
-                  child: widget.otherParticipantImage == null
-                      ? const Icon(Icons.person, size: 16, color: Colors.white)
-                      : null,
+                  // child محذوف لأن backgroundImage موجود
                 ),
                 const SizedBox(width: 18),
                 Text(

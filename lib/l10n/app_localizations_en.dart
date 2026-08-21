@@ -1614,6 +1614,40 @@ class AppLocalizationsEn extends AppLocalizations {
   String get freePlan => 'Free Plan';
 
   @override
+  String get noInternetConnection => 'No Internet Connection';
+
+  @override
+  String get noInternetSubtitle => 'Please check your network and try again.\nCached data will appear automatically when available.';
+
+  @override
+  String get unableToLoadChat => 'Unable to Load Chat';
+
+  @override
+  String get unableToLoadChatSub => 'Please check your connection and try again.\nYour chat history will appear automatically when available.';
+
+  @override
+  String get unableToLoadPlans => 'Unable to Load Plans';
+
+  @override
+  String get unableToLoadPlansSub => 'Check your connection and try again.\nCached data will appear automatically when available.';
+
+  @override
+  String get notifications_unableToLoadTitle => 'Unable to Load Notifications';
+
+  @override
+  String get notifications_unableToLoadSubtitle => 'Please check your connection and try again.\nNotifications will appear automatically when available.';
+
+  @override
+  String get notifications_emptyTitle => 'No Notifications Yet';
+
+  @override
+  String get notifications_emptySubtitle => 'We will notify you when something important arrives.';
+
+  @override
+  String get unableToLoadTraineesTitle => 'Unable to Load Trainees';
+
+  @override
+  String get unableToLoadTraineesSubtitle => 'Please check your connection and try again.\nTrainees will appear automatically when available.';
   String get createAdditionalPlan => 'Create Additional Plan';
 
   @override

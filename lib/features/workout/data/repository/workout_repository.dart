@@ -9,20 +9,33 @@ import '../web_services/workout_web_service.dart';
 class WorkoutRepository {
   final WorkoutWebService _webService;
   WorkoutRepository(this._webService);
-  Future<ApiResult<List<FilterItemModel>>> getCategories(int id) async {
-    try {
-      final cacheOptions = await DioFactory.getCacheOptions();
-      final dioOptions = cacheOptions.copyWith(
-        policy: CachePolicy.forceCache,
-      ).toOptions();
+ Future<ApiResult<List<FilterItemModel>>> getCategories(int id) async {
+  try {
+    final cacheOptions = await DioFactory.getCacheOptions();
+    final dioOptions = cacheOptions.copyWith(
+      policy: CachePolicy.request,        // ← يحاول السيرفر أولاً
+      maxStale: const Duration(days: 30), // ← صلاحية الكاش
+    ).toOptions();
 
-      final response = await _webService.getCategories(id, options: dioOptions);
-      final responseModel = FilterResponseModel.fromJson(response.data);
-      return Success(responseModel.data);
-    } catch (e) {
-      return Failure(ApiErrorHandler.handle(e));
-    }
+    final response = await _webService.getCategories(id, options: dioOptions);
+    final responseModel = FilterResponseModel.fromJson(response.data);
+    return Success(responseModel.data);
+  } catch (e) {
+    return Failure(ApiErrorHandler.handle(e));
   }
+}
+Future<ApiResult<List<ExerciseModel>>> getExercises({
+  int? categoryId,
+  int? organId,
+  List<int>? smallestCategoryId,
+  String? searchQuery,
+}) async {
+  try {
+    final cacheOptions = await DioFactory.getCacheOptions();
+    final dioOptions = cacheOptions.copyWith(
+      policy: CachePolicy.request,        // ← جرب السيرفر أولاً
+      maxStale: const Duration(days: 7),  // ← صلاحية الكاش
+    ).toOptions();
 
   Future<ApiResult<List<ExerciseModel>>> getAlternativeExercises(int exerciseId) async {
     try {
@@ -41,40 +54,36 @@ class WorkoutRepository {
         policy: CachePolicy.forceCache,
       ).toOptions();
 
-      final response = await _webService.getSubCategories(organId, options: dioOptions);
-      final responseModel = FilterResponseModel.fromJson(response.data);
-      return Success(responseModel.data);
-    } catch (e) {
-      return Failure(ApiErrorHandler.handle(e));
-    }
+    final response = await _webService.getExercises(
+      categoryId: categoryId,
+      organId: organId,
+      smallestCategoryId: smallestCategoryId,
+      searchQuery: searchQuery,
+      options: dioOptions,
+    );
+
+    final responseModel = ExerciseResponseModel.fromJson(response.data);
+    return Success(responseModel.data);
+  } catch (e) {
+    return Failure(ApiErrorHandler.handle(e));
   }
+}
 
-  Future<ApiResult<List<ExerciseModel>>> getExercises({
-    int? categoryId,
-    int? organId,
-    List<int>? smallestCategoryId,
-    String? searchQuery,
-  }) async {
-    try {
-      final cacheOptions = await DioFactory.getCacheOptions();
-      final dioOptions = cacheOptions.copyWith(
-        policy: CachePolicy.forceCache,
-      ).toOptions();
+Future<ApiResult<List<FilterItemModel>>> getSubCategories(int organId) async {
+  try {
+    final cacheOptions = await DioFactory.getCacheOptions();
+    final dioOptions = cacheOptions.copyWith(
+      policy: CachePolicy.request,
+      maxStale: const Duration(days: 30),
+    ).toOptions();
 
-      final response = await _webService.getExercises(
-        categoryId: categoryId,
-        organId: organId,
-        smallestCategoryId: smallestCategoryId,
-        searchQuery: searchQuery,
-        options: dioOptions,
-      );
-
-      final responseModel = ExerciseResponseModel.fromJson(response.data);
-      return Success(responseModel.data);
-    } catch (e) {
-      return Failure(ApiErrorHandler.handle(e));
-    }
+    final response = await _webService.getSubCategories(organId, options: dioOptions);
+    final responseModel = FilterResponseModel.fromJson(response.data);
+    return Success(responseModel.data);
+  } catch (e) {
+    return Failure(ApiErrorHandler.handle(e));
   }
+}
 
   Future<ApiResult<bool>> toggleSaveExercise(int exerciseId) async {
     try {
