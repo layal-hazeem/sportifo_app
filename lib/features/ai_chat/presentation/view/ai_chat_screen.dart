@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/helpers/snack_bar_utils.dart';
 import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
+import 'package:sportifo_app/core/widgets/no_internet_view.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -21,7 +22,6 @@ class AiChatScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        // 🔥 التعديل الأول والأهم: استخدام value بدلاً من create لمنع تدمير الكيوبيت
         BlocProvider.value(
           value: getIt<AiChatCubit>(),
         ),
@@ -56,7 +56,6 @@ class _AiChatViewState extends State<_AiChatView> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<NutritionCubit>().initialize();
-      // 🔥 التعديل الثاني: استدعاء التحديث من هنا لضمان عمله مرة واحدة عند فتح الشاشة
       context.read<AiChatCubit>().initialize();
       _scrollToBottom(animate: false);
     });
@@ -241,6 +240,8 @@ class _AiChatViewState extends State<_AiChatView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!; // 🌐 إضافة سياق الترجمة
+
     return Scaffold(
       backgroundColor: context.backgroundColor,
       body: Column(
@@ -272,7 +273,7 @@ class _AiChatViewState extends State<_AiChatView> {
                       context,
                       message: state.message,
                       type: _getErrorType(state.message),
-                      actionLabel: 'Retry',
+                      actionLabel: l10n.retry, // 🌐 تم الاستبدال
                       onActionPressed: () => _handleSend(_lastSentText!),
                     );
                   }
@@ -292,7 +293,7 @@ class _AiChatViewState extends State<_AiChatView> {
                   };
 
                   final isSending = state is AiChatSending;
-                  final isLoading = state is AiChatLoading || state is AiChatInitial;
+                  final isLoading = state is AiChatInitial || state is AiChatLoading;
                   final isError = state is AiChatError && messages.isEmpty;
 
                   if (isLoading && messages.isEmpty) {
@@ -300,25 +301,13 @@ class _AiChatViewState extends State<_AiChatView> {
                   }
 
                   if (isError) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(Icons.wifi_off_rounded, size: 50, color: Colors.grey),
-                          const SizedBox(height: 16),
-                          const Text("Connection Failed", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                          const SizedBox(height: 8),
-                          TextButton.icon(
-                            onPressed: () => context.read<AiChatCubit>().fetchHistory(forceRefresh: true),
-                            icon: const Icon(Icons.refresh, color: AppColors.primaryBtn),
-                            label: const Text("Tap to retry", style: TextStyle(color: AppColors.primaryBtn)),
-                          )
-                        ],
-                      ),
+                    return NoInternetView(
+                      onRetry: () => context.read<AiChatCubit>().fetchHistory(forceRefresh: true),
+                      title: l10n.unableToLoadChat, // 🌐 تم الاستبدال
+                      subtitle: l10n.unableToLoadChatSub, // 🌐 تم الاستبدال
                     );
                   }
 
-                  // 🔥 تم إصلاح هذا الجزء بنجاح وإزالة التكرار
                   final lastAiId = state is AiChatSuccess && state.lastAiMessage != null
                       ? state.lastAiMessage!.id
                       : -1;

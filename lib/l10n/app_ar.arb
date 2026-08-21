@@ -691,7 +691,24 @@
 "month_plural": "{count} أشهر",
 "months_range": "{min} - {max} أشهر",
 "free": "مجاني",
-  "freePlan": "خطة مجانية"
+  "freePlan": "خطة مجانية",
+
+
+  "noInternetConnection": "لا يوجد اتصال بالإنترنت",
+"noInternetSubtitle": "يرجى التحقق من الشبكة وإعادة المحاولة.\nستظهر البيانات المخزنة مؤقتاً تلقائياً عند توفرها.",
+"retry": "إعادة المحاولة",
+
+"unableToLoadChat": "تعذر تحميل المحادثة",
+"unableToLoadChatSub": "يرجى التحقق من الاتصال والمحاولة مرة أخرى.\nستظهَر سجلات المحادثة تلقائياً فور توفرها.",
+"retry": "إعادة المحاولة",
+"unableToLoadPlans": "تعذر تحميل الخطط",
+"unableToLoadPlansSub": "يرجى التحقق من الاتصال والمحاولة مرة أخرى.\nستظهر البيانات المخزنة تلقائياً فور توفرها.",
+
+"notifications":"الإشعارات",
+"notifications_unableToLoadTitle": "تعذر تحميل الإشعارات",
+"notifications_unableToLoadSubtitle": "يرجى التحقق من الاتصال والمحاولة مرة أخرى.\nستظهر الإشعارات تلقائياً عند توفرها.",
+"notifications_emptyTitle": "لا توجد إشعارات بعد",
+"notifications_emptySubtitle": "سنخبرك عند وصول شيء مهم."
 
 
 

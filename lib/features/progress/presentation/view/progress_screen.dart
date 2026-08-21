@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
+import 'package:sportifo_app/core/widgets/no_internet_view.dart'; // ✅ استدعاء الودجت الموحدة
 import 'package:sportifo_app/features/progress/presentation/view_model/exercise_filter_params.dart';
 import 'package:sportifo_app/features/progress/presentation/widgets/exercise_activity_section.dart';
 import 'package:sportifo_app/features/progress/presentation/widgets/weight_progress_section.dart';
@@ -82,102 +83,128 @@ class _ProgressContentState extends State<_ProgressContent> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return RefreshIndicator(
-      color: AppColors.primaryBtn,
-      backgroundColor: context.backgroundColor,
-      displacement: 40,
-      onRefresh: _onRefresh,
-      child: CustomScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        slivers: [
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    l10n.your_progress,
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: context.textColor,
+    return BlocBuilder<WeightProgressCubit, WeightProgressState>(
+      builder: (context, weightState) {
+        return BlocBuilder<ExerciseActivityCubit, ExerciseActivityState>(
+          builder: (context, activityState) {
+            // ✅✅✅ هون عدلنا: إذا فشل القسمان معاً (ما في كاش لأي منهن)
+            // بنعرض NoInternetView واحدة للصفحة بأكملها
+            final bool bothFailed = (weightState is WeightProgressError) &&
+                (activityState is ExerciseActivityError);
+
+            if (bothFailed) {
+              return NoInternetView(
+                onRetry: _onRefresh,
+                title: 'Unable to Load Progress',
+                subtitle:
+                    'Please check your connection and try again.\nYour progress will appear automatically when available.',
+              );
+            }
+
+            return RefreshIndicator(
+              color: AppColors.primaryBtn,
+              backgroundColor: context.backgroundColor,
+              displacement: 40,
+              onRefresh: _onRefresh,
+              child: CustomScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n.your_progress,
+                            style: TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              color: context.textColor,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                        ],
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+
+                  // قسم تقدم الوزن
+                  SliverToBoxAdapter(
+                    child: BlocBuilder<WeightProgressCubit, WeightProgressState>(
+                      builder: (context, state) {
+                        if (state is WeightProgressLoading) {
+                          return const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            child: LoadingShimmer(
+                              width: double.infinity,
+                              height: 280,
+                              borderRadius: 24,
+                            ),
+                          );
+                        } else if (state is WeightProgressSuccess) {
+                          return WeightProgressSection(data: state.data);
+                        } else if (state is WeightProgressError) {
+                          // ✅ بيظهر هون بس إذا القسم التاني ناجح
+                          return _ErrorWidget(
+                            message: state.message,
+                            onRetry: () => context
+                                .read<WeightProgressCubit>()
+                                .fetchWeightProgress(),
+                          );
+                        }
+                        return const SizedBox.shrink();
+                      },
+                    ),
+                  ),
+
+                  const SliverToBoxAdapter(child: SizedBox(height: 25)),
+
+                  // قسم تتبع التمارين
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: BlocBuilder<ExerciseActivityCubit, ExerciseActivityState>(
+                        builder: (context, state) {
+                          if (state is ExerciseActivityLoading) {
+                            return const LoadingShimmer(
+                              width: double.infinity,
+                              height: 400,
+                              borderRadius: 24,
+                            );
+                          } else if (state is ExerciseActivitySuccess) {
+                            return ExerciseActivitySection(
+                              days: state.days,
+                              filters: _filters,
+                              onApplyFilters: _applyFilters,
+                              onClearFilters: _clearFilters,
+                            );
+                          } else if (state is ExerciseActivityError) {
+                            // ✅ بيظهر هون بس إذا القسم التاني ناجح
+                            return _ErrorWidget(
+                              message: state.message,
+                              onRetry: () =>
+                                  context.read<ExerciseActivityCubit>().fetchActivity(
+                                        planId: _filters.planId,
+                                        exerciseId: _filters.exerciseId,
+                                        from: _filters.from,
+                                        to: _filters.to,
+                                      ),
+                            );
+                          }
+                          return const SizedBox.shrink();
+                        },
+                      ),
+                    ),
+                  ),
+
+                  const SliverToBoxAdapter(child: SizedBox(height: 30)),
                 ],
               ),
-            ),
-          ),
-
-          SliverToBoxAdapter(
-            child: BlocBuilder<WeightProgressCubit, WeightProgressState>(
-              builder: (context, state) {
-                if (state is WeightProgressLoading) {
-                  return const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: LoadingShimmer(
-                      width: double.infinity,
-                      height: 280,
-                      borderRadius: 24,
-                    ),
-                  );
-                } else if (state is WeightProgressSuccess) {
-                  return WeightProgressSection(data: state.data);
-                } else if (state is WeightProgressError) {
-                  return _ErrorWidget(
-                    message: state.message,
-                    onRetry: () => context
-                        .read<WeightProgressCubit>()
-                        .fetchWeightProgress(),
-                  );
-                }
-                return const SizedBox.shrink();
-              },
-            ),
-          ),
-
-          const SliverToBoxAdapter(child: SizedBox(height: 25)),
-
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: BlocBuilder<ExerciseActivityCubit, ExerciseActivityState>(
-                builder: (context, state) {
-                  if (state is ExerciseActivityLoading) {
-                    return const LoadingShimmer(
-                      width: double.infinity,
-                      height: 400,
-                      borderRadius: 24,
-                    );
-                  } else if (state is ExerciseActivitySuccess) {
-                    return ExerciseActivitySection(
-                      days: state.days,
-                      filters: _filters,
-                      onApplyFilters: _applyFilters,
-                      onClearFilters: _clearFilters,
-                    );
-                  } else if (state is ExerciseActivityError) {
-                    return _ErrorWidget(
-                      message: state.message,
-                      onRetry: () =>
-                          context.read<ExerciseActivityCubit>().fetchActivity(
-                                planId: _filters.planId,
-                                exerciseId: _filters.exerciseId,
-                                from: _filters.from,
-                                to: _filters.to,
-                              ),
-                    );
-                  }
-                  return const SizedBox.shrink();
-                },
-              ),
-            ),
-          ),
-
-          const SliverToBoxAdapter(child: SizedBox(height: 30)),
-        ],
-      ),
+            );
+          },
+        );
+      },
     );
   }
 }

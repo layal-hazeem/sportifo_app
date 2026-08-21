@@ -5,6 +5,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/widgets/loading_shimmer.dart';
 import '../../../../core/widgets/wave_app_bar.dart';
+import '../../../../core/widgets/no_internet_view.dart'; // ← 1. استيراد
 import '../../../../l10n/app_localizations.dart';
 import '../view_model/saved_exercises/saved_exercises_cubit.dart';
 import '../view_model/saved_exercises/saved_exercises_state.dart';
@@ -21,12 +22,23 @@ class _SavedExercisesScreenState extends State<SavedExercisesScreen> {
   @override
   void initState() {
     super.initState();
+    context.read<SavedExercisesCubit>().initialize();
   }
 
   Future<void> _onRefresh() async {
     await context.read<SavedExercisesCubit>().fetchSavedExercises(
       forceRefresh: true,
     );
+  }
+
+  // ← 2. دالة فحص الـ offline
+  bool _isOfflineError(String message) {
+    final lower = message.toLowerCase();
+    return lower.contains('socket') ||
+        lower.contains('connection') ||
+        lower.contains('network') ||
+        lower.contains('failed host lookup') ||
+        lower.contains('timeout');
   }
 
   @override
@@ -98,6 +110,16 @@ class _SavedExercisesScreenState extends State<SavedExercisesScreen> {
               ),
             );
           } else if (state is SavedExercisesError) {
+            // ← 3. لو offline error → NoInternetView
+            if (_isOfflineError(state.message)) {
+              return NoInternetView(
+                onRetry: () => context
+                    .read<SavedExercisesCubit>()
+                    .fetchSavedExercises(forceRefresh: true),
+              );
+            }
+
+            // لو error تاني → نفس العرض القديم
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -144,7 +166,7 @@ class _SavedExercisesScreenState extends State<SavedExercisesScreen> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      l10n.noSavedExercisesYet, // 🔥 ترجمة
+                      l10n.noSavedExercisesYet,
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.grey.shade600,
@@ -155,7 +177,7 @@ class _SavedExercisesScreenState extends State<SavedExercisesScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 40),
                       child: Text(
-                        l10n.savedExercisesHint, // 🔥 ترجمة
+                        l10n.savedExercisesHint,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 14,
@@ -174,7 +196,7 @@ class _SavedExercisesScreenState extends State<SavedExercisesScreen> {
                         ),
                         const SizedBox(width: 6),
                         Text(
-                          l10n.pullDownToRefresh, // 🔥 ترجمة
+                          l10n.pullDownToRefresh,
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.grey.shade400,

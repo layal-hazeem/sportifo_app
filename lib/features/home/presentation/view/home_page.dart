@@ -1,10 +1,10 @@
-//home page
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/helpers/snack_bar_utils.dart';
 import 'package:sportifo_app/core/routes/app_routes.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
+import 'package:sportifo_app/core/widgets/lazy_indexed_stack.dart';
 import 'package:sportifo_app/features/%20ads/presentation/view_model/ads_cubit.dart';
 import 'package:sportifo_app/features/ai_chat/presentation/view/ai_chat_screen.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/logout/logout_cubit.dart';
@@ -32,9 +32,6 @@ import '../../../workout/presentation/view/workout_type_screen.dart';
 import 'package:sportifo_app/core/enum/drawer_enum.dart';
 import 'package:flutter/services.dart';
 
-// ⚠️ احرصي على استيراد ملف الـ AppSnackBar الخاص بكِ
-// import 'package:sportifo_app/core/widgets/app_snack_bar.dart';
-
 HomeViewModel homeViewModel = HomeViewModel();
 
 class HomePage extends StatefulWidget {
@@ -47,7 +44,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   DrawerItem selectedDrawerItem = DrawerItem.profile;
   
-  // 🔥 متغير لتتبع زمن الضغط على زر الرجوع
   DateTime? _lastPressedAt;
 
   List<Widget> _getTraineeScreens() {
@@ -58,8 +54,8 @@ class _HomePageState extends State<HomePage> {
         child: const MyPlansScreen(),
       ),
       const TraineeScreen(),
-      BlocProvider(
-        create: (context) => getIt<CategoriesCubit>(),
+      BlocProvider.value(
+        value: getIt<CategoriesCubit>(),
         child: const WorkoutTypeScreen(),
       ),
       const AiChatScreen(),
@@ -89,8 +85,8 @@ class _HomePageState extends State<HomePage> {
           },
         ),
       ),
-      BlocProvider(
-        create: (context) => getIt<CategoriesCubit>(),
+      BlocProvider.value(
+        value: getIt<CategoriesCubit>(),
         child: const WorkoutTypeScreen(),
       ),
       const AiChatScreen(),
@@ -106,6 +102,7 @@ class _HomePageState extends State<HomePage> {
         BlocProvider(create: (_) => getIt<LogoutCubit>()),
         BlocProvider(create: (_) => getIt<ProfileCubit>()..getProfile()),
         BlocProvider.value(value: getIt<SavedExercisesCubit>()),
+        BlocProvider.value(value: getIt<CategoriesCubit>()),
       ],
       child: BlocListener<LogoutCubit, LogoutState>(
         listener: (context, state) {
@@ -118,7 +115,6 @@ class _HomePageState extends State<HomePage> {
           }
 
           if (state is LogoutError) {
-            // ✅ استخدام AppSnackBar عند حدوث خطأ في تسجيل الخروج
             AppSnackBar.show(
               context,
               message: state.message,
@@ -177,28 +173,24 @@ class _HomePageState extends State<HomePage> {
                 builder: (context, child) {
                   final bool isHomeScreen = homeViewModel.currentIndex == 2;
 
-                  // 🔥 تغليف الـ Scaffold بـ PopScope لإدارة زر الرجوع
                   return PopScope(
-                    canPop: false, // نمنع الخروج التلقائي
+                    canPop: false,
                     onPopInvokedWithResult: (didPop, result) {
                       if (didPop) return;
 
                       final now = DateTime.now();
                       const backButtonInterval = Duration(seconds: 2);
 
-                      // إذا كانت هذه الضغطة الأولى أو مضى أكثر من ثانيتين على الضغطة المسبقة
                       if (_lastPressedAt == null ||
                           now.difference(_lastPressedAt!) > backButtonInterval) {
                         _lastPressedAt = now;
 
-                        // ✅ استخدام AppSnackBar كـ Warning للتنبيه عند محاولة الخروج
                         AppSnackBar.show(
                           context,
                           message: l10n.press_again_to_exit,
                           type: SnackBarType.warning,
                         );
                       } else {
-                        // الضغطة الثانية خلال أقل من ثانيتين -> الخروج من التطبيق
                         SystemNavigator.pop();
                       }
                     },
@@ -219,7 +211,7 @@ class _HomePageState extends State<HomePage> {
                           homeViewModel.changeTab(2);
                         },
                       ),
-                      body: IndexedStack(
+                      body: LazyIndexedStack(
                         index: homeViewModel.currentIndex,
                         children: screens,
                       ),

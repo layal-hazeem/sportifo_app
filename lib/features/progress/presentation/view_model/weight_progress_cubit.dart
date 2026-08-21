@@ -7,7 +7,12 @@ import 'weight_progress_state.dart';
 class WeightProgressCubit extends Cubit<WeightProgressState> {
   final WeightProgressRepository _repository;
 
+  // ✅✅✅ هون عدلنا: كاش داخلي لحفظ آخر بيانات ناجحة
+  // بيمنع عرض NoInternetView لو في بيانات قديمة مخزنة
+  WeightProgressData? _cachedData;
+
   WeightProgressCubit(this._repository) : super(WeightProgressInitial());
+
   Future<void> fetchWeightProgress({bool forceRefresh = false}) async {
     emit(WeightProgressLoading());
     final result = await _repository.getWeightProgress(
@@ -17,9 +22,15 @@ class WeightProgressCubit extends Cubit<WeightProgressState> {
     if (isClosed) return;
 
     if (result is Success<WeightProgressData>) {
+      _cachedData = result.data; // ✅ خزن الكاش
       emit(WeightProgressSuccess(result.data));
     } else if (result is Failure) {
-      emit(WeightProgressError((result as Failure).message));
+      // ✅ إذا في كاش قديم، ارجع البيانات القديمة بدل Error
+      if (_cachedData != null) {
+        emit(WeightProgressSuccess(_cachedData!));
+      } else {
+        emit(WeightProgressError((result as Failure).message));
+      }
     }
   }
 }

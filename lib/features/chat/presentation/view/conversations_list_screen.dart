@@ -6,6 +6,7 @@ import 'package:sportifo_app/core/di/service_locator.dart';
 import 'package:sportifo_app/core/routes/app_routes.dart';
 import 'package:sportifo_app/core/services/chat_websocket_service.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/widgets/no_internet_view.dart'; // ✅ استدعاء الودجت الموحدة
 import 'package:sportifo_app/core/widgets/wave_app_bar.dart';
 import '../../data/models/message_model.dart';
 import '../view_model/conversations_cubit.dart';
@@ -30,14 +31,14 @@ class _ConversationsListScreenState extends State<ConversationsListScreen> {
     _fetchAndSubscribe();
   }
 
-   Future<void> _initWebSocket() async {
+  Future<void> _initWebSocket() async {
     await _webSocketService.init();
-    
+
     _webSocketService.events.listen((event) {
       if (!mounted) return;
       _handleRealtimeEvent(event.eventName, event.data, event.conversationId);
     });
-    
+
     _webSocketService.connectionState.listen((state) {
       if (state == 'CONNECTED' && mounted) {
         _resyncAllConversations();
@@ -54,13 +55,12 @@ class _ConversationsListScreenState extends State<ConversationsListScreen> {
         final messageData = data['message'] as Map<String, dynamic>?;
         if (messageData == null) return;
         final message = MessageModel.fromJson(messageData);
-        // 🔥🔥🔥 تحديث فوري لقائمة المحادثات
         cubit.updateConversationFromRealtime(conversationId, message);
         break;
 
       case 'message.read':
       case 'message.deleted':
-        cubit.fetchConversations(); // ريفرش خفيف
+        cubit.fetchConversations();
         break;
     }
   }
@@ -94,55 +94,57 @@ class _ConversationsListScreenState extends State<ConversationsListScreen> {
       appBar: const WaveAppBar(title: 'Chats', showBackButton: true),
       body: BlocBuilder<ConversationsCubit, ConversationsState>(
         builder: (context, state) {
+          // ⏳ تحميل أول مرة
           if (state is ConversationsLoading) {
-            return const Center(child: CircularProgressIndicator(color: AppColors.primaryBtn));
-          }
-
-          if (state is ConversationsError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.error_outline, size: 64, color: Colors.red[300]),
-                  const SizedBox(height: 16),
-                  Text('حدث خطأ', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.grey[700])),
-                  const SizedBox(height: 8),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 32),
-                    child: Text(state.message, textAlign: TextAlign.center, style: TextStyle(color: Colors.grey[600])),
-                  ),
-                  const SizedBox(height: 24),
-                  ElevatedButton.icon(
-                    onPressed: _fetchAndSubscribe,
-                    icon: const Icon(Icons.refresh),
-                    label: const Text('إعادة محاولة'),
-                    style: ElevatedButton.styleFrom(backgroundColor: AppColors.primaryBtn),
-                  ),
-                ],
-              ),
+            return const Center(
+              child: CircularProgressIndicator(color: AppColors.primaryBtn),
             );
           }
 
+          // ✅✅✅ هون عدلنا: إذا فشل التحميل وما في بيانات مخزنة سابقاً
+          // بنعرض NoInternetView الموحدة بدل الـ Center القديم
+          if (state is ConversationsError) {
+            return NoInternetView(
+              onRetry: () => _fetchAndSubscribe(),
+              title: 'Unable to Load Chats',
+              subtitle:
+                  'Please check your connection and try again.\nConversations will appear automatically when available.',
+            );
+          }
+
+          // 📭 نجاح بس ما في محادثات
           if (state is ConversationsLoaded) {
             if (state.conversations.isEmpty) {
               return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.chat_bubble_outline, size: 64, color: Colors.grey[300]),
+                    Icon(
+                      Icons.chat_bubble_outline,
+                      size: 64,
+                      color: Colors.grey[300],
+                    ),
                     const SizedBox(height: 16),
-                    Text('لا توجد محادثات', style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+                    Text(
+                      'No Conversations',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey[600],
+                      ),
+                    ),
                   ],
                 ),
               );
             }
 
+            // ✅ في بيانات: نعرض اللستة
             return RefreshIndicator(
               onRefresh: _fetchAndSubscribe,
               color: AppColors.primaryBtn,
               child: ListView.separated(
                 itemCount: state.conversations.length,
-                separatorBuilder: (_, __) => Divider(height: 1, color: Colors.grey[200]),
+                separatorBuilder: (_, __) =>
+                    Divider(height: 1, color: Colors.grey[200]),
                 itemBuilder: (context, index) {
                   final conversation = state.conversations[index];
                   return ConversationTile(
@@ -153,12 +155,18 @@ class _ConversationsListScreenState extends State<ConversationsListScreen> {
                         AppRoutes.chatDetail,
                         arguments: {
                           'conversationId': conversation.id,
-                          'otherParticipantName': conversation.otherParticipant.name,
-                          'otherParticipantImage': conversation.otherParticipant.profilePic,
+                          'otherParticipantName':
+                              conversation.otherParticipant.name,
+                          'otherParticipantImage':
+                              conversation.otherParticipant.profilePic,
+                          'subscriptionType': conversation.subscriptionType,
+                          'otherParticipantGender':
+                              conversation.otherParticipant.gender,
                         },
                       ).then((_) {
-                        // لما ترجعي من الشات، ريفرش
-                        context.read<ConversationsCubit>().fetchConversations();
+                        context
+                            .read<ConversationsCubit>()
+                            .fetchConversations();
                       });
                     },
                   );

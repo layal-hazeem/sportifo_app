@@ -3196,6 +3196,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Free Plan'**
   String get freePlan;
+
+  /// No description provided for @noInternetConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'No Internet Connection'**
+  String get noInternetConnection;
+
+  /// No description provided for @noInternetSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your network and try again.\nCached data will appear automatically when available.'**
+  String get noInternetSubtitle;
+
+  /// No description provided for @unableToLoadChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to Load Chat'**
+  String get unableToLoadChat;
+
+  /// No description provided for @unableToLoadChatSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your connection and try again.\nYour chat history will appear automatically when available.'**
+  String get unableToLoadChatSub;
+
+  /// No description provided for @unableToLoadPlans.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to Load Plans'**
+  String get unableToLoadPlans;
+
+  /// No description provided for @unableToLoadPlansSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your connection and try again.\nCached data will appear automatically when available.'**
+  String get unableToLoadPlansSub;
+
+  /// No description provided for @notifications_unableToLoadTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to Load Notifications'**
+  String get notifications_unableToLoadTitle;
+
+  /// No description provided for @notifications_unableToLoadSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your connection and try again.\nNotifications will appear automatically when available.'**
+  String get notifications_unableToLoadSubtitle;
+
+  /// No description provided for @notifications_emptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No Notifications Yet'**
+  String get notifications_emptyTitle;
+
+  /// No description provided for @notifications_emptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We will notify you when something important arrives.'**
+  String get notifications_emptySubtitle;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

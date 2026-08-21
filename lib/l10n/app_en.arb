@@ -732,5 +732,25 @@
 "month_plural": "{count} Months",
 "months_range": "{min} - {max} Months",
   "free": "FREE",
-  "freePlan": "Free Plan"
+  "freePlan": "Free Plan",
+
+
+
+  "noInternetConnection": "No Internet Connection",
+"noInternetSubtitle": "Please check your network and try again.\nCached data will appear automatically when available.",
+"retry": "Retry",
+
+"unableToLoadChat": "Unable to Load Chat",
+"unableToLoadChatSub": "Please check your connection and try again.\nYour chat history will appear automatically when available.",
+"retry": "Retry",
+"unableToLoadPlans": "Unable to Load Plans",
+"unableToLoadPlansSub": "Check your connection and try again.\nCached data will appear automatically when available.",
+
+"notifications":"Notifications",
+"notifications_unableToLoadTitle": "Unable to Load Notifications",
+"notifications_unableToLoadSubtitle": "Please check your connection and try again.\nNotifications will appear automatically when available.",
+"notifications_emptyTitle": "No Notifications Yet",
+"notifications_emptySubtitle": "We will notify you when something important arrives."
+
+
 }

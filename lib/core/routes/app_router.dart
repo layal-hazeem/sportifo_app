@@ -158,19 +158,14 @@ class AppRouter {
       case AppRoutes.muscleGroups:
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
-            providers: [
-              BlocProvider(create: (_) => getIt<CategoriesCubit>()),
-              BlocProvider(create: (_) => getIt<ExercisesCubit>()),
-              BlocProvider(create: (_) => getIt<PartsCubit>()),
-              // ✅ أضفنا SavedExercisesCubit هون
-              BlocProvider.value(value: getIt<SavedExercisesCubit>()),
-              BlocProvider.value(value: getIt<CategoriesCubit>()), // ✅ صح
-              BlocProvider.value(value: getIt<ExercisesCubit>()), // ✅ صح
-              BlocProvider.value(value: getIt<PartsCubit>()), // ✅ صح
-              BlocProvider.value(value: getIt<SavedExercisesCubit>()), // ✅ صح
-            ],
-            child: const MuscleGroupsScreen(),
-          ),
+  providers: [
+    BlocProvider(create: (_) => getIt<CategoriesCubit>()),
+    BlocProvider(create: (_) => getIt<ExercisesCubit>()),
+    BlocProvider(create: (_) => getIt<PartsCubit>()),
+    BlocProvider.value(value: getIt<SavedExercisesCubit>()),
+  ],
+  child: const MuscleGroupsScreen(),
+),
         );
 
       case AppRoutes.forgotPasswordScreen:
@@ -272,32 +267,23 @@ class AppRouter {
           ),
         );
       // 1. شاشة قائمة التمارين
-      case AppRoutes.exercisesList:
-        final args = settings.arguments as Map<String, dynamic>;
-        // 🔥 هنا لازم نطلب الـ fetch يدوياً بدون ما نعمل create جديد!
-        getIt<ExercisesCubit>().fetchExercises(categoryId: args['categoryId']);
+    case AppRoutes.exercisesList:
+  final args = settings.arguments as Map<String, dynamic>;
 
-        return MaterialPageRoute(
-          builder: (_) => MultiBlocProvider(
-            providers: [
-              BlocProvider(
-                create: (context) =>
-                    getIt<ExercisesCubit>()
-                      ..fetchExercises(categoryId: args['categoryId']),
-              ),
-              // ✅ أضفنا SavedExercisesCubit هون
-              BlocProvider.value(
-                value: getIt<ExercisesCubit>(),
-              ), // ✅ التعديل السحري هنا
-              BlocProvider.value(value: getIt<SavedExercisesCubit>()),
-            ],
-            child: ExercisesListScreen(
-              categoryId: args['categoryId'],
-              categoryName: args['categoryName'] ?? "Exercises",
-            ),
-          ),
-        );
-
+  return MaterialPageRoute(
+    builder: (_) => MultiBlocProvider(
+      providers: [
+        BlocProvider.value(
+          value: getIt<ExercisesCubit>()..fetchExercises(categoryId: args['categoryId']),
+        ),
+        BlocProvider.value(value: getIt<SavedExercisesCubit>()),
+      ],
+      child: ExercisesListScreen(
+        categoryId: args['categoryId'],
+        categoryName: args['categoryName'] ?? "Exercises",
+      ),
+    ),
+  );
       case AppRoutes.exerciseDetails:
         final exercise = settings.arguments as ExerciseModel;
         return MaterialPageRoute(

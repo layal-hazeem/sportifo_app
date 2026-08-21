@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/di/service_locator.dart';
 import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
+import 'package:sportifo_app/core/widgets/no_internet_view.dart'; // ✅ استدعاء الودجت الموحدة
 import '../../../../l10n/app_localizations.dart';
 import '../view_model/coach_details_cubit.dart';
 import '../view_model/coach_details_state.dart';
@@ -31,23 +32,16 @@ class CoachDetailsScreen extends StatelessWidget {
                   valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFFF6B35)),
                 ),
               );
-            } else if (state is CoachDetailsError) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.error_outline,
-                      color: Colors.red,
-                      size: 48,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      l10n.coach_details_error(state.message),
-                      style: const TextStyle(fontSize: 16, color: Colors.red),
-                    ),
-                  ],
-                ),
+            }
+            // ✅✅✅ هون عدلنا: إذا فشل التحميل وما في بيانات مخزنة
+            // بنعرض NoInternetView الموحدة بدل الـ Center القديم
+            else if (state is CoachDetailsError) {
+              return NoInternetView(
+                onRetry: () =>
+                    context.read<CoachDetailsCubit>().fetchCoachDetails(coachId),
+                title: 'Unable to Load Coach Details',
+                subtitle:
+                    'Please check your connection and try again.\nCoach details will appear automatically when available.',
               );
             } else if (state is CoachDetailsLoaded) {
               final coach = state.coachDetails;
