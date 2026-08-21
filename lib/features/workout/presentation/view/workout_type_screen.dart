@@ -86,6 +86,7 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
               _controller.forward(from: 0.0);
             }
           },
+          //
           builder: (context, state) {
             if (state is CategoriesLoading) {
               return ListView.builder(
