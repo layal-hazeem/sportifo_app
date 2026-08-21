@@ -40,7 +40,7 @@ class RegisterCubit extends Cubit<RegisterState> {
 
       switch (result) {
         case Success():
-          await NotificationService().registerDeviceToBackend();
+          NotificationService().registerDeviceToBackend();
           emit(const RegisterSuccess());
           break;
 

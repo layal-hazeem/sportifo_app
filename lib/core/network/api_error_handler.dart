@@ -31,21 +31,17 @@ class ApiErrorHandler {
 
     String? extractedMessage;
 
-    // 🔥 استخراج ذكي وآمن جداً للأخطاء من السيرفر
     if (data != null && data is Map<String, dynamic>) {
-      // 1. خط الدفاع الأول: البحث في مصفوفة 'errors' (Laravel Validation)
       if (data.containsKey('errors') && data['errors'] is Map) {
         final errors = data['errors'] as Map<String, dynamic>;
         if (errors.isNotEmpty) {
           final firstErrorList = errors.values.first;
-          // التأكد من أنها List وليست فارغة لمنع الـ Crash
           if (firstErrorList is List && firstErrorList.isNotEmpty) {
             extractedMessage = firstErrorList[0].toString();
           }
         }
       }
 
-      // 2. خط الدفاع الثاني: البحث في حقل 'message' العادي
       if (data.containsKey('message') && data['message'] != null) {
         final serverMessage = data['message'].toString();
 
@@ -62,12 +58,10 @@ class ApiErrorHandler {
       }
     }
 
-    // 🏆 إذا نجحنا في استخراج رسالة من السيرفر، نعرضها فوراً ونتجاهل الـ Status Code العادي!
     if (extractedMessage != null && extractedMessage.trim().isNotEmpty) {
       return extractedMessage;
     }
 
-    // 🛡️ خط الدفاع الثالث (الخطة البديلة): السيرفر لم يرسل رسالة صريحة (مثلاً Crash أو صفحة HTML)
     switch (statusCode) {
       case 400:
         return "Bad Request. Please check your inputs.";
@@ -79,7 +73,7 @@ class ApiErrorHandler {
         return "Requested resource was not found.";
       case 422:
         return "Validation Error. Please check your inputs.";
-      case 429: // 🔥 أضفنا حالة الـ Too Many Requests التي ظهرت لكِ!
+      case 429:
         return "Too many attempts. Please try again later.";
       case 500:
         return "Internal server error. Please try again later.";

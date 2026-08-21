@@ -297,7 +297,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get agreed => 'Agreed';
 
   @override
-  String get resistance_training => 'Resistance Training';
+  String get resistance_training => 'Resistance ';
 
   @override
   String get target_muscle => 'Target Muscle';
@@ -1711,6 +1711,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get somethingWentWrong => 'Something Went Wrong';
+
   @override
   String get mySubscriptions => 'My Subscriptions';
 
@@ -1875,4 +1876,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get plus15s => '+ 15s';
+
+  @override
+  String get activateSmartPlanTitle => 'Activate Your Smart Plan ⚡';
 }

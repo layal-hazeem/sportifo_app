@@ -674,7 +674,7 @@ abstract class AppLocalizations {
   /// No description provided for @resistance_training.
   ///
   /// In en, this message translates to:
-  /// **'Resistance Training'**
+  /// **'Resistance '**
   String get resistance_training;
 
   /// No description provided for @target_muscle.
@@ -3394,6 +3394,7 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Something Went Wrong'**
   String get somethingWentWrong;
+
   /// No description provided for @mySubscriptions.
   ///
   /// In en, this message translates to:
@@ -3723,6 +3724,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'+ 15s'**
   String get plus15s;
+
+  /// No description provided for @activateSmartPlanTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Activate Your Smart Plan ⚡'**
+  String get activateSmartPlanTitle;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

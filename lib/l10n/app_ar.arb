@@ -98,7 +98,7 @@
   "confirmLogout":"هل أنت متأكد أنك تريد تسجيل الخروج؟",
   "logoutApproval":"نعم، تسجيل الخروج",
   "agreed":"موافق",
-  "resistance_training": "تدريبات المقاومة",
+  "resistance_training": " المقاومة",
   "target_muscle": "العضلة المستهدفة",
   "how_to_perform": "كيفية الأداء",
   "gallery": "معرض الصور",
@@ -793,7 +793,10 @@
         "week": "أسبوع",
         "minus15s": "- 15 ثا",
         "plus15s": "+ 15 ثا",
-        "logCompletedSet": "تسجيل الجولة"
+        "logCompletedSet": "تسجيل الجولة",
+        "activateSmartPlanTitle": "تفعيل الخطة الذكية ",
+          "activateSmartPlanDesc": "اضبط هدفك البدني الأساسي الآن لحساب سعراتك اليومية والماكروز تلقائياً وبدقة.",
+          "setMyGoalNow": "ضبط هدفي الآن"
 
 
 

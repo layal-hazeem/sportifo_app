@@ -834,5 +834,8 @@
           "week": "Week",
           "minus15s": "- 15s",
           "plus15s": "+ 15s",
-          "logCompletedSet": "Log Completed Set"
+          "logCompletedSet": "Log Completed Set",
+          "activateSmartPlanTitle": "Activate Your Smart Plan ",
+            "activateSmartPlanDesc": "Set your main physical target now to dynamically evaluate your necessary daily calories and macronutrients.",
+            "setMyGoalNow": "Set My Goal Now"
 }

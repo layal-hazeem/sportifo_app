@@ -64,8 +64,11 @@ class TargetCubit extends Cubit<TargetState> {
         if (errorMsg.contains("No Internet") || errorMsg.contains("Connection timeout")) {
           if (state is TargetSuccess) return;
         }
-        if (result.message.contains("no targets") || result.message.contains("not found")) {
-          emit(TargetNotSet());
+
+        // 🔥 التعديل الجوهري هنا: حولنا الرسالة لـ lowercase لحتى يطابق صح 100%
+        final lowerMsg = errorMsg.toLowerCase();
+        if (lowerMsg.contains("no targets") || lowerMsg.contains("not found")) {
+          emit(TargetNotSet()); // ✅ رح تضرب هون فوراً ويطلع كارد (Set My Goal Now)
         } else {
           emit(TargetFailure(result.message));
         }
@@ -94,6 +97,7 @@ class TargetCubit extends Cubit<TargetState> {
         break;
     }
   }
+
   void reset() {
     emit(TargetInitial());
   }

@@ -297,7 +297,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get agreed => 'موافق';
 
   @override
-  String get resistance_training => 'تدريبات المقاومة';
+  String get resistance_training => ' المقاومة';
 
   @override
   String get target_muscle => 'العضلة المستهدفة';
@@ -965,10 +965,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get activateSmartPlan => 'فعّل خطتك الذكية ⚡';
 
   @override
-  String get activateSmartPlanDesc => 'حدد هدفك البدني الآن ليتم حساب السعرات الحرارية والمغذيات اليومية المناسبة لك.';
+  String get activateSmartPlanDesc => 'اضبط هدفك البدني الأساسي الآن لحساب سعراتك اليومية والماكروز تلقائياً وبدقة.';
 
   @override
-  String get setMyGoalNow => 'حدد هدفي الآن';
+  String get setMyGoalNow => 'ضبط هدفي الآن';
 
   @override
   String get bulkGoal => 'تضخيم';
@@ -1711,6 +1711,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get somethingWentWrong => 'حدث خطأ ما';
+
   @override
   String get mySubscriptions => 'اشتراكاتي';
 
@@ -1875,4 +1876,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get plus15s => '+ 15 ثا';
+
+  @override
+  String get activateSmartPlanTitle => 'تفعيل الخطة الذكية ⚡';
 }

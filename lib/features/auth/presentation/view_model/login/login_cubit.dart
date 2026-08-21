@@ -16,7 +16,6 @@ class LoginCubit extends Cubit<LoginState> {
 
   LoginCubit(this._authRepository) : super(LoginInitial());
 
-  // 🔥 غيرنا إلى Future<void> وأضفنا async
   Future<void> emitLoginStates(LoginRequest loginRequestBody) async {
     emit(LoginLoading());
 
@@ -25,18 +24,16 @@ class LoginCubit extends Cubit<LoginState> {
     if (result is Success<LoginResponse>) {
       final response = result.data;
 
-      // ========== 🔥 التعديل الجديد (هذا هو المطلوب) ==========
-      // حفظ userId و role من response.data.user
+
       try {
-        final user = response.data?.user; // LoginUser
+        final user = response.data?.user;
         if (user != null) {
           await getIt<LocalStorage>().saveUserId(user.id);
           await getIt<LocalStorage>().saveRole(user.role);
         }
       } catch (e) {
-        print('⚠️ فشل حفظ بيانات المستخدم: $e');
+        print(' فشل حفظ بيانات المستخدم: $e');
       }
-      // ========================================================
 
       if (response.isNotVerified) {
         emit(LoginNeedsOtp(loginRequestBody.login));
@@ -49,8 +46,6 @@ class LoginCubit extends Cubit<LoginState> {
     }
   }
 
-  // باقي الدوال (verifyOtp, emitResetPasswordStates, resendOtp) تبقى كما هي
-  // لا تغير فيها أي شيء
   void verifyOtp(VerifyOtpRequestBody body, {required OtpContext contextType}) async {
     emit(OtpLoading());
 
