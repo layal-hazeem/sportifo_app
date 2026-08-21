@@ -829,5 +829,20 @@
           "week": "Week",
           "minus15s": "- 15s",
           "plus15s": "+ 15s",
-          "logCompletedSet": "Log Completed Set"
+          "logCompletedSet": "Log Completed Set",
+
+
+
+           "noInternetTitle": "No Internet Connection",
+  "@noInternetTitle": {
+    "description": "Title shown when there is no internet"
+  },
+  "noInternetSubtitle": "Please check your connection and try again.",
+  "@noInternetSubtitle": {
+    "description": "Subtitle shown when there is no internet"
+  },
+  "retry": "Retry",
+  "@retry": {
+    "description": "Retry button text"
+  }
 }

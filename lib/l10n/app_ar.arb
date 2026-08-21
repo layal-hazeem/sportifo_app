@@ -788,7 +788,12 @@
         "week": "أسبوع",
         "minus15s": "- 15 ثا",
         "plus15s": "+ 15 ثا",
-        "logCompletedSet": "تسجيل الجولة"
+        "logCompletedSet": "تسجيل الجولة",
+
+
+          "noInternetTitle": "لا يوجد اتصال بالإنترنت",
+  "noInternetSubtitle": "يرجى التحقق من اتصالك والمحاولة مرة أخرى.",
+  "retry": "إعادة المحاولة"
 
 
 

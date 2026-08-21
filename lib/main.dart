@@ -14,7 +14,6 @@ import 'features/notifications/presentation/view_model/notifications_cubit.dart'
 import 'firebase_options.dart';
 import 'core/services/notification_service.dart';
 
-// ⚠️ [جديد] استدعاء الـ Background Handler هون بالـ main
 import 'core/services/notification_service.dart'
     show firebaseMessagingBackgroundHandler;
 
@@ -24,25 +23,25 @@ import 'core/routes/app_routes.dart';
 import 'core/routes/app_router.dart';
 import 'l10n/app_localizations.dart';
 
+import 'core/services/connectivity_service.dart';
+import 'core/connectivity/presentation/view_model/connectivity_cubit.dart';
+import 'core/connectivity/presentation/widgets/app_connectivity_wrapper.dart';
+
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // 🔥 1. تهيئة Firebase وتسجيل الـ Background Handler أولاً
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
-  // 2. تهيئة Hive للرسائل والإعدادات
   await Hive.initFlutter();
   Hive.registerAdapter(LocalMessageAdapter());
   await Hive.openBox('settings_box');
 
-  // 3. تهيئة الـ Service Locator والـ Pending Messages
   await setupServiceLocator();
   await getIt<PendingMessagesService>().init();
 
-  // 🔥 4. تشغيل خدمة الإشعارات بعد الجاهزية الكاملة
   await NotificationService().init();
 
   runApp(const MyApp());
@@ -58,14 +57,17 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => getIt<LocaleCubit>()),
         BlocProvider(create: (context) => getIt<NotificationsCubit>()),
         BlocProvider(create: (context) => ThemeCubit()),
+        BlocProvider.value(value: getIt<ConnectivityCubit>()),
       ],
       child: BlocBuilder<LocaleCubit, Locale>(
         builder: (context, locale) {
-          return BlocBuilder<ThemeCubit, ThemeMode>(
-            builder: (context, themeMode) {
-              return NeumorphicApp(
-                navigatorKey:
-                    navigatorKey, // 🔥 تم الحفاظ عليه هنا (هام جداً للتنقل من الإشعارات)
+          return Directionality(
+            textDirection: locale.languageCode == 'ar'
+                ? TextDirection.rtl
+                : TextDirection.ltr,
+            child: AppConnectivityWrapper(
+              child: NeumorphicApp(
+                navigatorKey: navigatorKey,
                 debugShowCheckedModeBanner: false,
                 title: 'Sportifo',
                 initialRoute: AppRoutes.splash,
@@ -78,13 +80,12 @@ class MyApp extends StatelessWidget {
                 ],
                 supportedLocales: const [Locale('en'), Locale('ar')],
                 locale: locale,
-                themeMode: themeMode, // 👈 تم ربط الثيم بنجاح
+                themeMode: ThemeMode.light,
                 theme: NeumorphicThemeData(
                   baseColor: AppColors.lightBackground,
                   defaultTextColor: AppColors.lightText,
                   accentColor: AppColors.primaryBtn,
-                  lightSource:
-                      LightSource.topLeft, // من الكود الأصلي للحفاظ على الشكل
+                  lightSource: LightSource.topLeft,
                   depth: 10,
                 ),
                 darkTheme: NeumorphicThemeData(
@@ -94,14 +95,11 @@ class MyApp extends StatelessWidget {
                   lightSource: LightSource.topLeft,
                   depth: 10,
                 ),
-              );
-            },
+              ),
+            ),
           );
         },
       ),
     );
   }
 }
-
-//وقت نضيف اي كلمة بملفات الترجمة مننفذ هاد الامر بالتيرمينال مشان يتعرف عالنصوص الجديدة اللي ترجمناها
-// flutter gen-l10n

@@ -88,8 +88,8 @@ class _CoachesFilterBottomSheetState extends State<CoachesFilterBottomSheet> {
               const SizedBox(width: 8),
               _buildChipFilter(
                 label: l10n.coach_female,
-                isSelected: _selectedGender == 2,
-                onTap: () => setState(() => _selectedGender = 2),
+                isSelected: _selectedGender == 0,
+                onTap: () => setState(() => _selectedGender = 0),
               ),
             ],
           ),

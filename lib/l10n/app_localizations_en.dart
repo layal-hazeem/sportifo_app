@@ -1861,4 +1861,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get plus15s => '+ 15s';
+
+  @override
+  String get noInternetTitle => 'No Internet Connection';
+
+  @override
+  String get noInternetSubtitle => 'Please check your connection and try again.';
 }
