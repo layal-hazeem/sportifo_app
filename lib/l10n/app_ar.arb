@@ -794,6 +794,11 @@
         "minus15s": "- 15 ثا",
         "plus15s": "+ 15 ثا",
         "logCompletedSet": "تسجيل الجولة",
+
+
+          "noInternetTitle": "لا يوجد اتصال بالإنترنت",
+  "noInternetSubtitle": "يرجى التحقق من اتصالك والمحاولة مرة أخرى.",
+  "retry": "إعادة المحاولة"
         "activateSmartPlanTitle": "تفعيل الخطة الذكية ",
           "activateSmartPlanDesc": "اضبط هدفك البدني الأساسي الآن لحساب سعراتك اليومية والماكروز تلقائياً وبدقة.",
           "setMyGoalNow": "ضبط هدفي الآن"

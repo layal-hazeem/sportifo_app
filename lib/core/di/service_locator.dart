@@ -93,6 +93,9 @@ import '../localization/locale_cubit.dart';
 import '../network/dio_factory.dart';
 import '../storage/local_storage.dart';
 
+import '../services/connectivity_service.dart';
+import '../connectivity/presentation/view_model/connectivity_cubit.dart';
+
 final getIt = GetIt.instance;
 
 Future<void> setupServiceLocator() async {
@@ -103,6 +106,14 @@ Future<void> setupServiceLocator() async {
     () => LocalStorage(getIt<SharedPreferences>()),
   );
 
+
+  // Connectivity
+  getIt.registerLazySingleton<ConnectivityService>(() => ConnectivityService());
+  getIt.registerLazySingleton<ConnectivityCubit>(
+    () => ConnectivityCubit(getIt<ConnectivityService>()),
+  );
+
+  
   final dioFactory = DioFactory(getIt<LocalStorage>());
   await dioFactory.init();
 

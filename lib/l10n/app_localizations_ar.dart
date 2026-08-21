@@ -1878,5 +1878,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get plus15s => '+ 15 ثا';
 
   @override
+  String get noInternetTitle => 'لا يوجد اتصال بالإنترنت';
+
+  @override
+  String get noInternetSubtitle => 'يرجى التحقق من اتصالك والمحاولة مرة أخرى.';
   String get activateSmartPlanTitle => 'تفعيل الخطة الذكية ⚡';
 }

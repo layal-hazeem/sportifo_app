@@ -959,7 +959,7 @@ abstract class AppLocalizations {
   /// **'Subscriptions'**
   String get subscriptions;
 
-  /// No description provided for @retry.
+  /// Retry button text
   ///
   /// In en, this message translates to:
   /// **'Retry'**
@@ -3725,6 +3725,17 @@ abstract class AppLocalizations {
   /// **'+ 15s'**
   String get plus15s;
 
+  /// Title shown when there is no internet
+  ///
+  /// In en, this message translates to:
+  /// **'No Internet Connection'**
+  String get noInternetTitle;
+
+  /// Subtitle shown when there is no internet
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your connection and try again.'**
+  String get noInternetSubtitle;
   /// No description provided for @activateSmartPlanTitle.
   ///
   /// In en, this message translates to:

@@ -181,27 +181,31 @@ class _HomePageState extends State<HomePage> {
                   return PopScope(
                     canPop: false, // نمنع الخروج التلقائي
                     onPopInvokedWithResult: (didPop, result) {
-                      if (didPop) return;
+  if (didPop) return;
 
-                      final now = DateTime.now();
-                      const backButtonInterval = Duration(seconds: 2);
+  // 🔥 إذا المستخدم مش بشاشة الهوم (index 2)، ارجعه للهوم
+  if (homeViewModel.currentIndex != 2) {
+    homeViewModel.changeTab(2);
+    return;
+  }
 
-                      // إذا كانت هذه الضغطة الأولى أو مضى أكثر من ثانيتين على الضغطة المسبقة
-                      if (_lastPressedAt == null ||
-                          now.difference(_lastPressedAt!) > backButtonInterval) {
-                        _lastPressedAt = now;
+  // إذا كان بشاشة الهوم، طبق منطق الضغط المزدوج للخروج
+  final now = DateTime.now();
+  const backButtonInterval = Duration(seconds: 2);
 
-                        // ✅ استخدام AppSnackBar كـ Warning للتنبيه عند محاولة الخروج
-                        AppSnackBar.show(
-                          context,
-                          message: l10n.press_again_to_exit,
-                          type: SnackBarType.warning,
-                        );
-                      } else {
-                        // الضغطة الثانية خلال أقل من ثانيتين -> الخروج من التطبيق
-                        SystemNavigator.pop();
-                      }
-                    },
+  if (_lastPressedAt == null ||
+      now.difference(_lastPressedAt!) > backButtonInterval) {
+    _lastPressedAt = now;
+
+    AppSnackBar.show(
+      context,
+      message: l10n.press_again_to_exit,
+      type: SnackBarType.warning,
+    );
+  } else {
+    SystemNavigator.pop();
+  }
+},
                     child: Scaffold(
                       drawer: CustomDrawer(
                         selectedItem: selectedDrawerItem,
