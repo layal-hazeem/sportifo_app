@@ -74,14 +74,20 @@ class _ExerciseActivitySectionState extends State<ExerciseActivitySection> {
         ],
 
         Row(
-          children: [
-            StatCard(l10n.workouts, totalWorkouts.toString(), Icons.fitness_center),
-            const SizedBox(width: 12),
-            StatCard(l10n.sets, totalSets.toString(), Icons.format_list_numbered),
-            const SizedBox(width: 12),
-            StatCard(l10n.days, widget.days.length.toString(), Icons.calendar_today),
-          ],
-        ),
+  children: [
+    Expanded( // ✅ NEW
+      child: StatCard(l10n.workouts, totalWorkouts.toString(), Icons.fitness_center),
+    ),
+    const SizedBox(width: 12),
+    Expanded( // ✅ NEW
+      child: StatCard(l10n.sets, totalSets.toString(), Icons.format_list_numbered),
+    ),
+    const SizedBox(width: 12),
+    Expanded( // ✅ NEW
+      child: StatCard(l10n.days, widget.days.length.toString(), Icons.calendar_today),
+    ),
+  ],
+),
         const SizedBox(height: 20),
 
         ExerciseChart(days: widget.days),

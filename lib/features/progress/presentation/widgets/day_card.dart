@@ -90,10 +90,7 @@ class _DayHeader extends StatelessWidget {
   final DayActivity day;
   final String month;
 
-  const _DayHeader({
-    required this.day,
-    required this.month,
-  });
+  const _DayHeader({required this.day, required this.month});
 
   @override
   Widget build(BuildContext context) {
@@ -101,6 +98,7 @@ class _DayHeader extends StatelessWidget {
 
     return Row(
       children: [
+        // ✅ الشهر (مرة وحدة)
         Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
@@ -114,41 +112,20 @@ class _DayHeader extends StatelessWidget {
               fontWeight: FontWeight.bold,
               fontSize: 12,
             ),
-          ),),
-           Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryBtn.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  month,
-                  style: TextStyle(
-                    color: AppColors.primaryBtn,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                  ),
-                ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        // ✅ التاريخ + عدد التمارين (مرة وحدة)
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              day.dateLabel,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
               ),
-              const SizedBox(width: 12),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    day.dateLabel,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
-                  ),
-                  Text(
-                    "${day.totalExercises} exercises",
-                    style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
-                  ),
-                ],
-              ),
+            ),
             Text(
               l10n.exercises_count(day.totalExercises),
               style: TextStyle(
@@ -159,6 +136,7 @@ class _DayHeader extends StatelessWidget {
           ],
         ),
         const Spacer(),
+        // ✅ التاريخ بالـ YYYY-MM-DD
         Text(
           day.date,
           style: TextStyle(fontSize: 12, color: Colors.grey.shade400),
