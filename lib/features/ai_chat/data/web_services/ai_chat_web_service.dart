@@ -10,6 +10,7 @@ class AiChatWebService {
     return await dio.get(ApiConstants.aiChatMessages, options: options);
   }
 
+
   Future<Response> sendMessage(
     String message, {
     Options? options,

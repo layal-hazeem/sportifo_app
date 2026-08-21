@@ -164,7 +164,8 @@ final l10n = AppLocalizations.of(context)!;
                   color: AppColors.primaryBtn.withValues(alpha: 0.6),
                 ),
               ),
-            if (!isUserMessage && hasNutrition)
+            if (!isUserMessage && hasNutrition && !widget.message.isCoach)
+
               Padding(
                 padding: const EdgeInsets.only(top: 8),
                 child: Row(

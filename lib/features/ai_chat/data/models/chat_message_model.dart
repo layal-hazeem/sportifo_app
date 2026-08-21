@@ -8,6 +8,7 @@ class ChatMessageModel {
   final double? fat;
   final String date;
   final String time;
+   final String? role;
 
   ChatMessageModel({
     required this.id,
@@ -19,7 +20,11 @@ class ChatMessageModel {
     this.fat,
     required this.date,
     required this.time,
+    this.role,
   });
+
+bool get isCoach => role == 'coach';
+
 
   bool hasNutritionData() {
     return calories != null;
@@ -36,6 +41,7 @@ class ChatMessageModel {
       fat: _parseDouble(json['fat']),
       date: json['date'] ?? '',
       time: json['time'] ?? '',
+      role: json['role'],
     );
   }
 
@@ -55,6 +61,7 @@ class ChatMessageModel {
       'fat': fat,
       'date': date,
       'time': time,
+      'role': role,
     };
   }
 }
