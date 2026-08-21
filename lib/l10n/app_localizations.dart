@@ -3202,6 +3202,7 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Create Additional Plan'**
   String get createAdditionalPlan;
+
   /// No description provided for @aboutUsContent.
   ///
   /// In en, this message translates to:
@@ -3363,6 +3364,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No alternative exercises available for this workout right now.'**
   String get noAlternativesFound;
+
+  /// No description provided for @userHasNoActiveSubscription.
+  ///
+  /// In en, this message translates to:
+  /// **'User Has No Active Subscription'**
+  String get userHasNoActiveSubscription;
+
+  /// No description provided for @planCreationFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan Creation Failed'**
+  String get planCreationFailed;
+
+  /// No description provided for @unauthorizedAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Unauthorized Action'**
+  String get unauthorizedAction;
+
+  /// No description provided for @setsAndRepsRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Sets And Reps Required'**
+  String get setsAndRepsRequired;
+
+  /// No description provided for @somethingWentWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Something Went Wrong'**
+  String get somethingWentWrong;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

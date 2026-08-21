@@ -1615,6 +1615,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get createAdditionalPlan => 'إنشاء خطة إضافية';
+
   @override
   String get aboutUsContent => 'سبورتيفو هي منصة ذكية للياقة البدنية صُممت لدعمك في كل مرحلة من رحلتك الرياضية. سواء كنت في بداية طريقك الرياضي أو تعمل على تحقيق أهداف محددة، توفر لك سبورتيفو الأدوات والدعم الذي تحتاجه في مكان واحد.\n\nتجمع المنصة بين برامج التمارين، والتمارين البديلة المناسبة، والتواصل المباشر مع المدربين، وإدارة الاشتراكات، والمساعدة الذكية في مجال التغذية. هدفنا هو تقديم تجربة رياضية أكثر مرونة وتخصيصاً، تتكيف مع احتياجات كل مستخدم.\n\nمن خلال سبورتيفو، يمكنك البقاء على تواصل مع مدربك، واكتشاف بدائل مناسبة للتمارين، والحصول على مساعدة ذكية في التغذية، مما يساعدك على البقاء متحمساً ومركزاً على أهدافك.\n\nسبورتيفو ليست مجرد تطبيق للتمارين، بل هي رفيقك الذكي لرحلة رياضية أفضل وأكثر تكاملاً.';
 
@@ -1695,4 +1696,19 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get noAlternativesFound => 'لا توجد تمارين بديلة متاحة لهذا التمرين حالياً.';
+
+  @override
+  String get userHasNoActiveSubscription => 'المستخدم ليس لديه اشتراك فعال';
+
+  @override
+  String get planCreationFailed => 'فشل إنشاء الخطة';
+
+  @override
+  String get unauthorizedAction => 'إجراء غير مصرح به';
+
+  @override
+  String get setsAndRepsRequired => '';
+
+  @override
+  String get somethingWentWrong => 'حدث خطأ ما';
 }

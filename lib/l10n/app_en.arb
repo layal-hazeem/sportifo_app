@@ -765,5 +765,10 @@
     "termsTitle4": "4. Content Ownership",
     "termsContent4": "All text, designs, images, and software in Sportifo are protected intellectual property of the app, and may not be reused without written permission.",
     "alternativeExercises": "Alternative Exercises",
-      "noAlternativesFound": "No alternative exercises available for this workout right now."
+      "noAlternativesFound": "No alternative exercises available for this workout right now.",
+      "userHasNoActiveSubscription":"User Has No Active Subscription",
+       "planCreationFailed":"Plan Creation Failed",
+    "unauthorizedAction":"Unauthorized Action",
+    "setsAndRepsRequired":"Sets And Reps Required",
+    "somethingWentWrong":"Something Went Wrong"
 }

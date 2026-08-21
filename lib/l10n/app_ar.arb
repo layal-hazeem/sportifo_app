@@ -724,19 +724,10 @@
     "termsTitle4": "4. ملكية المحتوى",
     "termsContent4": "جميع النصوص، التصاميم، الصور، والبرامج في سبورتيفو هي ملكية فكرية محمية للتطبيق، ولا يجوز إعادة استخدامها دون إذن كتابي.",
     "alternativeExercises": "التمارين البديلة",
-    "noAlternativesFound": "لا توجد تمارين بديلة متاحة لهذا التمرين حالياً."
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    "noAlternativesFound": "لا توجد تمارين بديلة متاحة لهذا التمرين حالياً.",
+    "userHasNoActiveSubscription":"المستخدم ليس لديه اشتراك فعال",
+    "planCreationFailed":"فشل إنشاء الخطة",
+    "unauthorizedAction":"إجراء غير مصرح به",
+    "setsAndRepsRequired":"",
+    "somethingWentWrong":"حدث خطأ ما"
 }
