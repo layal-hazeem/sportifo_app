@@ -27,7 +27,7 @@ class WorkoutConfirmDialog {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // 🔥 أيقونة بدائرة خفيفة اللون - بتوضح فوراً نوع الديالوغ
+              // Icon with light background circle to immediately indicate dialog type
               Container(
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
@@ -58,7 +58,7 @@ class WorkoutConfirmDialog {
               ),
               const SizedBox(height: 26),
 
-              // ✅ الزر الأساسي: معبّى باللون، هو الخيار الأوضح/المتوقع
+              // Primary Button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -85,9 +85,9 @@ class WorkoutConfirmDialog {
                 ),
               ),
 
-              // ⚪ الزر الثانوي: نصّي بس، تحت الأساسي مباشرة
+              // Secondary Text Button
               if (secondaryText != null) ...[
-                const SizedBox(height: 12), // 🔥 زيادة الفاصل بين الأزرار
+                const SizedBox(height: 12),
                 SizedBox(
                   width: double.infinity,
                   child: TextButton(
@@ -97,8 +97,7 @@ class WorkoutConfirmDialog {
                     },
                     style: TextButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 14),
-                      foregroundColor:
-                          Colors.grey.shade700, // 🔥 لون أغمق قليل للوضوح
+                      foregroundColor: Colors.grey.shade700,
                     ),
                     child: Text(
                       secondaryText,

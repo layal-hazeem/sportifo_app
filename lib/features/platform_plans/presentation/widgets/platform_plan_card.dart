@@ -50,7 +50,7 @@ class _PlatformPlanCardState extends State<PlatformPlanCard> {
     if (message != null && mounted) {
       final l10n = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
-
+      ScaffoldMessenger.of(context).clearSnackBars();
       if (!wasSaved) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -71,7 +71,7 @@ class _PlatformPlanCardState extends State<PlatformPlanCard> {
               },
             ),
             backgroundColor: AppColors.primaryBtn,
-            duration: const Duration(seconds: 4),
+            duration: const Duration(seconds: 3),
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
@@ -83,7 +83,7 @@ class _PlatformPlanCardState extends State<PlatformPlanCard> {
           SnackBar(
             content: Text(message),
             backgroundColor: Colors.black87,
-            duration: const Duration(seconds: 2),
+            duration: const Duration(seconds: 3),
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),

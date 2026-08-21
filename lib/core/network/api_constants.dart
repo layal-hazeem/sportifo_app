@@ -69,6 +69,8 @@ static String deleteMessage(int conversationId, int messageId) =>
   static const String notifications = "notifications";
   static const String notificationsCount = "notifications";
   static const String exerciseAlternatives = "exercise/alternatives";
+  static const String mySubscriptions = "subscriptions/my-subscriptions";
+
 
 
 }

@@ -26,8 +26,6 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
   int? selectedMuscleId;
   List<int> selectedSmallestCategoryId = [];
 
-  // 🔥 تم التعديل هنا: استخدام int (الـ ID) كـ Key بدلاً من String (الاسم)
-  // ⚠️ يرجى التأكد من مطابقة هذه الأرقام مع الـ IDs الحقيقية في الباك إند
   final Map<int, String> _muscleAssets = {
     1: 'assets/images/muscles/chest.jpg', // id الصدر
     2: 'assets/images/muscles/back.jpg', // id الظهر
@@ -89,7 +87,6 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
               },
               builder: (context, state) {
                 if (state is CategoriesLoading) {
-                  // 🔥 تأثير شيمر أفقي للكروت العلوية
                   return ListView.builder(
                     scrollDirection: Axis.horizontal,
                     padding: const EdgeInsets.symmetric(horizontal: 20),

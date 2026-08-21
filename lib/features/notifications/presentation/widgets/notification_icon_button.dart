@@ -21,7 +21,6 @@ class _NotificationIconButtonState extends State<NotificationIconButton> {
   @override
   void initState() {
     super.initState();
-    // جلب عدد الإشعارات الغير مقروءة فور إنشاء الأيقونة
     context.read<NotificationsCubit>().getUnreadCount();
   }
 
@@ -43,7 +42,6 @@ class _NotificationIconButtonState extends State<NotificationIconButton> {
               ),
               onPressed: () {
                 Navigator.pushNamed(context, AppRoutes.notifications).then((_) {
-                  // تحديث العداد عند العودة من شاشة الإشعارات
                   if (context.mounted) {
                     context.read<NotificationsCubit>().getUnreadCount();
                   }

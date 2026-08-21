@@ -45,6 +45,8 @@ import '../../features/settings/presentation/view/help_support_screen.dart';
 import '../../features/settings/presentation/view/privacy_policy_screen.dart';
 import '../../features/settings/presentation/view/terms_of_use_screen.dart';
 import '../../features/trainee_subscriptions/data/models/subscription_month_model.dart';
+import '../../features/trainee_subscriptions/presentation/view_model/my_subscriptions_cubit/my_subscriptions_cubit.dart';
+import '../../features/trainee_subscriptions/presentation/views/my_subscriptions_screen.dart';
 import '../../features/trainee_subscriptions/presentation/views/payment_screen.dart';
 import '../../features/trainee_subscriptions/presentation/views/select_month_screen.dart';
 import '../../features/home/presentation/view/home_page.dart';
@@ -397,14 +399,14 @@ class AppRouter {
       case AppRoutes.helpSupport:
         return MaterialPageRoute(builder: (_) => const HelpSupportScreen());
 
-      case AppRoutes.deleteAccount:
+
+      case AppRoutes.mySubscriptions:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
-            create: (context) => getIt<ProfileCubit>(),
-            child: const DeleteAccountScreen(),
+            create: (_) => getIt<MySubscriptionsCubit>()..fetchMySubscriptions(),
+            child: const MySubscriptionsScreen(),
           ),
         );
-
       case AppRoutes.foodLogs:
         return MaterialPageRoute(builder: (_) => const FoodLogsScreen());
       case AppRoutes.planDays:

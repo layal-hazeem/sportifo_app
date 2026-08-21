@@ -3,5 +3,5 @@ enum DrawerItem {
   saved,
   settings,
   about,
-  logout,
+  logout, mySubscriptions,
 }
