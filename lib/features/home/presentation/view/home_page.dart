@@ -32,6 +32,7 @@ import '../../../workout/presentation/view/workout_type_screen.dart';
 import 'package:sportifo_app/core/enum/drawer_enum.dart';
 import 'package:flutter/services.dart';
 
+
 HomeViewModel homeViewModel = HomeViewModel();
 
 class HomePage extends StatefulWidget {
