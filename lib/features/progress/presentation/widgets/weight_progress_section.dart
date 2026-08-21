@@ -95,10 +95,10 @@ class WeightProgressSection extends StatelessWidget {
                 children: [
                   Text(
                     l10n.weight_history,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black54,
+                      color: context.textColor,
                     ),
                   ),
                   const SizedBox(height: 20),
