@@ -1,5 +1,3 @@
-// مسار الملف: lib/features/my_plans(user)/presentation/view_model/my_plans_cubit.dart
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/network/api_result.dart';
 import '../../data/models/my_plan_model.dart';
@@ -14,19 +12,22 @@ class MyPlansCubit extends Cubit<MyPlansState> {
   Future<void> fetchTab(PlanTabType type, {bool isRefresh = false}) async {
     if (isClosed) return;
 
-    // 🔥 التعديل الأول: تاب المحفوظات بالذات لازم دايماً يعمل ريفريش ليجيب أحدث شي!
+    // 🔥 لو بدك Saved tab يتجدد دايماً لما تفتحه، خلّي هالسطر. إذا بدك يتصرف مثل الباقي، احذفه.
     if (type == PlanTabType.saved) {
       isRefresh = true;
     }
 
-    final currentStatus = state.statusFor(type);
+    final previousStatus = state.statusFor(type);
 
-    if (!isRefresh && currentStatus is TabSuccess) {
-      return;
+    // ✅ نعرض Loading بس بهالحالات:
+    // 1. Pull-to-refresh (isRefresh = true)
+    // 2. أول فتح (TabInitial)
+    // 3. آخر مرة فشلت (TabFailure) → محاولة جديدة
+    final bool shouldShowLoading = isRefresh || previousStatus is TabInitial || previousStatus is TabFailure;
+
+    if (shouldShowLoading) {
+      emit(state.copyWithTab(type, const TabLoading()));
     }
-
-    // 🔥 التعديل الثاني السحري: إجبار الواجهة على رمي "تحميل" لحظي لضمان تحديث الشاشة 100%
-    emit(state.copyWithTab(type, TabLoading()));
 
     final result = await _repository.fetchPlansForTab(type, isRefresh: isRefresh);
     if (isClosed) return;
@@ -36,7 +37,12 @@ class MyPlansCubit extends Cubit<MyPlansState> {
         emit(state.copyWithTab(type, TabSuccess(result.data)));
         break;
       case Failure<List<PlanModel>>():
-        if (currentStatus is TabSuccess) return;
+        // ✅ إذا عندنا بيانات قديمة (من الكاش أو تحميل سابق):
+        // نرجّعها وما نعرض شاشة الخطأ للمستخدم.
+        if (previousStatus is TabSuccess) {
+          emit(state.copyWithTab(type, previousStatus));
+          return;
+        }
         emit(state.copyWithTab(type, TabFailure(result.message ?? 'حدث خطأ غير متوقع')));
         break;
     }

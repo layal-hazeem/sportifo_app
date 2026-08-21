@@ -733,6 +733,29 @@
 "months_range": "{min} - {max} Months",
   "free": "FREE",
   "freePlan": "Free Plan",
+
+
+
+  "noInternetConnection": "No Internet Connection",
+"noInternetSubtitle": "Please check your network and try again.\nCached data will appear automatically when available.",
+"retry": "Retry",
+
+"unableToLoadChat": "Unable to Load Chat",
+"unableToLoadChatSub": "Please check your connection and try again.\nYour chat history will appear automatically when available.",
+"retry": "Retry",
+"unableToLoadPlans": "Unable to Load Plans",
+"unableToLoadPlansSub": "Check your connection and try again.\nCached data will appear automatically when available.",
+
+"notifications":"Notifications",
+"notifications_unableToLoadTitle": "Unable to Load Notifications",
+"notifications_unableToLoadSubtitle": "Please check your connection and try again.\nNotifications will appear automatically when available.",
+"notifications_emptyTitle": "No Notifications Yet",
+"notifications_emptySubtitle": "We will notify you when something important arrives.",
+
+"unableToLoadTraineesTitle": "Unable to Load Trainees",
+"unableToLoadTraineesSubtitle": "Please check your connection and try again.\nTrainees will appear automatically when available.",
+
+
   "createAdditionalPlan":"Create Additional Plan",
   "aboutUs": "About Us",
     "aboutUsContent": "Sportifo is a smart fitness platform designed to support you throughout every stage of your fitness journey. Whether you are just getting started or working toward specific fitness goals, Sportifo provides the tools and support you need in one convenient place.\n\nThe platform brings together personalized workout programs, suitable alternative exercises, direct communication with coaches, subscription management, and AI-powered nutrition assistance. Our goal is to create a more flexible and personalized fitness experience that adapts to your individual needs.\n\nWith Sportifo, you can stay connected with your coach, explore workout alternatives that suit you, and get smart assistance with your nutrition to help you stay motivated and focused on your goals.\n\nSportifo is more than just a workout app — it is your smart companion for a better and more connected fitness journey.",
@@ -829,5 +852,9 @@
           "week": "Week",
           "minus15s": "- 15s",
           "plus15s": "+ 15s",
-          "logCompletedSet": "Log Completed Set"
+          "logCompletedSet": "Log Completed Set",
+          "unableToLoadMusclesTitle": "Unable to Load Muscles",
+          "unableToLoadMusclesSubtitle": "Please check your connection and try again.\nMuscles will appear automatically when available.",
+          "unableToLoadExercisesTitle": "Unable to Load Exercises",
+          "unableToLoadExercisesSubtitle": "Please check your connection and try again.\nExercises will appear automatically when available."
 }

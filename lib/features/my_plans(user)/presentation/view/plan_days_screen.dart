@@ -10,6 +10,7 @@ import '../../data/models/my_plan_model.dart';
 import '../view_model/plan_days_cubit.dart';
 import '../view_model/plan_days_state.dart';
 import 'day_overview_screen.dart';
+import '../../../../core/widgets/no_internet_view.dart';
 import 'package:sportifo_app/features/edit_self_plan/presentation/view/edit_self_plan_screen.dart';
 
 class PlanDaysScreen extends StatelessWidget {
@@ -28,15 +29,11 @@ class PlanDaysScreen extends StatelessWidget {
             return _buildDaysShimmerLoading();
           }
 
-          if (state is PlanDaysFailure) {
-            return Center(
-              child: Text(
-                state.message,
-                style: const TextStyle(
-                  color: AppColors.hintText,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+            if (state is PlanDaysFailure) {
+            return NoInternetView(
+              onRetry: () => context.read<PlanDaysCubit>().fetchPlanDays(plan.id),
+              title: 'Unable to Load Plan',
+              subtitle: 'Please check your connection and try again.\nYour plan details will appear automatically when available.',
             );
           }
 

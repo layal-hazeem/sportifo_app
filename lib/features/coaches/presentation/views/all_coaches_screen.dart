@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/di/service_locator.dart';
 import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
+import 'package:sportifo_app/core/widgets/no_internet_view.dart'; // ✅ استدعاء الودجت الموحدة
 import '../../../../l10n/app_localizations.dart';
 import '../view_model/all_coaches_cubit.dart';
 import '../view_model/all_coaches_state.dart';
@@ -111,11 +112,15 @@ class _AllCoachesScreenState extends State<AllCoachesScreen> {
                             ),
                           ),
                         );
-                      } else if (state is AllCoachesError) {
-                        return Center(
-                          child: Text(
-                            l10n.coaches_error_loading(state.message),
-                          ),
+                      }
+                      // ✅✅✅ هون عدلنا: إذا فشل التحميل وما في بيانات مخزنة
+                      // بنعرض NoInternetView الموحدة بدل الـ Center القديم
+                      else if (state is AllCoachesError) {
+                        return NoInternetView(
+                          onRetry: () => _fetchCoaches(blocContext),
+                          title: 'Unable to Load Coaches',
+                          subtitle:
+                              'Please check your connection and try again.\nCoaches will appear automatically when available.',
                         );
                       } else if (state is AllCoachesLoaded) {
                         final coaches = state.coaches;

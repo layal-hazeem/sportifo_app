@@ -7,6 +7,10 @@ import 'exercise_activity_state.dart';
 class ExerciseActivityCubit extends Cubit<ExerciseActivityState> {
   final ExerciseActivityRepository _repository;
 
+  // ✅✅✅ هون عدلنا: كاش داخلي لحفظ آخر بيانات ناجحة
+  // بيمنع عرض NoInternetView لو في بيانات قديمة مخزنة
+  List<DayActivity>? _cachedDays;
+
   ExerciseActivityCubit(this._repository) : super(ExerciseActivityInitial());
 
   Future<void> fetchActivity({
@@ -28,9 +32,15 @@ class ExerciseActivityCubit extends Cubit<ExerciseActivityState> {
     if (isClosed) return;
 
     if (result is Success<List<DayActivity>>) {
+      _cachedDays = result.data; // ✅ خزن الكاش
       emit(ExerciseActivitySuccess(result.data));
     } else if (result is Failure) {
-      emit(ExerciseActivityError((result as Failure).message));
+      // ✅ إذا في كاش قديم، ارجع البيانات القديمة بدل Error
+      if (_cachedDays != null && _cachedDays!.isNotEmpty) {
+        emit(ExerciseActivitySuccess(_cachedDays!));
+      } else {
+        emit(ExerciseActivityError((result as Failure).message));
+      }
     }
   }
 }

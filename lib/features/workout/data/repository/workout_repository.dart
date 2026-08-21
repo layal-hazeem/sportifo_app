@@ -89,32 +89,32 @@ class WorkoutRepository {
     }
   }
 
-Future<ApiResult<List<ExerciseModel>>> getSavedExercises({
-  bool forceRefresh = false,
-}) async {
-  try {
-    final cacheOptions = await DioFactory.getCacheOptions();
-    final policy = forceRefresh 
-        ? CachePolicy.refresh  
-        : CachePolicy.forceCache; 
-    
-    final dioOptions = cacheOptions.copyWith(
-      policy: policy,
-    ).toOptions();
+  Future<ApiResult<List<ExerciseModel>>> getSavedExercises({
+    bool forceRefresh = false,
+  }) async {
+    try {
+      final cacheOptions = await DioFactory.getCacheOptions();
+      final policy = forceRefresh
+          ? CachePolicy.refresh
+          : CachePolicy.forceCache;
 
-    final response = await _webService.getSavedExercises(options: dioOptions);
+      final dioOptions = cacheOptions.copyWith(
+        policy: policy,
+      ).toOptions();
 
-    if (response.data['data'] is List) {
-      final List data = response.data['data'];
-      final exercises = data.map((e) => ExerciseModel.fromJson(e)).toList();
-      return Success(exercises);
+      final response = await _webService.getSavedExercises(options: dioOptions);
+
+      if (response.data['data'] is List) {
+        final List data = response.data['data'];
+        final exercises = data.map((e) => ExerciseModel.fromJson(e)).toList();
+        return Success(exercises);
+      }
+
+      final responseModel = ExerciseResponseModel.fromJson(response.data);
+      return Success(responseModel.data);
+    } catch (e) {
+      print("Error fetching saved: $e");
+      return Failure(ApiErrorHandler.handle(e));
     }
-
-    final responseModel = ExerciseResponseModel.fromJson(response.data);
-    return Success(responseModel.data);
-  } catch (e) {
-    print("Error fetching saved: $e");
-    return Failure(ApiErrorHandler.handle(e));
   }
-}
 }

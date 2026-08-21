@@ -166,38 +166,38 @@ class _WorkoutTypeScreenState extends State<WorkoutTypeScreen>
                         final category = categories[index];
                         final uiInfo =
                             categoryUIInfo[category.id] ??
-                            {
-                              'subtitle': l10n.start_training, // 🔥 تمت الترجمة
-                              'image': 'assets/images/default_workout.png',
-                            };
+                                {
+                                  'subtitle': l10n.start_training, // 🔥 تمت الترجمة
+                                  'image': 'assets/images/default_workout.png',
+                                };
 
                         final delay = 0.2 + (index * 0.2);
                         final slideAnim =
-                            Tween<Offset>(
-                              begin: const Offset(0.5, 0.0),
-                              end: Offset.zero,
-                            ).animate(
-                              CurvedAnimation(
-                                parent: _controller,
-                                curve: Interval(
-                                  delay,
-                                  1.0,
-                                  curve: Curves.easeOutQuart,
-                                ),
-                              ),
-                            );
+                        Tween<Offset>(
+                          begin: const Offset(0.5, 0.0),
+                          end: Offset.zero,
+                        ).animate(
+                          CurvedAnimation(
+                            parent: _controller,
+                            curve: Interval(
+                              delay,
+                              1.0,
+                              curve: Curves.easeOutQuart,
+                            ),
+                          ),
+                        );
 
                         final fadeAnim = Tween<double>(begin: 0.0, end: 1.0)
                             .animate(
-                              CurvedAnimation(
-                                parent: _controller,
-                                curve: Interval(
-                                  delay,
-                                  1.0,
-                                  curve: Curves.easeIn,
-                                ),
-                              ),
-                            );
+                          CurvedAnimation(
+                            parent: _controller,
+                            curve: Interval(
+                              delay,
+                              1.0,
+                              curve: Curves.easeIn,
+                            ),
+                          ),
+                        );
 
                         return SlideTransition(
                           position: slideAnim,

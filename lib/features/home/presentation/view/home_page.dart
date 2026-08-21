@@ -1,10 +1,10 @@
-//home page
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/helpers/snack_bar_utils.dart';
 import 'package:sportifo_app/core/routes/app_routes.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
+import 'package:sportifo_app/core/widgets/lazy_indexed_stack.dart';
 import 'package:sportifo_app/features/%20ads/presentation/view_model/ads_cubit.dart';
 import 'package:sportifo_app/features/ai_chat/presentation/view/ai_chat_screen.dart';
 import 'package:sportifo_app/features/auth/presentation/view_model/logout/logout_cubit.dart';
@@ -55,8 +55,8 @@ class _HomePageState extends State<HomePage> {
         child: const MyPlansScreen(),
       ),
       const TraineeScreen(),
-      BlocProvider(
-        create: (context) => getIt<CategoriesCubit>(),
+      BlocProvider.value(
+        value: getIt<CategoriesCubit>(),
         child: const WorkoutTypeScreen(),
       ),
       const AiChatScreen(),
@@ -86,8 +86,8 @@ class _HomePageState extends State<HomePage> {
           },
         ),
       ),
-      BlocProvider(
-        create: (context) => getIt<CategoriesCubit>(),
+      BlocProvider.value(
+        value: getIt<CategoriesCubit>(),
         child: const WorkoutTypeScreen(),
       ),
       const AiChatScreen(),
@@ -103,6 +103,7 @@ class _HomePageState extends State<HomePage> {
         BlocProvider(create: (_) => getIt<LogoutCubit>()),
         BlocProvider(create: (_) => getIt<ProfileCubit>()..getProfile()),
         BlocProvider.value(value: getIt<SavedExercisesCubit>()),
+        BlocProvider.value(value: getIt<CategoriesCubit>()),
       ],
       child: BlocListener<LogoutCubit, LogoutState>(
         listener: (context, state) {
@@ -211,7 +212,7 @@ class _HomePageState extends State<HomePage> {
                           homeViewModel.changeTab(2);
                         },
                       ),
-                      body: IndexedStack(
+                      body: LazyIndexedStack(
                         index: homeViewModel.currentIndex,
                         children: screens,
                       ),
