@@ -30,7 +30,7 @@ class NotificationService {
   final FirebaseMessaging _fcm = FirebaseMessaging.instance;
   final FlutterLocalNotificationsPlugin _localNotifications = FlutterLocalNotificationsPlugin();
 
-    static const String _baseUrl = 'https://sportifo.moayadismail.com/api/app';
+    static const String _baseUrl = "https://172.29.6.72:8000";
 
   Map<String, dynamic>? pendingNotificationData;
 

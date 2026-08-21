@@ -1,5 +1,5 @@
 class ApiConstants {
-  static const String domainUrl = "https://sportifo.moayadismail.com";
+  static const String domainUrl = "https://172.29.6.72:8000"; // ← بدّل
   static const String baseUrl = "$domainUrl/api/app/";
 
   static const String register = "register";

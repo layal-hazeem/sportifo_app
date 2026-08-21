@@ -38,8 +38,8 @@ class ChatWebSocketService {
   Stream<String> get connectionState => _connectionController.stream;
 
   static const String appKey = 'xciiem3ixu10pjwb6pbr';
-    static const String host = 'sportifo.moayadismail.com';  // ← بدّل IP
-  static const int wsPort = 443;  
+    static const String host = '172.29.6.72';  // ← بدّل IP
+  static const int wsPort = 8080;  
 
   bool get isConnected => _isConnected;
 
@@ -48,7 +48,7 @@ class ChatWebSocketService {
     _isInitialized = true;
 
     final options = PusherChannelsOptions.fromHost(
-      scheme: 'wss',
+      scheme: 'ws',
       host: host,
       key: appKey,
       port: wsPort,
