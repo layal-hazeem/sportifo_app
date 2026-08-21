@@ -8,7 +8,7 @@ import '../../data/models/exercise_model.dart';
 import '../view_model/alternatives_cubit/alternatives_cubit.dart';
 import '../view_model/alternatives_cubit/alternatives_state.dart';
 import '../view_model/saved_exercises/saved_exercises_cubit.dart';
-import 'exercise_details_screen.dart'; // استدعاء شاشة التفاصيل
+import 'exercise_details_screen.dart';
 
 class AlternativesScreen extends StatelessWidget {
   final int exerciseId;

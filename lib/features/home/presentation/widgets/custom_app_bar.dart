@@ -9,7 +9,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final int currentIndex;
   final String userName;
   final bool isCoach;
-  final VoidCallback? onHomeTap; // 🔥 كولباك العودة للهوم
+  final VoidCallback? onHomeTap;
 
   const CustomAppBar({
     super.key,
@@ -58,7 +58,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         break;
     }
 
-    // 🔥 إذا كنا خارج الهوم (currentIndex != 2)، نضيف زر الهوم ضمن الـ actions
     if (currentIndex != 2) {
       actions = [
         IconButton(
@@ -66,7 +65,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           tooltip: l10n.home,
           onPressed: onHomeTap,
         ),
-        ...?actions, // للحفاظ على باقي الأزرار إن وجدت
+        ...?actions,
       ];
     }
 
