@@ -18,7 +18,7 @@ class ChatDetailCubit extends Cubit<ChatDetailState> {
   
   bool _canSend = true;
   int? _currentConversationId;
-  int? _currentUserId; // 🔥 جديد
+  int? _currentUserId; 
   bool _isWebSocketInitialized = false;
   bool _isScreenActive = false;
 
@@ -33,15 +33,13 @@ class ChatDetailCubit extends Cubit<ChatDetailState> {
 
   void setCanSend(bool canSend) {
   _canSend = canSend;
-  dev.log('🔑 setCanSend -> $_canSend');
+  dev.log(' setCanSend -> $_canSend');
 }
-  void setCurrentUserId(int userId) => _currentUserId = userId; // 🔥 جديد
+  void setCurrentUserId(int userId) => _currentUserId = userId;
   void setScreenActive(bool active) {
     _isScreenActive = active;
-    dev.log('👁️ Screen active: $active');
+    dev.log(' Screen active: $active');
   }
-
-  // 🔥 تحويل LocalMessage → MessageModel لعرضها بالواجهة
   MessageModel _localToMessageModel(LocalMessage local) {
     return MessageModel(
       id: -1,
@@ -67,7 +65,6 @@ class ChatDetailCubit extends Cubit<ChatDetailState> {
       if (!_isWebSocketInitialized) {
       await _webSocketService.init();
       
-      // 🔥 استمعي للأحداث من الـ Stream
       _webSocketService.events.listen((event) {
         if (!isClosed && event.conversationId == _currentConversationId) {
           _handleWebSocketEvent(event.eventName, event.data);
@@ -146,8 +143,6 @@ class ChatDetailCubit extends Cubit<ChatDetailState> {
   Future<void> sendTypingNotification(int conversationId, int userId) async {
     await _webSocketService.sendTypingEvent(conversationId, userId);
   }
-
-  // 🔥🔥🔥 دمج الرسالة الجديدة (من WebSocket أو إرسال ناجح)
   void _mergeNewMessage(MessageModel newMessage) {
     if (isClosed) return;
     final currentState = state;
@@ -173,8 +168,6 @@ class ChatDetailCubit extends Cubit<ChatDetailState> {
       isSending: false,
     ));
   }
-
-  // 🔥🔥🔥 تحديث حالة رسالة محلية (pending → failed أو العكس)
   void _updateMessageStatus(String clientUuid, String newStatus) {
     if (isClosed) return;
     final currentState = state;
@@ -271,7 +264,6 @@ class ChatDetailCubit extends Cubit<ChatDetailState> {
     }
   }
 
-  // 🔥🔥🔥 fetchMessages محسّن: يدمج المحلية مع السيرفر
   Future<void> fetchMessages(int conversationId) async {
     if (isClosed) return;
     emit(const ChatDetailLoading());
@@ -282,14 +274,12 @@ class ChatDetailCubit extends Cubit<ChatDetailState> {
 
       if (result is Success<List<MessageModel>>) {
         final serverMessages = result.data;
-        
-        // 🔥 أضيفي الرسائل المحلية المعلقة
+      
         final pending = _pendingService.getPendingMessages()
             .where((m) => m.conversationId == conversationId);
         
         final localMessages = pending.map(_localToMessageModel).toList();
-        
-        // ادمج: أضف المحلية يلي ما لها نظير بالسيرفر
+  
         final merged = [...serverMessages];
         for (final local in localMessages) {
           if (!merged.any((m) => m.clientUuid == local.clientUuid)) {
@@ -307,7 +297,6 @@ class ChatDetailCubit extends Cubit<ChatDetailState> {
     }
   }
 
-  // 🔥🔥🔥 sendMessage محسّن: ما بيحذف الرسالة عند الفشل
   Future<void> sendMessage(
     int conversationId,
     String messageText,
@@ -336,8 +325,6 @@ class ChatDetailCubit extends Cubit<ChatDetailState> {
       createdAt: now,
     );
     await _pendingService.addMessage(localMessage);
-
-    // 2. أضف للواجهة فوراً (Optimistic UI)
     final tempMessage = _localToMessageModel(localMessage);
 
     final currentState = state;
@@ -350,7 +337,6 @@ class ChatDetailCubit extends Cubit<ChatDetailState> {
       ));
     }
 
-    // 3. أرسل للسيرفر
     try {
       final result = await _chatRepository.sendMessage(
         conversationId: conversationId,
@@ -376,13 +362,11 @@ class ChatDetailCubit extends Cubit<ChatDetailState> {
     }
   }
 
-  // 🔥🔥🔥 إعادة إرسال رسالة محددة (عند الضغط على ❌)
   Future<void> retryMessage(String clientUuid) async {
     if (isClosed) return;
     final msg = _pendingService.getPendingMessages()
         .firstWhere((m) => m.clientUuid == clientUuid, orElse: () => null as LocalMessage);
     
-    // تحديث الحالة لـ pending مؤقتاً
     await _pendingService.updateStatus(clientUuid, 'pending');
     _updateMessageStatus(clientUuid, 'pending');
 
@@ -450,10 +434,8 @@ Future<void> deleteMessage(int conversationId, int messageId, String clientUuid)
   final currentState = state;
   if (currentState is! ChatDetailLoaded) return;
 
-  // حفظ القائمة القديمة لحالة الفشل
   final previousMessages = List<MessageModel>.from(currentState.messages);
 
-  // تحديث واجهة المستخدم فوراً (حذف مؤقت)
   final optimistic = currentState.messages
       .where((msg) => msg.id != messageId && msg.clientUuid != clientUuid)
       .toList();
@@ -468,10 +450,8 @@ Future<void> deleteMessage(int conversationId, int messageId, String clientUuid)
     final result = await _chatRepository.deleteMessage(conversationId, messageId);
 
     if (result is Success<bool>) {
-      // ✅ نجح الحذف، لا حاجة لفعل أي شيء (التحديث المؤقت صحيح)
       dev.log('✅ Message deleted successfully');
     } else if (result is Failure<bool>) {
-      // ❌ فشل الحذف: نعيد القائمة القديمة ونعرض خطأ
       emit(ChatDetailLoaded(
         messages: previousMessages,
         canSend: currentState.canSend,
@@ -480,7 +460,7 @@ Future<void> deleteMessage(int conversationId, int messageId, String clientUuid)
       emit(ChatDetailError(result.message));
     }
   } catch (e) {
-    // ❌ خطأ غير متوقع: نعيد القائمة القديمة
+
     emit(ChatDetailLoaded(
       messages: previousMessages,
       canSend: currentState.canSend,

@@ -8,7 +8,6 @@ import 'package:sportifo_app/features/chat/presentation/view_model/chat_detail_c
 import 'package:sportifo_app/features/chat/presentation/view_model/conversations_cubit.dart';
 import 'package:sportifo_app/features/create_self_plan/presentation/view/create_self_plan_screen.dart';
 import 'package:sportifo_app/features/create_self_plan/presentation/view_model/create_self_plan_cubit.dart';
-import 'package:sportifo_app/features/edit_coach_plan/data/models/edit_coach_plan_model.dart';
 import 'package:sportifo_app/features/edit_coach_plan/presentation/view/edit_coach_plan_screen.dart';
 import 'package:sportifo_app/features/edit_coach_plan/presentation/view_model/edit_coach_plan_cubit.dart';
 import 'package:sportifo_app/features/existing_days/presentation/view/existing_days_screen.dart';
@@ -79,7 +78,7 @@ class AppRouter {
 
       case AppRoutes.onboarding:
         return MaterialPageRoute(builder: (_) => const OnboardingScreen());
-      case AppRoutes.workoutSummary: // أو أضف الـ Route الخاص بها
+      case AppRoutes.workoutSummary: 
         final args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
           builder: (_) => WorkoutSummaryScreen(
@@ -100,7 +99,7 @@ class AppRouter {
 
       case AppRoutes.notifications:
         return MaterialPageRoute(
-          builder: (_) => const NotificationsScreen(), // 👈 الشاشة اللي عملناها بالخطوة الماضية
+          builder: (_) => const NotificationsScreen(), 
         );
 
       case AppRoutes.login:
@@ -119,7 +118,7 @@ class AppRouter {
                 create: (_) => getIt<TargetCubit>()..fetchLatestTarget(),
               ),
               BlocProvider.value(value: getIt<SavedExercisesCubit>()),
-              // 🔥 إضافة الكيوبيت الجديد وتشغيله فورا لجلب الخطط
+              
               BlocProvider(
                 create: (_) =>
                     getIt<PlatformPlansCubit>()..fetchPlatformPlans(),
@@ -162,12 +161,11 @@ class AppRouter {
               BlocProvider(create: (_) => getIt<CategoriesCubit>()),
               BlocProvider(create: (_) => getIt<ExercisesCubit>()),
               BlocProvider(create: (_) => getIt<PartsCubit>()),
-              // ✅ أضفنا SavedExercisesCubit هون
               BlocProvider.value(value: getIt<SavedExercisesCubit>()),
-              BlocProvider.value(value: getIt<CategoriesCubit>()), // ✅ صح
-              BlocProvider.value(value: getIt<ExercisesCubit>()), // ✅ صح
-              BlocProvider.value(value: getIt<PartsCubit>()), // ✅ صح
-              BlocProvider.value(value: getIt<SavedExercisesCubit>()), // ✅ صح
+              BlocProvider.value(value: getIt<CategoriesCubit>()), 
+              BlocProvider.value(value: getIt<ExercisesCubit>()), 
+              BlocProvider.value(value: getIt<PartsCubit>()),
+              BlocProvider.value(value: getIt<SavedExercisesCubit>()), 
             ],
             child: const MuscleGroupsScreen(),
           ),
@@ -418,7 +416,8 @@ case AppRoutes.chatDetail:
           conversationId: args['conversationId'] as int,
           otherParticipantName: args['otherParticipantName'] as String,
           otherParticipantImage: args['otherParticipantImage'] as String?,
-          subscriptionType: args['subscriptionType'] as String?, // ← جديد
+          subscriptionType: args['subscriptionType'] as String?, 
+          availableNow: args['availableNow'] as bool? ?? true,
         ),
       ),
     );

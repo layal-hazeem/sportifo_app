@@ -260,7 +260,7 @@ class NotificationService {
       case 'ad':
         _handleAdNavigation(modelId);
         break;
-    // 💬 حالة إشعار المحادثة الفورية
+
       case 'chat':
       case 'message':
       case 'conversation':
@@ -268,14 +268,12 @@ class NotificationService {
           final conversationId = int.tryParse(modelId.toString());
 
           if (conversationId != null) {
-            // 🔥 جلب بيانات الطرف الآخر من الإشعار (إذا كان الباك إند يرسلها)
-            // إذا لم يرسلها، نضع قيمة افتراضية مثل "New Message"
             final senderName = data['sender_name']?.toString() ?? 'New Message';
             final senderImage = data['sender_image']?.toString();
             final subType = data['subscription_type']?.toString();
 
             navigatorKey.currentState?.pushNamed(
-              AppRoutes.chatDetail, // 👈 مسار الشات
+              AppRoutes.chatDetail, 
               arguments: {
                 'conversationId': conversationId,
                 'otherParticipantName': senderName,

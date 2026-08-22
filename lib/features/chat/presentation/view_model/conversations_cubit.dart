@@ -23,8 +23,6 @@ class ConversationsCubit extends Cubit<ConversationsState> {
       emit(ConversationsError('حدث خطأ غير متوقع: ${e.toString()}'));
     }
   }
-
-  /// 🔥🔥🔥 تحديث فوري لما توصل رسالة من WebSocket
   void updateConversationFromRealtime(int conversationId, MessageModel message) {
     final currentState = state;
     if (currentState is! ConversationsLoaded) return;

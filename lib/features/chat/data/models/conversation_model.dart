@@ -1,4 +1,3 @@
-// lib/features/chat/data/models/conversation_model.dart
 
 import 'participant_model.dart';
 import 'message_model.dart';
@@ -9,6 +8,7 @@ class ConversationModel {
   final MessageModel? lastMessage;
   final DateTime lastMessageAt;
   final String? subscriptionType;
+  final bool availableNow; 
 
   ConversationModel({
     required this.id,
@@ -16,6 +16,7 @@ class ConversationModel {
     required this.lastMessage,
     required this.lastMessageAt,
     this.subscriptionType,
+    this.availableNow = true,
   });
 
   factory ConversationModel.fromJson(Map<String, dynamic> json) {
@@ -40,6 +41,7 @@ class ConversationModel {
       lastMessage: lastMsg,
       lastMessageAt: parseTime,
       subscriptionType: json['subscription_type']?.toString(),
+      availableNow: json['available_now'] ?? true,
     );
   }
 
@@ -48,12 +50,16 @@ ConversationModel copyWith({
   ParticipantModel? otherParticipant,
   MessageModel? lastMessage,
   DateTime? lastMessageAt,
+  String? subscriptionType,
+  bool? availableNow,
 }) {
   return ConversationModel(
     id: id ?? this.id,
     otherParticipant: otherParticipant ?? this.otherParticipant,
     lastMessage: lastMessage ?? this.lastMessage,
     lastMessageAt: lastMessageAt ?? this.lastMessageAt,
+    subscriptionType: subscriptionType ?? this.subscriptionType,
+    availableNow: availableNow ?? this.availableNow,
   );
 }
   Map<String, dynamic> toJson() {
@@ -63,6 +69,7 @@ ConversationModel copyWith({
       'last_message': lastMessage?.toJson(),
       'last_message_at': lastMessageAt.toIso8601String(),
       'subscription_type': subscriptionType,
+      'available_now': availableNow,
     };
   }
 

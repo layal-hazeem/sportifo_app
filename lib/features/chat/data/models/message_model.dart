@@ -133,8 +133,8 @@ class MessageModel {
    DateTime getDateTime() {
     try {
       if (sentAt != null) {
-        final dateStr = sentAt!['date']; // "2026-08-16"
-        final timeStr = sentAt!['time']; // "03:48 AM" or "15:30"
+        final dateStr = sentAt!['date']; 
+        final timeStr = sentAt!['time'];
         if (dateStr != null && dateStr.isNotEmpty) {
           if (timeStr != null && timeStr.isNotEmpty) {
             return _parseDateTime(dateStr, timeStr);

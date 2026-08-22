@@ -30,7 +30,6 @@ class ChatWebSocketService {
   bool _isConnected = false;
   bool _isInitialized = false;
 
-  // 🔥 Broadcast Streams — أكتر من مستمع بيقدر يسمع
   final _eventController = StreamController<ChatWebSocketEvent>.broadcast();
   final _connectionController = StreamController<String>.broadcast();
 
@@ -38,7 +37,7 @@ class ChatWebSocketService {
   Stream<String> get connectionState => _connectionController.stream;
 
   static const String appKey = 'xciiem3ixu10pjwb6pbr';
-    static const String host = '172.29.6.72';  // ← بدّل IP
+    static const String host = '172.29.6.72'; 
   static const int wsPort = 8080;  
 
   bool get isConnected => _isConnected;
@@ -89,7 +88,7 @@ class ChatWebSocketService {
     final token = _localStorage.getToken() ?? '';
 
     try {
-      dev.log('🔐 Subscribing to: $presenceName');
+      dev.log(' Subscribing to: $presenceName');
 
       final presenceChannel = _client!.presenceChannel(
         presenceName,

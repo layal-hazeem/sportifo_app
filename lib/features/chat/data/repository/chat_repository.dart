@@ -33,12 +33,12 @@ class ChatRepository {
 
   Future<ApiResult<List<MessageModel>>> getMessages(
   int conversationId, {
-  int? afterId, // 🔥 جديد
+  int? afterId, 
 }) async {
   try {
     final response = await _chatWebService.getMessages(
       conversationId,
-      afterId: afterId, // 🔥 تمرير
+      afterId: afterId,
     );
 
     if (response.statusCode == 200) {

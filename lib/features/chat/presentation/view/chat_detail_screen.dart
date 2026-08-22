@@ -14,7 +14,7 @@ import 'package:sportifo_app/core/storage/local_storage.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/core/utils/url_fixer.dart';
 import 'package:sportifo_app/features/ai_chat/presentation/widgets/typing_indicator.dart';
-import 'package:sportifo_app/l10n/app_localizations.dart'; // ← جديد
+import 'package:sportifo_app/l10n/app_localizations.dart'; 
 import '../../data/models/message_model.dart';
 import '../view_model/chat_detail_cubit.dart';
 import '../view_model/chat_detail_state.dart';
@@ -28,6 +28,7 @@ class ChatDetailScreen extends StatefulWidget {
   final String otherParticipantName;
   final String? otherParticipantImage;
   final String? subscriptionType;
+  final bool availableNow;
 
   const ChatDetailScreen({
     Key? key,
@@ -35,6 +36,7 @@ class ChatDetailScreen extends StatefulWidget {
     required this.otherParticipantName,
     this.otherParticipantImage,
     this.subscriptionType,
+    this.availableNow = true,
   }) : super(key: key);
 
   @override
@@ -81,21 +83,21 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
   }
 
 
-  void _calculateCanSend() {
-  final localStorage = getIt<LocalStorage>();
-  final userRole = localStorage.getRole()?.toLowerCase();
-  final subType = widget.subscriptionType?.toLowerCase();
-print ('🔍 userRole = $userRole');
-print ('🔍 subscriptionType = $subType');
- 
+   void _calculateCanSend() {
+    final localStorage = getIt<LocalStorage>();
+    final userRole = localStorage.getRole()?.toLowerCase();
+    if (!widget.availableNow) {
+      _canSend = false;
+      return;
+    }
 
-  if (userRole == 'coach') {
-    _canSend = true;
-  } else {
+    if (userRole == 'coach') {
+      _canSend = true;
+      return;
+    }
+    final subType = widget.subscriptionType?.toLowerCase();
     _canSend = subType == 'gold';
   }
-  print('🔍 _canSend = $_canSend');
-}
   void _loadUserId() {
     final localStorage = getIt<LocalStorage>();
     final dynamic rawUserId = localStorage.getUserId();
@@ -323,7 +325,7 @@ void _showDeleteConfirmation(int? messageId, String? clientUuid) {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!; // ← نفس أسلوب LoginScreen
+    final l10n = AppLocalizations.of(context)!; 
 
     return Container(
       decoration: const BoxDecoration(
@@ -673,3 +675,4 @@ void _showDeleteConfirmation(int? messageId, String? clientUuid) {
     );
   }
 }
+

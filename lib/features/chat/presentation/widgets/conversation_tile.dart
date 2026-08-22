@@ -21,12 +21,9 @@ class ConversationTile extends StatelessWidget {
     final fixedProfilePic = UrlFixer.image(conversation.otherParticipant.profilePic);
     final currentUserId = getIt<LocalStorage>().getUserId();
 
-    // تحديد ما إذا كانت آخر رسالة مرسلة مني
     final bool isSentByMe = conversation.lastMessage != null &&
         currentUserId != null &&
         conversation.lastMessage!.senderId == currentUserId;
-
-    // تحديد ما إذا كانت آخر رسالة غير مقروءة (مرسلة من الطرف الآخر و readAt == null)
     final bool isUnread = conversation.lastMessage != null &&
         currentUserId != null &&
         conversation.lastMessage!.senderId != currentUserId &&
@@ -38,8 +35,6 @@ class ConversationTile extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(
           children: [
-            // صورة الطرف الآخر
-           // داخل الـ Row children، استبدل CircleAvatar بـ:
 GestureDetector(
   onTap: () => _showFullImage(context, fixedProfilePic),
   child: CircleAvatar(
@@ -53,8 +48,8 @@ GestureDetector(
         : null,
   ),
 ),
-const SizedBox(width: 16), // ← مسافة أكبر
-            // النصوص (الاسم، معاينة الرسالة، الوقت)
+const SizedBox(width: 16), 
+            
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,13 +68,12 @@ const SizedBox(width: 16), // ← مسافة أكبر
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      // 🔥 نقطة برتقالية فقط إذا كانت الرسالة غير مقروءة
                       if (isUnread)
                         Container(
                           width: 10,
                           height: 10,
                           decoration: const BoxDecoration(
-                            color: Color(0xFFFF9800), // برتقالي
+                            color: Color(0xFFFF9800), 
                             shape: BoxShape.circle,
                           ),
                         ),
@@ -96,7 +90,7 @@ const SizedBox(width: 16), // ← مسافة أكبر
                   const SizedBox(height: 4),
                   Row(
                     children: [
-                      // 🔥 مؤشرات التوصيل/القراءة فقط إذا كانت الرسالة مرسلة مني
+                      
                       if (isSentByMe && conversation.lastMessage != null)
                         Padding(
                           padding: const EdgeInsets.only(right: 4),
@@ -129,14 +123,14 @@ void _showFullImage(BuildContext context, String? imageUrl) {
 
   showDialog(
     context: context,
-    barrierDismissible: true, // تسكير بالكبسة على الخلفية
+    barrierDismissible: true, 
     builder: (context) => Dialog(
       backgroundColor: Colors.black87,
       insetPadding: EdgeInsets.zero,
       child: Stack(
         fit: StackFit.expand,
         children: [
-          // صورة قابلة للتكبير/التصغير بالإصبع
+         
           InteractiveViewer(
             panEnabled: true,
             boundaryMargin: const EdgeInsets.all(20),
@@ -182,22 +176,21 @@ void _showFullImage(BuildContext context, String? imageUrl) {
     ),
   );
 }
-  // 🔥 أيقونة حالة الرسالة (للمرسلة مني فقط)
   Widget _buildStatusIcon(MessageModel message) {
     final status = message.getStatus();
     if (status == 2) {
-      // مقروءة (read_at موجود)
+
       return const Icon(Icons.done_all, size: 14, color: Colors.blue);
     } else if (status == 1) {
-      // موصلة (delivered_at موجود)
+
       return Icon(Icons.done_all, size: 14, color: Colors.grey.shade500);
     } else {
-      // مرسلة (sent_at فقط)
+
       return Icon(Icons.done, size: 14, color: Colors.grey.shade500);
     }
   }
 
-  // 🔥 تنسيق الوقت
+
   String _formatTime(ConversationModel conversation) {
     final lastMessage = conversation.lastMessage;
     if (lastMessage == null || lastMessage.sentAt == null) return '';

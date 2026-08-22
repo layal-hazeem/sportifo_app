@@ -54,13 +54,12 @@ class _ConversationsListScreenState extends State<ConversationsListScreen> {
         final messageData = data['message'] as Map<String, dynamic>?;
         if (messageData == null) return;
         final message = MessageModel.fromJson(messageData);
-        // 🔥🔥🔥 تحديث فوري لقائمة المحادثات
         cubit.updateConversationFromRealtime(conversationId, message);
         break;
 
       case 'message.read':
       case 'message.deleted':
-        cubit.fetchConversations(); // ريفرش خفيف
+        cubit.fetchConversations(); 
         break;
     }
   }
@@ -115,7 +114,7 @@ class _ConversationsListScreenState extends State<ConversationsListScreen> {
                   ElevatedButton.icon(
                     onPressed: _fetchAndSubscribe,
                     icon: const Icon(Icons.refresh),
-                    label: const Text('إعادة محاولة'),
+                    label: const Text("Retry"),
                     style: ElevatedButton.styleFrom(backgroundColor: AppColors.primaryBtn),
                   ),
                 ],
@@ -131,7 +130,7 @@ class _ConversationsListScreenState extends State<ConversationsListScreen> {
                   children: [
                     Icon(Icons.chat_bubble_outline, size: 64, color: Colors.grey[300]),
                     const SizedBox(height: 16),
-                    Text('لا توجد محادثات', style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+                    Text("No conversations yet.", style: TextStyle(fontSize: 16, color: Colors.grey[600])),
                   ],
                 ),
               );
@@ -155,9 +154,10 @@ class _ConversationsListScreenState extends State<ConversationsListScreen> {
                           'conversationId': conversation.id,
                           'otherParticipantName': conversation.otherParticipant.name,
                           'otherParticipantImage': conversation.otherParticipant.profilePic,
+                          'subscriptionType': conversation.subscriptionType,
+                          'availableNow': conversation.availableNow,
                         },
                       ).then((_) {
-                        // لما ترجعي من الشات، ريفرش
                         context.read<ConversationsCubit>().fetchConversations();
                       });
                     },

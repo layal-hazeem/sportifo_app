@@ -6,7 +6,6 @@ class ChatWebService {
 
   ChatWebService(this._dio);
 
-  /// 🔥 نضيف timestamp فريد لكل طلب لنمنع الكاش نهائياً
   Map<String, dynamic> get _cacheBust {
     return {'_': DateTime.now().millisecondsSinceEpoch.toString()};
   }
@@ -21,14 +20,14 @@ class ChatWebService {
 Future<Response> getMessages(
   int conversationId, {
   int page = 1,
-  int? afterId, // 🔥 جديد
+  int? afterId,
 }) async {
   final queryParams = {
     'page': page,
     ..._cacheBust,
   };
   if (afterId != null) {
-    queryParams['after_id'] = afterId; // 🔥 إضافة after_id
+    queryParams['after_id'] = afterId;
   }
   return await _dio.get(
     ApiConstants.conversationMessages(conversationId),
