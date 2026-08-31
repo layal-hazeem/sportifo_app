@@ -38,7 +38,7 @@ class ChatWebSocketService {
   Stream<String> get connectionState => _connectionController.stream;
 
   static const String appKey = 'xciiem3ixu10pjwb6pbr';
-  static const String host = 'sportifo.moayadismail.com';  // ← بدّل IP
+  static const String host = 'sportifo-dev.duckdns.org'; 
   static const int wsPort = 443;  // ← WSS بيشتغل ع 443 مش 8080
 
   bool get isConnected => _isConnected;

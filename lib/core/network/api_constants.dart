@@ -1,5 +1,5 @@
 class ApiConstants {
-  static const String domainUrl = "https://sportifo.moayadismail.com";
+  static const String domainUrl = "https://sportifo-dev.duckdns.org";
   static const String baseUrl = "$domainUrl/api/app/";
 
   static const String register = "register";

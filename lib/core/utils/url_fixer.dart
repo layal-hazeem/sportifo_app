@@ -1,7 +1,7 @@
 // lib/core/utils/url_fixer.dart
 
 class UrlFixer {
-  static const String _serverIp = 'sportifo.moayadismail.com';  // ← بدّل
+  static const String _serverIp = 'sportifo-dev.duckdns.org';  // ← بدّل
   
   static String? image(String? url) {
     if (url == null || url.isEmpty) return null;
