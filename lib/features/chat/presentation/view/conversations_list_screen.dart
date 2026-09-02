@@ -155,6 +155,8 @@ class _ConversationsListScreenState extends State<ConversationsListScreen> {
                           'conversationId': conversation.id,
                           'otherParticipantName': conversation.otherParticipant.name,
                           'otherParticipantImage': conversation.otherParticipant.profilePic,
+                          'subscriptionType': conversation.subscriptionType, 
+                          'availableNow': conversation.availableNow, 
                         },
                       ).then((_) {
                         // لما ترجعي من الشات، ريفرش

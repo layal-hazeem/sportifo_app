@@ -28,6 +28,7 @@ class ChatDetailScreen extends StatefulWidget {
   final String otherParticipantName;
   final String? otherParticipantImage;
   final String? subscriptionType;
+  final bool availableNow;
 
   const ChatDetailScreen({
     Key? key,
@@ -35,6 +36,7 @@ class ChatDetailScreen extends StatefulWidget {
     required this.otherParticipantName,
     this.otherParticipantImage,
     this.subscriptionType,
+    this.availableNow = true,
   }) : super(key: key);
 
   @override
@@ -81,21 +83,33 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
   }
 
 
-  void _calculateCanSend() {
-  final localStorage = getIt<LocalStorage>();
-  final userRole = localStorage.getRole()?.toLowerCase();
-  final subType = widget.subscriptionType?.toLowerCase();
-print ('🔍 userRole = $userRole');
-print ('🔍 subscriptionType = $subType');
- 
+    void _calculateCanSend() {
+    final localStorage = getIt<LocalStorage>();
+    final userRole = localStorage.getRole()?.toLowerCase();
+    
+    print('🔍 userRole = $userRole');
+    print('🔍 availableNow = ${widget.availableNow}');
+    print('🔍 subscriptionType = ${widget.subscriptionType}');
 
-  if (userRole == 'coach') {
-    _canSend = true;
-  } else {
+    // ✅ الخطوة 1: إذا available_now = false → مقفولة للكل
+    if (!widget.availableNow) {
+      _canSend = false;
+      print('🔒 Chat closed by coach (available_now = false)');
+      return;
+    }
+
+    // ✅ الخطوة 2: إذا الكوتش → يحكي دائماً
+    if (userRole == 'coach') {
+      _canSend = true;
+      print('🔓 Coach can always send');
+      return;
+    }
+
+    // ✅ الخطوة 3: إذا اليوزر → نشيك ع الاشتراك
+    final subType = widget.subscriptionType?.toLowerCase();
     _canSend = subType == 'gold';
+    print('🔍 User _canSend = $_canSend (subType: $subType)');
   }
-  print('🔍 _canSend = $_canSend');
-}
   void _loadUserId() {
     final localStorage = getIt<LocalStorage>();
     final dynamic rawUserId = localStorage.getUserId();

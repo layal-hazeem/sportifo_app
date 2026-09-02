@@ -438,6 +438,7 @@ class AppRouter {
                 otherParticipantName: args['otherParticipantName'] as String,
                 otherParticipantImage: args['otherParticipantImage'] as String?,
                 subscriptionType: args['subscriptionType'] as String?, // ← جديد
+                availableNow: args['availableNow'] as bool? ?? true,
               ),
             ),
           );
