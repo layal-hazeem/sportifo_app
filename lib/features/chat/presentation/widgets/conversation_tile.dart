@@ -5,6 +5,7 @@ import 'package:sportifo_app/core/storage/local_storage.dart';
 import 'package:sportifo_app/core/utils/url_fixer.dart';
 import 'package:sportifo_app/features/chat/data/models/message_model.dart';
 import '../../data/models/conversation_model.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 
 class ConversationTile extends StatelessWidget {
   final ConversationModel conversation;
@@ -18,16 +19,20 @@ class ConversationTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fixedProfilePic = UrlFixer.image(conversation.otherParticipant.profilePic);
+    final fixedProfilePic = UrlFixer.image(
+      conversation.otherParticipant.profilePic,
+    );
     final currentUserId = getIt<LocalStorage>().getUserId();
 
     // تحديد ما إذا كانت آخر رسالة مرسلة مني
-    final bool isSentByMe = conversation.lastMessage != null &&
+    final bool isSentByMe =
+        conversation.lastMessage != null &&
         currentUserId != null &&
         conversation.lastMessage!.senderId == currentUserId;
 
     // تحديد ما إذا كانت آخر رسالة غير مقروءة (مرسلة من الطرف الآخر و readAt == null)
-    final bool isUnread = conversation.lastMessage != null &&
+    final bool isUnread =
+        conversation.lastMessage != null &&
         currentUserId != null &&
         conversation.lastMessage!.senderId != currentUserId &&
         conversation.lastMessage!.readAt == null;
@@ -39,22 +44,26 @@ class ConversationTile extends StatelessWidget {
         child: Row(
           children: [
             // صورة الطرف الآخر
-           // داخل الـ Row children، استبدل CircleAvatar بـ:
-GestureDetector(
-  onTap: () => _showFullImage(context, fixedProfilePic),
-  child: CircleAvatar(
-    radius: 28,
-    backgroundColor: Colors.grey.shade300,
-    backgroundImage: fixedProfilePic != null
-        ? CachedNetworkImageProvider(fixedProfilePic)
-        : const AssetImage('assets/images/female.jpg') as ImageProvider,
-    child: fixedProfilePic == null
-        ? const Icon(Icons.person, color: Colors.grey, size: 28)
-        : null,
-  ),
-),
-const SizedBox(width: 16), // ← مسافة أكبر
-            // النصوص (الاسم، معاينة الرسالة، الوقت)
+            // داخل الـ Row children، استبدل CircleAvatar بـ:
+            GestureDetector(
+              onTap: () => _showFullImage(context, fixedProfilePic),
+              child: CircleAvatar(
+                radius: 28,
+                backgroundColor: context.secondaryBackgroundColor,
+                backgroundImage: fixedProfilePic != null
+                    ? CachedNetworkImageProvider(fixedProfilePic)
+                    : const AssetImage('assets/images/female.jpg')
+                          as ImageProvider,
+                child: fixedProfilePic == null
+                    ? Icon(
+                        Icons.person,
+                        color: context.textColor.withValues(alpha: 0.5),
+                        size: 28,
+                      )
+                    : null,
+              ),
+            ),
+            const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,15 +74,16 @@ const SizedBox(width: 16), // ← مسافة أكبر
                         child: Text(
                           conversation.otherParticipant.name,
                           style: TextStyle(
-                            fontWeight: isUnread ? FontWeight.bold : FontWeight.w600,
+                            fontWeight: isUnread
+                                ? FontWeight.bold
+                                : FontWeight.w600,
                             fontSize: 15,
-                            color: isUnread ? Colors.black87 : Colors.black54,
+                            color: isUnread ? context.textColor: context.textColor.withValues(alpha:0.6),
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      // 🔥 نقطة برتقالية فقط إذا كانت الرسالة غير مقروءة
                       if (isUnread)
                         Container(
                           width: 10,
@@ -88,7 +98,9 @@ const SizedBox(width: 16), // ← مسافة أكبر
                         _formatTime(conversation),
                         style: TextStyle(
                           fontSize: 12,
-                          color: isUnread ? Colors.black87 : Colors.grey.shade500,
+                          color: isUnread
+                              ?  context.textColor
+                              :  context.textColor.withValues(alpha: 0.45),
                         ),
                       ),
                     ],
@@ -96,7 +108,6 @@ const SizedBox(width: 16), // ← مسافة أكبر
                   const SizedBox(height: 4),
                   Row(
                     children: [
-                      // 🔥 مؤشرات التوصيل/القراءة فقط إذا كانت الرسالة مرسلة مني
                       if (isSentByMe && conversation.lastMessage != null)
                         Padding(
                           padding: const EdgeInsets.only(right: 4),
@@ -106,9 +117,13 @@ const SizedBox(width: 16), // ← مسافة أكبر
                         child: Text(
                           conversation.getLastMessagePreview(),
                           style: TextStyle(
-                            color: isUnread ? Colors.black87 : Colors.grey.shade600,
+                            color: isUnread
+                                ? context.textColor
+                                : context.textColor.withValues(alpha: 0.55),
                             fontSize: 13,
-                            fontWeight: isUnread ? FontWeight.w500 : FontWeight.normal,
+                            fontWeight: isUnread
+                                ? FontWeight.w500
+                                : FontWeight.normal,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -124,64 +139,58 @@ const SizedBox(width: 16), // ← مسافة أكبر
       ),
     );
   }
-void _showFullImage(BuildContext context, String? imageUrl) {
-  if (imageUrl == null) return;
 
-  showDialog(
-    context: context,
-    barrierDismissible: true, // تسكير بالكبسة على الخلفية
-    builder: (context) => Dialog(
-      backgroundColor: Colors.black87,
-      insetPadding: EdgeInsets.zero,
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          // صورة قابلة للتكبير/التصغير بالإصبع
-          InteractiveViewer(
-            panEnabled: true,
-            boundaryMargin: const EdgeInsets.all(20),
-            minScale: 0.5,
-            maxScale: 4.0,
-            child: Center(
-              child: CachedNetworkImage(
-                imageUrl: imageUrl,
-                fit: BoxFit.contain,
-                placeholder: (context, url) => const CircularProgressIndicator(
-                  color: Colors.white,
-                ),
-                errorWidget: (context, url, error) => const Icon(
-                  Icons.error,
-                  color: Colors.white,
-                  size: 50,
-                ),
-              ),
-            ),
-          ),
-          // زر الإغلاق
-          Positioned(
-            top: 40,
-            right: 20,
-            child: GestureDetector(
-              onTap: () => Navigator.pop(context),
-              child: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.black54,
-                  shape: BoxShape.circle,
-                ),
-                padding: const EdgeInsets.all(8),
-                child: const Icon(
-                  Icons.close,
-                  color: Colors.white,
-                  size: 28,
+  void _showFullImage(BuildContext context, String? imageUrl) {
+    if (imageUrl == null) return;
+
+    showDialog(
+      context: context,
+      barrierDismissible: true, // تسكير بالكبسة على الخلفية
+      builder: (context) => Dialog(
+        backgroundColor: Colors.black87,
+        insetPadding: EdgeInsets.zero,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            // صورة قابلة للتكبير/التصغير بالإصبع
+            InteractiveViewer(
+              panEnabled: true,
+              boundaryMargin: const EdgeInsets.all(20),
+              minScale: 0.5,
+              maxScale: 4.0,
+              child: Center(
+                child: CachedNetworkImage(
+                  imageUrl: imageUrl,
+                  fit: BoxFit.contain,
+                  placeholder: (context, url) =>
+                      const CircularProgressIndicator(color: Colors.white),
+                  errorWidget: (context, url, error) =>
+                      const Icon(Icons.error, color: Colors.white, size: 50),
                 ),
               ),
             ),
-          ),
-        ],
+            // زر الإغلاق
+            Positioned(
+              top: 40,
+              right: 20,
+              child: GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: Colors.black54,
+                    shape: BoxShape.circle,
+                  ),
+                  padding: const EdgeInsets.all(8),
+                  child: const Icon(Icons.close, color: Colors.white, size: 28),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
+
   // 🔥 أيقونة حالة الرسالة (للمرسلة مني فقط)
   Widget _buildStatusIcon(MessageModel message) {
     final status = message.getStatus();

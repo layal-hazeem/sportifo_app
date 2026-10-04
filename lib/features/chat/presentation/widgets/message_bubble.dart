@@ -3,6 +3,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:sportifo_app/core/utils/url_fixer.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../../data/models/message_model.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
+import 'package:sportifo_app/core/theme/app_colors.dart';
 
 class MessageBubble extends StatelessWidget {
   final MessageModel message;
@@ -26,10 +28,12 @@ class MessageBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    if (message.isDeleted) return _buildDeletedMessage(l10n);
+    if (message.isDeleted) return _buildDeletedMessage(context, l10n);
 
     return Align(
-      alignment: isSentByCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
+      alignment: isSentByCurrentUser
+          ? Alignment.centerRight
+          : Alignment.centerLeft,
       child: GestureDetector(
         onLongPress: () {
           if (canDelete && isSentByCurrentUser && message.status == 'sent') {
@@ -49,8 +53,8 @@ class MessageBubble extends StatelessWidget {
             ),
             decoration: BoxDecoration(
               color: isSentByCurrentUser
-                  ? const Color(0xFFF57C00)
-                  : const Color(0xFFF5F5F5),
+                  ? AppColors.primaryBtn
+                  : context.secondaryBackgroundColor,
               borderRadius: BorderRadius.only(
                 topLeft: const Radius.circular(18),
                 topRight: const Radius.circular(18),
@@ -59,7 +63,11 @@ class MessageBubble extends StatelessWidget {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.06),
+                  color: Colors.black.withValues(
+                    alpha: Theme.of(context).brightness == Brightness.dark
+                        ? 0.3
+                        : 0.06,
+                  ),
                   blurRadius: 4,
                   offset: const Offset(0, 2),
                 ),
@@ -83,7 +91,8 @@ class MessageBubble extends StatelessWidget {
                         } else {
                           url = mediaItem.toString();
                         }
-                        if (url == null || url.isEmpty) return const SizedBox.shrink();
+                        if (url == null || url.isEmpty)
+                          return const SizedBox.shrink();
                         final fixedUrl = UrlFixer.image(url);
                         if (fixedUrl == null) return const SizedBox.shrink();
                         return GestureDetector(
@@ -98,14 +107,20 @@ class MessageBubble extends StatelessWidget {
                               placeholder: (context, url) => Container(
                                 width: 150,
                                 height: 150,
-                                color: Colors.grey.shade300,
-                                child: const Icon(Icons.image, color: Colors.grey),
+                                color:context.secondaryBackgroundColor,
+                                child:  Icon(
+                                  Icons.image,
+                                  color:  context.textColor.withValues(alpha:0.4),
+                                ),
                               ),
                               errorWidget: (context, url, error) => Container(
                                 width: 150,
                                 height: 150,
-                                color: Colors.grey.shade200,
-                                child: const Icon(Icons.broken_image, color: Colors.red),
+                                color:  context.secondaryBackgroundColor,
+                                child: const Icon(
+                                  Icons.broken_image,
+                                  color: Colors.red,
+                                ),
                               ),
                             ),
                           ),
@@ -117,7 +132,9 @@ class MessageBubble extends StatelessWidget {
                   Text(
                     message.body,
                     style: TextStyle(
-                      color: isSentByCurrentUser ? Colors.white : Colors.black87,
+                      color: isSentByCurrentUser
+                          ? Colors.white   
+                          : context.textColor, 
                       fontSize: 15,
                       height: 1.3,
                     ),
@@ -132,8 +149,8 @@ class MessageBubble extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 11,
                         color: isSentByCurrentUser
-                            ? Colors.white.withOpacity(0.8)
-                            : Colors.grey.shade500,
+                            ? Colors.white.withValues(alpha:0.8)
+                            : context.textColor.withValues(alpha:0.5),
                       ),
                     ),
                     if (isSentByCurrentUser) ...[
@@ -157,7 +174,7 @@ class MessageBubble extends StatelessWidget {
         height: 12,
         child: CircularProgressIndicator(
           strokeWidth: 1.5,
-          color: Colors.white.withOpacity(0.8),
+          color: Colors.white.withValues(alpha:0.8),
         ),
       );
     }
@@ -165,44 +182,50 @@ class MessageBubble extends StatelessWidget {
     if (message.status == 'failed') {
       return GestureDetector(
         onTap: onRetry,
-        child: Icon(
-          Icons.error_outline,
-          size: 14,
-          color: Colors.red.shade100,
-        ),
+        child: Icon(Icons.error_outline, size: 14, color: Colors.red.shade100),
       );
     }
 
     final status = message.getStatus();
     if (status == 2) {
-      return const Icon(Icons.done_all, size: 14, color: Colors.lightBlueAccent);
+      return const Icon(
+        Icons.done_all,
+        size: 14,
+        color: Colors.lightBlueAccent,
+      );
     } else if (status == 1) {
-      return Icon(Icons.done_all, size: 14, color: Colors.white.withOpacity(0.7));
+      return Icon(
+        Icons.done_all,
+        size: 14,
+        color: Colors.white.withValues(alpha:0.7),
+      );
     } else {
-      return Icon(Icons.done, size: 14, color: Colors.white.withOpacity(0.7));
+      return Icon(Icons.done, size: 14, color: Colors.white.withValues(alpha:0.7));
     }
   }
 
-  Widget _buildDeletedMessage(AppLocalizations l10n) {
+  Widget _buildDeletedMessage(BuildContext context, AppLocalizations l10n) {
     return Align(
-      alignment: isSentByCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
+      alignment: isSentByCurrentUser
+          ? Alignment.centerRight
+          : Alignment.centerLeft,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
-            color: Colors.grey.shade200,
+            color:context.secondaryBackgroundColor,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.block, size: 14, color: Colors.grey.shade500),
+              Icon(Icons.block, size: 14, color: context.textColor.withValues(alpha:0.45)),
               const SizedBox(width: 6),
               Text(
                 l10n.messageDeleted,
                 style: TextStyle(
-                  color: Colors.grey.shade500,
+                  color: context.textColor.withValues(alpha:0.45),
                   fontSize: 13,
                   fontStyle: FontStyle.italic,
                 ),
@@ -235,8 +258,13 @@ class MessageBubble extends StatelessWidget {
                     child: CachedNetworkImage(
                       imageUrl: imageUrl,
                       fit: BoxFit.contain,
-                      placeholder: (context, url) => const CircularProgressIndicator(color: Colors.white),
-                      errorWidget: (context, url, error) => const Icon(Icons.error, color: Colors.white, size: 48),
+                      placeholder: (context, url) =>
+                          const CircularProgressIndicator(color: Colors.white),
+                      errorWidget: (context, url, error) => const Icon(
+                        Icons.error,
+                        color: Colors.white,
+                        size: 48,
+                      ),
                     ),
                   ),
                 ),
@@ -244,7 +272,11 @@ class MessageBubble extends StatelessWidget {
                   top: 8,
                   right: 8,
                   child: IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white, size: 28),
+                    icon: const Icon(
+                      Icons.close,
+                      color: Colors.white,
+                      size: 28,
+                    ),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ),

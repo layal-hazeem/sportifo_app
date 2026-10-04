@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
+import 'package:sportifo_app/core/theme/app_colors.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 
 class MessageInputField extends StatelessWidget {
   final TextEditingController controller;
@@ -28,10 +30,10 @@ class MessageInputField extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.backgroundColor, // بدل Colors.white
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha:0.05),
             blurRadius: 10,
             offset: const Offset(0, -4),
           ),
@@ -47,7 +49,7 @@ class MessageInputField extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 margin: const EdgeInsets.only(bottom: 8),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF57C00),
+                  color: AppColors.primaryBtn, // لون براند — يبقى
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
@@ -63,8 +65,8 @@ class MessageInputField extends StatelessWidget {
                   icon: Icon(
                     Icons.image,
                     color: enabled && !isLoading
-                        ? const Color(0xFFF57C00)
-                        : Colors.grey.shade400,
+                        ? AppColors.primaryBtn // لون براند — يبقى
+                        : context.textColor.withValues(alpha:0.35), // بدل grey.shade400
                   ),
                   onPressed: enabled && !isLoading ? onImageTap : null,
                 ),
@@ -77,17 +79,21 @@ class MessageInputField extends StatelessWidget {
                     minLines: 1,
                     textInputAction: TextInputAction.send,
                     onSubmitted: (_) => enabled && !isLoading ? onSend() : null,
+                    style: TextStyle(color: context.textColor), // ← جديد: لون نص الإدخال
+                    cursorColor: AppColors.primaryBtn, // ← جديد: لون المؤشر
                     decoration: InputDecoration(
                       hintText: isLoading
                           ? l10n.sendingMessage
                           : (enabled ? l10n.typeMessage : l10n.cannotSend),
-                      hintStyle: TextStyle(color: Colors.grey.shade400),
+                      hintStyle: TextStyle(
+                        color: context.textColor.withValues(alpha:0.35), // بدل grey.shade400
+                      ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(24),
                         borderSide: BorderSide.none,
                       ),
                       filled: true,
-                      fillColor: const Color(0xFFF2F2F2),
+                      fillColor: context.secondaryBackgroundColor, // بدل 0xFFF2F2F2
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16,
                         vertical: 12,
@@ -103,8 +109,8 @@ class MessageInputField extends StatelessWidget {
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       color: enabled && !isLoading
-                          ? const Color(0xFFF57C00)
-                          : Colors.grey.shade300,
+                          ? AppColors.primaryBtn // لون براند — يبقى
+                          : context.textColor.withValues(alpha:0.2), // بدل grey.shade300
                       shape: BoxShape.circle,
                     ),
                     child: isLoading
@@ -121,8 +127,8 @@ class MessageInputField extends StatelessWidget {
                         : Icon(
                             Icons.send,
                             color: enabled
-                                ? Colors.white
-                                : Colors.grey.shade500,
+                                ? Colors.white // فوق البرتقالي — يبقى
+                                : context.textColor.withValues(alpha:0.45), // بدل grey.shade500
                             size: 20,
                           ),
                   ),

@@ -1,5 +1,5 @@
-
 import 'package:flutter/material.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 
 class TypingIndicator extends StatefulWidget {
   const TypingIndicator({Key? key}) : super(key: key);
@@ -59,7 +59,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
-              color: Colors.grey[300],
+              color: context.secondaryBackgroundColor, // بدل Colors.grey[300]
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(16),
                 topRight: Radius.circular(16),
@@ -78,7 +78,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
                       width: 8,
                       height: 8 + (_animations[index].value * 4),
                       decoration: BoxDecoration(
-                        color: Colors.grey[600],
+                        color: context.textColor.withValues(alpha:0.5), // بدل Colors.grey[600]
                         shape: BoxShape.circle,
                       ),
                     );

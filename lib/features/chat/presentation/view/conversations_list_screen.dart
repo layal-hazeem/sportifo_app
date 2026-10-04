@@ -11,6 +11,8 @@ import '../../data/models/message_model.dart';
 import '../view_model/conversations_cubit.dart';
 import '../view_model/conversations_state.dart';
 import '../widgets/conversation_tile.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class ConversationsListScreen extends StatefulWidget {
   const ConversationsListScreen({Key? key}) : super(key: key);
@@ -54,13 +56,12 @@ class _ConversationsListScreenState extends State<ConversationsListScreen> {
         final messageData = data['message'] as Map<String, dynamic>?;
         if (messageData == null) return;
         final message = MessageModel.fromJson(messageData);
-        // 🔥🔥🔥 تحديث فوري لقائمة المحادثات
         cubit.updateConversationFromRealtime(conversationId, message);
         break;
 
       case 'message.read':
       case 'message.deleted':
-        cubit.fetchConversations(); // ريفرش خفيف
+        cubit.fetchConversations(); 
         break;
     }
   }
@@ -90,7 +91,7 @@ class _ConversationsListScreenState extends State<ConversationsListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: context.backgroundColor,
       appBar: const WaveAppBar(title: 'Chats', showBackButton: true),
       body: BlocBuilder<ConversationsCubit, ConversationsState>(
         builder: (context, state) {
@@ -105,11 +106,11 @@ class _ConversationsListScreenState extends State<ConversationsListScreen> {
                 children: [
                   Icon(Icons.error_outline, size: 64, color: Colors.red[300]),
                   const SizedBox(height: 16),
-                  Text('حدث خطأ', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.grey[700])),
+                  Text('حدث خطأ', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color:  context.textColor)),
                   const SizedBox(height: 8),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 32),
-                    child: Text(state.message, textAlign: TextAlign.center, style: TextStyle(color: Colors.grey[600])),
+                    child: Text(state.message, textAlign: TextAlign.center, style: TextStyle(color:  context.textColor.withValues(alpha:0.6))),
                   ),
                   const SizedBox(height: 24),
                   ElevatedButton.icon(
@@ -129,9 +130,9 @@ class _ConversationsListScreenState extends State<ConversationsListScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.chat_bubble_outline, size: 64, color: Colors.grey[300]),
+                    Icon(Icons.chat_bubble_outline, size: 64, color: context.textColor.withValues(alpha:0.3)),
                     const SizedBox(height: 16),
-                    Text('لا توجد محادثات', style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+                    Text('لا توجد محادثات', style: TextStyle(fontSize: 16, color: context.textColor.withValues(alpha:0.6))),
                   ],
                 ),
               );
@@ -142,7 +143,7 @@ class _ConversationsListScreenState extends State<ConversationsListScreen> {
               color: AppColors.primaryBtn,
               child: ListView.separated(
                 itemCount: state.conversations.length,
-                separatorBuilder: (_, __) => Divider(height: 1, color: Colors.grey[200]),
+                separatorBuilder: (_, __) => Divider(height: 1, color: context.textColor.withValues(alpha:0.15),),
                 itemBuilder: (context, index) {
                   final conversation = state.conversations[index];
                   return ConversationTile(

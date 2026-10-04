@@ -1,6 +1,7 @@
 // lib/features/chat/presentation/widgets/message_date_separator.dart
 
 import 'package:flutter/material.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 
 class MessageDateSeparator extends StatelessWidget {
   final String date;
@@ -12,6 +13,8 @@ class MessageDateSeparator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dividerColor = context.textColor.withValues(alpha:0.2);
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16),
       child: Row(
@@ -19,7 +22,7 @@ class MessageDateSeparator extends StatelessWidget {
           Expanded(
             child: Container(
               height: 1,
-              color: Colors.grey[300],
+              color: dividerColor, // بدل Colors.grey[300]
             ),
           ),
           Padding(
@@ -28,7 +31,7 @@ class MessageDateSeparator extends StatelessWidget {
               date,
               style: TextStyle(
                 fontSize: 12,
-                color: Colors.grey[600],
+                color: context.textColor.withValues(alpha:0.6), // بدل Colors.grey[600]
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -36,7 +39,7 @@ class MessageDateSeparator extends StatelessWidget {
           Expanded(
             child: Container(
               height: 1,
-              color: Colors.grey[300],
+              color: dividerColor, // بدل Colors.grey[300]
             ),
           ),
         ],

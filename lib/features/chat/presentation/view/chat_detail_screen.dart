@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:math' as dev;
-
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,6 +21,8 @@ import '../widgets/message_bubble.dart';
 import '../widgets/message_input_field.dart';
 import '../widgets/message_date_separator.dart';
 import 'package:sportifo_app/core/helpers/snack_bar_utils.dart';
+import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class ChatDetailScreen extends StatefulWidget {
   final int conversationId;
@@ -66,7 +67,6 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
     _calculateCanSend();
     _initAsync();
     _setupConnectivityListener();
-    
 
     _scrollController.addListener(() {
       if (_scrollController.hasClients) {
@@ -82,34 +82,21 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
     });
   }
 
-
-    void _calculateCanSend() {
+  void _calculateCanSend() {
     final localStorage = getIt<LocalStorage>();
     final userRole = localStorage.getRole()?.toLowerCase();
-    
-    print('🔍 userRole = $userRole');
-    print('🔍 availableNow = ${widget.availableNow}');
-    print('🔍 subscriptionType = ${widget.subscriptionType}');
-
-    // ✅ الخطوة 1: إذا available_now = false → مقفولة للكل
     if (!widget.availableNow) {
       _canSend = false;
-      print('🔒 Chat closed by coach (available_now = false)');
       return;
     }
-
-    // ✅ الخطوة 2: إذا الكوتش → يحكي دائماً
     if (userRole == 'coach') {
       _canSend = true;
-      print('🔓 Coach can always send');
       return;
     }
-
-    // ✅ الخطوة 3: إذا اليوزر → نشيك ع الاشتراك
     final subType = widget.subscriptionType?.toLowerCase();
     _canSend = subType == 'gold';
-    print('🔍 User _canSend = $_canSend (subType: $subType)');
   }
+
   void _loadUserId() {
     final localStorage = getIt<LocalStorage>();
     final dynamic rawUserId = localStorage.getUserId();
@@ -191,83 +178,83 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
     return '${msgDate.day}/${msgDate.month}/${msgDate.year}';
   }
 
- void _showMessageDetails(MessageModel message) {
-  final l10n = AppLocalizations.of(context)!;
+  void _showMessageDetails(MessageModel message) {
+    final l10n = AppLocalizations.of(context)!;
 
-  showModalBottomSheet(
-    context: context,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-    ),
-    builder: (context) {
-      return Container(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
-                  borderRadius: BorderRadius.circular(2),
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: context.textColor.withValues(alpha:0.3),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              l10n.messageDetails,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: AppColors.primaryBtn,
+              const SizedBox(height: 20),
+              Text(
+                l10n.messageDetails,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primaryBtn,
+                ),
               ),
-            ),
-            const Divider(height: 24),
-            if (message.sentAt != null)
-              _detailRow(
-                l10n.sentAt,
-                '${message.sentAt!['date']} ${message.sentAt!['time']}',
-              ),
-            if (message.deliveredAt != null)
-              _detailRow(
-                l10n.deliveredAt,
-                '${message.deliveredAt!['date']} ${message.deliveredAt!['time']}',
-              ),
-            if (message.readAt != null)
-              _detailRow(
-                l10n.readAt,
-                '${message.readAt!['date']} ${message.readAt!['time']}',
-              ),
-            const SizedBox(height: 16),
-          ],
-        ),
-      );
-    },
-  );
-}
-
-Widget _detailRow(String label, String value) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 8),
-    child: Row(
-      children: [
-        Expanded(
-          child: Text(
-            label,
-            style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+              const Divider(height: 24),
+              if (message.sentAt != null)
+                _detailRow(
+                  l10n.sentAt,
+                  '${message.sentAt!['date']} ${message.sentAt!['time']}',
+                ),
+              if (message.deliveredAt != null)
+                _detailRow(
+                  l10n.deliveredAt,
+                  '${message.deliveredAt!['date']} ${message.deliveredAt!['time']}',
+                ),
+              if (message.readAt != null)
+                _detailRow(
+                  l10n.readAt,
+                  '${message.readAt!['date']} ${message.readAt!['time']}',
+                ),
+              const SizedBox(height: 16),
+            ],
           ),
-        ),
-        Text(
-          value,
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-        ),
-      ],
-    ),
-  );
-}
+        );
+      },
+    );
+  }
+
+  Widget _detailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              label,
+              style: TextStyle(fontSize: 14, color: context.textColor,),
+            ),
+          ),
+          Text(
+            value,
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+          ),
+        ],
+      ),
+    );
+  }
 
   Future<void> _pickImages() async {
     final l10n = AppLocalizations.of(context)!;
@@ -293,24 +280,26 @@ Widget _detailRow(String label, String value) {
       _selectedImages.clear();
     });
   }
-void _showDeleteConfirmation(int? messageId, String? clientUuid) {
+
+  void _showDeleteConfirmation(int? messageId, String? clientUuid) {
     final l10n = AppLocalizations.of(context)!;
 
     DialogHelper.showCustomDialog(
       context: context,
-      title: l10n.deleteMessageTitle ,
-      message: l10n.deleteMessageConfirmation ,
+      title: l10n.deleteMessageTitle,
+      message: l10n.deleteMessageConfirmation,
       type: DialogType.warning,
       confirmBtnText: l10n.delete,
       onConfirm: () {
         context.read<ChatDetailCubit>().deleteMessage(
           widget.conversationId,
-          messageId ?? -1,       
+          messageId ?? -1,
           clientUuid ?? '',
         );
       },
     );
   }
+
   Future<List<XFile>> _compressImages(List<XFile> images) async {
     List<XFile> compressed = [];
     final tempDir = await getTemporaryDirectory();
@@ -337,12 +326,17 @@ void _showDeleteConfirmation(int? messageId, String? clientUuid) {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!; // ← نفس أسلوب LoginScreen
+    final l10n = AppLocalizations.of(context)!; 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('assets/images/chat_background1.jpg'),
+          image: AssetImage(
+            isDark
+                ? 'assets/images/chat_background_dark.jpg'
+                : 'assets/images/chat_background1.jpg',
+          ),
           fit: BoxFit.cover,
         ),
       ),
@@ -360,7 +354,7 @@ void _showDeleteConfirmation(int? messageId, String? clientUuid) {
                 width: 40,
                 height: 40,
                 decoration: const BoxDecoration(
-                  color: Color(0xFFF57C00),
+                  color: AppColors.primaryBtn,
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
@@ -379,7 +373,7 @@ void _showDeleteConfirmation(int? messageId, String? clientUuid) {
               bottom: 6,
             ),
             decoration: BoxDecoration(
-              color: const Color(0xFFF57C00),
+              color: AppColors.primaryBtn,
               borderRadius: BorderRadius.circular(24),
             ),
             child: Row(
@@ -453,7 +447,7 @@ void _showDeleteConfirmation(int? messageId, String? clientUuid) {
                         icon: const Icon(Icons.refresh),
                         label: Text(l10n.retry),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFF57C00),
+                          backgroundColor: AppColors.primaryBtn,
                         ),
                       ),
                     ],
@@ -477,13 +471,13 @@ void _showDeleteConfirmation(int? messageId, String? clientUuid) {
                                       Icon(
                                         Icons.chat_bubble_outline,
                                         size: 64,
-                                        color: Colors.grey[400],
+                                        color: context.textColor.withValues(alpha:0.3),
                                       ),
                                       const SizedBox(height: 16),
                                       Text(
                                         l10n.noMessagesYet,
                                         style: TextStyle(
-                                          color: Colors.grey[600],
+                                          color:context.textColor.withValues(alpha:0.6),
                                           fontSize: 16,
                                         ),
                                       ),
@@ -491,7 +485,7 @@ void _showDeleteConfirmation(int? messageId, String? clientUuid) {
                                       Text(
                                         l10n.startConversation,
                                         style: TextStyle(
-                                          color: Colors.grey[500],
+                                          color: context.textColor.withValues(alpha:0.4),
                                           fontSize: 14,
                                         ),
                                       ),
@@ -670,7 +664,7 @@ void _showDeleteConfirmation(int? messageId, String? clientUuid) {
                           onPressed: () => _scrollToBottom(animated: true),
                           child: const Icon(
                             Icons.arrow_downward,
-                            color: Color(0xFFF57C00),
+                            color: AppColors.primaryBtn,
                             size: 24,
                           ),
                         ),
