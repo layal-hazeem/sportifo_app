@@ -1882,5 +1882,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noInternetSubtitle => 'Please check your connection and try again.';
-  String get activateSmartPlanTitle => 'Activate Your Smart Plan ⚡';
+
+  @override
+  String get activateSmartPlanTitle => 'Activate Your Smart Plan ';
+
+  @override
+  String get comingSoon => 'Coming Soon';
+
+  @override
+  String get aiCoachComingSoonSubtitle => 'AI Coach feature is under development.\nStay tuned!';
+
+  @override
+  String get underDevelopment => 'Under Development';
 }

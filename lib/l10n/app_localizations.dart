@@ -3736,11 +3736,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please check your connection and try again.'**
   String get noInternetSubtitle;
+
   /// No description provided for @activateSmartPlanTitle.
   ///
   /// In en, this message translates to:
-  /// **'Activate Your Smart Plan ⚡'**
+  /// **'Activate Your Smart Plan '**
   String get activateSmartPlanTitle;
+
+  /// No description provided for @comingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming Soon'**
+  String get comingSoon;
+
+  /// No description provided for @aiCoachComingSoonSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Coach feature is under development.\nStay tuned!'**
+  String get aiCoachComingSoonSubtitle;
+
+  /// No description provided for @underDevelopment.
+  ///
+  /// In en, this message translates to:
+  /// **'Under Development'**
+  String get underDevelopment;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

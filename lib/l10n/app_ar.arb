@@ -798,10 +798,15 @@
 
           "noInternetTitle": "لا يوجد اتصال بالإنترنت",
   "noInternetSubtitle": "يرجى التحقق من اتصالك والمحاولة مرة أخرى.",
-  "retry": "إعادة المحاولة"
+  "retry": "إعادة المحاولة",
         "activateSmartPlanTitle": "تفعيل الخطة الذكية ",
           "activateSmartPlanDesc": "اضبط هدفك البدني الأساسي الآن لحساب سعراتك اليومية والماكروز تلقائياً وبدقة.",
-          "setMyGoalNow": "ضبط هدفي الآن"
+          "setMyGoalNow": "ضبط هدفي الآن",
+
+          "comingSoon": "قريباً",
+"aiCoachComingSoonSubtitle": "ميزة المدرّب الذكي قيد التطوير.\nترقّبها!",
+"underDevelopment": "قيد التطوير"
+          
 
 
 

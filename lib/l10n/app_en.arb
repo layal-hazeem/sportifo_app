@@ -849,8 +849,12 @@
   "retry": "Retry",
   "@retry": {
     "description": "Retry button text"
-  }
+  },
           "activateSmartPlanTitle": "Activate Your Smart Plan ",
             "activateSmartPlanDesc": "Set your main physical target now to dynamically evaluate your necessary daily calories and macronutrients.",
-            "setMyGoalNow": "Set My Goal Now"
+            "setMyGoalNow": "Set My Goal Now",
+
+            "comingSoon": "Coming Soon",
+"aiCoachComingSoonSubtitle": "AI Coach feature is under development.\nStay tuned!",
+"underDevelopment": "Under Development"
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
-import 'package:sportifo_app/features/workout/presentation/widgets/gallery_section.dart';
+//import 'package:sportifo_app/features/workout/presentation/widgets/gallery_section.dart';
 import 'package:sportifo_app/features/workout/presentation/widgets/how_to_perform_card.dart';
 import 'package:sportifo_app/features/workout/presentation/widgets/info_stat_card.dart';
 import '../../../../core/routes/app_routes.dart';
@@ -48,9 +48,9 @@ class ExerciseDetailsScreen extends StatelessWidget {
     final organName = exercise.category?.organ?.name;
     final partName = exercise.category?.organ?.part?.name;
 
-    final galleryUrls = exercise.pictureUrls.length > 1
-        ? exercise.pictureUrls.sublist(1)
-        : <String>[];
+    // final galleryUrls = exercise.pictureUrls.length > 1
+    //     ? exercise.pictureUrls.sublist(1)
+    //     : <String>[];
 
     return Scaffold(
       backgroundColor: context.backgroundColor,
@@ -138,12 +138,12 @@ class ExerciseDetailsScreen extends StatelessWidget {
                     title: l10n.how_to_perform,
                     description: exercise.description,
                   ),
-                  const SizedBox(height: 28),
-                  GallerySection(
-                    imageUrls: galleryUrls,
-                    title: l10n.gallery,
-                    photosLabel: l10n.photos,
-                  ),
+                  // const SizedBox(height: 28),
+                  // GallerySection(
+                  //   imageUrls: galleryUrls,
+                  //   title: l10n.gallery,
+                  //   photosLabel: l10n.photos,
+                  // ),
                 ],
               ),
             ),

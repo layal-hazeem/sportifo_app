@@ -1882,5 +1882,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get noInternetSubtitle => 'يرجى التحقق من اتصالك والمحاولة مرة أخرى.';
-  String get activateSmartPlanTitle => 'تفعيل الخطة الذكية ⚡';
+
+  @override
+  String get activateSmartPlanTitle => 'تفعيل الخطة الذكية ';
+
+  @override
+  String get comingSoon => 'قريباً';
+
+  @override
+  String get aiCoachComingSoonSubtitle => 'ميزة المدرّب الذكي قيد التطوير.\nترقّبها!';
+
+  @override
+  String get underDevelopment => 'قيد التطوير';
 }

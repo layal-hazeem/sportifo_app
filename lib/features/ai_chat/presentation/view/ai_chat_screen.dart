@@ -1,33 +1,131 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sportifo_app/core/helpers/snack_bar_utils.dart';
+import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
+// import 'package:flutter_bloc/flutter_bloc.dart';
+// import 'package:sportifo_app/core/helpers/snack_bar_utils.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
-import '../../../../core/di/service_locator.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../data/models/chat_message_model.dart';
-import '../view_model/ai_chat_cubit.dart';
-import '../view_model/ai_chat_state.dart';
-import '../widgets/chat_bubble.dart';
-import '../widgets/message_input.dart';
-import '../widgets/typing_indicator.dart';
-import 'package:sportifo_app/features/nutrition/presentation/view_model/nutrition_cubit.dart';
-import 'package:sportifo_app/features/nutrition/presentation/view_model/nutrition_state.dart';
+// import '../../../../core/di/service_locator.dart';
+// import '../../data/models/chat_message_model.dart';
+// import '../view_model/ai_chat_cubit.dart';
+// import '../view_model/ai_chat_state.dart';
+// import '../widgets/chat_bubble.dart';
+// import '../widgets/message_input.dart';
+// import '../widgets/typing_indicator.dart';
+// import 'package:sportifo_app/features/nutrition/presentation/view_model/nutrition_cubit.dart';
+// import 'package:sportifo_app/features/nutrition/presentation/view_model/nutrition_state.dart';
+
+/// 🚧 مفتاح تشغيل/إيقاف ميزة الـ AI Chat
+/// حالياً: false = يعرض "Coming Soon"
+/// لترجيع الميزة: حوّلها إلى true وفك التعليق عن الكود والاستيرادات أسفل
+const bool _kAiChatEnabled = false;
 
 class AiChatScreen extends StatelessWidget {
   const AiChatScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    if (!_kAiChatEnabled) {
+      return const _AiChatComingSoonView();
+    }
+
+    // الكود القديم موقوف — فك التعليق عنه عند تفعيل الميزة
+    return const _AiChatComingSoonView();
+  }
+}
+
+/// 🚧 شاشة "قريباً" — متوافقة مع الـ dark / light mode
+class _AiChatComingSoonView extends StatelessWidget {
+  const _AiChatComingSoonView();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Scaffold(
+      backgroundColor: context.backgroundColor,
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 32),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(28),
+                decoration: BoxDecoration(
+                  color: AppColors.primaryBtn.withValues(alpha:0.08),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.smart_toy_outlined,
+                  size: 56,
+                  color: AppColors.primaryBtn,
+                ),
+              ),
+              const SizedBox(height: 28),
+              Text(
+                l10n.comingSoon,
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: context.textColor,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                l10n.aiCoachComingSoonSubtitle,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 14,
+                  height: 1.5,
+                  color: context.textColor.withValues(alpha:0.55),
+                ),
+              ),
+              const SizedBox(height: 28),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 8,
+                ),
+                decoration: BoxDecoration(
+                  color: AppColors.primaryBtn.withValues(alpha:0.1),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: AppColors.primaryBtn.withValues(alpha:0.3),
+                  ),
+                ),
+                child:  Text(
+                  l10n.underDevelopment,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.primaryBtn,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ============================================================================
+// ⛔ الكود الأصلي للميزة — موقوف مؤقتاً (لا تحذفه)
+// لإعادة التفعيل: حوّل _kAiChatEnabled إلى true، فك التعليق عن الاستيرادات
+// أعلى الملف، وفك التعليق عن كل الكود أسفل، واستبدل build بـ:
+//   return MultiBlocProvider(... child: const _AiChatView());
+// ============================================================================
+
+/*
+class _AiChatScreenEnabled extends StatelessWidget {
+  const _AiChatScreenEnabled({super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        // 🔥 التعديل الأول والأهم: استخدام value بدلاً من create لمنع تدمير الكيوبيت
-        BlocProvider.value(
-          value: getIt<AiChatCubit>(),
-        ),
-        BlocProvider.value(
-          value: getIt<NutritionCubit>(),
-        ),
+        BlocProvider.value(value: getIt<AiChatCubit>()),
+        BlocProvider.value(value: getIt<NutritionCubit>()),
       ],
       child: const _AiChatView(),
     );
@@ -56,7 +154,6 @@ class _AiChatViewState extends State<_AiChatView> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<NutritionCubit>().initialize();
-      // 🔥 التعديل الثاني: استدعاء التحديث من هنا لضمان عمله مرة واحدة عند فتح الشاشة
       context.read<AiChatCubit>().initialize();
       _scrollToBottom(animate: false);
     });
@@ -292,11 +389,16 @@ class _AiChatViewState extends State<_AiChatView> {
                   };
 
                   final isSending = state is AiChatSending;
-                  final isLoading = state is AiChatLoading || state is AiChatInitial;
+                  final isLoading =
+                      state is AiChatLoading || state is AiChatInitial;
                   final isError = state is AiChatError && messages.isEmpty;
 
                   if (isLoading && messages.isEmpty) {
-                    return const Center(child: CircularProgressIndicator(color: AppColors.primaryBtn));
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.primaryBtn,
+                      ),
+                    );
                   }
 
                   if (isError) {
@@ -304,24 +406,42 @@ class _AiChatViewState extends State<_AiChatView> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(Icons.wifi_off_rounded, size: 50, color: Colors.grey),
+                          const Icon(
+                            Icons.wifi_off_rounded,
+                            size: 50,
+                            color: Colors.grey,
+                          ),
                           const SizedBox(height: 16),
-                          const Text("Connection Failed", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                          const Text(
+                            "Connection Failed",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
                           const SizedBox(height: 8),
                           TextButton.icon(
-                            onPressed: () => context.read<AiChatCubit>().fetchHistory(forceRefresh: true),
-                            icon: const Icon(Icons.refresh, color: AppColors.primaryBtn),
-                            label: const Text("Tap to retry", style: TextStyle(color: AppColors.primaryBtn)),
+                            onPressed: () => context
+                                .read<AiChatCubit>()
+                                .fetchHistory(forceRefresh: true),
+                            icon: const Icon(
+                              Icons.refresh,
+                              color: AppColors.primaryBtn,
+                            ),
+                            label: const Text(
+                              "Tap to retry",
+                              style: TextStyle(color: AppColors.primaryBtn),
+                            ),
                           )
                         ],
                       ),
                     );
                   }
 
-                  // 🔥 تم إصلاح هذا الجزء بنجاح وإزالة التكرار
-                  final lastAiId = state is AiChatSuccess && state.lastAiMessage != null
-                      ? state.lastAiMessage!.id
-                      : -1;
+                  final lastAiId =
+                      state is AiChatSuccess && state.lastAiMessage != null
+                          ? state.lastAiMessage!.id
+                          : -1;
 
                   if (messages.isEmpty && !isLoading && !isSending) {
                     return const _EmptyChatView();
@@ -351,7 +471,6 @@ class _AiChatViewState extends State<_AiChatView> {
                           );
                         },
                       ),
-
                       AnimatedPositioned(
                         duration: const Duration(milliseconds: 300),
                         curve: Curves.easeInOut,
@@ -455,7 +574,10 @@ class _EmptyChatView extends StatelessWidget {
                   const SizedBox(height: 8),
                   Text(
                     l10n.empty_chat_subtitle,
-                    style: TextStyle(fontSize: 14, color: Colors.grey.shade500),
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey.shade500,
+                    ),
                   ),
                 ],
               ),
@@ -466,3 +588,4 @@ class _EmptyChatView extends StatelessWidget {
     );
   }
 }
+*/
