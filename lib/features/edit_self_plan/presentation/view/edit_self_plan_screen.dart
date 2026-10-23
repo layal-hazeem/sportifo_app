@@ -62,7 +62,7 @@ class _EditSelfPlanScreenState extends State<EditSelfPlanScreen> {
         exercises: List<ExerciseModel>.from(day.exercises),
 
         defaultSets: day.sets,
-        defaultReps: int.tryParse(day.reps?.toString() ?? ''),
+        defaultReps: day.reps?.toString() ?? '',
       );
 
       _dayIds[uiDay] = day.id;

@@ -732,9 +732,9 @@ class _PlanDayCardState extends State<PlanDayCard> {
                             setsController.text,
                           );
 
-                          widget.day.defaultReps = int.tryParse(
-                            repsController.text,
-                          );
+                          widget.day.defaultReps =
+                            repsController.text;
+                          
                         });
 
                         Navigator.pop(context);

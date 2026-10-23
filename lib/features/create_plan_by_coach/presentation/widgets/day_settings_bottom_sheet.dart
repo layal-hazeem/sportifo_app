@@ -56,7 +56,7 @@ class _DaySettingsBottomSheetState extends State<DaySettingsBottomSheet> {
   void save() {
     widget.day.defaultSets = int.tryParse(setsController.text.trim());
 
-    widget.day.defaultReps = int.tryParse(repsController.text.trim());
+    widget.day.defaultReps = repsController.text.trim();
 
     Navigator.pop(context, applyToAll);
   }
