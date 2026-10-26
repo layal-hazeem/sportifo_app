@@ -21,6 +21,8 @@ import 'package:sportifo_app/features/workout/data/repository/workout_repository
 
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
+import '../../../../core/helpers/snack_bar_utils.dart';
+
 class CreateSelfPlanScreen extends StatefulWidget {
   const CreateSelfPlanScreen({super.key});
 
@@ -108,11 +110,9 @@ class _CreateSelfPlanScreenState extends State<CreateSelfPlanScreen> {
 
           Navigator.pop(context, true);
 
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(l10n.planCreatedSuccessfully)));
+          AppSnackBar.show(context, message: l10n.planCreatedSuccessfully,
+              type: SnackBarType.success);
         }
-
         if (state is CreateSelfPlanError) {
           if (isLoadingDialogShown) {
             isLoadingDialogShown = false;
@@ -543,18 +543,7 @@ class _CreateSelfPlanScreenState extends State<CreateSelfPlanScreen> {
   }
 
   void _showValidationMessage(String message) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: Text(message),
-          behavior: SnackBarBehavior.floating,
-          margin: const EdgeInsets.all(16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
-          ),
-        ),
-      );
+    AppSnackBar.show(context, message: message, type: SnackBarType.warning);
   }
 
   Widget _buildEmptyDaysState() {
@@ -640,17 +629,6 @@ class _CreateSelfPlanScreenState extends State<CreateSelfPlanScreen> {
       errorMessage = l10n.somethingWentWrong;
     }
 
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: Text(errorMessage),
-          behavior: SnackBarBehavior.floating,
-          margin: const EdgeInsets.all(16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
-          ),
-        ),
-      );
+    AppSnackBar.show(context, message: errorMessage, type: SnackBarType.error);
   }
 }

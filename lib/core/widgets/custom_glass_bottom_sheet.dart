@@ -4,54 +4,93 @@ import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 
 class CustomGlassBottomSheet extends StatelessWidget {
   final Widget child;
-  final double height;
+
+  /// إذا حددت [fixedHeight] يستخدمها كنسبة من الشاشة (0.0 → 1.0).
+  /// إذا تركتها null يتمدد البوتوم شيت حسب المحتوى (مع حد أقصى 90%).
+  final double? fixedHeight;
 
   const CustomGlassBottomSheet({
     super.key,
     required this.child,
-    this.height = 0.45,
+    this.fixedHeight,
   });
 
   static Future<T?> show<T>({
     required BuildContext context,
     required Widget child,
-    double height = 0.45,
+    double? fixedHeight,
+    bool isDismissible = true,
+    bool enableDrag = true,
   }) {
     return showModalBottomSheet<T>(
       context: context,
       isScrollControlled: true,
+      isDismissible: isDismissible,
+      enableDrag: enableDrag,
       backgroundColor: Colors.transparent,
-      barrierColor: Colors.black.withOpacity(.15),
-      builder: (_) {
-        return BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-          child: CustomGlassBottomSheet(height: height, child: child),
-        );
-      },
+      barrierColor: Colors.black.withValues(alpha: 0.4),
+      builder: (_) => BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+        child: CustomGlassBottomSheet(fixedHeight: fixedHeight, child: child),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return FractionallySizedBox(
-      heightFactor: height,
-      child: ClipRRect(
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
-                child: Container(
-                  color: context.backgroundColor.withOpacity(.88),
-                ),
-              ),
-            ),
+    final bottomPadding = MediaQuery.of(context).viewInsets.bottom +
+        MediaQuery.of(context).padding.bottom;
 
-            Container(padding: const EdgeInsets.all(20), child: child),
-          ],
-        ),
+    Widget sheet = Container(
+      decoration: BoxDecoration(
+        color: context.backgroundColor.withValues(alpha: 0.95),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.25),
+            blurRadius: 30,
+            offset: const Offset(0, -4),
+          ),
+        ],
       ),
+      child: Column(
+        mainAxisSize: fixedHeight != null ? MainAxisSize.max : MainAxisSize.min,
+        children: [
+          // ── Drag handle
+          const SizedBox(height: 12),
+          Container(
+            width: 40,
+            height: 4,
+            decoration: BoxDecoration(
+              color: context.textColor.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          const SizedBox(height: 8),
+          // ── Content
+          Flexible(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(20, 12, 20, 20 + bottomPadding),
+              child: child,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (fixedHeight != null) {
+      return FractionallySizedBox(
+        heightFactor: fixedHeight,
+        child: sheet,
+      );
+    }
+
+    // wrap with max height constraint (90% of screen)
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.9,
+      ),
+      child: sheet,
     );
   }
 }

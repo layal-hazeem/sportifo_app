@@ -25,6 +25,8 @@ import 'package:sportifo_app/features/edit_coach_plan/presentation/view_model/ed
 import 'package:sportifo_app/features/edit_coach_plan/presentation/view_model/edit_coach_plan_state.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
+import '../../../../core/helpers/snack_bar_utils.dart';
+
 class EditCoachPlanScreen extends StatefulWidget {
   final PlanDetailsModel plan;
   const EditCoachPlanScreen({super.key, required this.plan});
@@ -125,7 +127,7 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
     final selectedDays =
         await CustomGlassBottomSheet.show<List<ExistingDaysModel>>(
           context: context,
-          height: 0.85,
+          fixedHeight: 0.85,
           child: BlocProvider(
             create: (_) => getIt<ExistingDaysCubit>()..getExistingDays(),
             child: const ExistingDaysListBottomSheet(),
@@ -328,18 +330,7 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
   }
 
   void _showValidationMessage(String message) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: Text(message),
-          behavior: SnackBarBehavior.floating,
-          margin: const EdgeInsets.all(16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
-          ),
-        ),
-      );
+    AppSnackBar.show(context, message: message, type: SnackBarType.warning);
   }
 
   @override
@@ -622,20 +613,11 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
 
           CustomGlassBottomSheet.show(
             context: context,
-            height: 0.30,
+            fixedHeight: 0.30,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
-                  width: 45,
-                  height: 5,
-                  decoration: BoxDecoration(
-                    color: AppColors.hintText,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
 
-                const SizedBox(height: 20),
 
                 _buildActionTile(
                   icon: Icons.add_circle_outline,
@@ -817,17 +799,6 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
       errorMessage = l10n.somethingWentWrong;
     }
 
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: Text(errorMessage),
-          behavior: SnackBarBehavior.floating,
-          margin: const EdgeInsets.all(16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
-          ),
-        ),
-      );
+    AppSnackBar.show(context, message: errorMessage, type: SnackBarType.error);
   }
 }

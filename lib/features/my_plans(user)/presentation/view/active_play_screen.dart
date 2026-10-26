@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
+import '../../../../core/helpers/snack_bar_utils.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -250,9 +251,7 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
 
   void _onLogSet(ActiveWorkoutInProgress state, AppLocalizations l10n) {
     if (_repsController.text.isEmpty || _weightController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.enterWeightAndReps)),
-      );
+      AppSnackBar.show(context, message: l10n.enterWeightAndReps, type: SnackBarType.warning);
       return;
     }
     context.read<ActiveWorkoutCubit>().logSet(

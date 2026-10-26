@@ -21,7 +21,7 @@ import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/
 import 'package:sportifo_app/features/workout/data/models/exercise_model.dart';
 import 'package:sportifo_app/features/workout/data/repository/workout_repository.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
-
+import 'package:sportifo_app/core/helpers/snack_bar_utils.dart';
 class CreatePlanScreen extends StatefulWidget {
   final int userId;
 
@@ -161,10 +161,7 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
           }
 
           Navigator.pop(context, true);
-
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(l10n.planCreatedSuccessfully)));
+          AppSnackBar.show(context, message: l10n.planCreatedSuccessfully, type: SnackBarType.success);
         }
 
         if (state is CreatePlanError) {
@@ -211,19 +208,11 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
 
                     CustomGlassBottomSheet.show(
                       context: context,
-                      height: 0.30,
+                      fixedHeight: 0.30,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Container(
-                            width: 45,
-                            height: 5,
-                            decoration: BoxDecoration(
-                              color: context.backgroundColor,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                          ),
-                          const SizedBox(height: 20),
+
 
                           _buildActionTile(
                             icon: Icons.add_circle_outline,
@@ -251,7 +240,7 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
                                     List<ExistingDaysModel>
                                   >(
                                     context: context,
-                                    height: 0.85,
+                                    fixedHeight: 0.85,
                                     child: BlocProvider(
                                       create: (_) =>
                                           getIt<ExistingDaysCubit>()
@@ -618,7 +607,16 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
       _showValidationMessage(l10n.everyWorkoutDayNeedsExercise);
       return;
     }
-
+    for (final day in days) {
+      for (final exercise in day.exercises) {
+        if (!exercise.isCardio) {
+          if (exercise.sets == null || exercise.reps == null || exercise.reps!.isEmpty) {
+            _showValidationMessage(l10n.setsAndRepsRequired);
+            return;
+          }
+        }
+      }
+    }
     final request = CreatePlanRequest(
       userId: widget.userId,
       goal: selectedGoal!,
@@ -639,18 +637,7 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
   }
 
   void _showValidationMessage(String message) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: Text(message),
-          behavior: SnackBarBehavior.floating,
-          margin: const EdgeInsets.all(16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
-          ),
-        ),
-      );
+    AppSnackBar.show(context, message: message, type: SnackBarType.warning);
   }
 
   Widget _buildEmptyDaysState() {
@@ -791,17 +778,7 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
       errorMessage = l10n.somethingWentWrong;
     }
 
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: Text(errorMessage),
-          behavior: SnackBarBehavior.floating,
-          margin: const EdgeInsets.all(16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
-          ),
-        ),
-      );
+    // احذف من ScaffoldMessenger... لـ );  وحط ↓
+    AppSnackBar.show(context, message: errorMessage, type: SnackBarType.error);
   }
 }

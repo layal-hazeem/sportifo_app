@@ -27,6 +27,8 @@ import 'package:sportifo_app/features/edit_self_plan/presentation/view_model/edi
 
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
+import '../../../../core/helpers/snack_bar_utils.dart';
+
 class EditSelfPlanScreen extends StatefulWidget {
   final PlanModel plan;
 
@@ -379,18 +381,7 @@ EFFECTIVE REPS: $effectiveReps
   }
 
   void _showValidationMessage(String message) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: Text(message),
-          behavior: SnackBarBehavior.floating,
-          margin: const EdgeInsets.all(16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
-          ),
-        ),
-      );
+    AppSnackBar.show(context, message: message, type: SnackBarType.warning);
   }
 
   @override
@@ -747,17 +738,6 @@ EFFECTIVE REPS: $effectiveReps
       errorMessage = l10n.somethingWentWrong;
     }
 
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: Text(errorMessage),
-          behavior: SnackBarBehavior.floating,
-          margin: const EdgeInsets.all(16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
-          ),
-        ),
-      );
+    AppSnackBar.show(context, message: errorMessage, type: SnackBarType.error);
   }
 }

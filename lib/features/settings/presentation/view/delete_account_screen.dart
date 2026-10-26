@@ -9,6 +9,8 @@ import 'package:sportifo_app/features/profile/presentation/view_model/profile_cu
 import 'package:sportifo_app/features/profile/presentation/view_model/profile_state.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
+import '../../../../core/helpers/snack_bar_utils.dart';
+
 class DeleteAccountScreen extends StatelessWidget {
   const DeleteAccountScreen({super.key});
 
@@ -18,12 +20,7 @@ class DeleteAccountScreen extends StatelessWidget {
     return BlocConsumer<ProfileCubit, ProfileState>(
       listener: (context, state) {
         if (state is DeleteAccountSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(l10n.deletedSucceful),
-              backgroundColor: Colors.green,
-            ),
-          );
+          AppSnackBar.show(context, message: l10n.deletedSucceful, type: SnackBarType.success);
 
           Future.delayed(const Duration(seconds: 1), () {
             Navigator.pushNamedAndRemoveUntil(
@@ -35,9 +32,7 @@ class DeleteAccountScreen extends StatelessWidget {
         }
 
         if (state is DeleteAccountFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message), backgroundColor: Colors.red),
-          );
+          AppSnackBar.show(context, message: state.message, type: SnackBarType.error);
         }
       },
 

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import '../../../../core/di/service_locator.dart';
+import '../../../../core/helpers/snack_bar_utils.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../data/models/my_plan_model.dart';
@@ -26,12 +27,8 @@ class DayOverviewScreen extends StatelessWidget {
   void _startWorkoutFlow(BuildContext context, int targetIndex) async {
     final l10n = AppLocalizations.of(context)!;
     if (day.exercises.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(l10n.no_exercises_found),
-          backgroundColor: AppColors.primaryBtn,
-        ),
-      );
+      AppSnackBar.show(context, message: l10n.no_exercises_found, type: SnackBarType.warning);
+
       return;
     }
 
