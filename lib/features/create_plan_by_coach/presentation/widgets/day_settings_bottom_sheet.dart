@@ -68,7 +68,8 @@ class _DaySettingsBottomSheetState extends State<DaySettingsBottomSheet> {
       }
 
       final parsedSets = int.tryParse(setsText);
-      if (parsedSets == null || parsedSets <= 0) {
+      final parsedReps = int.tryParse(repsText);
+      if (parsedSets == null || parsedSets <= 0 || parsedReps == null || parsedReps <= 0) {
         AppSnackBar.show(
           context,
           message: l10n.setsAndRepsRequired,
@@ -79,11 +80,7 @@ class _DaySettingsBottomSheetState extends State<DaySettingsBottomSheet> {
     }
 
     widget.day.defaultSets = int.tryParse(setsText);
-    widget.day.defaultReps = int.tryParse(repsText);
-    widget.day.defaultSets = int.tryParse(setsController.text.trim());
-
-    widget.day.defaultReps = repsController.text.trim();
-
+    widget.day.defaultReps = repsText.isEmpty ? null : repsText;
     Navigator.pop(context, applyToAll);
   }
 
