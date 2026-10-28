@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
 import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
+import 'package:sportifo_app/core/widgets/custom_glass_bottom_sheet.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
 class CreateDayBottomSheet extends StatefulWidget {
@@ -8,12 +9,11 @@ class CreateDayBottomSheet extends StatefulWidget {
 
   const CreateDayBottomSheet({super.key, required this.onCreate});
 
+  /// 🔥 تم التوحيد مع الضبابية والشكل الموحد للتطبيق
   static void show(BuildContext context, Function(String) onCreate) {
-    showModalBottomSheet(
+    CustomGlassBottomSheet.show(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: context.backgroundColor,
-      builder: (_) => CreateDayBottomSheet(onCreate: onCreate),
+      child: CreateDayBottomSheet(onCreate: onCreate),
     );
   }
 
@@ -60,139 +60,123 @@ class _CreateDayBottomSheetState extends State<CreateDayBottomSheet> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return Padding(
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom,
-      ),
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(24, 14, 24, 24),
-        decoration: BoxDecoration(
-          color: context.backgroundColor,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 42,
-              height: 5,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(20),
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(
+              color: AppColors.primaryBtn.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(
+                color: AppColors.primaryBtn.withValues(alpha: 0.14),
               ),
             ),
-
-            const SizedBox(height: 22),
-
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                color: AppColors.primaryBtn.withOpacity(.08),
-                borderRadius: BorderRadius.circular(18),
-                border: Border.all(
-                  color: AppColors.primaryBtn.withOpacity(.14),
-                ),
-              ),
-              child: const Icon(
-                Icons.calendar_month_rounded,
-                size: 28,
-                color: AppColors.primaryBtn,
-              ),
+            child: const Icon(
+              Icons.calendar_month_rounded,
+              size: 28,
+              color: AppColors.primaryBtn,
             ),
+          ),
 
-            const SizedBox(height: 16),
+          const SizedBox(height: 16),
 
-            Text(
-              l10n.createWorkoutDay,
-              style: const TextStyle(
-                fontSize: 19,
-                fontWeight: FontWeight.w800,
-                letterSpacing: -0.3,
-              ),
+          Text(
+            l10n.createWorkoutDay,
+            style: const TextStyle(
+              fontSize: 19,
+              fontWeight: FontWeight.w800,
+              letterSpacing: -0.3,
             ),
+          ),
 
-            const SizedBox(height: 6),
+          const SizedBox(height: 6),
 
-            Text(
-              l10n.giveTrainingDayName,
-              style: TextStyle(
-                color: Colors.grey.shade600,
-                fontSize: 13,
+          Text(
+            l10n.giveTrainingDayName,
+            style: TextStyle(
+              color: Colors.grey.shade600,
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+
+          const SizedBox(height: 24),
+
+          TextField(
+            controller: controller,
+            focusNode: focusNode,
+            autofocus: true,
+            style: const TextStyle(
+              fontSize: 14.5,
+              fontWeight: FontWeight.w600,
+            ),
+            decoration: InputDecoration(
+              hintText: l10n.exampleChestDay,
+              hintStyle: TextStyle(
+                color: Colors.grey.shade400,
                 fontWeight: FontWeight.w500,
               ),
-            ),
-
-            const SizedBox(height: 24),
-
-            TextField(
-              controller: controller,
-              focusNode: focusNode,
-              autofocus: true,
-              style: const TextStyle(
-                fontSize: 14.5,
-                fontWeight: FontWeight.w600,
+              filled: true,
+              fillColor: context.backgroundColor,
+              prefixIcon: const Icon(
+                Icons.fitness_center_rounded,
+                color: AppColors.primaryBtn,
+                size: 20,
               ),
-              decoration: InputDecoration(
-                hintText: l10n.exampleChestDay,
-                hintStyle: TextStyle(
-                  color: Colors.grey.shade400,
-                  fontWeight: FontWeight.w500,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide(
+                  color: Colors.grey.withValues(alpha: 0.2),
                 ),
-                filled: true,
-                fillColor: context.backgroundColor,
-                prefixIcon: const Icon(
-                  Icons.fitness_center_rounded,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide(
+                  color: Colors.grey.withValues(alpha: 0.2),
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: const BorderSide(
                   color: AppColors.primaryBtn,
-                  size: 20,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide(color: Colors.grey.shade200),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide(color: Colors.grey.shade200),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: const BorderSide(
-                    color: AppColors.primaryBtn,
-                    width: 1.4,
-                  ),
-                ),
-              ),
-              onSubmitted: (_) => _submit(),
-            ),
-
-            const SizedBox(height: 20),
-
-            SizedBox(
-              width: double.infinity,
-              height: 54,
-              child: ElevatedButton(
-                onPressed: hasText ? _submit : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryBtn,
-                  disabledBackgroundColor: Colors.grey.shade300,
-                  elevation: 0,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                ),
-                child: Text(
-                  l10n.createDayButton,
-                  style: TextStyle(
-                    color: context.textColor,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 15,
-                  ),
+                  width: 1.4,
                 ),
               ),
             ),
-          ],
-        ),
+            onSubmitted: (_) => _submit(),
+          ),
+
+          const SizedBox(height: 20),
+
+          SizedBox(
+            width: double.infinity,
+            height: 54,
+            child: ElevatedButton(
+              onPressed: hasText ? _submit : null,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primaryBtn,
+                disabledBackgroundColor: Colors.grey.shade300,
+                elevation: 0,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
+              child: Text(
+                l10n.createDayButton,
+                style: TextStyle(
+                  color: context.textColor,
+                  fontWeight: FontWeight.w800,
+                  fontSize: 15,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

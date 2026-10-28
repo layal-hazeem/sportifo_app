@@ -12,7 +12,6 @@ import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/
 import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/exercises_picker.dart';
 import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/day_card.dart';
 import 'package:sportifo_app/features/create_plan_by_coach/presentation/widgets/plan_details_card.dart';
-import 'package:sportifo_app/features/edit_coach_plan/presentation/widgets/edit_plan_loading.dart';
 import 'package:sportifo_app/features/existing_days/data/model/existing_days_model.dart';
 import 'package:sportifo_app/features/existing_days/presentation/view/existing_days_screen.dart';
 import 'package:sportifo_app/features/existing_days/presentation/view_model/existing_days_cubit.dart';
@@ -26,6 +25,7 @@ import 'package:sportifo_app/features/edit_coach_plan/presentation/view_model/ed
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
 import '../../../../core/helpers/snack_bar_utils.dart';
+import '../../../../core/widgets/loading_dialog.dart';
 
 class EditCoachPlanScreen extends StatefulWidget {
   final PlanDetailsModel plan;
@@ -84,17 +84,17 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
     }
     _pageController
         .animateToPage(
-          1,
-          duration: const Duration(milliseconds: 150),
-          curve: Curves.easeInOut,
-        )
+      1,
+      duration: const Duration(milliseconds: 150),
+      curve: Curves.easeInOut,
+    )
         .then((_) {
-          if (!mounted) return;
+      if (!mounted) return;
 
-          setState(() {
-            _currentStep = 1;
-          });
-        });
+      setState(() {
+        _currentStep = 1;
+      });
+    });
   }
 
   void _goToPreviousStep() {
@@ -102,17 +102,17 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
 
     _pageController
         .animateToPage(
-          0,
-          duration: const Duration(milliseconds: 150),
-          curve: Curves.easeInOut,
-        )
+      0,
+      duration: const Duration(milliseconds: 150),
+      curve: Curves.easeInOut,
+    )
         .then((_) {
-          if (!mounted) return;
+      if (!mounted) return;
 
-          setState(() {
-            _currentStep = 0;
-          });
-        });
+      setState(() {
+        _currentStep = 0;
+      });
+    });
   }
 
   void addDay() {
@@ -125,14 +125,14 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
 
   Future<void> addExistingDays() async {
     final selectedDays =
-        await CustomGlassBottomSheet.show<List<ExistingDaysModel>>(
-          context: context,
-          fixedHeight: 0.85,
-          child: BlocProvider(
-            create: (_) => getIt<ExistingDaysCubit>()..getExistingDays(),
-            child: const ExistingDaysListBottomSheet(),
-          ),
-        );
+    await CustomGlassBottomSheet.show<List<ExistingDaysModel>>(
+      context: context,
+      fixedHeight: 0.85,
+      child: BlocProvider(
+        create: (_) => getIt<ExistingDaysCubit>()..getExistingDays(),
+        child: const ExistingDaysListBottomSheet(),
+      ),
+    );
 
     if (selectedDays == null || selectedDays.isEmpty) {
       return;
@@ -143,31 +143,31 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
         final uiDay = PlanDayUiModel(
           name: day.name ?? '',
           exercises:
-              day.exercises
+          day.exercises
+              ?.map(
+                (exercise) => ExerciseModel(
+              id: exercise.id ?? 0,
+              name: exercise.name ?? '',
+              description: exercise.description ?? '',
+              images:
+              exercise.images
                   ?.map(
-                    (exercise) => ExerciseModel(
-                      id: exercise.id ?? 0,
-                      name: exercise.name ?? '',
-                      description: exercise.description ?? '',
-                      images:
-                          exercise.images
-                              ?.map(
-                                (image) => ExerciseMedia(
-                                  url: image.url ?? '',
-                                  type: image.type ?? '',
-                                ),
-                              )
-                              .toList() ??
-                          [],
-                      category: exercise.category != null
-                          ? ExerciseCategory(
-                              id: exercise.category!.id ?? 0,
-                              name: exercise.category!.name ?? '',
-                            )
-                          : null,
-                    ),
-                  )
+                    (image) => ExerciseMedia(
+                  url: image.url ?? '',
+                  type: image.type ?? '',
+                ),
+              )
                   .toList() ??
+                  [],
+              category: exercise.category != null
+                  ? ExerciseCategory(
+                id: exercise.category!.id ?? 0,
+                name: exercise.category!.name ?? '',
+              )
+                  : null,
+            ),
+          )
+              .toList() ??
               [],
         );
 
@@ -176,6 +176,7 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
     });
   }
 
+  /// 🔥 تم التوحيد: استخدام CustomGlassBottomSheet بدلاً من showModalBottomSheet القديم
   Future<void> addExercise(int dayIndex) async {
     final workoutRepository = getIt<WorkoutRepository>();
 
@@ -187,19 +188,13 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
 
     final exercises = (result as Success<List<ExerciseModel>>).data;
 
-    final selected = await showModalBottomSheet<List<ExerciseModel>>(
+    if (!mounted) return;
+
+    final selected = await CustomGlassBottomSheet.show<List<ExerciseModel>>(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return SizedBox(
-          height: MediaQuery.of(context).size.height * 0.9,
-          child: ExerciseMultiPickerBottomSheet(exercises: exercises),
-        );
-      },
+      fixedHeight: 0.9,
+      contentPadding: EdgeInsets.zero,
+      child: ExerciseMultiPickerBottomSheet(exercises: exercises),
     );
 
     if (selected == null || selected.isEmpty) {
@@ -317,11 +312,22 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
       return;
     }
 
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => const EditPlanLoadingDialog(),
-    );
+    // 🔥 هذا هو الفحص الذي كان مفقوداً وكان يسبب إرسال بيانات فارغة للسيرفر:
+    for (final day in days) {
+      for (final exercise in day.exercises) {
+        if (!exercise.isCardio) {
+          if (exercise.sets == null ||
+              exercise.sets! <= 0 ||
+              exercise.reps == null ||
+              exercise.reps!.trim().isEmpty) {
+            _showValidationMessage(l10n.setsAndRepsRequired);
+            return;
+          }
+        }
+      }
+    }
+
+    LoadingDialog.show(context, title: l10n.saving, message: l10n.waitUpdatePlan);
 
     context.read<EditCoachPlanCubit>().updatePlan(
       planId: widget.plan.id,
@@ -340,13 +346,12 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
     return BlocConsumer<EditCoachPlanCubit, EditCoachPlanState>(
       listener: (context, state) {
         if (state is EditCoachPlanSuccess) {
-          Navigator.of(context).pop();
+          LoadingDialog.hide(context);
           Navigator.of(context).pop(true);
         }
 
         if (state is EditCoachPlanError) {
-          Navigator.of(context).pop();
-
+          LoadingDialog.hide(context);
           _showErrorMessage(state.error);
         }
       },
@@ -372,7 +377,6 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
           ),
 
           bottomNavigationBar: _buildBottomNavigationBar(),
-
           floatingActionButton: _currentStep == 1 ? _buildAddDayFab() : null,
         );
       },
@@ -490,7 +494,7 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
 
                 Text(
                   '${days.length} '
-                  '${days.length == 1 ? l10n.day : l10n.days}',
+                      '${days.length == 1 ? l10n.day : l10n.days}',
                   style: TextStyle(
                     fontSize: 12,
                     color: AppColors.hintText,
@@ -611,14 +615,12 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
 
           if (!mounted) return;
 
+          // 🔥 حذف fixedHeight ليتمدد المحتوى بحجمه الحقيقي تلقائياً مع الضبابية
           CustomGlassBottomSheet.show(
             context: context,
-            fixedHeight: 0.30,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-
-
                 _buildActionTile(
                   icon: Icons.add_circle_outline,
                   color: AppColors.primaryBtn,
@@ -639,7 +641,6 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
                   subtitle: l10n.addExistingDaySubtitle,
                   onTap: () async {
                     Navigator.pop(context);
-
                     await addExistingDays();
                   },
                 ),
@@ -674,7 +675,9 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
         decoration: BoxDecoration(
           color: context.backgroundColor,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: context.backgroundColor),
+          border: Border.all(
+            color: Colors.grey.withValues(alpha: 0.15),
+          ),
         ),
         child: Row(
           children: [
@@ -682,7 +685,7 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
               width: 52,
               height: 52,
               decoration: BoxDecoration(
-                color: color.withOpacity(.12),
+                color: color.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Icon(icon, color: color),
@@ -725,7 +728,7 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
       decoration: BoxDecoration(
         color: context.backgroundColor,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: Colors.grey.withValues(alpha: 0.2)),
       ),
       child: Column(
         children: [
@@ -733,7 +736,7 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
             width: 64,
             height: 64,
             decoration: BoxDecoration(
-              color: AppColors.primaryBtn.withOpacity(.10),
+              color: AppColors.primaryBtn.withValues(alpha: 0.10),
               shape: BoxShape.circle,
             ),
             child: Icon(

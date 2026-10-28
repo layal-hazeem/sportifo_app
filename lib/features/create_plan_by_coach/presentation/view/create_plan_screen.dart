@@ -22,6 +22,9 @@ import 'package:sportifo_app/features/workout/data/models/exercise_model.dart';
 import 'package:sportifo_app/features/workout/data/repository/workout_repository.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 import 'package:sportifo_app/core/helpers/snack_bar_utils.dart';
+
+import '../../../../core/widgets/loading_dialog.dart';
+
 class CreatePlanScreen extends StatefulWidget {
   final int userId;
 
@@ -58,15 +61,16 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
 
       _pageController
           .animateToPage(
-            1,
-            duration: const Duration(milliseconds: 150),
-            curve: Curves.easeInOut,
-          )
+        1,
+        duration: const Duration(milliseconds: 150),
+        curve: Curves.easeInOut,
+      )
           .then((_) {
-            setState(() {
-              _currentStep = 1;
-            });
-          });
+        if (!mounted) return;
+        setState(() {
+          _currentStep = 1;
+        });
+      });
     }
   }
 
@@ -74,15 +78,16 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
     if (_currentStep == 1) {
       _pageController
           .animateToPage(
-            0,
-            duration: const Duration(milliseconds: 150),
-            curve: Curves.easeInOut,
-          )
+        0,
+        duration: const Duration(milliseconds: 150),
+        curve: Curves.easeInOut,
+      )
           .then((_) {
-            setState(() {
-              _currentStep = 0;
-            });
-          });
+        if (!mounted) return;
+        setState(() {
+          _currentStep = 0;
+        });
+      });
     }
   }
 
@@ -95,61 +100,10 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
         if (state is CreatePlanLoading) {
           if (!isLoadingDialogShown) {
             isLoadingDialogShown = true;
-
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (_) {
-                return Dialog(
-                  backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 30,
-                      horizontal: 25,
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: 70,
-                          height: 70,
-                          decoration: BoxDecoration(
-                            color: AppColors.primaryBtn.withOpacity(.12),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(18),
-                            child: CircularProgressIndicator(
-                              strokeWidth: 4,
-                              color: AppColors.primaryBtn,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        Text(
-                          l10n.creatingYourPlan,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          l10n.pleaseWaitWhileSavingWorkout,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.grey.shade600,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
+            LoadingDialog.show(
+              context,
+              title: l10n.creatingYourPlan,
+              message: l10n.pleaseWaitWhileSavingWorkout,
             );
           }
         }
@@ -157,17 +111,21 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
         if (state is CreatePlanSuccess) {
           if (isLoadingDialogShown) {
             isLoadingDialogShown = false;
-            Navigator.pop(context);
+            LoadingDialog.hide(context);
           }
 
           Navigator.pop(context, true);
-          AppSnackBar.show(context, message: l10n.planCreatedSuccessfully, type: SnackBarType.success);
+          AppSnackBar.show(
+            context,
+            message: l10n.planCreatedSuccessfully,
+            type: SnackBarType.success,
+          );
         }
 
         if (state is CreatePlanError) {
           if (isLoadingDialogShown) {
             isLoadingDialogShown = false;
-            Navigator.pop(context);
+            LoadingDialog.hide(context);
           }
 
           _showErrorMessage(state.message);
@@ -192,131 +150,7 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
           ],
         ),
         bottomNavigationBar: _buildBottomNavigationBar(),
-        floatingActionButton: _currentStep == 1
-            ? AnimatedRotation(
-                turns: isFabOpen ? 0.125 : 0,
-                duration: const Duration(milliseconds: 200),
-                child: FloatingActionButton(
-                  backgroundColor: AppColors.primaryBtn,
-                  elevation: 6,
-                  onPressed: () async {
-                    setState(() {
-                      isFabOpen = !isFabOpen;
-                    });
-
-                    await Future.delayed(const Duration(milliseconds: 200));
-
-                    CustomGlassBottomSheet.show(
-                      context: context,
-                      fixedHeight: 0.30,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-
-
-                          _buildActionTile(
-                            icon: Icons.add_circle_outline,
-                            color: AppColors.primaryBtn,
-                            title: l10n.createNewDay,
-                            subtitle: l10n.creatDaySubtitle,
-                            onTap: () {
-                              Navigator.pop(context);
-                              addDay();
-                            },
-                          ),
-
-                          const SizedBox(height: 12),
-
-                          _buildActionTile(
-                            icon: Icons.copy_outlined,
-                            color: Colors.blue,
-                            title: l10n.addExistingDay,
-                            subtitle: l10n.addExistingDaySubtitle,
-                            onTap: () async {
-                              Navigator.pop(context);
-
-                              final selectedDays =
-                                  await CustomGlassBottomSheet.show<
-                                    List<ExistingDaysModel>
-                                  >(
-                                    context: context,
-                                    fixedHeight: 0.85,
-                                    child: BlocProvider(
-                                      create: (_) =>
-                                          getIt<ExistingDaysCubit>()
-                                            ..getExistingDays(),
-                                      child:
-                                          const ExistingDaysListBottomSheet(),
-                                    ),
-                                  );
-
-                              if (selectedDays == null) return;
-
-                              setState(() {
-                                for (final day in selectedDays) {
-                                  days.add(
-                                    PlanDayUiModel(
-                                      name: day.name ?? "",
-                                      exercises:
-                                          day.exercises
-                                              ?.map(
-                                                (e) => ExerciseModel(
-                                                  id: e.id ?? 0,
-                                                  name: e.name ?? "",
-                                                  description:
-                                                      e.description ?? "",
-                                                  images:
-                                                      e.images
-                                                          ?.map(
-                                                            (
-                                                              img,
-                                                            ) => ExerciseMedia(
-                                                              url:
-                                                                  img.url ?? "",
-                                                              type:
-                                                                  img.type ??
-                                                                  "",
-                                                            ),
-                                                          )
-                                                          .toList() ??
-                                                      [],
-                                                  category: e.category != null
-                                                      ? ExerciseCategory(
-                                                          id:
-                                                              e.category!.id ??
-                                                              0,
-                                                          name:
-                                                              e
-                                                                  .category!
-                                                                  .name ??
-                                                              "",
-                                                        )
-                                                      : null,
-                                                ),
-                                              )
-                                              .toList() ??
-                                          [],
-                                    ),
-                                  );
-                                }
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 100),
-                    child: Icon(
-                      isFabOpen ? Icons.close : Icons.add,
-                      key: ValueKey(isFabOpen),
-                      color: context.backgroundColor,
-                    ),
-                  ),
-                ),
-              )
-            : null,
+        floatingActionButton: _currentStep == 1 ? _buildAddDayFab() : null,
       ),
     );
   }
@@ -427,7 +261,7 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
 
                 Text(
                   '${days.length} '
-                  '${days.length == 1 ? l10n.day : l10n.days}',
+                      '${days.length == 1 ? l10n.day : l10n.days}',
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey.shade600,
@@ -556,6 +390,7 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
     });
   }
 
+  /// 🔥 تم التوحيد: استخدام CustomGlassBottomSheet بدلاً من showModalBottomSheet القديم
   Future<void> addExercise(int dayIndex) async {
     final workoutRepository = getIt<WorkoutRepository>();
 
@@ -565,19 +400,13 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
 
     final exercises = (result as Success<List<ExerciseModel>>).data;
 
-    final selected = await showModalBottomSheet<List<ExerciseModel>>(
+    if (!mounted) return;
+
+    final selected = await CustomGlassBottomSheet.show<List<ExerciseModel>>(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return SizedBox(
-          height: MediaQuery.of(context).size.height * 0.9,
-          child: ExerciseMultiPickerBottomSheet(exercises: exercises),
-        );
-      },
+      fixedHeight: 0.9,
+      contentPadding: EdgeInsets.zero,
+      child: ExerciseMultiPickerBottomSheet(exercises: exercises),
     );
 
     if (selected == null || selected.isEmpty) return;
@@ -588,7 +417,6 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
           exercise.sets = null;
           exercise.reps = null;
           exercise.duration = null;
-
           return exercise;
         }).toList(),
       );
@@ -631,13 +459,121 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
       }).toList(),
     );
 
-    print(request.toMap());
-
     context.read<CreatePlanCubit>().createPlan(request);
   }
 
   void _showValidationMessage(String message) {
     AppSnackBar.show(context, message: message, type: SnackBarType.warning);
+  }
+
+  Widget _buildAddDayFab() {
+    final l10n = AppLocalizations.of(context)!;
+
+    return AnimatedRotation(
+      turns: isFabOpen ? 0.125 : 0,
+      duration: const Duration(milliseconds: 200),
+      child: FloatingActionButton(
+        backgroundColor: AppColors.primaryBtn,
+        elevation: 6,
+        onPressed: () async {
+          setState(() {
+            isFabOpen = !isFabOpen;
+          });
+
+          await Future.delayed(const Duration(milliseconds: 200));
+
+          if (!mounted) return;
+
+          CustomGlassBottomSheet.show(
+            context: context,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildActionTile(
+                  icon: Icons.add_circle_outline,
+                  color: AppColors.primaryBtn,
+                  title: l10n.createNewDay,
+                  subtitle: l10n.creatDaySubtitle,
+                  onTap: () {
+                    Navigator.pop(context);
+                    addDay();
+                  },
+                ),
+
+                const SizedBox(height: 12),
+
+                _buildActionTile(
+                  icon: Icons.copy_outlined,
+                  color: Colors.blue,
+                  title: l10n.addExistingDay,
+                  subtitle: l10n.addExistingDaySubtitle,
+                  onTap: () async {
+                    Navigator.pop(context);
+
+                    final selectedDays =
+                    await CustomGlassBottomSheet.show<List<ExistingDaysModel>>(
+                      context: context,
+                      fixedHeight: 0.85,
+                      child: BlocProvider(
+                        create: (_) => getIt<ExistingDaysCubit>()..getExistingDays(),
+                        child: const ExistingDaysListBottomSheet(),
+                      ),
+                    );
+
+                    if (selectedDays == null) return;
+
+                    setState(() {
+                      for (final day in selectedDays) {
+                        days.add(
+                          PlanDayUiModel(
+                            name: day.name ?? "",
+                            exercises:
+                            day.exercises
+                                ?.map(
+                                  (e) => ExerciseModel(
+                                id: e.id ?? 0,
+                                name: e.name ?? "",
+                                description: e.description ?? "",
+                                images:
+                                e.images
+                                    ?.map(
+                                      (img) => ExerciseMedia(
+                                    url: img.url ?? "",
+                                    type: img.type ?? "",
+                                  ),
+                                )
+                                    .toList() ??
+                                    [],
+                                category: e.category != null
+                                    ? ExerciseCategory(
+                                  id: e.category!.id ?? 0,
+                                  name: e.category!.name ?? "",
+                                )
+                                    : null,
+                              ),
+                            )
+                                .toList() ??
+                                [],
+                          ),
+                        );
+                      }
+                    });
+                  },
+                ),
+              ],
+            ),
+          );
+        },
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 100),
+          child: Icon(
+            isFabOpen ? Icons.close : Icons.add,
+            key: ValueKey(isFabOpen),
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _buildEmptyDaysState() {
@@ -647,9 +583,9 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
       margin: const EdgeInsets.fromLTRB(20, 8, 20, 20),
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
       decoration: BoxDecoration(
-        color: Colors.grey.shade50,
+        color: context.backgroundColor,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: Colors.grey.withValues(alpha: 0.2)),
       ),
       child: Column(
         children: [
@@ -657,7 +593,7 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
             width: 64,
             height: 64,
             decoration: BoxDecoration(
-              color: AppColors.primaryBtn.withOpacity(.10),
+              color: AppColors.primaryBtn.withValues(alpha: 0.10),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -714,9 +650,9 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.grey.shade50,
+          color: context.backgroundColor,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: Colors.grey.shade200),
+          border: Border.all(color: Colors.grey.withValues(alpha: 0.15)),
         ),
         child: Row(
           children: [
@@ -724,7 +660,7 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
               width: 52,
               height: 52,
               decoration: BoxDecoration(
-                color: color.withOpacity(.12),
+                color: color.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Icon(icon, color: color),
@@ -744,12 +680,12 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
                     ),
                   ),
                   const SizedBox(height: 4),
-                  Text(subtitle, style: TextStyle(color: Colors.grey.shade600)),
+                  Text(subtitle, style: TextStyle(color: AppColors.hintText)),
                 ],
               ),
             ),
 
-            const Icon(Icons.arrow_forward_ios, size: 16),
+            Icon(Icons.arrow_forward_ios, size: 16, color: context.textColor),
           ],
         ),
       ),
@@ -778,7 +714,6 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
       errorMessage = l10n.somethingWentWrong;
     }
 
-    // احذف من ScaffoldMessenger... لـ );  وحط ↓
     AppSnackBar.show(context, message: errorMessage, type: SnackBarType.error);
   }
 }

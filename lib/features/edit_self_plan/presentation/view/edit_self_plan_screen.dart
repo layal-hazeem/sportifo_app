@@ -28,6 +28,7 @@ import 'package:sportifo_app/features/edit_self_plan/presentation/view_model/edi
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
 import '../../../../core/helpers/snack_bar_utils.dart';
+import '../../../../core/widgets/loading_dialog.dart';
 
 class EditSelfPlanScreen extends StatefulWidget {
   final PlanModel plan;
@@ -345,34 +346,14 @@ class _EditSelfPlanScreenState extends State<EditSelfPlanScreen> {
         if (effectiveSets == null ||
             effectiveReps == null ||
             effectiveReps.trim().isEmpty) {
-          _showValidationMessage('Missing sets/reps for ${exercise.name}');
-          debugPrint('''
-━━━━━━━━━━━━━━━━━━━━━━
-DAY: ${day.name}
-EXERCISE: ${exercise.name}
-ID: ${exercise.id}
-isCardio: ${exercise.isCardio}
+          _showValidationMessage(l10n.setsAndRepsRequired);
 
-exercise.sets: ${exercise.sets}
-exercise.reps: ${exercise.reps}
-
-dayDefaultSets: ${day.defaultSets}
-dayDefaultReps: ${day.defaultReps}
-
-EFFECTIVE SETS: $effectiveSets
-EFFECTIVE REPS: $effectiveReps
-━━━━━━━━━━━━━━━━━━━━━━
-''');
           return;
         }
       }
     }
 
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => const EditPlanLoadingDialog(),
-    );
+    LoadingDialog.show(context, title: l10n.saving, message: l10n.waitUpdatePlan);
 
     context.read<EditSelfPlanCubit>().updatePlan(
       planId: widget.plan.id,
@@ -391,14 +372,12 @@ EFFECTIVE REPS: $effectiveReps
     return BlocConsumer<EditSelfPlanCubit, EditSelfPlanState>(
       listener: (context, state) {
         if (state is EditSelfPlanSuccess) {
-          Navigator.of(context).pop();
-
+          LoadingDialog.hide(context);
           Navigator.of(context).pop(true);
         }
 
         if (state is EditSelfPlanError) {
-          Navigator.of(context).pop();
-
+          LoadingDialog.hide(context);
           _showErrorMessage(state.error);
         }
       },

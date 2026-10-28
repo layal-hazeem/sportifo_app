@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
+import '../../../../core/helpers/dialog_helper.dart';
 import '../../../../core/helpers/snack_bar_utils.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -212,40 +213,15 @@ class _ActivePlayScreenState extends State<ActivePlayScreen> {
   }
 
   void _showHowToDialog(String? description, AppLocalizations l10n) {
-    showDialog(
+    DialogHelper.showCustomDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: Row(
-          children: [
-            const Icon(Icons.info_outline_rounded, color: AppColors.primaryBtn),
-            const SizedBox(width: 8),
-            Text(
-              l10n.howToPerformTitle,
-              style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 18),
-            ),
-          ],
-        ),
-        content: Text(
-          (description == null || description.isEmpty)
-              ? l10n.noInstructionsAvailable
-              : description,
-          style: TextStyle(height: 1.5, fontSize: 14, color: context.textColor),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(
-              l10n.gotIt,
-              style: const TextStyle(
-                color: AppColors.primaryBtn,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        backgroundColor: Colors.white,
-      ),
+      title: l10n.howToPerformTitle,
+      message: (description == null || description.isEmpty)
+          ? l10n.noInstructionsAvailable
+          : description,
+      type: DialogType.confirm,
+      confirmBtnText: l10n.gotIt,
+      cancelBtnText: '',  // بدك تشيل زر الإلغاء
     );
   }
 

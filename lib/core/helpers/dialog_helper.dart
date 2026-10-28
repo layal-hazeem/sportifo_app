@@ -1,42 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:sportifo_app/core/theme/app_colors.dart';
-import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
-enum DialogType { success, error, warning, input }
+enum DialogType { confirm, delete, warning, success }
 
 class DialogHelper {
-  static Future<T?> showCustomDialog<T>({
+  static Future<bool?> showCustomDialog({
     required BuildContext context,
     required String title,
     String? message,
-    String? hintText,
-    TextEditingController? controller,
     required DialogType type,
     String? confirmBtnText,
     String? cancelBtnText,
     bool barrierDismissible = true,
-    Function(String)? onConfirmWithInput,
     VoidCallback? onConfirm,
   }) {
     final l10n = AppLocalizations.of(context)!;
     final config = _DialogConfig.fromType(type);
 
-    return showDialog<T>(
+    return showDialog<bool>(
       context: context,
       barrierDismissible: barrierDismissible,
-      barrierColor: Colors.black.withValues(alpha: 0.6),
+      barrierColor: Colors.black.withValues(alpha: 0.5),
       builder: (ctx) => _AppDialog(
         title: title,
         message: message,
-        hintText: hintText,
-        controller: controller,
         config: config,
         confirmBtnText: confirmBtnText ?? l10n.agreed,
         cancelBtnText: cancelBtnText ?? l10n.cancel,
         onConfirm: onConfirm,
-        onConfirmWithInput: onConfirmWithInput,
-        isInput: type == DialogType.input,
       ),
     );
   }
@@ -52,180 +44,156 @@ class _DialogConfig {
 
   factory _DialogConfig.fromType(DialogType type) {
     switch (type) {
-      case DialogType.success:
-        return const _DialogConfig(
-          accentColor: Color(0xFF22C55E),
-          icon: Icons.check_circle_rounded,
-        );
-      case DialogType.error:
+      case DialogType.delete:
         return const _DialogConfig(
           accentColor: Color(0xFFEF4444),
-          icon: Icons.cancel_rounded,
+          icon: Icons.delete_outline_rounded,
         );
       case DialogType.warning:
         return const _DialogConfig(
           accentColor: AppColors.primaryBtn,
-          icon: Icons.warning_rounded,
+          icon: Icons.warning_amber_rounded,
         );
-      case DialogType.input:
+      case DialogType.success:
+        return const _DialogConfig(
+          accentColor: Color(0xFF22C55E),
+          icon: Icons.check_circle_outline_rounded,
+        );
+      case DialogType.confirm:
         return const _DialogConfig(
           accentColor: AppColors.primaryBtn,
-          icon: Icons.edit_rounded,
+          icon: Icons.help_outline_rounded,
         );
     }
   }
 }
 
-// ─── Dialog Widget ─────────────────────────────────────────────────────────────
+// ─── Dialog ────────────────────────────────────────────────────────────────────
 
 class _AppDialog extends StatelessWidget {
   final String title;
   final String? message;
-  final String? hintText;
-  final TextEditingController? controller;
   final _DialogConfig config;
   final String confirmBtnText;
   final String cancelBtnText;
   final VoidCallback? onConfirm;
-  final Function(String)? onConfirmWithInput;
-  final bool isInput;
 
   const _AppDialog({
     required this.title,
     required this.message,
-    required this.hintText,
-    required this.controller,
     required this.config,
     required this.confirmBtnText,
     required this.cancelBtnText,
-    required this.onConfirm,
-    required this.onConfirmWithInput,
-    required this.isInput,
+    this.onConfirm,
   });
 
   @override
   Widget build(BuildContext context) {
-    final bg = context.backgroundColor;
-    final textColor = context.textColor;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final bgColor = isDark ? const Color(0xFF2C2C2E) : Colors.white;
+    final titleColor = isDark ? Colors.white : Colors.black;
+    final subtitleColor = isDark
+        ? Colors.white.withValues(alpha: 0.55)
+        : Colors.black.withValues(alpha: 0.45);
+    final dividerColor = isDark
+        ? Colors.white.withValues(alpha: 0.1)
+        : Colors.black.withValues(alpha: 0.1);
 
     return Dialog(
       backgroundColor: Colors.transparent,
-      insetPadding: const EdgeInsets.symmetric(horizontal: 28),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 40),
       child: Container(
         decoration: BoxDecoration(
-          color: bg,
-          borderRadius: BorderRadius.circular(24),
+          color: bgColor,
+          borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.3),
-              blurRadius: 40,
-              offset: const Offset(0, 12),
+              color: Colors.black.withValues(alpha: isDark ? 0.5 : 0.15),
+              blurRadius: 30,
+              offset: const Offset(0, 10),
             ),
           ],
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // ── Top accent strip
-            Container(
-              height: 4,
-              decoration: BoxDecoration(
-                color: config.accentColor,
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-              ),
-            ),
+            // ── Icon + Title + Message
             Padding(
-              padding: const EdgeInsets.fromLTRB(24, 28, 24, 24),
+              padding: const EdgeInsets.fromLTRB(24, 28, 24, 20),
               child: Column(
-                mainAxisSize: MainAxisSize.min,
                 children: [
-                  // ── Icon
-                  if (!isInput) ...[
-                    Container(
-                      width: 64,
-                      height: 64,
-                      decoration: BoxDecoration(
-                        color: config.accentColor.withValues(alpha: 0.12),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(config.icon, color: config.accentColor, size: 32),
+                  // Icon
+                  Container(
+                    width: 52,
+                    height: 52,
+                    decoration: BoxDecoration(
+                      color: config.accentColor.withValues(alpha: 0.12),
+                      shape: BoxShape.circle,
                     ),
-                    const SizedBox(height: 16),
-                  ],
-                  // ── Title
+                    child: Icon(
+                      config.icon,
+                      color: config.accentColor,
+                      size: 26,
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  // Title
                   Text(
                     title,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: textColor,
-                      fontSize: 18,
+                      color: titleColor,
+                      fontSize: 17,
                       fontWeight: FontWeight.w700,
                       height: 1.3,
                     ),
                   ),
-                  // ── Message or Input
-                  if (message != null && !isInput) ...[
-                    const SizedBox(height: 10),
+                  // Message
+                  if (message != null) ...[
+                    const SizedBox(height: 8),
                     Text(
                       message!,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: textColor.withValues(alpha: 0.6),
+                        color: subtitleColor,
                         fontSize: 14,
-                        height: 1.5,
+                        height: 1.45,
                       ),
                     ),
                   ],
-                  if (isInput) ...[
-                    const SizedBox(height: 16),
-                    TextField(
-                      controller: controller,
-                      autofocus: true,
-                      decoration: InputDecoration(
-                        hintText: hintText,
-                        hintStyle: const TextStyle(color: AppColors.hintText),
-                        filled: true,
-                        fillColor: context.secondaryBackgroundColor,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide.none,
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: config.accentColor, width: 1.5),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                      ),
+                ],
+              ),
+            ),
+
+            // ── Divider
+            Divider(height: 1, color: dividerColor),
+
+            // ── Buttons
+            IntrinsicHeight(
+              child: Row(
+                children: [
+                  // Cancel
+                  Expanded(
+                    child: _DialogButton(
+                      label: cancelBtnText,
+                      color: subtitleColor,
+                      fontWeight: FontWeight.w500,
+                      onTap: () => Navigator.of(context).pop(false),
                     ),
-                  ],
-                  const SizedBox(height: 28),
-                  // ── Actions
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _DialogButton(
-                          label: cancelBtnText,
-                          onTap: () => Navigator.of(context).pop(),
-                          isOutlined: true,
-                          color: textColor.withValues(alpha: 0.5),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _DialogButton(
-                          label: confirmBtnText,
-                          onTap: () {
-                            Navigator.of(context).pop();
-                            if (isInput && onConfirmWithInput != null) {
-                              onConfirmWithInput!(controller?.text ?? '');
-                            } else {
-                              onConfirm?.call();
-                            }
-                          },
-                          color: config.accentColor,
-                        ),
-                      ),
-                    ],
+                  ),
+                  VerticalDivider(width: 1, color: dividerColor),
+                  // Confirm
+                  Expanded(
+                    child: _DialogButton(
+                      label: confirmBtnText,
+                      color: config.accentColor,
+                      fontWeight: FontWeight.w700,
+                      onTap: () {
+                        Navigator.of(context).pop(true);
+                        onConfirm?.call();
+                      },
+                    ),
                   ),
                 ],
               ),
@@ -241,36 +209,34 @@ class _AppDialog extends StatelessWidget {
 
 class _DialogButton extends StatelessWidget {
   final String label;
-  final VoidCallback onTap;
   final Color color;
-  final bool isOutlined;
+  final FontWeight fontWeight;
+  final VoidCallback onTap;
 
   const _DialogButton({
     required this.label,
-    required this.onTap,
     required this.color,
-    this.isOutlined = false,
+    required this.fontWeight,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 120),
-        height: 48,
-        decoration: BoxDecoration(
-          color: isOutlined ? Colors.transparent : color,
-          borderRadius: BorderRadius.circular(14),
-          border: isOutlined ? Border.all(color: color, width: 1.5) : null,
-        ),
-        alignment: Alignment.center,
-        child: Text(
-          label,
-          style: TextStyle(
-            color: isOutlined ? color : Colors.white,
-            fontSize: 15,
-            fontWeight: FontWeight.w600,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(20)),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: color,
+              fontSize: 16,
+              fontWeight: fontWeight,
+            ),
           ),
         ),
       ),

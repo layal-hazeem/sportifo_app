@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 import '../../../../core/di/service_locator.dart';
+import '../../../../core/helpers/dialog_helper.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/helpers/snack_bar_utils.dart';
 import '../../../../core/widgets/wave_app_bar.dart';
@@ -285,61 +286,14 @@ class _FoodLogsScreenState extends State<FoodLogsScreen> {
   }
 
   void _showDeleteConfirmation(BuildContext context, int mealId, AppLocalizations l10n) {
-    showDialog(
+    DialogHelper.showCustomDialog(
       context: context,
+      title: l10n.delete_meal_title,
+      message: l10n.delete_meal_confirmation,
+      type: DialogType.delete,
       barrierDismissible: false,
-      builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        title: Column(
-          children: [
-            Icon(
-              Icons.warning_amber_rounded,
-              color: AppColors.primaryBtn,
-              size: 50,
-            ),
-            const SizedBox(height: 12),
-             Text(
-              l10n.delete_meal_title,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.black87,
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
-            ),
-          ],
-        ),
-        content:  Text(
-          l10n.delete_meal_confirmation,
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 14, color: Colors.black54),
-        ),
-        actionsAlignment: MainAxisAlignment.center,
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child:  Text(
-              l10n.cancel,
-              style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w600),
-            ),
-          ),
-          const SizedBox(width: 12),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(ctx);
-              _nutritionCubit.deleteMeal(mealId);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red.shade400,
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            child:  Text(l10n.delete),
-          ),
-        ],
-      ),
+      confirmBtnText: l10n.delete,
+      onConfirm: () => _nutritionCubit.deleteMeal(mealId),
     );
   }
 }
