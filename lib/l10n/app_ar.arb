@@ -100,6 +100,7 @@
   "agreed":"موافق",
   "resistance_training": " المقاومة",
   "target_muscle": "العضلة المستهدفة",
+  "refineMuscleTarget": "استهداف أدق",
   "how_to_perform": "كيفية الأداء",
   "gallery": "معرض الصور",
   "no_exercises_found": "لم يتم العثور على تمارين",
@@ -566,6 +567,18 @@
 "min": "د",
 "sec": "ث",
 "selectExercises": "اختر التمارين",
+"selectVisible": "تحديد الظاهر",
+"clearVisible": "مسح الظاهر",
+"matchingExercises": "{count} تمرين ظاهر",
+"@matchingExercises": {
+  "placeholders": {
+    "count": {
+      "type": "int"
+    }
+  }
+},
+"noSearchResults": "لا توجد تمارين تطابق البحث",
+"tryDifferentSearch": "جرّب كلمة بحث أخرى أو امسح البحث.",
 "resistance": "مقاومة",
 "cardio": "كارديو",
 "addExercises": "إضافة ({count})",
