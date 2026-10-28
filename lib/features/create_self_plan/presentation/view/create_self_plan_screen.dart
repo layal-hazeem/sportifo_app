@@ -21,6 +21,10 @@ import 'package:sportifo_app/features/workout/data/repository/workout_repository
 
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
+import '../../../../core/helpers/snack_bar_utils.dart';
+import '../../../../core/widgets/custom_glass_bottom_sheet.dart';
+import '../../../../core/widgets/loading_dialog.dart';
+
 class CreateSelfPlanScreen extends StatefulWidget {
   const CreateSelfPlanScreen({super.key});
 
@@ -103,20 +107,18 @@ class _CreateSelfPlanScreenState extends State<CreateSelfPlanScreen> {
         if (state is CreateSelfPlanSuccess) {
           if (isLoadingDialogShown) {
             isLoadingDialogShown = false;
-            Navigator.pop(context);
+            LoadingDialog.hide(context);
           }
 
           Navigator.pop(context, true);
 
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(l10n.planCreatedSuccessfully)));
+          AppSnackBar.show(context, message: l10n.planCreatedSuccessfully,
+              type: SnackBarType.success);
         }
-
         if (state is CreateSelfPlanError) {
           if (isLoadingDialogShown) {
             isLoadingDialogShown = false;
-            Navigator.pop(context);
+            LoadingDialog.hide(context);
           }
 
             _showErrorMessage(state.message);
@@ -164,59 +166,8 @@ class _CreateSelfPlanScreenState extends State<CreateSelfPlanScreen> {
 
     final l10n = AppLocalizations.of(context)!;
 
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) {
-        return Dialog(
-          backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 25),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 70,
-                  height: 70,
-                  decoration: BoxDecoration(
-                    color: AppColors.primaryBtn.withOpacity(.12),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(18),
-                    child: CircularProgressIndicator(
-                      strokeWidth: 4,
-                      color: AppColors.primaryBtn,
-                    ),
-                  ),
-                ),
+    LoadingDialog.show(context, title: l10n.creatingYourPlan, message: l10n.pleaseWaitWhileSavingWorkout);
 
-                const SizedBox(height: 20),
-
-                Text(
-                  l10n.creatingYourPlan,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-
-                const SizedBox(height: 8),
-
-                Text(
-                  l10n.pleaseWaitWhileSavingWorkout,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
   }
 
   Widget _buildStepHeader() {
@@ -474,19 +425,13 @@ class _CreateSelfPlanScreenState extends State<CreateSelfPlanScreen> {
 
     final exercises = (result as Success<List<ExerciseModel>>).data;
 
-    final selected = await showModalBottomSheet<List<ExerciseModel>>(
+    if (!mounted) return;
+
+    final selected = await CustomGlassBottomSheet.show<List<ExerciseModel>>(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return SizedBox(
-          height: MediaQuery.of(context).size.height * 0.9,
-          child: ExerciseMultiPickerBottomSheet(exercises: exercises),
-        );
-      },
+      fixedHeight: 0.9,
+      contentPadding: EdgeInsets.zero,
+      child: ExerciseMultiPickerBottomSheet(exercises: exercises),
     );
 
     if (selected == null || selected.isEmpty) {
@@ -509,19 +454,51 @@ class _CreateSelfPlanScreenState extends State<CreateSelfPlanScreen> {
   Future<void> savePlan() async {
     final l10n = AppLocalizations.of(context)!;
 
+    // 1. التأكد من وجود أيام
     if (days.isEmpty) {
       _showValidationMessage(l10n.addAtLeastOneWorkoutDay);
       return;
     }
 
+    // 2. التأكد من وجود تمارين داخل كل يوم
     if (days.any((day) => day.exercises.isEmpty)) {
       _showValidationMessage(l10n.everyWorkoutDayNeedsExercise);
       return;
     }
 
+    // 3. التأكد من اختيار الهدف
     if (selectedGoal == null) {
       _showValidationMessage(l10n.chooseGoalForTrainingPlan);
       return;
+    }
+
+    // 🔥 4. الفحص الحاسم: التأكد من أن كل تمرين مقاومة يحتوي على مجموعات وعدات
+    for (final day in days) {
+      for (final exercise in day.exercises) {
+        if (!exercise.isCardio) {
+          if (exercise.sets == null ||
+              exercise.sets! <= 0 ||
+              exercise.reps == null ||
+              exercise.reps!.trim().isEmpty) {
+            AppSnackBar.show(
+              context,
+              message: "${l10n.setsAndRepsRequired} ",
+              type: SnackBarType.warning,
+            );
+            return;
+          }
+        } else {
+          // إذا كان كارديو والتطبيق يشترط وقت:
+          if (exercise.duration == null || exercise.duration!.trim().isEmpty) {
+            AppSnackBar.show(
+              context,
+              message: "Determining the duration of the exercise is required",
+              type: SnackBarType.warning,
+            );
+            return;
+          }
+        }
+      }
     }
 
     final request = CreateSelfPlanRequest(
@@ -537,24 +514,11 @@ class _CreateSelfPlanScreenState extends State<CreateSelfPlanScreen> {
       }).toList(),
     );
 
-    debugPrint(request.toMap().toString());
-
     context.read<CreateSelfPlanCubit>().createSelfPlan(request);
   }
 
   void _showValidationMessage(String message) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: Text(message),
-          behavior: SnackBarBehavior.floating,
-          margin: const EdgeInsets.all(16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
-          ),
-        ),
-      );
+    AppSnackBar.show(context, message: message, type: SnackBarType.warning);
   }
 
   Widget _buildEmptyDaysState() {
@@ -640,17 +604,6 @@ class _CreateSelfPlanScreenState extends State<CreateSelfPlanScreen> {
       errorMessage = l10n.somethingWentWrong;
     }
 
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: Text(errorMessage),
-          behavior: SnackBarBehavior.floating,
-          margin: const EdgeInsets.all(16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
-          ),
-        ),
-      );
+    AppSnackBar.show(context, message: errorMessage, type: SnackBarType.error);
   }
 }

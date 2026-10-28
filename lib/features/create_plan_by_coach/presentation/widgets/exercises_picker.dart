@@ -734,18 +734,6 @@ class _ExerciseMultiPickerBottomSheetState
         ),
         child: Column(
           children: [
-            const SizedBox(height: 10),
-
-            Center(
-              child: Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            ),
 
             const SizedBox(height: 16),
 

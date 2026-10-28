@@ -5,6 +5,8 @@ import 'package:sportifo_app/core/theme/app_theme_extensions.dart';
 import 'package:sportifo_app/core/widgets/wave_app_bar.dart';
 import 'package:sportifo_app/l10n/app_localizations.dart';
 
+import '../../../../core/helpers/snack_bar_utils.dart';
+
 class HelpSupportScreen extends StatelessWidget {
   const HelpSupportScreen({super.key});
 
@@ -18,9 +20,7 @@ class HelpSupportScreen extends StatelessWidget {
       await launchUrl(url, mode: LaunchMode.externalApplication);
     } else {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.cantOpenWhatsapp)),
-        );
+        AppSnackBar.show(context, message: l10n.cantOpenWhatsapp, type: SnackBarType.warning);
       }
     }
   }
@@ -32,9 +32,7 @@ class HelpSupportScreen extends StatelessWidget {
       await launchUrl(url);
     } else {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.cantOpenEmail)),
-        );
+        AppSnackBar.show(context, message: l10n.cantOpenEmail, type: SnackBarType.warning);
       }
     }
   }
