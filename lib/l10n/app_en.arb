@@ -97,6 +97,7 @@
   "agreed":"Agreed",
   "resistance_training": "Resistance ",
   "target_muscle": "Target Muscle",
+  "refineMuscleTarget": "Refine target",
   "how_to_perform": "How to perform",
   "gallery": "Gallery",
   "no_exercises_found": "No exercises found",
@@ -599,6 +600,18 @@
 "min": "min",
 "sec": "sec",
 "selectExercises": "Select Exercises",
+"selectVisible": "Select visible",
+"clearVisible": "Clear visible",
+"matchingExercises": "{count} exercises shown",
+"@matchingExercises": {
+  "placeholders": {
+    "count": {
+      "type": "int"
+    }
+  }
+},
+"noSearchResults": "No exercises match your search",
+"tryDifferentSearch": "Try another search or clear the search field.",
 "resistance": "Resistance",
 "cardio": "Cardio",
 "addExercises": "Add ({count})",

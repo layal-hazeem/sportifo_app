@@ -683,6 +683,12 @@ abstract class AppLocalizations {
   /// **'Target Muscle'**
   String get target_muscle;
 
+  /// No description provided for @refineMuscleTarget.
+  ///
+  /// In en, this message translates to:
+  /// **'Refine target'**
+  String get refineMuscleTarget;
+
   /// No description provided for @how_to_perform.
   ///
   /// In en, this message translates to:
@@ -2704,6 +2710,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select Exercises'**
   String get selectExercises;
+
+  /// No description provided for @selectVisible.
+  ///
+  /// In en, this message translates to:
+  /// **'Select visible'**
+  String get selectVisible;
+
+  /// No description provided for @clearVisible.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear visible'**
+  String get clearVisible;
+
+  /// No description provided for @matchingExercises.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} exercises shown'**
+  String matchingExercises(int count);
+
+  /// No description provided for @noSearchResults.
+  ///
+  /// In en, this message translates to:
+  /// **'No exercises match your search'**
+  String get noSearchResults;
+
+  /// No description provided for @tryDifferentSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Try another search or clear the search field.'**
+  String get tryDifferentSearch;
 
   /// No description provided for @resistance.
   ///

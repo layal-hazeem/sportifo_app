@@ -303,6 +303,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get target_muscle => 'Target Muscle';
 
   @override
+  String get refineMuscleTarget => 'Refine target';
+
+  @override
   String get how_to_perform => 'How to perform';
 
   @override
@@ -1350,6 +1353,23 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get selectExercises => 'Select Exercises';
+
+  @override
+  String get selectVisible => 'Select visible';
+
+  @override
+  String get clearVisible => 'Clear visible';
+
+  @override
+  String matchingExercises(int count) {
+    return '$count exercises shown';
+  }
+
+  @override
+  String get noSearchResults => 'No exercises match your search';
+
+  @override
+  String get tryDifferentSearch => 'Try another search or clear the search field.';
 
   @override
   String get resistance => 'Resistance';

@@ -303,6 +303,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get target_muscle => 'العضلة المستهدفة';
 
   @override
+  String get refineMuscleTarget => 'استهداف أدق';
+
+  @override
   String get how_to_perform => 'كيفية الأداء';
 
   @override
@@ -1350,6 +1353,23 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get selectExercises => 'اختر التمارين';
+
+  @override
+  String get selectVisible => 'تحديد الظاهر';
+
+  @override
+  String get clearVisible => 'مسح الظاهر';
+
+  @override
+  String matchingExercises(int count) {
+    return '$count تمرين ظاهر';
+  }
+
+  @override
+  String get noSearchResults => 'لا توجد تمارين تطابق البحث';
+
+  @override
+  String get tryDifferentSearch => 'جرّب كلمة بحث أخرى أو امسح البحث.';
 
   @override
   String get resistance => 'مقاومة';
