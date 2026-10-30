@@ -63,7 +63,7 @@ class _PlanDayCardState extends State<PlanDayCard> {
         : exercises.take(2).toList();
 
     return Dismissible(
-      key: ValueKey(widget.day.name),
+      key: ObjectKey(widget.day),
       direction: DismissDirection.endToStart,
 
       // 🔴 DELETE BACKGROUND
