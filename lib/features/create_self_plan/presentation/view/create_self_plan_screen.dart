@@ -451,6 +451,7 @@ class _CreateSelfPlanScreenState extends State<CreateSelfPlanScreen> {
     });
   }
 
+
   Future<void> savePlan() async {
     final l10n = AppLocalizations.of(context)!;
 
@@ -472,24 +473,13 @@ class _CreateSelfPlanScreenState extends State<CreateSelfPlanScreen> {
       return;
     }
 
-    // 🔥 4. الفحص الحاسم: التأكد من أن كل تمرين مقاومة يحتوي على مجموعات وعدات
+    // 4. التحقق من تمارين المقاومة والكارديو
     for (final day in days) {
       for (final exercise in day.exercises) {
-        if (!exercise.isCardio) {
-          if (exercise.sets == null ||
-              exercise.sets! <= 0 ||
-              exercise.reps == null ||
-              exercise.reps!.trim().isEmpty) {
-            AppSnackBar.show(
-              context,
-              message: "${l10n.setsAndRepsRequired} ",
-              type: SnackBarType.warning,
-            );
-            return;
-          }
-        } else {
-          // إذا كان كارديو والتطبيق يشترط وقت:
-          if (exercise.duration == null || exercise.duration!.trim().isEmpty) {
+        if (exercise.isCardio) {
+          // الكارديو يحتاج مدة
+          if (exercise.duration == null ||
+              exercise.duration!.trim().isEmpty) {
             AppSnackBar.show(
               context,
               message: "Determining the duration of the exercise is required",
@@ -497,10 +487,23 @@ class _CreateSelfPlanScreenState extends State<CreateSelfPlanScreen> {
             );
             return;
           }
+        } else {
+          // المقاومة: نعتمد قيمة التمرين، وإذا لم توجد نستخدم قيمة اليوم
+          final effectiveSets = exercise.sets ?? day.defaultSets;
+          final effectiveReps = exercise.reps ?? day.defaultReps;
+
+          if (effectiveSets == null ||
+              effectiveSets <= 0 ||
+              effectiveReps == null ||
+              effectiveReps.trim().isEmpty) {
+            _showValidationMessage(l10n.setsAndRepsRequired);
+            return;
+          }
         }
       }
     }
 
+    // 5. إنشاء الطلب
     final request = CreateSelfPlanRequest(
       goal: selectedGoal!,
       durationMonths: durationMonths,
@@ -516,6 +519,7 @@ class _CreateSelfPlanScreenState extends State<CreateSelfPlanScreen> {
 
     context.read<CreateSelfPlanCubit>().createSelfPlan(request);
   }
+
 
   void _showValidationMessage(String message) {
     AppSnackBar.show(context, message: message, type: SnackBarType.warning);
