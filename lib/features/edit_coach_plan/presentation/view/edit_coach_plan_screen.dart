@@ -56,8 +56,9 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
       final uiDay = PlanDayUiModel(
         name: day.name,
         exercises: List<ExerciseModel>.from(day.exercises),
+        defaultSets: day.sets,
+        defaultReps: day.reps,
       );
-
       _dayIds[uiDay] = day.id;
 
       _originalExerciseIds[uiDay] = day.exercises
@@ -315,11 +316,14 @@ class _EditCoachPlanScreenState extends State<EditCoachPlanScreen> {
     // 🔥 هذا هو الفحص الذي كان مفقوداً وكان يسبب إرسال بيانات فارغة للسيرفر:
     for (final day in days) {
       for (final exercise in day.exercises) {
+        final effectiveSets = exercise.sets ?? day.defaultSets;
+        final effectiveReps = exercise.reps ?? day.defaultReps;
+
         if (!exercise.isCardio) {
-          if (exercise.sets == null ||
-              exercise.sets! <= 0 ||
-              exercise.reps == null ||
-              exercise.reps!.trim().isEmpty) {
+          if (effectiveSets == null ||
+              effectiveSets <= 0 ||
+              effectiveReps == null ||
+              effectiveReps.trim().isEmpty) {
             _showValidationMessage(l10n.setsAndRepsRequired);
             return;
           }

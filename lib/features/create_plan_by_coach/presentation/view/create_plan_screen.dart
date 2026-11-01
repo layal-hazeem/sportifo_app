@@ -423,6 +423,7 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
     });
   }
 
+
   Future<void> savePlan() async {
     final l10n = AppLocalizations.of(context)!;
 
@@ -435,16 +436,38 @@ class _CreatePlanScreenState extends State<CreatePlanScreen> {
       _showValidationMessage(l10n.everyWorkoutDayNeedsExercise);
       return;
     }
+
+
     for (final day in days) {
       for (final exercise in day.exercises) {
-        if (!exercise.isCardio) {
-          if (exercise.sets == null || exercise.reps == null || exercise.reps!.isEmpty) {
+        if (exercise.isCardio) {
+          // الكارديو يحتاج مدة
+          if (exercise.duration == null ||
+              exercise.duration!.trim().isEmpty) {
+            AppSnackBar.show(
+              context,
+              message: "Determining the duration of the exercise is required",
+              type: SnackBarType.warning,
+            );
+            return;
+          }
+        } else {
+          // المقاومة: نستخدم قيم التمرين أو القيم الافتراضية لليوم
+          final effectiveSets = exercise.sets ?? day.defaultSets;
+          final effectiveReps = exercise.reps ?? day.defaultReps;
+
+          if (effectiveSets == null ||
+              effectiveSets <= 0 ||
+              effectiveReps == null ||
+              effectiveReps.trim().isEmpty) {
             _showValidationMessage(l10n.setsAndRepsRequired);
             return;
           }
         }
       }
     }
+
+
     final request = CreatePlanRequest(
       userId: widget.userId,
       goal: selectedGoal!,

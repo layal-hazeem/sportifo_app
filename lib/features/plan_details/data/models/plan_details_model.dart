@@ -69,14 +69,19 @@ class PlanDetailsModel {
   }
 }
 
+
 class PlanDayModel {
   final int id;
   final String name;
+  final int? sets;
+  final String? reps;
   final List<ExerciseModel> exercises;
 
   PlanDayModel({
     required this.id,
     required this.name,
+    this.sets,
+    this.reps,
     required this.exercises,
   });
 
@@ -84,13 +89,18 @@ class PlanDayModel {
     return PlanDayModel(
       id: json['id'] ?? 0,
       name: json['name'] ?? '',
+      sets: json['sets'] != null
+          ? int.tryParse(json['sets'].toString())
+          : null,
+      reps: json['reps']?.toString(),
       exercises: (json['exercises'] as List?)
-              ?.map((e) => ExerciseModel.fromJson(e))
-              .toList() ??
+          ?.map((e) => ExerciseModel.fromJson(e))
+          .toList() ??
           [],
     );
   }
 }
+
 
 class PlanUserModel {
   final int id;
